@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_16"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="学币充值" />
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/dp_19"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="学币充值"
+                android:textColor="@color/blue5087FF"
+                android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_13"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text12spGray999999"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="支付金额 : 20元" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/dp_19"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="学币充值"
+                android:textColor="@color/black333333"
+                android:textSize="@dimen/sp_11" />
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dp_13"
+            android:layout_marginEnd="@dimen/dp_19"
+            android:text="×1"
+            android:textColor="@color/gray999999"
+            android:textSize="@dimen/sp_10" />
+
+        <TextView
+            style="@style/Text12spBlack333333"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dp_23"
+            android:layout_marginEnd="@dimen/dp_19"
+            android:text="共1件商品 合计：¥20"
+            android:textSize="@dimen/sp_10" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_15"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_15"
+        android:layout_gravity="end"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/btnOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_bg_radius_15_gray_hollow"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"
+            android:text="申请退单"
+            android:paddingStart="@dimen/dp_21"
+            android:paddingEnd="@dimen/dp_21"
+            android:textColor="@color/gray666666"
+            android:textSize="@dimen/sp_12" />
+        <TextView
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_bg_radius_15_gray_hollow"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"
+            android:text="申请退单"
+            android:paddingStart="@dimen/dp_21"
+            android:paddingEnd="@dimen/dp_21"
+            android:textColor="@color/gray666666"
+            android:textSize="@dimen/sp_12" />
+        <TextView
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_bg_radius_15_gray_hollow"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"
+            android:text="申请退单"
+            android:paddingStart="@dimen/dp_21"
+            android:paddingEnd="@dimen/dp_21"
+            android:textColor="@color/gray666666"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+</LinearLayout>

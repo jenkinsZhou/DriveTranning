@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_radius_10_white"
+    >
+
+    <ImageView
+        android:layout_marginTop="@dimen/dp_24"
+        android:layout_width="@dimen/dp_69"
+        android:background="@color/blue53C2FF"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="@dimen/dp_69"/>
+
+    <TextView
+        android:text="@string/app_name"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/dp_22"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/sp_17"
+        android:textColor="@color/black333333"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </TextView>
+    <TextView
+        android:text="请重新抽检"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/sp_13"
+        android:layout_marginTop="@dimen/dp_13"
+        android:textColor="@color/gray999999"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <TextView
+        android:layout_marginBottom="@dimen/dp_19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_gradient_radius_25_blue_53c2ff_4e52ff"
+        android:gravity="center"
+        android:paddingStart="@dimen/dp_38"
+        android:layout_marginTop="@dimen/dp_18"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_38"
+        android:paddingBottom="@dimen/dp_8"
+        android:text="确认修改"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12" />
+</LinearLayout>

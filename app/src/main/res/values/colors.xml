@@ -44,14 +44,8 @@
     <!--LoadMoreView loading颜色-->
     <color name="colorLoadMoreProgress">@color/colorTitleText</color>
 
-    <!--蓝色区域-->
-    <color name="blue5593FF">#5593FF</color>
-    <color name="blue4287FF">#4287FF</color>
-    <color name="blue55A9FF">#55A9FF</color>
-    <color name="blue41baff">#41baff</color>
-    <color name="blueCommon">#4287FF</color>
-    <color name="blue5E8FEB">#5E8FEB</color>
-    <color name="blue79C6FA">#79C6FA</color>
+
+
 
     <!--灰色区域-->
     <color name="grayF4F5F7">#F4F5F7</color>
@@ -90,8 +84,7 @@
     <color name="redFF4A5C">#FF4A5C</color>
     <color name="redD10303">#D10303</color>
     <color name="redE54E3F">#E54E3F</color>
-
-
+    <color name="redFF736C">#FF736C</color>
     <!--橙色区域-->
     <color name="orangeFE7000">#FE7000</color>
     <color name="orangeFEF4EC">#FEF4EC</color>
@@ -118,6 +111,15 @@
     <color name="blue007AFF">#007AFF</color>
     <color name="blue53C2FF">#53C2FF</color>
     <color name="blue4E52FF">#4E52FF</color>
+    <color name="blue5593FF">#5593FF</color>
+    <color name="blue4287FF">#4287FF</color>
+    <color name="blue55A9FF">#55A9FF</color>
+    <color name="blue41baff">#41baff</color>
+    <color name="blueCommon">#4287FF</color>
+    <color name="blue5E8FEB">#5E8FEB</color>
+    <color name="blue79C6FA">#79C6FA</color>
+    <color name="blue5087FF">#5087FF</color>
+
     <color name="default_black_text_color">#333333</color>
     <color name="default_gray_text_color">#A2A2A2</color>
 
