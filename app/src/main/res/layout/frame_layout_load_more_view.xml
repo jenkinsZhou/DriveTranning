@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingTop="12dp"
+             android:paddingBottom="12dp"
+             android:gravity="center"
+             tools:background="@android:color/white">
+
+    <LinearLayout
+        android:id="@+id/lLayout_loadingFastLoadMore"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:id="@+id/pb_loadingFastLoadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginRight="4dp"
+            android:indeterminateTint="@color/colorLoadMoreProgress"
+            android:indeterminateTintMode="src_atop"/>
+
+        <TextView
+            android:id="@+id/tv_loadingFastLoadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:textSize="@dimen/dp_load_more_text_size"
+            android:textColor="@color/colorLoadMoreText"
+            android:text="@string/agentweb_coming_soon_download"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fLayout_loadFailFastLoadMore"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/tv_loadFailFastLoadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dp_load_more_text_size"
+            android:textColor="@color/colorLoadMoreText"
+            android:text="@string/agentweb_leave"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fLayout_loadEndFastLoadMore"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_loadEndFastLoadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dp_load_more_text_size"
+            android:textColor="@color/colorLoadMoreText"
+            android:text="@string/agentweb_loading"/>
+    </FrameLayout>
+</FrameLayout>

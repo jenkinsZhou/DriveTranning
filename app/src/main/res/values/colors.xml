@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="colorQQBackgroundStart">#4e8cfc</color>
+    <color name="colorQQBackgroundEnd">#33bafc</color>
+    <color name="colorQQBackgroundCenter">#34b0fc</color>
+
+    <!--普通有灰色背景的用这个-->
+    <color name="colorBackground">#f8f8f8</color>
+    <color name="colorTextBlack">#333333</color>
+    <color name="colorTextBlackLight">#636363</color>
+    <color name="colorTextGray">#666666</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhitePressed">#DCDCDC</color>
+    <color name="colorRadiusDefaultRipple">#c8cccccc</color>
+    <!--TitleBarView背景色 微信背景-->
+    <color name="colorTitleBackground">#FCFCFC</color>
+    <!--TitleBarView 文字颜色-->
+    <color name="colorTitleText">#393939</color>
+    <!--TitleBarView 下划线颜色-->
+    <color name="colorTitleDivider">@color/colorTabUnderline</color>
+    <!--主页tab背景色-->
+    <color name="colorTabBackground">#FCFCFC</color>
+    <!--主页上划线颜色-->
+    <color name="colorTabUnderline">#E6E6E6</color>
+    <!--主页tab文字默认颜色-->
+    <color name="colorTabTextUnSelect">#909090</color>
+    <!--主页tab文字选中颜色-->
+    <color name="colorTabTextSelect">@color/colorTitleText</color>
+
+    <!--多状态文本颜色控制-->
+    <color name="status_layout_click_view_text_color">#0084FF</color>
+    <color name="status_layout_tip_text_color">@color/colorTitleText</color>
+
+    <!--Glide加载图片默认占位图背景色-->
+    <color name="colorPlaceholder">#CCCCCC</color>
+
+    <!--LoadMoreView 文本颜色-->
+    <color name="colorLoadMoreText">@color/colorTitleText</color>
+    <!--LoadMoreView loading颜色-->
+    <color name="colorLoadMoreProgress">@color/colorTitleText</color>
+
+    <!--蓝色区域-->
+    <color name="blue5593FF">#5593FF</color>
+    <color name="blue4287FF">#4287FF</color>
+    <color name="blue55A9FF">#55A9FF</color>
+    <color name="blue41baff">#41baff</color>
+    <color name="blueCommon">#4287FF</color>
+    <color name="blue5E8FEB">#5E8FEB</color>
+    <color name="blue79C6FA">#79C6FA</color>
+
+    <!--灰色区域-->
+    <color name="grayF4F5F7">#F4F5F7</color>
+    <color name="gray999999">#999999</color>
+    <color name="gray888888">#888888</color>
+    <color name="gray333333">#333333</color>
+    <color name="grayEAEAEA">#F4F5F7</color>
+    <color name="grayEEEEEE">#EEEEEE</color>
+    <color name="gray666666">#666666</color>
+    <color name="grayF5F5F5">#F5F5F5</color>
+    <color name="grayE0E0E0">#E0E0E0</color>
+    <color name="grayA2A2A2">#A2A2A2</color>
+    <color name="grayCCCCCC">#CCCCCC</color>
+    <color name="grayAAAAAA">#AAAAAA</color>
+    <color name="gray3A3A3A">#3A3A3A</color>
+    <color name="grayF2F2F2">#F2F2F2</color>
+    <color name="gray555555">#555555</color>
+    <color name="grayF0F0F0">#F0F0F0</color>
+    <color name="grayFDFDFD">#FDFDFD</color>
+    <color name="grayF9F9F9">#F9F9F9</color>
+
+
+    <!--黑色区域-->
+    <color name="black333333">#333333</color>
+    <color name="black171717">#171717</color>
+    <color name="blackff000000">#ff000000</color>
+    <color name="blackBB000000">#BB000000</color>
+    <color name="black000000">#000000</color>
+    <color name="black222222">#222222</color>
+    <color name="black212222">#212222</color>
+
+    <color name="black434443">#434443</color>
+
+    <!--红色区域-->
+    <color name="redF35757">#F35757</color>
+    <color name="redFF4A5C">#FF4A5C</color>
+    <color name="redD10303">#D10303</color>
+    <color name="redE54E3F">#E54E3F</color>
+
+
+    <!--橙色区域-->
+    <color name="orangeFE7000">#FE7000</color>
+    <color name="orangeFEF4EC">#FEF4EC</color>
+
+    <!--黄色区域-->
+    <color name="yellowFFB400">#FFB400</color>
+    <color name="yellowFBE945">#FBE945</color>
+    <color name="yellowF58220">#F58220</color>
+    <color name="yellowFCC946">#FCC946</color>
+    <color name="yellowFD9547">#FD9547</color>
+    <color name="yellowE1BD85">#E1BD85</color>
+    <color name="yellowB4976A">#B4976A</color>
+
+    <!--绿色区域-->
+    <color name="green0DBD00">#0DBD00</color>
+    <color name="green42AF3D">#42AF3D</color>
+    <color name="green4EBBBF">#4EBBBF</color>
+    <color name="green78C2E4">#78C2E4</color>
+    <color name="green73C7DF">#73C7DF</color>
+    <color name="green63C4E1">#63C4E1</color>
+    <color name="green7DD1E0">#7DD1E0</color>
+    <!--蓝色区域-->
+    <color name="blue358EB9">#358EB9</color>
+    <color name="blue007AFF">#007AFF</color>
+    <color name="blue53C2FF">#53C2FF</color>
+    <color name="blue4E52FF">#4E52FF</color>
+    <color name="default_black_text_color">#333333</color>
+    <color name="default_gray_text_color">#A2A2A2</color>
+
+    <color name="default_color_activity_background">@color/grayF9F9F9</color>
+
+
+
+
+
+
+</resources>
