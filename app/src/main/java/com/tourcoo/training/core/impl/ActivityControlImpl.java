@@ -60,7 +60,7 @@ import static com.tourcoo.training.core.app.MyApplication.isControlNavigation;
  * @Function: Activity/Fragment 生命周期全局处理及BasisActivity 的按键处理
  * @Description:
  */
-public class ActivityControlImpl implements ActivityFragmentControl, ActivityKeyEventControl, ActivityDispatchEventControl {
+public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKeyEventControl, ActivityDispatchEventControl {
     private static String TAG = "ActivityControlImpl";
     /**
      * Audio管理器，用了控制音量
@@ -299,11 +299,16 @@ public class ActivityControlImpl implements ActivityFragmentControl, ActivityKey
                     return;
                 }*/
                 //设置类全面屏手势滑动返回
-                SlideBack.with(activity)
-                        .haveScroll(true)
-                        .edgeMode(SlideBack.EDGE_BOTH)
-                        .callBack(activity::onBackPressed)
-                        .register();
+                if (activity instanceof BaseActivity) {
+                    if(((BaseActivity) activity).isSlideEnable()){
+                        SlideBack.with(activity)
+                                .haveScroll(true)
+                                .edgeMode(SlideBack.EDGE_BOTH)
+                                .callBack(activity::onBackPressed)
+                                .register();
+                    }
+                }
+
             }
 
             @Override

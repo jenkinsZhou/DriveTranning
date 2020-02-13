@@ -43,6 +43,11 @@ public class MainTabActivity extends BaseMainActivity {
     }
 
     @Override
+    public boolean isSlideEnable() {
+        return false;
+    }
+
+    @Override
     public void setTabLayout(CommonTabLayout tabLayout) {
       /*  ImageView imageView = new ImageView(mContext);
         imageView.setImageResource(R.drawable.ic_github);

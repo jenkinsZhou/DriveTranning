@@ -20,6 +20,7 @@ import com.tourcoo.training.core.interfaces.ActivityKeyEventControl;
 import com.tourcoo.training.core.interfaces.IBasicView;
 import com.tourcoo.training.core.interfaces.IRefreshLoadView;
 import com.tourcoo.training.core.interfaces.QuitAppControl;
+import com.tourcoo.training.core.interfaces.ISideControl;
 import com.tourcoo.training.core.manager.RxJavaManager;
 import com.tourcoo.training.core.retrofit.BaseObserver;
 import com.tourcoo.training.core.util.CommonUtil;
@@ -38,7 +39,7 @@ import java.util.List;
  * @date 2019年12月26日17:04
  * @Email: 971613168@qq.com
  */
-public abstract class BaseActivity extends RxAppCompatActivity implements IBasicView {
+public abstract class BaseActivity extends RxAppCompatActivity implements IBasicView , ISideControl {
     protected Activity mContext;
     protected View mContentView;
 
@@ -315,4 +316,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
                     });
         }
     }
+
+
+
 }
