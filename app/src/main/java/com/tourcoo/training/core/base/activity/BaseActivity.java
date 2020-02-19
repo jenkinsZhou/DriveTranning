@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.FrameLayout;
 
 import androidx.fragment.app.Fragment;
 
+import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.constant.FrameConstant;
@@ -42,7 +44,7 @@ import java.util.List;
 public abstract class BaseActivity extends RxAppCompatActivity implements IBasicView , ISideControl {
     protected Activity mContext;
     protected View mContentView;
-
+    protected Handler baseHandler  = new Handler();
     protected Bundle mSavedInstanceState;
     protected boolean mIsViewLoaded = false;
     protected boolean mIsFirstShow = true;
@@ -66,6 +68,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
         super.onCreate(savedInstanceState);
         this.mSavedInstanceState = savedInstanceState;
         mContext = this;
+        setStatusBarDarkMode(mContext, isStatusBarDarkMode());
         beforeSetContentView();
         mContentView = View.inflate(mContext, getContentLayout(), null);
         //解决StatusLayoutManager与SmartRefreshLayout冲突
@@ -119,7 +122,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         List<Fragment> list = getSupportFragmentManager().getFragments();
-        if (list == null || list.size() == 0) {
+        if (list.size() == 0) {
             return;
         }
         for (Fragment f : list) {
@@ -317,6 +320,20 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
         }
     }
 
+    protected void setStatusBarColor(Activity activity, int color) {
+        if (color <= 0) {
+            return;
+        }
+        baseHandler.postDelayed(() -> ImmersionBar.with(activity)
+                .statusBarColor(color)
+                .init(), 50);
+    }
 
+
+    protected void setStatusBarDarkMode(Activity activity, boolean isDarkFont) {
+        baseHandler.postDelayed(() -> ImmersionBar.with(activity)
+                .statusBarDarkFont(isDarkFont, 0.2f)
+                .init(), 50);
+    }
 
 }

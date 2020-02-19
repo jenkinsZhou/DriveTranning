@@ -2,6 +2,7 @@ package com.tourcoo.training.core.base.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
@@ -17,7 +18,7 @@ public class QQTitleActivity extends BaseTitleActivity  {
 
     @Override
     public int getContentLayout() {
-        return R.layout.activity_qq_title;
+        return R.layout.activity_register;
     }
 
     @Override
@@ -27,10 +28,11 @@ public class QQTitleActivity extends BaseTitleActivity  {
 
     @Override
     public void setTitleBar(TitleBarView titleBar) {
-        titleBar.setLeftTextDrawable(R.drawable.ic_back_white)
+        titleBar.setLeftTextDrawable(R.drawable.icon_return)
                 .setStatusBarLightMode(false)
-                .setTitleMainTextColor(Color.WHITE)
-                .setBgResource(R.drawable.shape_qq_bg);
+                .setTitleMainTextColor(Color.BLACK)
+                .setBgResource(R.color.white)
+              ;
     }
 
 

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_color_activity_background"
+    android:orientation="vertical">
+
+    <include layout="@layout/frame_layout_title_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/dp_14">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_17"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="*"
+                android:textColor="@color/redF35757" />
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="车辆品牌" />
+
+            <TextView
+                style="@style/Text15spGrayA2A2A2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/dp_15"
+                android:layout_weight="1"
+                android:drawableEnd="@drawable/icon_arrow_right"
+                android:drawablePadding="@dimen/dp_7"
+                android:gravity="end"
+                android:text="点击设置" />
+
+        </LinearLayout>
+
+        <include layout="@layout/line_horizontal_gray_eeeeee_0_5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_17"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="*"
+                android:textColor="@color/redF35757" />
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="车型" />
+
+            <TextView
+                style="@style/Text15spGrayA2A2A2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/dp_15"
+                android:layout_weight="1"
+                android:drawableEnd="@drawable/icon_arrow_right"
+                android:drawablePadding="@dimen/dp_7"
+                android:gravity="end"
+                android:text="点击设置" />
+        </LinearLayout>
+
+        <include layout="@layout/line_horizontal_gray_eeeeee_0_5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_17"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="*"
+                android:textColor="@color/redF35757" />
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="车牌号" />
+
+            <TextView
+                style="@style/Text15spGrayA2A2A2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/dp_15"
+                android:layout_weight="1"
+                android:drawableEnd="@drawable/icon_arrow_right"
+                android:drawablePadding="@dimen/dp_7"
+                android:gravity="end"
+                android:text="点击设置" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/dp_14">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_17"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="下次年审时间" />
+
+            <TextView
+                style="@style/Text15spGrayA2A2A2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/dp_15"
+                android:layout_weight="1"
+                android:drawableEnd="@drawable/icon_arrow_right"
+                android:drawablePadding="@dimen/dp_7"
+                android:gravity="end"
+                android:text="点击设置" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/dp_22"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_22"
+        android:layout_marginBottom="@dimen/dp_19"
+        android:background="@drawable/selector_gradient_radius_25_blue"
+        android:gravity="center"
+        android:paddingStart="@dimen/dp_38"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_38"
+        android:paddingBottom="@dimen/dp_8"
+        android:text="确认添加"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15" />
+
+</LinearLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimary">#004D8E</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">@color/blue55A9FF</color>
     <color name="transparent">#00000000</color>
 
     <color name="colorQQBackgroundStart">#4e8cfc</color>
@@ -45,8 +45,7 @@
     <color name="colorLoadMoreProgress">@color/colorTitleText</color>
 
 
-
-
+    <color name="whiteFFFEFF">#FFFEFF</color>
     <!--灰色区域-->
     <color name="grayF4F5F7">#F4F5F7</color>
     <color name="gray999999">#999999</color>
@@ -56,8 +55,10 @@
     <color name="grayEEEEEE">#EEEEEE</color>
     <color name="gray666666">#666666</color>
     <color name="grayF5F5F5">#F5F5F5</color>
+    <color name="grayE8E8E8">#E8E8E8</color>
     <color name="grayE0E0E0">#E0E0E0</color>
     <color name="grayA2A2A2">#A2A2A2</color>
+    <color name="grayA0A0A0">#A0A0A0</color>
     <color name="grayCCCCCC">#CCCCCC</color>
     <color name="grayAAAAAA">#AAAAAA</color>
     <color name="gray3A3A3A">#3A3A3A</color>
@@ -66,7 +67,10 @@
     <color name="grayF0F0F0">#F0F0F0</color>
     <color name="grayFDFDFD">#FDFDFD</color>
     <color name="grayF9F9F9">#F9F9F9</color>
-
+    <color name="grayFBF8FB">#FBF8FB</color>
+    <color name="grayDBDBDB">#DBDBDB</color>
+    <color name="grayBFBFBF">#BFBFBF</color>
+    <color name="grayF0F0E9">#F0F0E9</color>
 
     <!--黑色区域-->
     <color name="black333333">#333333</color>
@@ -85,6 +89,7 @@
     <color name="redD10303">#D10303</color>
     <color name="redE54E3F">#E54E3F</color>
     <color name="redFF736C">#FF736C</color>
+    <color name="redE8403E">#E8403E</color>
     <!--橙色区域-->
     <color name="orangeFE7000">#FE7000</color>
     <color name="orangeFEF4EC">#FEF4EC</color>
@@ -119,11 +124,10 @@
     <color name="blue5E8FEB">#5E8FEB</color>
     <color name="blue79C6FA">#79C6FA</color>
     <color name="blue5087FF">#5087FF</color>
-
     <color name="default_black_text_color">#333333</color>
     <color name="default_gray_text_color">#A2A2A2</color>
 
-    <color name="default_color_activity_background">@color/grayF9F9F9</color>
+    <color name="default_color_activity_background">@color/grayF5F5F5</color>
 
 
 

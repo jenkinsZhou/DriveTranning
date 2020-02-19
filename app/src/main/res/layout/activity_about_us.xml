@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
-    <include layout="@layout/line_horizontal_gray_eeeeee_0_5_dp" />
+    <include layout="@layout/line_horizontal_gray_eeeeee_0_5dp" />
 
     <LinearLayout
         android:orientation="horizontal"

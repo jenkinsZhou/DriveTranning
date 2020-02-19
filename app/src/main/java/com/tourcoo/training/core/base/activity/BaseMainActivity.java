@@ -2,6 +2,8 @@ package com.tourcoo.training.core.base.activity;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.delegate.MainTabDelegate;
 import com.tourcoo.training.core.interfaces.IMainView;
@@ -23,7 +25,7 @@ public abstract class BaseMainActivity extends BaseActivity implements IMainView
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         if (mFastMainTabDelegate != null) {
             mFastMainTabDelegate.onSaveInstanceState(outState);
         }

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/frame_layout_title_bar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_15"
+                android:layout_marginEnd="@dimen/dp_5"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_5">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="用户头像"
+                    android:textColor="@color/black333333"
+                    android:textSize="@dimen/sp_15" />
+
+                <ImageView
+                    android:layout_width="@dimen/dp_70"
+                    android:layout_height="@dimen/dp_70"
+                    android:src="@drawable/def_qq" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/icon_arrow_right" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line_horizontal_gray_e0e0e0_0_5dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_15"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingEnd="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_15">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="姓名"
+                    android:textColor="@color/black333333"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="183****4562"
+                    android:textColor="@color/grayA2A2A2"
+                    android:textSize="@dimen/sp_15" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/icon_arrow_right" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line_horizontal_gray_e0e0e0_0_5dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_15"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingEnd="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_15">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="车牌号"
+                    android:textColor="@color/black333333"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="皖A58699"
+                    android:textColor="@color/grayA2A2A2"
+                    android:textSize="@dimen/sp_15" />
+
+
+            </LinearLayout>
+
+            <include layout="@layout/line_horizontal_gray_e0e0e0_0_5dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_15"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingEnd="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_15">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="身份证号"
+                    android:textColor="@color/black333333"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="183****4562"
+                    android:textColor="@color/grayA2A2A2"
+                    android:textSize="@dimen/sp_15" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/icon_arrow_right"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line_horizontal_gray_e0e0e0_0_5dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_15"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingEnd="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_15">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="企业名称"
+                    android:textColor="@color/black333333"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="安徽南北快递运输有限公司 "
+                    android:textColor="@color/grayA2A2A2"
+                    android:textSize="@dimen/sp_15" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/icon_arrow_right"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line_horizontal_gray_e0e0e0_0_5dp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_10"
+                android:background="@color/grayF2F2F2" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:text="身份证照片"
+                    android:textColor="@color/black333333"
+                    android:textSize="@dimen/sp_15" />
+
+
+                   <LinearLayout
+                       android:layout_marginTop="@dimen/dp_15"
+                       android:paddingStart="@dimen/dp_25"
+                       android:paddingEnd="@dimen/dp_25"
+                               android:orientation="horizontal"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content">
+
+                       <RelativeLayout
+                           android:layout_width="0dp"
+                           android:layout_weight="1"
+                           android:layout_marginEnd="@dimen/dp_10"
+                           android:layout_height="wrap_content">
+
+
+                           <ImageView
+                               android:scaleType="fitXY"
+                               android:src="@drawable/img_front"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"/>
+                           <ImageView
+                               android:src="@drawable/btn_uploading"
+                               android:layout_width="wrap_content"
+                               android:layout_centerVertical="true"
+                               android:layout_centerHorizontal="true"
+                               android:layout_height="wrap_content"/>
+
+                       </RelativeLayout>
+
+
+                       <RelativeLayout
+                           android:layout_marginStart="@dimen/dp_10"
+                           android:layout_width="0dp"
+                           android:layout_weight="1"
+                           android:layout_height="wrap_content">
+
+
+                           <ImageView
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:scaleType="fitXY"
+                               android:src="@drawable/img_front" />
+
+                           <ImageView
+                               android:src="@drawable/btn_uploading"
+                               android:layout_width="wrap_content"
+                               android:layout_centerVertical="true"
+                               android:layout_centerHorizontal="true"
+                               android:layout_height="wrap_content"/>
+                       </RelativeLayout>
+
+                               </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

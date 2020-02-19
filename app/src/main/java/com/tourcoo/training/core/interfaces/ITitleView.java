@@ -1,6 +1,7 @@
 package com.tourcoo.training.core.interfaces;
 
 
+import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 
 /**
@@ -28,5 +29,14 @@ public interface ITitleView {
      * @param titleBar
      */
     void setTitleBar(TitleBarView titleBar);
+
+
+    /**
+     * 主标题设置上移或下移(默认上移10dp)
+     * @return
+     */
+    default int getMarginTop() {
+        return -SizeUtil.dp2px(10);
+    }
 
 }

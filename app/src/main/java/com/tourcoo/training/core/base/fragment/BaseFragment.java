@@ -4,6 +4,7 @@ package com.tourcoo.training.core.base.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 
 
 import com.apkfuns.logutils.LogUtils;
+import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.constant.FrameConstant;
@@ -40,6 +42,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 public abstract class BaseFragment extends RxFragment implements IBasicView {
 
+    protected Handler baseHandler = new Handler();
     protected Activity mContext;
     protected View mContentView;
     protected boolean mIsFirstShow;
@@ -102,6 +105,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
             }
         }
         beforeInitView(savedInstanceState);
+        setStatusBarDarkMode(mContext, isStatusBarDarkMode());
         initView(savedInstanceState);
 
         if (isSingleFragment() && !mIsVisibleChanged) {
@@ -251,4 +255,22 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
             loadData();
         }
     }
+
+
+    protected void setStatusBarColor(Activity activity, int color) {
+        if (color <= 0) {
+            return;
+        }
+        baseHandler.postDelayed(() -> ImmersionBar.with(activity)
+                .statusBarColor(color)
+                .init(), 50);
+    }
+
+
+    protected void setStatusBarDarkMode(Activity activity, boolean isDarkFont) {
+        baseHandler.postDelayed(() -> ImmersionBar.with(activity)
+                .statusBarDarkFont(isDarkFont, 0.2f)
+                .init(), 50);
+    }
+
 }

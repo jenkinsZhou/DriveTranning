@@ -1,10 +1,13 @@
 package com.tourcoo.training.core.base.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.gyf.immersionbar.ImmersionBar;
 import com.tourcoo.training.core.interfaces.ITitleView;
 import com.tourcoo.training.core.util.FindViewUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
@@ -19,6 +22,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
  */
 public abstract class BaseTitleFragment extends BaseFragment implements ITitleView {
 
+
     protected TitleBarView mTitleBar;
 
     @Override
@@ -26,4 +30,13 @@ public abstract class BaseTitleFragment extends BaseFragment implements ITitleVi
         super.beforeInitView(savedInstanceState);
         mTitleBar = FindViewUtil.getTargetView(mContentView, TitleBarView.class);
     }
+
+    @Override
+    public int getMarginTop() {
+        return 0;
+    }
+
+
+
+
 }
