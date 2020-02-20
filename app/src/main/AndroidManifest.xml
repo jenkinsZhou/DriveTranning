@@ -28,6 +28,7 @@
         </activity>
         <activity android:name="com.tourcoo.training.ui.MainActivity"/>
         <activity android:name="com.tourcoo.training.core.base.activity.QQTitleActivity"/>
+        <activity android:name=".ui.study.FreeStudyActivity" />
     </application>
 
 </manifest>
