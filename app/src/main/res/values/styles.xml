@@ -30,6 +30,10 @@
         <item name="android:backgroundDimAmount">0.4</item>
     </style>
 
+    <!-- CustomCheckBox theme -->
+    <style name="CheckBoxThemeSelectPay" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/style_check_payment</item>
+    </style>
 
     <style name="Theme_dialog" parent="@android:style/Theme.Dialog">
 

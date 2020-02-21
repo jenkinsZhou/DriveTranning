@@ -1,7 +1,9 @@
 package com.tourcoo.training.core.app;
 
 import android.app.Application;
+import android.content.Context;
 
+import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
 import com.apkfuns.logutils.LogUtils;
@@ -118,5 +120,13 @@ public class MyApplication extends MultiDexApplication {
      */
     public static boolean isControlNavigation() {
         return true;
+    }
+
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

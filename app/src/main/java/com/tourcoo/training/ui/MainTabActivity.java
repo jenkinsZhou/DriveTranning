@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.activity.BaseMainActivity;
 import com.tourcoo.training.core.base.entity.FrameTabEntity;
+import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
 
 import java.util.ArrayList;
@@ -57,5 +58,10 @@ public class MainTabActivity extends BaseMainActivity {
                 WebViewActivity.start(mContext, "https://github.com/JenkinsZhou/FastLib/blob/master/README.md");
             }
         });*/
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

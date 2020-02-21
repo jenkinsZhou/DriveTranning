@@ -73,6 +73,7 @@
     <color name="grayBFBFBF">#BFBFBF</color>
     <color name="grayF0F0E9">#F0F0E9</color>
 
+
     <!--黑色区域-->
     <color name="black333333">#333333</color>
     <color name="black171717">#171717</color>
@@ -91,6 +92,7 @@
     <color name="redE54E3F">#E54E3F</color>
     <color name="redFF736C">#FF736C</color>
     <color name="redE8403E">#E8403E</color>
+    <color name="redF56D43">#F56D43</color>
     <!--橙色区域-->
     <color name="orangeFE7000">#FE7000</color>
     <color name="orangeFEF4EC">#FEF4EC</color>

@@ -19,16 +19,19 @@
         <activity android:name="com.tourcoo.training.ui.MainTabActivity"
             android:launchMode="singleTop"
             >
+        </activity>
+        <activity android:name="com.tourcoo.training.ui.MainActivity"/>
+        <activity android:name="com.tourcoo.training.core.base.activity.QQTitleActivity"/>
+        <activity android:name=".ui.study.FreeStudyActivity" />
+        <activity android:name=".ui.SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
-        <activity android:name="com.tourcoo.training.ui.MainActivity"/>
-        <activity android:name="com.tourcoo.training.core.base.activity.QQTitleActivity"/>
-        <activity android:name=".ui.study.FreeStudyActivity" />
     </application>
 
 </manifest>

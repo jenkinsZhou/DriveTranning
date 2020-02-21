@@ -1,29 +1,29 @@
 package com.tourcoo.training.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.mine.MineItemAdapter;
-import com.tourcoo.training.core.base.activity.QQTitleActivity;
-import com.tourcoo.training.core.base.fragment.BaseFragment;
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment;
 import com.tourcoo.training.core.util.StatusBarUtil;
+import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
-import com.tourcoo.training.widget.dialog.dialog.BottomShareDialog;
-import com.tourcoo.training.widget.dialog.dialog.ShareEntity;
+import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
+import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
+import com.tourcoo.training.widget.dialog.share.ShareEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +40,14 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     public int getContentLayout() {
         return R.layout.fragement_mine;
     }
+
     private RelativeLayout rlTitle;
     private SmartRefreshLayout smartRefreshLayoutCommon;
     private MineItemAdapter accountAdapter;
     private MineItemAdapter achievementAdapter;
     private RecyclerView rvMyAccount;
     private RecyclerView rvStudyAchievement;
+
     @Override
     public void initView(Bundle savedInstanceState) {
         rlTitle = mContentView.findViewById(R.id.rlTitle);
@@ -58,8 +60,8 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         achievementAdapter = new MineItemAdapter();
         accountAdapter.bindToRecyclerView(rvMyAccount);
         achievementAdapter.bindToRecyclerView(rvStudyAchievement);
-        rvMyAccount.setLayoutManager(new GridLayoutManager(mContext,3));
-        rvStudyAchievement.setLayoutManager(new GridLayoutManager(mContext,4));
+        rvMyAccount.setLayoutManager(new GridLayoutManager(mContext, 3));
+        rvStudyAchievement.setLayoutManager(new GridLayoutManager(mContext, 4));
         mContentView.findViewById(R.id.ivSetting).setOnClickListener(this);
     }
 
@@ -69,7 +71,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         loadAchievement();
     }
 
-    private void loadMineAccount(){
+    private void loadMineAccount() {
         MineItem accountItem = new MineItem();
         accountItem.setIconId(R.drawable.icon_account);
         accountItem.setItemName("账户");
@@ -86,7 +88,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         accountAdapter.setNewData(accountList);
     }
 
-    private void loadAchievement(){
+    private void loadAchievement() {
         MineItem studyItem = new MineItem();
         studyItem.setIconId(R.drawable.icon_record);
         studyItem.setItemName("学习记录");
@@ -120,7 +122,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     }
 
 
-    private void setMarginTop( ) {
+    private void setMarginTop() {
         ViewGroup.LayoutParams layoutParams = rlTitle.getLayoutParams();
         if (layoutParams instanceof LinearLayout.LayoutParams) {
             ((LinearLayout.LayoutParams) layoutParams).setMargins(0, getMarginTop(), 0, 0);
@@ -141,15 +143,37 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivSetting:
-                BottomShareDialog shareDialog = new BottomShareDialog(mContext).create();
-                ShareEntity shareEntity = new ShareEntity("微信",R.drawable.icon_wx);
-                ShareEntity shareEntity1 = new ShareEntity("朋友圈",R.drawable.icon_pyq);
-                ShareEntity shareEntity2 = new ShareEntity("QQ",R.drawable.icon_qq);
-                ShareEntity shareEntity3 = new ShareEntity("QQ空间",R.drawable.icon_qz);
-                shareDialog.addData(shareEntity).addData(shareEntity1).addData(shareEntity2).addData(shareEntity3).show();
+             /*   BottomShareDialog shareDialog = new BottomShareDialog(mContext).create();
+                ShareEntity shareEntity = new ShareEntity("微信", R.drawable.icon_wx);
+                ShareEntity shareEntity1 = new ShareEntity("朋友圈", R.drawable.icon_pyq);
+                ShareEntity shareEntity2 = new ShareEntity("QQ", R.drawable.icon_qq);
+                ShareEntity shareEntity3 = new ShareEntity("QQ空间", R.drawable.icon_qz);
+                shareDialog.addData(shareEntity).addData(shareEntity1).addData(shareEntity2).addData(shareEntity3).show();*/
+                MultiplePayDialog multiplePayDialog = new MultiplePayDialog(mContext).create();
+                multiplePayDialog.show();
                 break;
             default:
                 break;
         }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(getView() == null){
+            return;
+        }
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                Toast.makeText(getActivity(), "按了返回键", Toast.LENGTH_SHORT).show();
+                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK){
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
 }

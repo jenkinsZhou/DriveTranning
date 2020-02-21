@@ -22,11 +22,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.apkfuns.logutils.LogUtils;
 import com.tourcoo.training.core.app.ActivityThread;
 import com.tourcoo.training.core.app.AppGlobals;
+import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.constant.FrameConstant;
 
 import java.lang.reflect.Method;
@@ -52,7 +54,7 @@ public class CommonUtil {
      * @return application
      */
     public static Application getApplication() {
-        try {
+      /*  try {
             //兼容android P，直接调用@hide注解的方法来获取application对象
             Application app = ActivityThread.currentApplication();
             LogUtils.tag(TAG).e("getApplication0:" + app);
@@ -70,8 +72,8 @@ public class CommonUtil {
                 return app;
             }
         } catch (Exception e) {
-        }
-        return null;
+        }*/
+        return MyApplication.getContext();
     }
 
 
@@ -442,4 +444,8 @@ public class CommonUtil {
         }
     }
 
+
+    public static int getColor(int colorId) {
+        return ContextCompat.getColor(MyApplication.getContext(), colorId);
+    }
 }

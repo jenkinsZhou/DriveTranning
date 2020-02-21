@@ -1,9 +1,10 @@
-package com.tourcoo.training.widget.dialog.dialog;
+package com.tourcoo.training.widget.dialog.share;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -36,15 +37,19 @@ public class BottomShareDialog {
     private LinearLayout content;
     private boolean showTitle = false;
     private List<ShareEntity> sheetItemList;
-    private Display display;
     private RecyclerView rvShare;
     private ShareAdapter adapter;
-
+    private int width = 0;
 
     public BottomShareDialog(Context context) {
         this.mContext = context;
         WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        display = windowManager.getDefaultDisplay();
+        if(windowManager == null){
+            return;
+        }
+        DisplayMetrics metrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(metrics);
+         width  = metrics.widthPixels;
     }
 
     public static class ShareItem {
@@ -152,9 +157,10 @@ public class BottomShareDialog {
 
     public BottomShareDialog create() {
         // 获取Dialog布局
+
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_bottom_grid_share, null);
         // 设置Dialog最小宽度为屏幕宽度
-        view.setMinimumWidth(display.getWidth());
+        view.setMinimumWidth(width);
         rvShare = view.findViewById(R.id.rvShare);
         rvShare.setLayoutManager(new GridLayoutManager(mContext,4));
         // 获取自定义Dialog布局中的控件

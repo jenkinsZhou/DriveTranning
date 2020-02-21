@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="frame_quit_app">The app will be exit if you press again</string>
-    <string name="frame_multi_loading">Loading...</string>
-    <string name="frame_multi_empty">No Data</string>
-    <string name="frame_multi_error">Load Error</string>
-    <string name="frame_web_alert_title">Kindly Reminder</string>
+    <string name="frame_quit_app">再按一次退出</string>
+    <string name="frame_multi_loading">加载中...</string>
+    <string name="frame_multi_empty">暂无数据</string>
+    <string name="frame_multi_error">加载错误</string>
+    <string name="frame_web_alert_title">温馨提示</string>
     <string name="frame_web_alert_msg">Are you sure to close this page?</string>
-    <string name="frame_web_alert_left">Back</string>
-    <string name="frame_web_alert_right">Close</string>
-    <string name="frame_copy_success">Copy Successful</string>
+    <string name="frame_web_alert_left">返回</string>
+    <string name="frame_web_alert_right">关闭</string>
+    <string name="frame_copy_success">复制成功</string>
     <string name="frame_exception_network_not_connected">Network Not Connected Exception</string>
     <string name="frame_exception_network_error">Network Error Exception</string>
     <string name="frame_exception_accounts">Account Exception</string>
@@ -22,7 +22,7 @@
     <string name="frame_exception_class_cast">Class Cast Exception</string>
     <string name="frame_exception_other_error">Other Exception</string>
     <string name="frame_loading">Loading...</string>
-    <string name="frame_cancel">Cancel</string>
+    <string name="frame_cancel">取消</string>
     <string name="frame_load_more_load_end">No more data</string>
     <string name="frame_load_more_load_failed">Load more failed</string>
     <string name="frame_load_more_loading">Loading...</string>

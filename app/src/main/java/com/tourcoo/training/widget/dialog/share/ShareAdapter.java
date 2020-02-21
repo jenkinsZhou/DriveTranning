@@ -1,4 +1,4 @@
-package com.tourcoo.training.widget.dialog.dialog;
+package com.tourcoo.training.widget.dialog.share;
 
 import android.widget.ImageView;
 
