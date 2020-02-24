@@ -37,7 +37,7 @@ public class SplashActivity extends BaseTitleActivity {
     /**
      * 闪屏
      */
-    private long mDelayTime = 1800;
+    private long mDelayTime = 500;
 
     @Override
     public void beforeSetContentView() {
@@ -142,5 +142,10 @@ public class SplashActivity extends BaseTitleActivity {
     public void setTitleBar(TitleBarView titleBar) {
         titleBar.setStatusBarLightMode(false)
                 .setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //do nothing
     }
 }

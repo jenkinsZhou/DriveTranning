@@ -49,7 +49,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
     protected boolean mIsViewLoaded = false;
     protected boolean mIsFirstShow = true;
     protected boolean mIsFirstBack = true;
-    protected long mDelayBack = 2000;
+    protected long mDelayBack = 1000;
     protected String TAG = getClass().getSimpleName();
     private QuitAppControl mQuitAppControl;
 

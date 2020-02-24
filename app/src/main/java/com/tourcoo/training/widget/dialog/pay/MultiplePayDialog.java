@@ -2,8 +2,10 @@ package com.tourcoo.training.widget.dialog.pay;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.blankj.utilcode.util.LogUtils;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.SizeUtil;
@@ -102,7 +105,7 @@ public class MultiplePayDialog {
         viewList = new ArrayList<>();
         View view1 = LayoutInflater.from(mContext).inflate(R.layout.layout_payment_type_picker_coin, null);
         View view2 = LayoutInflater.from(mContext).inflate(R.layout.layout_payment_type_cash, null);
-         tvCoinPayment = view1.findViewById(R.id.tvCoinPayment);
+        tvCoinPayment = view1.findViewById(R.id.tvCoinPayment);
         LinearLayout rootView = view1.findViewById(R.id.optionspicker);
         viewList.add(view1);
         viewList.add(view2);
@@ -130,6 +133,12 @@ public class MultiplePayDialog {
             }
         });
         initPicker(rootView);
+        dialog.setOnKeyListener((dialog, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dismiss();
+            }
+            return true;
+        });
         return this;
     }
 
@@ -198,7 +207,7 @@ public class MultiplePayDialog {
                 ClipPagerTitleView clipPagerTitleView = new ClipPagerTitleView(context);
                 clipPagerTitleView.setPadding(SizeUtil.dp2px(30), 0, SizeUtil.dp2px(30), 0);
                 clipPagerTitleView.setText(titleList.get(index));
-                clipPagerTitleView.setTextSize(SizeUtil.sp2px(15));
+                clipPagerTitleView.setTextSize(SizeUtil.sp2px(14));
                 clipPagerTitleView.setTextColor(CommonUtil.getColor(R.color.gray999999));
                 clipPagerTitleView.setClipColor(CommonUtil.getColor(R.color.blue5087FF));
                 clipPagerTitleView.setOnClickListener(v -> vpContainer.setCurrentItem(index));
@@ -220,35 +229,47 @@ public class MultiplePayDialog {
     }
 
     /**
-     * @description
-     *
-     * 注意事项：
+     * @description 注意事项：
      * 自定义布局中，id为 optionspicker 或者 timepicker 的布局以及其子控件必须要有，否则会报空指针。
      * 具体可参考demo 里面的两个自定义layout布局。
      */
-private void initPicker(ViewGroup rootView){
-    pvCustomOptions = new OptionsPickerBuilder(mContext, (options1, option2, options3, v) -> {
-    }).setCyclic(true,true,true)
-            .isDialog(false)
-            .setContentTextSize(22)
-            .setTextColorOut(CommonUtil.getColor(R.color.gray999999))
-            .setTextColorCenter(CommonUtil.getColor(R.color.black333333))
-            .setLayoutRes(R.layout.layout_custom_picker, v -> {
-            })
-            .setDecorView(rootView)
-            .setOutSideCancelable(false)
-            .setOptionsSelectChangeListener(new OnOptionsSelectChangeListener() {
-                @Override
-                public void onOptionsSelectChanged(int options1, int options2, int options3) {
-                    tvCoinPayment.setText(options1Items.get(options1));
-                }
-            })
-            .setItemVisibleCount(5)
-            .build();
-    pvCustomOptions.getDialogContainerLayout();
-    pvCustomOptions.setPicker(options1Items);
-    //添加数据
-}
+    private void initPicker(ViewGroup rootView) {
+        pvCustomOptions = new OptionsPickerBuilder(mContext, (options1, option2, options3, v) -> {
+        }).setCyclic(true, true, true)
+                .isDialog(false)
+                .setContentTextSize(18)
+                .setLineSpacingMultiplier(2.0f)
+                .setDividerColor(CommonUtil.getColor(R.color.transparent))
+                .setTextColorOut(CommonUtil.getColor(R.color.gray999999))
+                .setTextColorCenter(CommonUtil.getColor(R.color.black333333))
+                .setLayoutRes(R.layout.layout_custom_picker, v -> {
+                })
+                .setDecorView(rootView)
+                .setOutSideCancelable(false)
+                .setOptionsSelectChangeListener(new OnOptionsSelectChangeListener() {
+                    @Override
+                    public void onOptionsSelectChanged(int options1, int options2, int options3) {
+                        tvCoinPayment.setText(options1Items.get(options1));
+                    }
+                })
+                .setItemVisibleCount(3)
+                .build();
+        pvCustomOptions.getDialogContainerLayout();
+        pvCustomOptions.setPicker(options1Items);
+        //添加数据
+    }
 
+    public boolean isShowing() {
+        if (dialog != null) {
+            return dialog.isShowing();
+        }
+        return false;
+    }
 
+    public void dismiss() {
+        if (dialog != null && pvCustomOptions != null) {
+            pvCustomOptions.dismiss();
+            dialog.dismiss();
+        }
+    }
 }

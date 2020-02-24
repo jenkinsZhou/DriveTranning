@@ -1,13 +1,11 @@
-package com.tourcoo.training.ui;
+package com.tourcoo.training.ui.home;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,14 +14,14 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.mine.MineItemAdapter;
+import com.tourcoo.training.control.listener.OnBackPressListener;
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
+import com.tourcoo.training.ui.MainTabActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
-import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
-import com.tourcoo.training.widget.dialog.share.ShareEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +45,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     private MineItemAdapter achievementAdapter;
     private RecyclerView rvMyAccount;
     private RecyclerView rvStudyAchievement;
+    private MultiplePayDialog multiplePayDialog;
 
     @Override
     public void initView(Bundle savedInstanceState) {
@@ -149,31 +148,35 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 ShareEntity shareEntity2 = new ShareEntity("QQ", R.drawable.icon_qq);
                 ShareEntity shareEntity3 = new ShareEntity("QQ空间", R.drawable.icon_qz);
                 shareDialog.addData(shareEntity).addData(shareEntity1).addData(shareEntity2).addData(shareEntity3).show();*/
-                MultiplePayDialog multiplePayDialog = new MultiplePayDialog(mContext).create();
+                 multiplePayDialog = new MultiplePayDialog(mContext).create();
                 multiplePayDialog.show();
                 break;
             default:
                 break;
         }
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(getView() == null){
-            return;
-        }
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
+
+  /*  private void listenBackPress(){
+        MainTabActivity activity = (MainTabActivity) mContext;
+        activity.setOnBackPressListener(new OnBackPressListener() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                Toast.makeText(getActivity(), "按了返回键", Toast.LENGTH_SHORT).show();
-                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK){
-                    return true;
+            public void onBackPress() {
+                if(multiplePayDialog != null &&multiplePayDialog. isShowing()){
+                    ToastUtil.show("关闭弹窗");
+                    multiplePayDialog.dismiss();
+                }else {
+                    ToastUtil.show("multiplePayDialog为空");
                 }
-                return false;
             }
         });
+    }*/
+
+    public void closePayDialog(){
+        if(multiplePayDialog != null){
+            ToastUtil.show("执行了");
+
+            multiplePayDialog.dismiss();
+        }
     }
 
 }

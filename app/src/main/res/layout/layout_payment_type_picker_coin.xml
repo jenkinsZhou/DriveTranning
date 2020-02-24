@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/whiteFFFEFF"
     android:layout_height="wrap_content">
 
     <!--此部分需要完整复制过去，删减或者更改ID会导致初始化找不到内容而报空-->
@@ -9,7 +10,6 @@
         android:id="@+id/optionspicker"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:minHeight="100dp"
         android:gravity="center"
         android:background="@android:color/white"
         android:orientation="horizontal">
@@ -34,18 +34,18 @@
     </LinearLayout>
 
     <TextView
+        android:layout_alignParentBottom="true"
         android:id="@+id/tvCoinPayment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_25"
         android:background="@drawable/selector_gradient_radius_25_blue"
         android:gravity="center"
         android:clickable="true"
         android:focusable="true"
-        android:paddingTop="@dimen/dp_8"
+        android:paddingTop="@dimen/dp_7"
         android:layout_marginEnd="@dimen/dp_22"
         android:layout_marginStart="@dimen/dp_22"
-        android:paddingBottom="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_7"
         android:layout_marginBottom="@dimen/dp_10"
         android:text="确定支付（2学币）"
         android:textColor="@color/white"
@@ -53,4 +53,4 @@
 
 
 
-</LinearLayout>
+</RelativeLayout>

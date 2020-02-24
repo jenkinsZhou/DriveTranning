@@ -3,12 +3,16 @@ package com.tourcoo.training.ui;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.tourcoo.training.R;
+import com.tourcoo.training.control.listener.OnBackPressListener;
 import com.tourcoo.training.core.base.activity.BaseMainActivity;
 import com.tourcoo.training.core.base.entity.FrameTabEntity;
-import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
+import com.tourcoo.training.ui.home.MainFragment;
+import com.tourcoo.training.ui.home.MineFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class MainTabActivity extends BaseMainActivity {
     @Override
     public List<FrameTabEntity> getTabList() {
         mTabEntities = new ArrayList<>();
-        mTabEntities.add(new FrameTabEntity("主页", R.drawable.ic_home_normal, R.drawable.ic_home_selected, MineFragment.newInstance()));
+        mTabEntities.add(new FrameTabEntity("主页", R.drawable.ic_home_normal, R.drawable.ic_home_selected, MainFragment.newInstance()));
         mTabEntities.add(new FrameTabEntity("我的", R.drawable.ic_home_normal, R.drawable.ic_home_selected, MineFragment.newInstance()));
         return mTabEntities;
     }
@@ -50,18 +54,14 @@ public class MainTabActivity extends BaseMainActivity {
 
     @Override
     public void setTabLayout(CommonTabLayout tabLayout) {
-      /*  ImageView imageView = new ImageView(mContext);
-        imageView.setImageResource(R.drawable.ic_github);
-        tabLayout.setCenterView(imageView, SizeUtil.dp2px(42), SizeUtil.dp2px(42), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WebViewActivity.start(mContext, "https://github.com/JenkinsZhou/FastLib/blob/master/README.md");
-            }
-        });*/
+        mTabLayout = tabLayout;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
+
+
+
+
+
+
+
 }
