@@ -8,7 +8,7 @@ import com.tourcoo.training.core.widget.view.alpha.delegate.AlphaDelegate;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:56
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 控制Alpha 按下效果
  * Description:
  */

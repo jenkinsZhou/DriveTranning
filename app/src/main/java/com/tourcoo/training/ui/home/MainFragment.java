@@ -30,15 +30,17 @@ public class MainFragment extends BaseTitleFragment implements View.OnClickListe
 
     }
 
-    @Override
-    public void setTitleBar(TitleBarView titleBar) {
 
-    }
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
         MainFragment fragment = new MainFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void setTitleBar(TitleBarView titleBar) {
+        titleBar.setTitleMainText("主页");
     }
 }

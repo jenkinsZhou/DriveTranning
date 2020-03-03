@@ -29,7 +29,7 @@ import retrofit2.HttpException;
 
 /**
  * @Author: JenkinsZhou on 2018/12/4 18:08
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 网络请求成功/失败全局处理
  * @Description:
  */

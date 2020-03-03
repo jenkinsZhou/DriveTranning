@@ -8,7 +8,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 /**
  * @Author: JenkinsZhou on 2019/3/22 14:03
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 快速刷新{@link RefreshDelegate}
  * @Description:
  */

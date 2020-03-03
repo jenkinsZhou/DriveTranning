@@ -7,7 +7,7 @@ import com.tourcoo.training.core.widget.view.alpha.AlphaViewHelper;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:52
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 控制View alpha度代理类
  * Description:
  */

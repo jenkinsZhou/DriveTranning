@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes;
 
 /**
  * @Author: JenkinsZhou on 2018/12/3 13:07
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Description:
  */
 public interface CustomTabEntity {

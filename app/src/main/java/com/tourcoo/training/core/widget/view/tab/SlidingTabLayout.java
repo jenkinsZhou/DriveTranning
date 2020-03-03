@@ -39,7 +39,7 @@ import java.util.Collections;
 
 /**
  * @Author: JenkinsZhou on 2018/11/30 11:18
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 滑动TabLayout, 对于ViewPager的依赖性强
  * @Description: 1、2018-11-30 11:18:41 修改原库 https://github.com/H07000223/FlycoTabLayout 选中粗体当初始化选中第一项不生效BUG
  * {@link #updateTabStyles()}

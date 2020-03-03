@@ -17,7 +17,7 @@ import java.util.WeakHashMap;
 
 /**
  * @Author: JenkinsZhou on 2019/3/25 10:48
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 保存Delegate对象以便统一销毁
  * @Description:
  */

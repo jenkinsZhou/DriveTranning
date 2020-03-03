@@ -29,7 +29,7 @@ import java.util.Objects;
 
 /**
  * @Author: JenkinsZhou on 2018/7/13 17:52
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 主页tab代理类
  * Description:
  * 1、2018-7-20 17:15:08 修正获取子控件方法

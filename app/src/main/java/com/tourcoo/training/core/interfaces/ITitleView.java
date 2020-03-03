@@ -6,7 +6,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 9:53
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:包含TitleBarView接口
  * Description:
  * 1、2018-4-20 10:15:01 去掉isLightStatusBarEnable通过{@link TitleBarView#setStatusBarLightMode(boolean)}

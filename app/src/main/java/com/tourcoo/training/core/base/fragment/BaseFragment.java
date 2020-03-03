@@ -31,7 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 
 /**
  * @Author: JenkinsZhou on 2018/7/13 17:49
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 所有Fragment的基类实现懒加载
  * Description:
  * 1、新增控制是否为FragmentActivity的唯一Fragment 方法以优化懒加载方式

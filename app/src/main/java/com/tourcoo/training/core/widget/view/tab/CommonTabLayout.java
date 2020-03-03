@@ -39,7 +39,7 @@ import java.util.ArrayList;
 
 /**
  * @Author: JenkinsZhou on 2018/11/30 9:48
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 没有继承HorizontalScrollView不能滑动, 对于ViewPager无依赖
  * @Description: 1、2018-11-30 09:48:45 修改原库在处理Activity状态回收后当前选中tab正确Fragment不正确问题{@link #onRestoreInstanceState(Parcelable)}
  * 2、2018-11-30 10:07:38 修改参数方法拼写错误及java方法废弃部分错误拼写

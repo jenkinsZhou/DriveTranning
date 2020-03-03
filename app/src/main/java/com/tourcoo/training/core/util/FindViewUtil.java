@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:47
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 查找View工具类
  * Description:
  * 1、2018-2-24 10:10:55 新增查找某个id的目标View

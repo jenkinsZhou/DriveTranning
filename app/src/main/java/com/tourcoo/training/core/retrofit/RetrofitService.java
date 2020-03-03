@@ -14,7 +14,7 @@ import retrofit2.http.Url;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:23
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 快速实现文件下载/上传
  * Description:
  */

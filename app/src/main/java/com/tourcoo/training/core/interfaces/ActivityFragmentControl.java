@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
 
 /**
  * @Author: JenkinsZhou on 2018/7/22/022 18:19
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:Activity/Fragment 属性控制(生命周期/背景色/屏幕控制)
  * Description:
  * 1、将原Activity 虚拟导航栏功能迁移新增全局控制Activity StatusBarView功能

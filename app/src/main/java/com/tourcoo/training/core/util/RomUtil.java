@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:49
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:手机ROM工具类-主要国产手机:通过android.os.SystemProperties系统属性获取
  * Description:
  * 1、新增是否为某个手机方法新增OPPO/VIVO/SMARTISAN/360 ROM方法

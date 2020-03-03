@@ -24,7 +24,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:31
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 软键盘和虚拟导航栏统一设置
  * Description:
  * 1、2018-2-7 12:27:36 修改是否控制NavigationBar参数及对应java方法

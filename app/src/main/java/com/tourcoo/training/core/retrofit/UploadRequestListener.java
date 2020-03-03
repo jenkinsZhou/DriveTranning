@@ -2,7 +2,7 @@ package com.tourcoo.training.core.retrofit;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:25
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 上传进度监听
  * Description:
  */

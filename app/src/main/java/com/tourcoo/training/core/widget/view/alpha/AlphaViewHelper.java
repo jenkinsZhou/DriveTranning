@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:26
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 设置View按下状态透明度变化帮助类
  * Description:
  * 1、新增全局style设置透明度属性

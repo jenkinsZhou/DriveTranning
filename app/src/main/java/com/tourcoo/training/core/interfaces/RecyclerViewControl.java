@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @Author: JenkinsZhou on 2018/11/19 12:02
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: {@link IRefreshLoadView}列表布局全局控制RecyclerView
  * @Description:
  */

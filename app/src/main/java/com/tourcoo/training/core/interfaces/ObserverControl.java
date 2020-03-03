@@ -5,7 +5,7 @@ import com.tourcoo.training.core.retrofit.BaseObserver;
 
 /**
  * @Author: JenkinsZhou on 2019/7/12 10:25
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: {@link BaseObserver}错误信息拦截并做其它操作处理配合{@link com.tourcoo.training.core.retrofit.FrameNullException}以处理解决接口某些情况下无法回调成功问题
  * @Description:
  */

@@ -7,7 +7,7 @@ import com.tourcoo.training.core.widget.view.radius.RadiusTextView;
 
 /**
  * @Author: JenkinsZhou on 2019/1/18 17:49
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Description:
  */
 public interface ToastControl {

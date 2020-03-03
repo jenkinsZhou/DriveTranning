@@ -7,7 +7,7 @@ import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 10:43
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 基于实现{@link IRefreshLoadView}下拉刷新、列表、多状态布局的全局回调接口
  * Description:
  */

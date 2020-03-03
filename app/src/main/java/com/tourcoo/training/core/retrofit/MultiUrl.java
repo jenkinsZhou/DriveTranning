@@ -20,7 +20,7 @@ import okhttp3.Response;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:08
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:MultiUrl 以简洁的 Api,让 Retrofit 不仅支持多 BaseUrl
  * 还可以在 App 运行时动态切换任意 BaseUrl,在多 BaseUrl 场景下也不会影响到其他不需要切换的 BaseUrl
  * Description:设置支持多BaseUrl

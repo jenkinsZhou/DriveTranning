@@ -19,7 +19,7 @@ import io.reactivex.functions.Function;
 
 /**
  * @Author: JenkinsZhou on 2018/10/10 15:42
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: RxJava 重试机制--retryWhen操作符{@link Observable#retryWhen(Function)}
  * @Description: 1、2019-1-7 17:57:09 新增Context参数以检查网络连接状态定向重试机制
  */

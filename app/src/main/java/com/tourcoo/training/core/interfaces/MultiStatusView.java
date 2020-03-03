@@ -4,7 +4,7 @@ import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 /**
  * @Author: JenkinsZhou on 2018/7/20 16:51
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 用于全局设置多状态布局
  * Description:
  * 1、修改设置多状态布局方式

@@ -10,7 +10,7 @@ import com.chad.library.adapter.base.loadmore.LoadMoreView;
 
 /**
  * @Author: JenkinsZhou on 2018/7/20 16:52
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 下拉及上拉刷新
  * Description:
  * 1、2018-7-20 17:11:22 多状态集成关系

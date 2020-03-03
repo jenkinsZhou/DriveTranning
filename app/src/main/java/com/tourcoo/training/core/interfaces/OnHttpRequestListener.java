@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 10:39
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: http请求成功后处理结果回调{@link HttpRequestControl#httpRequestSuccess(IHttpRequestControl, List, OnHttpRequestListener)}
  * Description:
  */

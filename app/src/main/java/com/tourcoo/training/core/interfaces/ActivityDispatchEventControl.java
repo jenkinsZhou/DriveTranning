@@ -8,7 +8,7 @@ import android.view.accessibility.AccessibilityEvent;
 
 /**
  * @Author: JenkinsZhou on 2018/9/26 16:19
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: Activity 事件派发--必须继承自{@link com.aries.library.fast.basis.BasisActivity}
  * Activity 必须在前台
  * @Description:

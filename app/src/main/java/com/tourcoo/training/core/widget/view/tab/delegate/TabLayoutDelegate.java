@@ -14,7 +14,7 @@ import com.tourcoo.training.core.widget.view.tab.listener.ITabLayout;
 
 /**
  * @Author: JenkinsZhou on 2018/11/30 15:55
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: TabLayout属性代理类
  * @Description: 1、2018-12-13 09:40:01 新增选中文字字号设置 textSelectSize
  * 2、2019-4-16 17:35:13 新增部分漏掉set方法{@link #setIndicatorMarginLeft(int)}{@link #setIndicatorMarginTop(int)}{@link #setIndicatorMarginRight(int)}{@link #setIndicatorMarginBottom(int)}

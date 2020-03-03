@@ -2,7 +2,7 @@ package com.tourcoo.training.core.retrofit;
 
 /**
  * @Author: JenkinsZhou on 2019/7/11 21:55
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 特定空对象Exception 用于解决接口某些情况下
  * 数据null无法回调{@link BaseObserver#onDoNext(Object)} (Object)}的情况
  * @Description:

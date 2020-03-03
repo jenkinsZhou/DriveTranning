@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:50
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 状态栏工具类(状态栏文字颜色)
  * Description:
  * 1、修改状态栏黑白字 功能逻辑--参考 https://github.com/QMUI/QMUI_Android  QMUIStatusBarHelper类

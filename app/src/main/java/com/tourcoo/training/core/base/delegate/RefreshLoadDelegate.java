@@ -23,7 +23,7 @@ import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 /**
  * @Author: JenkinsZhou on 2018/7/13 17:52
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 快速实现下拉刷新及上拉加载更多代理类
  * Description:
  * 1、使用StatusLayoutManager重构多状态布局功能

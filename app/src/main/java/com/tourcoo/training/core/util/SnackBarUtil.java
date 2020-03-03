@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * @Author: JenkinsZhou on 2018/7/16 16:45
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: SnackBar工具类
  * Description:
  */

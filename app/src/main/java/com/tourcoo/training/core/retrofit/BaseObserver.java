@@ -8,7 +8,7 @@ import io.reactivex.observers.DefaultObserver;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:21
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: Retrofit快速观察者-观察者基类用于错误全局设置
  * Description:
  * 1、2017-11-16 11:35:12 JenkinsZhou增加返回错误码全局控制

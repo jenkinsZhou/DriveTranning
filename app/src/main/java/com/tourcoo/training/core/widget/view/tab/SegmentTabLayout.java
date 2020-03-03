@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 /**
  * @Author: JenkinsZhou on 2018/11/30 11:22
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function:
  * @Description: 1、2018-11-30 11:18:41 修改原库 https://github.com/H07000223/FlycoTabLayout 选中粗体当初始化选中第一项不生效BUG
  * * * {@link #updateTabStyles()}

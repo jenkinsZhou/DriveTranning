@@ -17,7 +17,7 @@ import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 /**
  * @Author: JenkinsZhou on 2018/7/20 16:54
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:下拉刷新及上拉加载更多
  * Description:
  * 1、2018-7-9 09:50:59 修正Adapter 错误造成无法展示列表数据BUG

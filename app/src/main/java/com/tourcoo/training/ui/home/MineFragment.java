@@ -16,11 +16,13 @@ import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.mine.MineItemAdapter;
 import com.tourcoo.training.control.listener.OnBackPressListener;
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment;
+import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.MainTabActivity;
+import com.tourcoo.training.ui.face.FaceRecognitionActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 
 import java.util.ArrayList;
@@ -148,8 +150,9 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 ShareEntity shareEntity2 = new ShareEntity("QQ", R.drawable.icon_qq);
                 ShareEntity shareEntity3 = new ShareEntity("QQ空间", R.drawable.icon_qz);
                 shareDialog.addData(shareEntity).addData(shareEntity1).addData(shareEntity2).addData(shareEntity3).show();*/
-                 multiplePayDialog = new MultiplePayDialog(mContext).create();
-                multiplePayDialog.show();
+              /*   multiplePayDialog = new MultiplePayDialog(mContext).create();
+                multiplePayDialog.show();*/
+                CommonUtil.startActivity(mContext, FaceRecognitionActivity.class);
                 break;
             default:
                 break;

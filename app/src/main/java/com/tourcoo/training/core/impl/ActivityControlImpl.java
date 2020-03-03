@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,10 +31,10 @@ import com.luck.picture.lib.PictureBaseActivity;
 import com.luck.picture.lib.PicturePreviewActivity;
 import com.parfoismeng.slidebacklib.SlideBack;
 import com.tourcoo.training.BuildConfig;
-import com.tourcoo.training.ui.MainActivity;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.base.activity.BaseActivity;
+import com.tourcoo.training.core.base.activity.BaseMainActivity;
 import com.tourcoo.training.core.base.fragment.BaseFragment;
 import com.tourcoo.training.core.interfaces.ActivityDispatchEventControl;
 import com.tourcoo.training.core.interfaces.ActivityFragmentControl;
@@ -45,9 +47,9 @@ import com.tourcoo.training.core.util.StackUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.navigation.KeyboardHelper;
-import com.tourcoo.training.core.widget.navigation.NavigationBarUtil;
 import com.tourcoo.training.core.widget.navigation.NavigationViewHelper;
 import com.tourcoo.training.core.widget.view.status.StatusViewHelper;
+import com.tourcoo.training.ui.SplashActivity;
 
 import java.util.List;
 
@@ -56,7 +58,7 @@ import static com.tourcoo.training.core.app.MyApplication.isControlNavigation;
 
 /**
  * @Author: JenkinsZhou on 2018/12/4 18:04
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: Activity/Fragment 生命周期全局处理及BasisActivity 的按键处理
  * @Description:
  */
@@ -206,22 +208,6 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
      */
     @Override
     public boolean setNavigationBar(Activity activity, NavigationViewHelper helper, View bottomView) {
-        //其它默认属性请参考FastLifecycleCallbacks
-        helper.setLogEnable(BuildConfig.DEBUG)
-                .setPlusNavigationViewEnable(true)
-                //此处为配合BGASwipeBackHelper滑动返回效果-如不使用BGASwipeBackHelper推荐使用上面的方法
-                .setPlusNavigationViewEnable(true, true, true)
-                .setNavigationBarLightMode(NavigationBarUtil.isSupportNavigationBarFontChange() && isPlusView(activity))
-                .setOnKeyboardVisibilityChangedListener(getOnKeyboardVisibilityChangedListener(activity))
-                .setBottomView(PicturePreviewActivity.class.isAssignableFrom(activity.getClass()) ?
-                        FindViewUtil.getTargetView(bottomView, R.id.select_bar_layout) : bottomView)
-                .setNavigationViewColor(isLeak(activity) ? Color.BLACK : Color.argb(NavigationBarUtil.isSupportNavigationBarFontChange() && isPlusView(activity) ? 0 : 102, 0, 0, 0))
-                .setNavigationLayoutColor(ContextCompat.getColor(activity, !isPlusView(activity) ? R.color.transparent : R.color.colorTabBackground));
-        if (!isControlNavigation() && !(activity instanceof MainActivity)) {
-            KeyboardHelper.with(activity)
-                    .setEnable()
-                    .setOnKeyboardVisibilityChangedListener(getOnKeyboardVisibilityChangedListener(activity));
-        }
         return isControlNavigation();
     }
 
@@ -239,10 +225,8 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
      * @return
      */
     protected boolean isPlusView(Activity activity) {
-       /* return !(activity instanceof SplashActivity)
-                && !(activity instanceof TestStatusActivity)
-                && !isLeak(activity);*/
-        return !isLeak(activity);
+        return !(activity instanceof SplashActivity)
+                && !isLeak(activity);
     }
 
     private KeyboardHelper.OnKeyboardVisibilityChangedListener mOnKeyboardVisibilityChangedListener = (activity, isOpen, heightDiff, navigationHeight) -> {

@@ -18,7 +18,7 @@ import okhttp3.ResponseBody;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 13:41
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:快速下载观察者
  * Description:
  * 1、2018-7-11 16:38:18 去掉部分参数

@@ -9,7 +9,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 10:34
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 设置有TitleBar及下拉刷新Fragment
  * Description:
  */

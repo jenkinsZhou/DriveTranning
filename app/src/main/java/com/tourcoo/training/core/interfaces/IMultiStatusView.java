@@ -6,7 +6,7 @@ import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 /**
  * @Author: JenkinsZhou on 2018/7/20 17:08
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: StatusLayoutManager 属性控制
  * Description:
  */

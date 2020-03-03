@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 10:07
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: Title配合CollapsingTitleBarLayout实现效果
  * Description:
  */

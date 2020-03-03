@@ -13,7 +13,7 @@ import com.tourcoo.training.R;
 
 /**
  * @Author: JenkinsZhou on 2018/12/3 13:11
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 用于需要圆角矩形框背景的TextView的情况, 减少直接使用TextView时引入的shape资源文件
  * @Description:
  */

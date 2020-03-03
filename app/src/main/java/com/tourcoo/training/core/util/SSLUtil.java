@@ -21,7 +21,7 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:13
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 证书工具类
  * Description:
  */

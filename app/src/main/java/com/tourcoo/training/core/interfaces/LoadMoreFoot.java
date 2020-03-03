@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.loadmore.LoadMoreView;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 10:39
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 设置Adapter全局加载更多脚布局
  * Description:
  */

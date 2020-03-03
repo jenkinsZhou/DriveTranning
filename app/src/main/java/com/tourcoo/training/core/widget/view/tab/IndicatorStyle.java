@@ -2,7 +2,7 @@ package com.tourcoo.training.core.widget.view.tab;
 
 /**
  * @Author: JenkinsZhou on 2018/12/3 11:52
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 指示器样式
  * @Description:
  */

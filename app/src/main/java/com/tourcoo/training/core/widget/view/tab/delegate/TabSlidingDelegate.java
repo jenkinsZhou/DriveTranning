@@ -8,7 +8,7 @@ import com.tourcoo.training.core.widget.view.tab.listener.ITabLayout;
 
 /**
  * @Author: JenkinsZhou on 2018/12/3 9:19
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Description:
  */
 public class TabSlidingDelegate extends TabCommonSlidingDelegate<TabSlidingDelegate> {

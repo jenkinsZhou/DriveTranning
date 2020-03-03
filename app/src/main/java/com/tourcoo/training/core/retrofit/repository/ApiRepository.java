@@ -7,7 +7,7 @@ import com.tourcoo.training.core.retrofit.service.ApiService;
 
 /**
  * @Author: JenkinsZhou on 2018/11/19 14:25
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: Retrofit api调用示例
  * @Description:
  */

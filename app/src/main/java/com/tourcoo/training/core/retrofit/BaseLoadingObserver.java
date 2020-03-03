@@ -3,7 +3,7 @@ package com.tourcoo.training.core.retrofit;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:08
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 快速创建支持Loading的Retrofit观察者
  * Description:
  * 1、2017-11-16 13:38:16 JenkinsZhou增加多种构造用于实现父类全局设置网络请求错误码

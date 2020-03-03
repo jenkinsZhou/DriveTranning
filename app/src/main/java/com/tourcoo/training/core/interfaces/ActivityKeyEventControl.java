@@ -5,7 +5,7 @@ import android.view.KeyEvent;
 
 /**
  * @Author: JenkinsZhou on 2018/9/26 16:19
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: Activity 按键监控(如音量键、返回键、菜单键)--必须继承自{@link com.tourcoo.training.core.base.activity.BaseActivity}
  * Activity 必须在前台
  * @Description:

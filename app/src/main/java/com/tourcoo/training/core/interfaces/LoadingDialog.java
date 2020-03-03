@@ -8,7 +8,7 @@ import com.tourcoo.training.core.widget.dialog.LoadingDialogWrapper;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 10:39
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 用于全局配置网络请求登录Loading提示框
  * Description:
  */

@@ -16,7 +16,7 @@ import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 /**
  * @Author: JenkinsZhou on 2018/7/20 16:55
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:下拉刷新及上拉加载更多+多状态切换
  * Description:
  * 1、2018-7-20 16:55:45 设置StatusLayoutManager 目标View

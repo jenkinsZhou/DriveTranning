@@ -119,7 +119,7 @@ public class MyApplication extends MultiDexApplication {
      * @return
      */
     public static boolean isControlNavigation() {
-        return true;
+        return false;
     }
 
 

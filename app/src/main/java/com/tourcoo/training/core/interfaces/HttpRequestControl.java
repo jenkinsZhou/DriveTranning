@@ -6,7 +6,7 @@ import io.reactivex.annotations.NonNull;
 
 /**
  * @Author: JenkinsZhou on 2018/7/16 9:16
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 网络请求相关(可全局控制网络成功及失败展示逻辑-需继承{@link com.tourcoo.training.core.retrofit.BaseObserver}或自己实现类似逻辑)
  * Description:
  */

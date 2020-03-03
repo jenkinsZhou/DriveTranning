@@ -2,7 +2,7 @@ package com.tourcoo.training.core.constant;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:39
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 全局常量
  * Description:
  */

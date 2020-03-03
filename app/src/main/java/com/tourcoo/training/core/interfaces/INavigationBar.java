@@ -8,7 +8,7 @@ import com.tourcoo.training.core.widget.navigation.NavigationViewHelper;
 
 /**
  * @Author: JenkinsZhou on 2019/7/19 14:35
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: Activity 全局虚拟导航栏控制
  * @Description: 1、2019-7-19 14:35:52 从{@link ActivityFragmentControl}抽离用于Activity做定制化
  */

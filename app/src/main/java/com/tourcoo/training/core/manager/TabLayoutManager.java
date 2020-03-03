@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 11:13
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: FlycoTabLay+ViewPager 使用管理类
  * Description:
  */

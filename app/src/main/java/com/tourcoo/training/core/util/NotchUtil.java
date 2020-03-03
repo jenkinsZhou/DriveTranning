@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 
 /**
  * @Author: JenkinsZhou on 2019/5/9 17:44
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 刘海工具类修改自Tencent QMUI_Android项目 https://github.com/Tencent/QMUI_Android QMUINotchHelper类
  * @Description:
  */

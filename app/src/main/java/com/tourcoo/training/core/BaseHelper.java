@@ -8,7 +8,7 @@ import com.tourcoo.training.core.manager.DelegateManager;
 
 /**
  * @Author: JenkinsZhou on 2019/8/7 14:22
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 绑定Activity Helper
  * @Description:
  */

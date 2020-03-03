@@ -12,7 +12,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:47
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: Drawable设置相关工具类
  * Description:
  * 1、2018-11-16 16:36:09 修改newDrawable返回

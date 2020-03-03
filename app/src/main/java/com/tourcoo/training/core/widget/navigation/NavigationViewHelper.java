@@ -30,7 +30,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * @Author: JenkinsZhou on 2018/11/27 18:14
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 虚拟导航栏控制帮助类-因导航栏情况过于复杂建议一次Activity/Dialog 只进行一次{@link #init()} 同时建议在竖屏时使用能应用内固定竖屏最好
  * Description:
  * 1、修改NavigationLayoutDrawable默认保持与activity的根布局背景一致

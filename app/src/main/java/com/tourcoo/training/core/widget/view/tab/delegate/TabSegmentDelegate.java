@@ -10,7 +10,7 @@ import com.tourcoo.training.core.widget.view.tab.listener.ITabLayout;
 
 /**
  * @Author: JenkinsZhou on 2018/12/3 11:16
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: {@link com.aries.ui.view.tab.SegmentTabLayout} 属性及java设置方法代理
  * @Description:
  */

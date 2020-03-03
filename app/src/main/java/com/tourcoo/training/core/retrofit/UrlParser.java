@@ -5,7 +5,7 @@ import okhttp3.Request;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:26
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 多BaseUrl解析器--开发者可自定义
  * Description:
  */

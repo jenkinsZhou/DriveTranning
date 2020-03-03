@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#004D8E</color>
+    <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">@color/blue55A9FF</color>
     <color name="transparent">#00000000</color>
@@ -8,7 +8,7 @@
     <color name="colorQQBackgroundStart">#4e8cfc</color>
     <color name="colorQQBackgroundEnd">#33bafc</color>
     <color name="colorQQBackgroundCenter">#34b0fc</color>
-
+    <color name="defaultTextColorPrimary">@color/blue5087FF</color>
     <!--普通有灰色背景的用这个-->
     <color name="colorBackground">#f8f8f8</color>
     <color name="colorTextBlack">#333333</color>
@@ -18,7 +18,7 @@
     <color name="colorWhitePressed">#DCDCDC</color>
     <color name="colorRadiusDefaultRipple">#c8cccccc</color>
     <!--TitleBarView背景色 微信背景-->
-    <color name="colorTitleBackground">#FCFCFC</color>
+    <color name="colorTitleBackground">@color/white</color>
     <!--TitleBarView 文字颜色-->
     <color name="colorTitleText">#393939</color>
     <!--TitleBarView 下划线颜色-->
@@ -115,6 +115,7 @@
     <color name="green63C4E1">#63C4E1</color>
     <color name="green7DD1E0">#7DD1E0</color>
     <!--蓝色区域-->
+
     <color name="blue358EB9">#358EB9</color>
     <color name="blue007AFF">#007AFF</color>
     <color name="blue53C2FF">#53C2FF</color>

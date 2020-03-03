@@ -29,7 +29,7 @@ import java.security.MessageDigest;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 10:53
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: Glide 工具类支持加载常规、圆角、圆形图片
  * Description:
  */

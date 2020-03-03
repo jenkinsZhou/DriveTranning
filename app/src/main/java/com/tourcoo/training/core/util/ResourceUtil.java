@@ -7,7 +7,7 @@ import android.util.TypedValue;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:49
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 资源文件获取帮助类
  * Description:
  */

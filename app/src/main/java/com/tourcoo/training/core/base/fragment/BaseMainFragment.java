@@ -13,7 +13,7 @@ import com.tourcoo.training.core.widget.view.tab.listener.OnTabSelectListener;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 11:27
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 快速创建主页布局
  * Description:
  */

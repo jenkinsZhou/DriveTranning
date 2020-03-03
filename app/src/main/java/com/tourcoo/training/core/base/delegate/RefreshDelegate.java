@@ -15,7 +15,7 @@ import com.tourcoo.training.core.util.FindViewUtil;
 
 /**
  * @Author: JenkinsZhou on 2019/3/22 14:18
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 快速实现下拉刷新布局代理
  * @Description:
  */

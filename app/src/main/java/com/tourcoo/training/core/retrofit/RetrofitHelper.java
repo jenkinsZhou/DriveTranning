@@ -32,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @Author: JenkinsZhou on 2018/7/24 13:10
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: Retrofit封装
  * Description:
  * 1、2017-11-16 12:48:31 JenkinsZhou 修改读、写、链接超时时间均为readTimeout的BUG会造成超时设置无效BUG

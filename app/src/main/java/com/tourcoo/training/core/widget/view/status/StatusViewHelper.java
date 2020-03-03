@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:43
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 沉浸式状态栏控制帮助类
  * Description:
  * 1、2019-4-15 10:39:33 增加状态栏深色图标及文字颜色api {@link #setStatusBarLightMode(boolean)}支持 MIUI V6及以上、Flyme及Android M以上

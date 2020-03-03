@@ -10,7 +10,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 
 /**
  * @Author: JenkinsZhou on 2018/9/19 10:37
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: QQ默认主题Title背景渐变
  * Description:
  */

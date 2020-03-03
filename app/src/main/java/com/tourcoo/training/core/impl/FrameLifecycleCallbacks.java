@@ -42,7 +42,7 @@ import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
 
 /**
  * @Author: JenkinsZhou on 2018/7/30 13:48
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: Activity/Fragment生命周期
  * Description:
  * 1、2018-7-2 09:29:54 新增继承{@link BaseMainActivity}的Activity虚拟导航栏功能

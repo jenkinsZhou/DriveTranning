@@ -9,7 +9,7 @@ import java.util.Stack;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:32
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:Activity堆栈管理工具类
  * Description:
  * 1、2018-6-21 09:49:11 新增根据class获取Activity方法

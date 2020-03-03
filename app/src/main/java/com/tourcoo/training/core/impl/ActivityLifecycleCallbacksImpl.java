@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 /**
  * @Author: JenkinsZhou on 2019/7/18 13:42
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 生命周期监听
  * @Description:
  */

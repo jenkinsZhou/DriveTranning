@@ -16,7 +16,7 @@ import java.io.File;
 
 /**
  * @Author: JenkinsZhou on 2018/7/20 15:41
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: FileProvider文件路径处理帮助类
  * Description:
  * 1、2018-7-23 14:28:33 新增安装apk兼容7.0以下版本

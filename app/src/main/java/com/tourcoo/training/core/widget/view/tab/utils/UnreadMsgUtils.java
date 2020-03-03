@@ -10,7 +10,7 @@ import com.tourcoo.training.core.widget.view.tab.MsgView;
 
 /**
  * @Author: JenkinsZhou on 2018/12/3 13:10
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: 未读消息提示View, 显示小红点或者带有数字的红点:数字一位,圆数字两位,圆角矩形,圆角是高度的一半数字超过两位,显示99+
  * @Description:
  */

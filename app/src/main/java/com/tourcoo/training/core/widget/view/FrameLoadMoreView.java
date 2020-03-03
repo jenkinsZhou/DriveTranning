@@ -23,7 +23,7 @@ import com.tourcoo.training.R;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:38
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 用于快速设置 BaseRecyclerViewAdapterHelper LoadMoreView相关布局属性
  * Description:
  */

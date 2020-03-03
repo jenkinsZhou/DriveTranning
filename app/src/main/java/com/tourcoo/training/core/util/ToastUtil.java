@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:37
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: Toast 工具
  * Description:
  * 1、2018-7-11 15:40:26 去掉Toast返回值并新增子线程弹出Toast功能

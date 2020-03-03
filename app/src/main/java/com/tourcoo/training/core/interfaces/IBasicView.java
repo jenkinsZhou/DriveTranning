@@ -6,7 +6,7 @@ import androidx.annotation.LayoutRes;
 
 /**
  * @Author: JenkinsZhou on 2018/7/16 16:31
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: Basis Activity及Fragment通用属性
  * Description:
  * 1、2018-7-23 10:37:39 删除findView 因高版本系统jar已实现相应功能

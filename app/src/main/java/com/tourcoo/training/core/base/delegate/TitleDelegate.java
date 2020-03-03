@@ -16,7 +16,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 
 /**
  * @Author: JenkinsZhou on 2018/7/13 17:53
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 带TitleBarView 的Activity及Fragment代理类
  * Description:
  * 1、2018-4-20 13:53:57 简化全局属性设置通过接口暴露实现

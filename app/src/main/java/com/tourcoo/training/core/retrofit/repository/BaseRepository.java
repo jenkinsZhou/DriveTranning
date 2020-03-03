@@ -15,7 +15,7 @@ import io.reactivex.functions.Function;
 
 /**
  * @Author: JenkinsZhou on 2018/10/10 17:24
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function: retrofit使用基类封装
  * @Description:
  */

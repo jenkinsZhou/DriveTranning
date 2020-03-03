@@ -24,7 +24,7 @@ import com.tourcoo.training.core.widget.view.radius.RadiusSwitch;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 10:01
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function:  公共属性解析代理类
  * Description:
  * 1、2017-11-15 09:36:14 添加Java属性设置链式调用支持

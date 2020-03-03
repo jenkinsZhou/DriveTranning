@@ -15,7 +15,7 @@ import com.tourcoo.training.R;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:58
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 设置Switch thumb及track相关代理
  * Description:
  * 2018-6-1 09:40:27 1、增加默认属性值并调整设置Drawable逻辑

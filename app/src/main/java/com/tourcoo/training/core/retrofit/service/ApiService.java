@@ -1,19 +1,13 @@
 package com.tourcoo.training.core.retrofit.service;
 
-
-
-
-
-
 /**
- * @Author: JenkinsZhou on 2018/7/30 14:01
- * @E-Mail: JenkinsZhou@126.com
- * Function: 接口定义
- * Description:
+ * @author :JenkinsZhou
+ * @description :
+ * @company :途酷科技
+ * @date 2020年03月03日13:52
+ * @Email: 971613168@qq.com
  */
 public interface ApiService {
-
-
 
 
 }

@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:32
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 导航栏控制工具类
  * Description:
  * 1、2018-11-9 11:30:44 修改获取虚拟导航栏高度方法增加VIVO及MIUI全面屏判断

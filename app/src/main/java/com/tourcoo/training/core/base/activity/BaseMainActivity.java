@@ -11,7 +11,7 @@ import com.tourcoo.training.core.interfaces.IMainView;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 10:00
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 快速创建主页Activity布局
  * Description:
  */

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  * @Author: JenkinsZhou on 2018/11/29 16:18
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * @Function:
  * @Description: 1、2018-11-29 16:18:47 修改原库初始化判断{@link #initFragments()}
  * * 原{@link FragmentTransaction#commit()}修改为{@link FragmentTransaction#commitAllowingStateLoss()}

@@ -9,7 +9,7 @@ import io.reactivex.Observable;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 11:02
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: RxJava使用管理类
  * Description:
  * 1、2018-7-23 11:10:35 去掉设置定时器返回值并标记为废弃使用另一个{@link #setTimer(long)}

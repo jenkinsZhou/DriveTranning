@@ -20,7 +20,7 @@ import com.tourcoo.training.core.util.DrawableUtil;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:59
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: TextView特有代理类
  * Description:
  * 1、2018-2-4 17:42:18 增加 CompoundButton 类(CheckBox和RadioButton)增加ButtonDrawable属性

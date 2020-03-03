@@ -12,7 +12,7 @@ import com.tourcoo.training.core.util.DrawableUtil;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:57
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 设置CompoundButton ButtonDrawable相关代理
  * Description:
  * 1、新增控制是否Button为系统自带属性

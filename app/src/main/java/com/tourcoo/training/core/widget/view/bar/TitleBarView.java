@@ -35,7 +35,7 @@ import com.tourcoo.training.core.widget.view.alpha.AlphaTextView;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 10:21
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 定制标题栏-支持沉浸式
  * Description:
  * 1、2017-11-21 10:30:14 JenkinsZhou 修改onMeasure及onLayout回调控制宽度获取TitleBarView实际宽度(之前为屏幕宽度)

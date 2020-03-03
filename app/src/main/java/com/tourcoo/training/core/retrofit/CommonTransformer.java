@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:24
- * @E-Mail: JenkinsZhou@126.com
+ * @E-Mail: 971613168@qq.com
  * Function: 控制操作线程的辅助类
  * Description:
  */
