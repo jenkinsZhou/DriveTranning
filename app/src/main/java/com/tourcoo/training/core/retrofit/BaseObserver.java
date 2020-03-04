@@ -51,7 +51,7 @@ public abstract class BaseObserver<T> extends DefaultObserver<T> {
 
     @Override
     public void onNext(T entity) {
-        onDoNext(entity);
+        onSuccessNext(entity);
     }
 
 
@@ -60,7 +60,7 @@ public abstract class BaseObserver<T> extends DefaultObserver<T> {
      *
      * @param entity 可能为null
      */
-    public abstract void onDoNext(T entity);
+    public abstract void onSuccessNext(T entity);
 
     public void onDoError(Throwable e) {
 

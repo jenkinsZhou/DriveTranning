@@ -286,7 +286,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
                 RxJavaManager.getInstance().setTimer(10)
                         .subscribe(new BaseObserver<Long>() {
                             @Override
-                            public void onDoNext(Long entity) {
+                            public void onSuccessNext(Long entity) {
                                 if (activity.isFinishing()) {
                                     return;
                                 }

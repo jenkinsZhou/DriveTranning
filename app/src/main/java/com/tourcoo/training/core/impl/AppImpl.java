@@ -34,7 +34,7 @@ import com.tourcoo.training.core.util.StackUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.dialog.LoadingDialogWrapper;
-import com.tourcoo.training.core.widget.dialog.loading.FrameLoadingDialog;
+import com.tourcoo.training.core.widget.dialog.loading.IosLoadingDialog;
 import com.tourcoo.training.core.widget.view.FrameLoadMoreView;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.core.widget.view.radius.RadiusTextView;
@@ -61,9 +61,9 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
     @NonNull
     @Override
     public RefreshHeader createRefreshHeader(@NonNull Context context, @NonNull RefreshLayout layout) {
-        layout.setEnableHeaderTranslationContent(false)
+        layout.setEnableHeaderTranslationContent(true)
                 .setPrimaryColorsId(R.color.colorAccent)
-                .setEnableOverScrollDrag(false);
+                .setEnableOverScrollDrag(true);
         ClassicsHeader classicsHeader = new ClassicsHeader(mContext);
         return classicsHeader;
     }
@@ -112,12 +112,12 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
     @Override
     public LoadingDialogWrapper createLoadingDialog(@Nullable Activity activity) {
       /*  return new LoadingDialogWrapper(activity,
-                new FrameLoadingDialog.WeBoBuilder(activity)
+                new IosLoadingDialog.WeBoBuilder(activity)
                         .setMessage("加载中")
                         .create())
                 .setCanceledOnTouchOutside(false)
                 .setMessage("请求数据中,请稍候...");*/
-        return new LoadingDialogWrapper(activity, new FrameLoadingDialog(activity));
+        return new LoadingDialogWrapper(activity, new IosLoadingDialog(activity));
     }
 
     @Override

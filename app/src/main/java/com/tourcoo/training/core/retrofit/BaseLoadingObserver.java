@@ -1,6 +1,17 @@
 package com.tourcoo.training.core.retrofit;
 
 
+import android.app.Activity;
+import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+
+import com.tourcoo.training.core.UiManager;
+import com.tourcoo.training.core.interfaces.IHttpRequestControl;
+import com.tourcoo.training.core.util.StackUtil;
+import com.tourcoo.training.core.widget.dialog.LoadingDialogWrapper;
+
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:08
  * @E-Mail: 971613168@qq.com
@@ -9,19 +20,19 @@ package com.tourcoo.training.core.retrofit;
  * 1、2017-11-16 13:38:16 JenkinsZhou增加多种构造用于实现父类全局设置网络请求错误码
  */
 public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
-/*
-    *//**
+    /**
      * Dialog
-     *//*
-    private FastLoadDialog mDialog;
+     */
+    private LoadingDialogWrapper mDialog;
+    protected String loadingText = "";
 
-    *//**
+    /**
      * 用于全局配置
      *
      * @param activity
-     *//*
+     */
     public BaseLoadingObserver(@Nullable Activity activity, IHttpRequestControl httpRequestControl, @StringRes int resId) {
-        this(FastManager.getInstance().getLoadingDialog().createLoadingDialog(activity).setMessage(resId), httpRequestControl);
+        this(UiManager.getInstance().getLoadingDialog().createLoadingDialog(activity).setMessage(resId), httpRequestControl);
     }
 
     public BaseLoadingObserver(IHttpRequestControl httpRequestControl, @StringRes int resId) {
@@ -29,7 +40,7 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     }
 
     public BaseLoadingObserver(@Nullable Activity activity, IHttpRequestControl httpRequestControl, CharSequence msg) {
-        this(FastManager.getInstance().getLoadingDialog().createLoadingDialog(activity).setMessage(msg), httpRequestControl);
+        this(UiManager.getInstance().getLoadingDialog().createLoadingDialog(activity).setMessage(msg), httpRequestControl);
     }
 
     public BaseLoadingObserver(IHttpRequestControl httpRequestControl, CharSequence msg) {
@@ -37,7 +48,7 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     }
 
     public BaseLoadingObserver(@Nullable Activity activity, @StringRes int resId) {
-        this(FastManager.getInstance().getLoadingDialog().createLoadingDialog(activity).setMessage(resId));
+        this(UiManager.getInstance().getLoadingDialog().createLoadingDialog(activity).setMessage(resId));
     }
 
     public BaseLoadingObserver(@StringRes int resId) {
@@ -45,7 +56,7 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     }
 
     public BaseLoadingObserver(@Nullable Activity activity, CharSequence msg) {
-        this(FastManager.getInstance().getLoadingDialog().createLoadingDialog(activity).setMessage(msg));
+        this(UiManager.getInstance().getLoadingDialog().createLoadingDialog(activity).setMessage(msg));
     }
 
     public BaseLoadingObserver(CharSequence msg) {
@@ -53,7 +64,7 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     }
 
     public BaseLoadingObserver(@Nullable Activity activity, IHttpRequestControl httpRequestControl) {
-        this(FastManager.getInstance().getLoadingDialog().createLoadingDialog(activity), httpRequestControl);
+        this(UiManager.getInstance().getLoadingDialog().createLoadingDialog(activity), httpRequestControl);
     }
 
     public BaseLoadingObserver(IHttpRequestControl httpRequestControl) {
@@ -61,18 +72,23 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     }
 
     public BaseLoadingObserver(@Nullable Activity activity) {
-        this(FastManager.getInstance().getLoadingDialog().createLoadingDialog(activity));
+        this(UiManager.getInstance().getLoadingDialog().createLoadingDialog(activity));
     }
 
     public BaseLoadingObserver() {
         this(StackUtil.getInstance().getCurrent());
     }
 
-    public BaseLoadingObserver(FastLoadDialog dialog) {
+    public BaseLoadingObserver(String loadingText) {
+        this(StackUtil.getInstance().getCurrent());
+        this.loadingText = loadingText;
+    }
+
+    public BaseLoadingObserver(LoadingDialogWrapper dialog) {
         this(dialog, null);
     }
 
-    public BaseLoadingObserver(FastLoadDialog dialog, IHttpRequestControl httpRequestControl) {
+    public BaseLoadingObserver(LoadingDialogWrapper dialog, IHttpRequestControl httpRequestControl) {
         super(httpRequestControl);
         this.mDialog = dialog;
     }
@@ -91,6 +107,9 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
 
     public void showProgressDialog() {
         if (mDialog != null) {
+            if(!TextUtils.isEmpty(loadingText)){
+                mDialog.setMessage(loadingText);
+            }
             mDialog.show();
         }
     }
@@ -105,5 +124,5 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     protected void onStart() {
         super.onStart();
         showProgressDialog();
-    }*/
+    }
 }

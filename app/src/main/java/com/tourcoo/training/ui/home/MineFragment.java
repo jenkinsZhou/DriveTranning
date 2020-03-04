@@ -22,7 +22,7 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.MainTabActivity;
-import com.tourcoo.training.ui.face.FaceRecognitionActivity;
+import com.tourcoo.training.ui.account.TestMvpActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 
 import java.util.ArrayList;
@@ -64,6 +64,8 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         rvMyAccount.setLayoutManager(new GridLayoutManager(mContext, 3));
         rvStudyAchievement.setLayoutManager(new GridLayoutManager(mContext, 4));
         mContentView.findViewById(R.id.ivSetting).setOnClickListener(this);
+        mContentView.findViewById(R.id.ivAddCar).setOnClickListener(this);
+
     }
 
     @Override
@@ -150,9 +152,11 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 ShareEntity shareEntity2 = new ShareEntity("QQ", R.drawable.icon_qq);
                 ShareEntity shareEntity3 = new ShareEntity("QQ空间", R.drawable.icon_qz);
                 shareDialog.addData(shareEntity).addData(shareEntity1).addData(shareEntity2).addData(shareEntity3).show();*/
-              /*   multiplePayDialog = new MultiplePayDialog(mContext).create();
-                multiplePayDialog.show();*/
-                CommonUtil.startActivity(mContext, FaceRecognitionActivity.class);
+                 multiplePayDialog = new MultiplePayDialog(mContext).create();
+                multiplePayDialog.show();
+                break;
+            case R.id.ivAddCar:
+                CommonUtil.startActivity(mContext, TestMvpActivity.class);
                 break;
             default:
                 break;

@@ -28,7 +28,7 @@ import com.tourcoo.training.core.interfaces.ToastControl;
 import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.dialog.LoadingDialogWrapper;
-import com.tourcoo.training.core.widget.dialog.loading.FrameLoadingDialog;
+import com.tourcoo.training.core.widget.dialog.loading.IosLoadingDialog;
 
 /**
  * @author :JenkinsZhou
@@ -142,7 +142,7 @@ public class UiManager {
             mApplication = application;
             sInstance = new UiManager();
             //预设置FrameLoadDialog属性
-            sInstance.setLoadingDialog(activity -> new LoadingDialogWrapper(activity, new FrameLoadingDialog(activity).setLoadingText("加载中...")));
+            sInstance.setLoadingDialog(activity -> new LoadingDialogWrapper(activity, new IosLoadingDialog(activity).setLoadingText("加载中...")));
           /*  //设置检测滑动返回是否导入
             if (CommonUtil.isClassExist(FrameConstant.BGA_SWIPE_BACK_HELPER_CLASS)) {
                 //设置滑动返回监听
@@ -176,7 +176,7 @@ public class UiManager {
         return this;
     }
 
-    public RecyclerViewControl getFastRecyclerViewControl() {
+    public RecyclerViewControl getRecyclerViewControl() {
         return mRecyclerViewControl;
     }
 
@@ -186,7 +186,7 @@ public class UiManager {
      * @param control
      * @return
      */
-    public UiManager setFastRecyclerViewControl(RecyclerViewControl control) {
+    public UiManager setRecyclerViewControl(RecyclerViewControl control) {
         this.mRecyclerViewControl = control;
         return this;
     }

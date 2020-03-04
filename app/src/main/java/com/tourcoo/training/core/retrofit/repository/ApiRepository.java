@@ -2,8 +2,19 @@ package com.tourcoo.training.core.retrofit.repository;
 
 
 
+import com.tourcoo.training.core.base.entity.BaseMovieEntity;
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
+import com.tourcoo.training.core.retrofit.CommonTransformer;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
+import com.tourcoo.training.core.retrofit.RetryWhen;
 import com.tourcoo.training.core.retrofit.service.ApiService;
+import com.tourcoo.training.core.util.ToastUtil;
+import com.trello.rxlifecycle3.android.ActivityEvent;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import io.reactivex.Observable;
 
 /**
  * @Author: JenkinsZhou on 2018/11/19 14:25
@@ -37,6 +48,25 @@ public class ApiRepository extends BaseRepository {
     }
 
 
+    public Observable<String> requestAuthentication(int page) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("page", page);
+        return CommonTransformer.switchSchedulers(getApiService().requestAuthentication(params).retryWhen(new RetryWhen()));
+    }
 
+    /**
+     * 获取电影列表
+     *
+     * @param start 起始 下标
+     * @param count 请求总数量
+     * @return
+     */
+    public Observable<BaseMovieEntity> getMovie(int start, int count) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("apikey","0b2bdeda43b5688921839c8ecb20399b");
+        params.put("start", start);
+        params.put("count", count);
+        return CommonTransformer.switchSchedulers(getApiService().getMovie("v2/movie/top250", params).retryWhen(new RetryWhen()));
+    }
 
 }

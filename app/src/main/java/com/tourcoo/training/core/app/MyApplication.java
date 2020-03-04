@@ -58,7 +58,7 @@ public class MyApplication extends MultiDexApplication {
                 //设置Adapter加载更多视图--默认设置了FastLoadMoreView
                 .setLoadMoreFoot(impl)
                 //全局设置RecyclerView
-                .setFastRecyclerViewControl(impl)
+                .setRecyclerViewControl(impl)
                 //设置RecyclerView加载过程多布局属性
                 .setMultiStatusView(impl)
                 //设置全局网络请求等待Loading提示框如登录等待loading--观察者必须为FastLoadingObserver及其子类
@@ -97,8 +97,8 @@ public class MyApplication extends MultiDexApplication {
                 .setLogEnable(true)
 //                .setLogEnable(BuildConfig.DEBUG, TAG, HttpLoggingInterceptor.Level.BODY)
                 //设置统一超时--也可单独调用read/write/connect超时(可以设置时间单位TimeUnit)
-                //默认20 s
-                .setTimeout(30);
+                //默认20
+                .setTimeout(20);
 
         //注意设置baseUrl要以/ 结尾 service 里的方法不要以/打头不然拦截到的url会有问题
         //以下为配置多BaseUrl--默认方式一优先级高 可通过FastRetrofit.getInstance().setHeaderPriorityEnable(true);设置方式二优先级

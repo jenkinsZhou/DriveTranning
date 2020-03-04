@@ -121,7 +121,7 @@ public class SplashActivity extends BaseTitleActivity {
                 .compose(bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new BaseObserver<Long>() {
                     @Override
-                    public void onDoNext(Long entity) {
+                    public void onSuccessNext(Long entity) {
                         if (isFinishing() || isDestroyed()) {
                             return;
                         }

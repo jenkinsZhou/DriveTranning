@@ -381,7 +381,7 @@ public class SlidingTabLayout extends HorizontalScrollView implements ViewPager.
         mTabRect.left = (int) left;
         mTabRect.right = (int) right;
 
-        //indicatorWidth小于0时,原jpardogo's PagerSlidingTabStrip
+        //indicatorWidth小于0时,原jpardogo'IBaseView PagerSlidingTabStrip
         if (getDelegate().getIndicatorWidth() < 0) {
 
         } else {//indicatorWidth大于0时,圆角矩形以及三角形

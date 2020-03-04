@@ -184,7 +184,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
                     .compose(bindUntilEvent(FragmentEvent.DESTROY))
                     .subscribe(new BaseObserver<Long>() {
                         @Override
-                        public void onDoNext(Long entity) {
+                        public void onSuccessNext(Long entity) {
                             onHiddenChanged(hidden);
                         }
                     });
@@ -206,7 +206,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
                     .compose(bindUntilEvent(FragmentEvent.DESTROY))
                     .subscribe(new BaseObserver<Long>() {
                         @Override
-                        public void onDoNext(Long entity) {
+                        public void onSuccessNext(Long entity) {
                             setUserVisibleHint(isVisibleToUser);
                         }
                     });
@@ -239,7 +239,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
                         .compose(bindUntilEvent(FragmentEvent.DESTROY))
                         .subscribe(new BaseObserver<Long>() {
                             @Override
-                            public void onDoNext(Long entity) {
+                            public void onSuccessNext(Long entity) {
                                 onVisibleChanged(true);
                             }
                         });

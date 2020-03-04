@@ -66,8 +66,8 @@ public class RefreshLoadDelegate<T> {
         if (mRecyclerView == null) {
             return;
         }
-        if (UiManager.getInstance().getFastRecyclerViewControl() != null) {
-            UiManager.getInstance().getFastRecyclerViewControl().setRecyclerView(mRecyclerView, mTargetClass);
+        if (UiManager.getInstance().getRecyclerViewControl() != null) {
+            UiManager.getInstance().getRecyclerViewControl().setRecyclerView(mRecyclerView, mTargetClass);
         }
         mAdapter = mIRefreshLoadView.getAdapter();
         mRecyclerView.setLayoutManager(mIRefreshLoadView.getLayoutManager() == null ? new LinearLayoutManager(mContext) : mIRefreshLoadView.getLayoutManager());

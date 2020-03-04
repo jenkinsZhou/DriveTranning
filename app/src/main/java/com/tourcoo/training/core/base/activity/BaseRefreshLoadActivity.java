@@ -12,6 +12,7 @@ import com.tourcoo.training.core.base.delegate.RefreshLoadDelegate;
 import com.tourcoo.training.core.base.delegate.TitleDelegate;
 import com.tourcoo.training.core.interfaces.IHttpRequestControl;
 import com.tourcoo.training.core.interfaces.IRefreshLoadView;
+import com.tourcoo.training.core.util.ToastUtil;
 
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
@@ -31,7 +32,7 @@ public abstract class BaseRefreshLoadActivity<T>
     protected StatusLayoutManager mStatusManager;
     private BaseQuickAdapter mQuickAdapter;
     protected int mDefaultPage = 0;
-    protected int mDefaultPageSize = 10;
+    protected int mDefaultPageSize = 15;
 
     protected RefreshLoadDelegate<T> mFastRefreshLoadDelegate;
     private Class<?> mClass;

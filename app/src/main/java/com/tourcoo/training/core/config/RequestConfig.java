@@ -9,8 +9,8 @@ package com.tourcoo.training.core.config;
  */
 public class RequestConfig {
 
-    public static String BASE_URL_NO_LINE = " http://47.103.39.21";
-    public static String BASE_URL = " http://47.103.39.21/";
+    public static String BASE_URL_NO_LINE = "https://api.douban.com";
+    public static String BASE_URL = "https://api.douban.com/";
 
     public static final int CODE_REQUEST_SUCCESS = 200;
     public static final int CODE_REQUEST_TOKEN_INVALID = 401;

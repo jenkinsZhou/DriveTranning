@@ -30,7 +30,7 @@ public abstract class BaseDownloadObserver extends BaseObserver<ResponseBody> {
     /**
      * 下载暂停标识字符-以异常形式抛出
      */
-    public final static String DOWNLOAD_PAUSE = "FAST_DOWNLOAD_PAUSE";
+    public final static String DOWNLOAD_PAUSE = "DOWNLOAD_PAUSE";
     /**
      * 提示Dialog
      */
@@ -119,7 +119,7 @@ public abstract class BaseDownloadObserver extends BaseObserver<ResponseBody> {
 
 
     @Override
-    public void onDoNext(ResponseBody entity) {
+    public void onSuccessNext(ResponseBody entity) {
 
     }
 

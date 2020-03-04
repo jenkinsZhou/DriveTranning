@@ -27,6 +27,7 @@ import com.tourcoo.training.core.manager.RxJavaManager;
 import com.tourcoo.training.core.retrofit.BaseObserver;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.StackUtil;
+import com.tourcoo.training.core.widget.dialog.loading.IosLoadingDialog;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.trello.rxlifecycle3.components.support.RxAppCompatActivity;
 
@@ -52,6 +53,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
     protected long mDelayBack = 1000;
     protected String TAG = getClass().getSimpleName();
     private QuitAppControl mQuitAppControl;
+    protected IosLoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
         mIsViewLoaded = true;
         beforeInitView(savedInstanceState);
         initView(savedInstanceState);
+        loadingDialog = new IosLoadingDialog(mContext);
     }
 
 
@@ -275,7 +278,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
                     .compose(this.bindUntilEvent(ActivityEvent.DESTROY))
                     .subscribe(new BaseObserver<Long>() {
                         @Override
-                        public void onDoNext(Long entity) {
+                        public void onSuccessNext(Long entity) {
                             beforeFastLazyLoad();
                         }
                     });
@@ -313,7 +316,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
                     .compose(this.<Long>bindUntilEvent(ActivityEvent.DESTROY))
                     .subscribe(new BaseObserver<Long>() {
                         @Override
-                        public void onDoNext(Long entity) {
+                        public void onSuccessNext(Long entity) {
                             mIsFirstBack = true;
                         }
                     });

@@ -3,12 +3,15 @@ package com.tourcoo.training.core.widget.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.util.FindViewUtil;
 import com.tourcoo.training.core.util.StackUtil;
+import com.tourcoo.training.core.widget.dialog.loading.IosLoadingDialog;
 
 import java.lang.ref.WeakReference;
 
@@ -20,7 +23,7 @@ import java.lang.ref.WeakReference;
  * @Email: 971613168@qq.com
  */
 public class LoadingDialogWrapper {
-    private Dialog mDialog ;
+    private Dialog mDialog;
 
     private Activity mActivity;
     private final WeakReference<Activity> mReference;
@@ -31,7 +34,6 @@ public class LoadingDialogWrapper {
 
     public LoadingDialogWrapper(Activity activity) {
         this(activity, new ProgressDialog.Builder(activity)
-                .setMessage(R.string.frame_loading)
                 .create());
     }
 
@@ -76,11 +78,20 @@ public class LoadingDialogWrapper {
         }
         if (mDialog instanceof ProgressDialog) {
             ((ProgressDialog) mDialog).setMessage(msg);
+        } else if (mDialog instanceof IosLoadingDialog) {
+           if(!TextUtils.isEmpty(msg)){
+               ((IosLoadingDialog) mDialog).setLoadingText(msg);
+           }
         } else {
-            TextView textView = FindViewUtil.getTargetView(mDialog.getWindow().getDecorView(), TextView.class);
-            if (textView != null) {
-                textView.setText(msg);
+            if (mDialog.getWindow() != null) {
+                TextView textView = FindViewUtil.getTargetView(mDialog.getWindow().getDecorView(), TextView.class);
+                if (textView != null) {
+                    textView.setText(msg);
+                } else {
+                    LogUtils.eTag("LoadingDialogWrapper", "textView为null");
+                }
             }
+
         }
         return this;
     }

@@ -282,7 +282,7 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
         mIndicatorRect.left = (int) left;
         mIndicatorRect.right = (int) right;
 
-        //indicatorWidth小于0时,原jpardogo's PagerSlidingTabStrip
+        //indicatorWidth小于0时,原jpardogo'IBaseView PagerSlidingTabStrip
         if (getDelegate().getIndicatorWidth() < 0) {
         } else {//indicatorWidth大于0时,圆角矩形以及三角形
             float indicatorLeft = currentTabView.getLeft() + (currentTabView.getWidth() - getDelegate().getIndicatorWidth()) / 2;
@@ -298,7 +298,7 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
         mIndicatorRect.left = (int) p.left;
         mIndicatorRect.right = (int) p.right;
 
-        //indicatorWidth小于0时,原jpardogo's PagerSlidingTabStrip
+        //indicatorWidth小于0时,原jpardogo'IBaseView PagerSlidingTabStrip
         if (getDelegate().getIndicatorWidth() < 0) {
 
         } else {//indicatorWidth大于0时,圆角矩形以及三角形

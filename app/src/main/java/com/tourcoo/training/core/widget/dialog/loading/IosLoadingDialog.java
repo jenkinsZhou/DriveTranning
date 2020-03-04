@@ -12,13 +12,13 @@ import android.widget.TextView;
 import com.tourcoo.training.R;
 
 
-public class FrameLoadingDialog extends Dialog {
+public class IosLoadingDialog extends Dialog {
     public Context context;
     public CharSequence loadingText;
     private TextView tvLoadingText;
 
-    public FrameLoadingDialog(Context context) {
-        super(context, R.style.frame_loading_dialog);
+    public IosLoadingDialog(Context context) {
+        super(context, R.style.DefaultLoadingDialogStyle);
         this.context = context;
         setCancelable(true);
         setCanceledOnTouchOutside(false);
@@ -28,8 +28,8 @@ public class FrameLoadingDialog extends Dialog {
         }
     }
 
-    public FrameLoadingDialog(Context context, String loadingText) {
-        super(context, R.style.frame_loading_dialog);
+    public IosLoadingDialog(Context context, String loadingText) {
+        super(context, R.style.DefaultLoadingDialogStyle);
         this.context = context;
         this.loadingText = loadingText;
         setCancelable(false);
@@ -53,7 +53,7 @@ public class FrameLoadingDialog extends Dialog {
     }
 
 
-    public FrameLoadingDialog setLoadingText(String loadingText) {
+    public IosLoadingDialog setLoadingText(String loadingText) {
         if (TextUtils.isEmpty(loadingText)) {
             return this;
         }
@@ -69,7 +69,7 @@ public class FrameLoadingDialog extends Dialog {
         return this;
     }
 
-    public FrameLoadingDialog setLoadingText(CharSequence loadingText) {
+    public IosLoadingDialog setLoadingText(CharSequence loadingText) {
         if (TextUtils.isEmpty(loadingText)) {
             return this;
         }
