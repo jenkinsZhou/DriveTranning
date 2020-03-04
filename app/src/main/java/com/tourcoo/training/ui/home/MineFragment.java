@@ -3,6 +3,8 @@ package com.tourcoo.training.ui.home;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,7 +24,9 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.MainTabActivity;
-import com.tourcoo.training.ui.account.TestMvpActivity;
+import com.tourcoo.training.ui.account.IndustrialRegisterActivity;
+import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
+import com.tourcoo.training.ui.face.FaceRecognitionActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 
 import java.util.ArrayList;
@@ -64,8 +68,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         rvMyAccount.setLayoutManager(new GridLayoutManager(mContext, 3));
         rvStudyAchievement.setLayoutManager(new GridLayoutManager(mContext, 4));
         mContentView.findViewById(R.id.ivSetting).setOnClickListener(this);
-        mContentView.findViewById(R.id.ivAddCar).setOnClickListener(this);
-
+        mContentView.findViewById(R.id.llMineInfo).setOnClickListener(this);
     }
 
     @Override
@@ -152,11 +155,12 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 ShareEntity shareEntity2 = new ShareEntity("QQ", R.drawable.icon_qq);
                 ShareEntity shareEntity3 = new ShareEntity("QQ空间", R.drawable.icon_qz);
                 shareDialog.addData(shareEntity).addData(shareEntity1).addData(shareEntity2).addData(shareEntity3).show();*/
-                 multiplePayDialog = new MultiplePayDialog(mContext).create();
-                multiplePayDialog.show();
+              /*   multiplePayDialog = new MultiplePayDialog(mContext).create();
+                multiplePayDialog.show();*/
+                CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity.class);
                 break;
-            case R.id.ivAddCar:
-                CommonUtil.startActivity(mContext, TestMvpActivity.class);
+            case R.id.llMineInfo:
+                CommonUtil.startActivity(mContext, IndustrialRegisterActivity.class);
                 break;
             default:
                 break;

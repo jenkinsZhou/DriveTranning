@@ -1,11 +1,19 @@
 package com.tourcoo.training.ui.home;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.view.View;
 
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
+
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * @author :JenkinsZhou
@@ -28,6 +36,7 @@ public class MainFragment extends BaseTitleFragment implements View.OnClickListe
     @Override
     public void initView(Bundle savedInstanceState) {
 
+
     }
 
 
@@ -43,4 +52,7 @@ public class MainFragment extends BaseTitleFragment implements View.OnClickListe
     public void setTitleBar(TitleBarView titleBar) {
         titleBar.setTitleMainText("主页");
     }
+
+
+
 }

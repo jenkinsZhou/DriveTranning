@@ -66,6 +66,6 @@ public interface IBasicView {
      * @return
      */
     default boolean isStatusBarDarkMode() {
-        return false;
+        return true;
     }
 }

@@ -2,7 +2,6 @@ package com.tourcoo.training.core.base.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
@@ -18,7 +17,7 @@ public class QQTitleActivity extends BaseTitleActivity  {
 
     @Override
     public int getContentLayout() {
-        return R.layout.activity_register;
+        return R.layout.activity_register_driver;
     }
 
     @Override

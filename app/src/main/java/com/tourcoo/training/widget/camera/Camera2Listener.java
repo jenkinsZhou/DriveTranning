@@ -1,4 +1,4 @@
-package com.tourcoo.training.widget.camera2;
+package com.tourcoo.training.widget.camera;
 
 import android.hardware.camera2.CameraDevice;
 import android.util.Size;
