@@ -24,6 +24,7 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.MainTabActivity;
+import com.tourcoo.training.ui.account.IndustrialRegisterActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.face.FaceRecognitionActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
@@ -67,6 +68,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         rvMyAccount.setLayoutManager(new GridLayoutManager(mContext, 3));
         rvStudyAchievement.setLayoutManager(new GridLayoutManager(mContext, 4));
         mContentView.findViewById(R.id.ivSetting).setOnClickListener(this);
+        mContentView.findViewById(R.id.llMineInfo).setOnClickListener(this);
     }
 
     @Override
@@ -156,7 +158,9 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
               /*   multiplePayDialog = new MultiplePayDialog(mContext).create();
                 multiplePayDialog.show();*/
                 CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity.class);
-
+                break;
+            case R.id.llMineInfo:
+                CommonUtil.startActivity(mContext, IndustrialRegisterActivity.class);
                 break;
             default:
                 break;

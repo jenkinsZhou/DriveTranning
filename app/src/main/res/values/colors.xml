@@ -77,6 +77,7 @@
     <!--黑色区域-->
     <color name="black333333">#333333</color>
     <color name="black171717">#171717</color>
+    <color name="black181818">#181818</color>
     <color name="blackff000000">#ff000000</color>
     <color name="blackBB000000">#BB000000</color>
     <color name="black000000">#000000</color>
@@ -128,6 +129,9 @@
     <color name="blue5E8FEB">#5E8FEB</color>
     <color name="blue79C6FA">#79C6FA</color>
     <color name="blue5087FF">#5087FF</color>
+    <color name="blue4989E5">#4989E5</color>
+
+    <color name="blueE7EFFF">#E7EFFF</color>
     <color name="default_black_text_color">#333333</color>
     <color name="default_gray_text_color">#A2A2A2</color>
 
