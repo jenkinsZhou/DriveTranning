@@ -127,6 +127,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/dp_5"
+                    android:drawableStart="@mipmap/icon_point"
+                    android:drawablePadding="@dimen/dp_5"
                     android:text="首次登录密码为身份证号码的后6位"
                     android:textColor="@color/blue5087FF"
                     android:textSize="@dimen/sp_12" />

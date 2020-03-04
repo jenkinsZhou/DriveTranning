@@ -28,4 +28,8 @@
     <dimen name="dp_min_width_loading">65dp</dimen>
     <dimen name="dp_min_height_loading">65dp</dimen>
     <dimen name="dp_action_sheet_list_line_height">@dimen/dp_line_size</dimen>
+
+    <dimen name="dp_register_industry_edit_margin_top">@dimen/dp_15</dimen>
+    <dimen name="dp_register_industry_edit_margin_bottom">@dimen/dp_8</dimen>
+    <dimen name="dp_register_industry_edit_margin_start">@dimen/dp_30</dimen>
 </resources>

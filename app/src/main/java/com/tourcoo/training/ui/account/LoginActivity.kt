@@ -6,36 +6,34 @@ import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import kotlinx.android.synthetic.main.activity_register_driver.*
 
 /**
  *@description :
- *@company :途酷科技
+ *@company :翼迈科技股份有限公司
  * @author :JenkinsZhou
- * @date 2020年03月04日17:37
+ * @date 2020年03月04日23:50
  * @Email: 971613168@qq.com
  */
-class DriverRegisterActivity  : BaseTitleActivity() , View.OnClickListener {
-
+class LoginActivity : BaseTitleActivity(),View.OnClickListener {
     override fun getContentLayout(): Int {
-        return R.layout.activity_register_driver
+        return R.layout.activity_login
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
-        titleBar!!.setTitleMainText("个体工商户注册")
+        titleBar!!.visibility = View.GONE
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        tvGoLogin.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.tvGoLogin->{
-                CommonUtil.startActivity(mContext, LoginActivity::class.java)
-            }
-            else -> {
-            }
+
+
         }
+    }
+
+    override fun isStatusBarDarkMode(): Boolean {
+        return false
     }
 }
