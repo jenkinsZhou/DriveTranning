@@ -1,4 +1,4 @@
-package com.tourcoo.training.widget.camera2;
+package com.tourcoo.training.widget.camera;
 
 import android.Manifest;
 import android.content.Context;
@@ -25,7 +25,6 @@ import android.view.Surface;
 import android.view.TextureView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.blankj.utilcode.util.PermissionUtils;

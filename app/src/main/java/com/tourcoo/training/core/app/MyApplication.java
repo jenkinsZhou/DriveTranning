@@ -31,6 +31,7 @@ public class MyApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         application = this;
+        com.blankj.utilcode.util.LogUtils.getConfig().setBorderSwitch(false).setGlobalTag("DriveTraining");
         initSync();
     }
 

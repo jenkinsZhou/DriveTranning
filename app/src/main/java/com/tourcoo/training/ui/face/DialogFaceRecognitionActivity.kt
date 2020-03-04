@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.face
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,28 +12,25 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.View
-import android.view.WindowManager
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
-import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.util.ToastUtil
-import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener
 import kotlinx.android.synthetic.main.activity_face_recognition.*
 import java.io.*
 
-
 /**
  *@description :
  *@company :途酷科技
  * @author :JenkinsZhou
- * @date 2020年03月03日14:52
+ * @date 2020年03月04日15:08
  * @Email: 971613168@qq.com
  */
-class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClickListener {
+class DialogFaceRecognitionActivity : AppCompatActivity() , CameraListener, View.OnClickListener {
     companion object {
         const val tag = "FaceRecognitionActivity"
     }
@@ -40,15 +38,19 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
     private val photoName = "test.jpg"
     private var cameraHelper: CameraHelper? = null
     private val cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT
-    override fun getContentLayout(): Int {
-        return R.layout.activity_face_recognition
-    }
 
-    override fun setTitleBar(titleBar: TitleBarView?) {
-        titleBar!!.setTitleMainText("人脸识别")
-    }
 
-    override fun initView(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_dialog_face_recognition)
+        /*   val win: Window = window
+           val lp = win.attributes
+           lp.width = WindowManager.LayoutParams.WRAP_CONTENT
+           lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+           lp.dimAmount = 0.2f
+           win.attributes = lp*/
+        window.setGravity(Gravity.CENTER)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         llTakePhoto.setOnClickListener(this)
         ivFaceBackground.post {
@@ -59,9 +61,6 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
         }
     }
 
-    override fun isStatusBarDarkMode(): Boolean {
-        return true
-    }
 
     override fun onCameraError(e: Exception?) {
     }
@@ -127,14 +126,14 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
             override fun onPictureTaken(data: ByteArray?, camera: Camera?) {
                 if(!sdCardIsAvailable()){
                     ToastUtil.show("存储空间不足或异常")
-                  return
+                    return
                 }
                 val resource = BitmapFactory.decodeByteArray(data, 0, data!!.size)
                 if (resource == null) {
                     ToastUtil.show("拍照失败")
                     return
                 }
-                val photoPath =com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory()+File.separator+photoName
+                val photoPath =com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory()+ File.separator+photoName
                 saveImage(photoPath, toTurn(resource)!!)
                 notifyMedia(photoPath)
             }
@@ -152,7 +151,7 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
      * @param path 保存为本地图片的地址
      * @param bitmap 要转化的Bitmap
      */
-   private fun saveImage(path: String?, bitmap: Bitmap) {
+    private fun saveImage(path: String?, bitmap: Bitmap) {
         try {
             val bos = BufferedOutputStream(FileOutputStream(path))
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)
@@ -202,5 +201,4 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
         img = Bitmap.createBitmap(img, 0, 0, width, height, matrix, true)
         return img
     }
-
 }

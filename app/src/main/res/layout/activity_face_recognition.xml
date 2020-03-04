@@ -125,6 +125,7 @@
 
 
             <LinearLayout
+                android:id="@+id/llTakePhoto"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_marginTop="@dimen/dp_58"

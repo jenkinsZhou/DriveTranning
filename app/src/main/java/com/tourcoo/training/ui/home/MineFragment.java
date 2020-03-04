@@ -3,6 +3,8 @@ package com.tourcoo.training.ui.home;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +24,7 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.MainTabActivity;
+import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.face.FaceRecognitionActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 
@@ -152,7 +155,8 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 shareDialog.addData(shareEntity).addData(shareEntity1).addData(shareEntity2).addData(shareEntity3).show();*/
               /*   multiplePayDialog = new MultiplePayDialog(mContext).create();
                 multiplePayDialog.show();*/
-                CommonUtil.startActivity(mContext, FaceRecognitionActivity.class);
+                CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity.class);
+
                 break;
             default:
                 break;
