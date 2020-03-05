@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">州峰电子</string>
+    <string name="king_keyboard_key_done_text">完成</string>
+    <string name="king_keyboard_key_more_text">更多</string>
+    <string name="king_keyboard_key_back_text">返回</string>
 </resources>

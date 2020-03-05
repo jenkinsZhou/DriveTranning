@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dp_12"
+    android:id="@+id/llRechargeMoney"
+    android:background="@drawable/bg_radius_7_blue_e9f2ff_hollow"
+    android:paddingLeft="@dimen/dp_10"
+    android:paddingTop="@dimen/dp_13"
+    android:layout_marginStart="@dimen/dp_5"
+    android:layout_marginEnd="@dimen/dp_5"
+    android:paddingRight="@dimen/dp_10"
+    android:paddingBottom="@dimen/dp_11"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvRechargeMoney"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="20元"
+            android:textStyle="bold"
+            android:textColor="@color/blue5087FF"
+            android:textSize="@dimen/sp_18" />
+
+        <TextView
+            android:text="充值22学币"
+            android:id="@+id/tvRechargeDesc"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_gravity="center"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/blue5087FF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

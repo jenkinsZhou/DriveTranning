@@ -6,6 +6,7 @@ import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.widget.keyboard.KingKeyboard
 import kotlinx.android.synthetic.main.activity_register_driver.*
 
 /**
@@ -17,25 +18,34 @@ import kotlinx.android.synthetic.main.activity_register_driver.*
  */
 class DriverRegisterActivity  : BaseTitleActivity() , View.OnClickListener {
 
+    private lateinit var kingKeyboard: KingKeyboard
     override fun getContentLayout(): Int {
         return R.layout.activity_register_driver
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
-        titleBar!!.setTitleMainText("个体工商户注册")
+        titleBar!!.setTitleMainText("驾驶员注册")
     }
 
     override fun initView(savedInstanceState: Bundle?) {
         tvGoLogin.setOnClickListener(this)
+        initPlantKeyBoard()
     }
 
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tvGoLogin->{
-                CommonUtil.startActivity(mContext, LoginActivity::class.java)
+                CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
             }
             else -> {
             }
         }
+    }
+    
+    private fun initPlantKeyBoard(){
+        kingKeyboard = KingKeyboard(this, keyboardParent)
+        kingKeyboard.register(etDriverPlantNum, KingKeyboard.KeyboardType.LICENSE_PLATE)
+        kingKeyboard.setKeyboardCustom(R.xml.keyboard_custom)
+        kingKeyboard.setVibrationEffectEnabled(true)
     }
 }

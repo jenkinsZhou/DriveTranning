@@ -42,6 +42,7 @@
         <activity android:name=".ui.account.IndustrialRegisterActivity" />
         <activity android:name=".ui.account.DriverRegisterActivity" />
         <activity android:name=".ui.account.LoginActivity" />
+        <activity android:name=".ui.account.MyAccountActivity" />
     </application>
 
 </manifest>

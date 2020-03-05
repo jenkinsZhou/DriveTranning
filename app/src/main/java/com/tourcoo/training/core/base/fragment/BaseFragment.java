@@ -273,4 +273,32 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
                 .init(), 50);
     }
 
+
+
+    protected void setStatusBarModeWhite(RxFragment fragment) {
+        setStatusBar(fragment, false);
+    }
+
+    protected void setStatusBarModeDark(RxFragment fragment) {
+        setStatusBar(fragment, true);
+    }
+    protected void setStatusBarColor(RxFragment fragment,int color) {
+        if(color <= 0){
+            return;
+        }
+        baseHandler.postDelayed(() -> ImmersionBar.with(fragment)
+                .statusBarColor(color)
+                .init(), 50);
+    }
+
+    private void setStatusBar(RxFragment fragment, boolean isDarkFont) {
+        baseHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImmersionBar.with(fragment)
+                        .statusBarDarkFont(isDarkFont, 0.2f)
+                        .init();
+            }
+        }, 1);
+    }
 }

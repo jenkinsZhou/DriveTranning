@@ -448,4 +448,11 @@ public class CommonUtil {
     public static int getColor(int colorId) {
         return ContextCompat.getColor(MyApplication.getContext(), colorId);
     }
+
+    public static String getNotNullValue(String number) {
+        if (TextUtils.isEmpty(number)) {
+            return "";
+        }
+        return number;
+    }
 }

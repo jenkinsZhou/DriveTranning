@@ -3,7 +3,12 @@ package com.tourcoo.training.core.util;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.TypedValue;
+
+import androidx.core.content.ContextCompat;
+
+import com.tourcoo.training.core.app.MyApplication;
 
 /**
  * @Author: JenkinsZhou on 2018/7/19 9:49
@@ -48,13 +53,21 @@ public class ResourceUtil {
         return drawable;
     }
 
-    public int getColor(int res) {
+   /* public int getColor(int res) {
         int result = 0;
         try {
             result = mContext.getResources().getColor(res);
         } catch (Exception e) {
         }
         return result;
+    }*/
+
+    public static int getColor(int colorId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return ContextCompat.getColor(MyApplication.getContext(), colorId);
+        } else {
+            return MyApplication.getContext().getResources().getColor(colorId);
+        }
     }
 
     public ColorStateList getColorStateList(int res) {

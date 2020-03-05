@@ -55,6 +55,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        setStatusBarModeWhite(this);
         rlTitle = mContentView.findViewById(R.id.rlTitle);
         rvMyAccount = mContentView.findViewById(R.id.rvMyAccount);
         rvStudyAchievement = mContentView.findViewById(R.id.rvStudyAchievement);
@@ -189,5 +190,6 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
             multiplePayDialog.dismiss();
         }
     }
+
 
 }

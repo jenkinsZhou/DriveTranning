@@ -46,6 +46,8 @@
 
 
     <color name="whiteFFFEFF">#FFFEFF</color>
+    <color name="whiteFBF8FB">#FBF8FB</color>
+
     <!--灰色区域-->
     <color name="grayF4F5F7">#F4F5F7</color>
     <color name="grayF4F4F4">#F4F4F4</color>
@@ -76,6 +78,7 @@
 
     <!--黑色区域-->
     <color name="black333333">#333333</color>
+    <color name="black525252">#525252</color>
     <color name="black171717">#171717</color>
     <color name="black181818">#181818</color>
     <color name="blackff000000">#ff000000</color>
@@ -130,6 +133,7 @@
     <color name="blue79C6FA">#79C6FA</color>
     <color name="blue5087FF">#5087FF</color>
     <color name="blue4989E5">#4989E5</color>
+    <color name="blueE9F2FF">#E9F2FF</color>
 
     <color name="blueE7EFFF">#E7EFFF</color>
     <color name="default_black_text_color">#333333</color>
@@ -137,8 +141,28 @@
 
     <color name="default_color_activity_background">@color/grayF5F5F5</color>
 
+<!--车牌号键盘相关颜色-->
+    <color name="king_keyboard_key_text_color">#ff333333</color>
 
+    <color name="king_keyboard_key_special_text_color">#ff333333</color>
 
+    <color name="king_keyboard_key_done_text_color">#ffeeeeee</color>
+
+    <color name="king_keyboard_key_none_text_color">#7f999999</color>
+
+    <color name="king_keyboard_key_icon_color">#ff333333</color>
+
+    <color name="king_keyboard_key_bg_normal">#ffffffff</color>
+    <color name="king_keyboard_key_bg_pressed">#ffbbbbbb</color>
+
+    <color name="king_keyboard_special_key_bg_normal">#ffa8afbf</color>
+    <color name="king_keyboard_special_key_bg_pressed">#ff989faf</color>
+
+    <color name="king_keyboard_done_key_bg_normal">#ff0477ff</color>
+    <color name="king_keyboard_done_key_bg_pressed">#ff0467ef</color>
+
+    <color name="king_keyboard_none_key_bg_normal">#ffefefef</color>
+    <color name="king_keyboard_none_key_bg_pressed">#ffefefef</color>
 
 
 
