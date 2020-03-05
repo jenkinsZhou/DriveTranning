@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     >
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/iv_coverMovie"
         android:layout_width="72dp"
         android:layout_height="100dp"
@@ -30,13 +30,11 @@
 
     <TextView
         android:id="@+id/tv_typeMovie"
-        style="@style/TextStyleMovieItem"
         android:layout_below="@id/tv_titleMovie"
         tools:text="Type"/>
 
     <TextView
         android:id="@+id/tv_yearMovie"
-        style="@style/TextStyleMovieItem"
         android:layout_below="@id/tv_typeMovie"
         tools:text="Year"/>
 
@@ -51,7 +49,7 @@
         style="@style/TextStyleMovieItem"
         android:layout_below="@id/tv_directorMovie"
         android:paddingBottom="10dp"
-        tools:text="Cast"/>
+        tools:text="Cast"/>-->
 
     <com.flyco.labelview.LabelView
         android:id="@+id/lv_topMovie"

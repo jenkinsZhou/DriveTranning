@@ -6,25 +6,35 @@
     android:orientation="horizontal">
 
     <RelativeLayout
-        android:background="@drawable/bg_radius_7_white_fffeff"
-        android:layout_gravity="center_vertical"
+        android:id="@+id/rlContentView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/bg_radius_7_white_fffeff"
+        android:orientation="vertical">
 
-        <EditText
+        <TextView
+            android:id="@+id/tvCustomAmount"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_16"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:text="其他金额" />
+
+        <EditText
             android:id="@+id/etCustomAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:background="@null"
             android:gravity="center"
-            android:hint="其他金额"
             android:inputType="number"
-            android:textColorHint="@color/gray999999"
-            android:textSize="@dimen/sp_15" />
+            android:hint="其他金额"
+            android:textColorHint="@color/blue5087FF"
+            android:textSize="@dimen/sp_16"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </LinearLayout>

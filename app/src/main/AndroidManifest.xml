@@ -43,6 +43,7 @@
         <activity android:name=".ui.account.DriverRegisterActivity" />
         <activity android:name=".ui.account.LoginActivity" />
         <activity android:name=".ui.account.MyAccountActivity" />
+        <activity android:name=".ui.study.StudyMedalRecordActivity" />
     </application>
 
 </manifest>

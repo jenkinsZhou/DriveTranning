@@ -6,6 +6,7 @@ import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.ui.study.StudyMedalRecordActivity
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import kotlinx.android.synthetic.main.activity_register_driver.*
 
@@ -35,7 +36,9 @@ class DriverRegisterActivity  : BaseTitleActivity() , View.OnClickListener {
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tvGoLogin->{
-                CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
+//                CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
+                CommonUtil.startActivity(mContext, StudyMedalRecordActivity::class.java)
+
             }
             else -> {
             }
