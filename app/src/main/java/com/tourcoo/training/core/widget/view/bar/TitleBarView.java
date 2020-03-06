@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -1900,5 +1901,20 @@ public class TitleBarView extends ViewGroup {
         return had;
     }
 
+    public TextView getMainTitleTextView() {
+        return mTvTitleMain;
+    }
 
+    /**
+     * 标题加粗模式
+     *
+     * @param isBold
+     * @return
+     */
+    public TitleBarView setTextBoldMode(boolean isBold) {
+        if (mTvTitleMain != null) {
+            mTvTitleMain.setTypeface(isBold ? Typeface.defaultFromStyle(Typeface.BOLD) : Typeface.defaultFromStyle(Typeface.NORMAL));
+        }
+        return this;
+    }
 }

@@ -2,14 +2,16 @@ package com.tourcoo.training.ui.study
 
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import com.blankj.utilcode.util.LogUtils
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.study.StudyMedalAdapter
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.study.StudyMedal
+import com.tourcoo.training.entity.study.StudyMedalGroup
 import com.tourcoo.training.entity.study.StudyMedalGroup.ITEM_TYPE_CONTENT
-import com.tourcoo.training.entity.study.StudyMedalGroup.ITEM_TYPE_TITLE
+import com.tourcoo.training.entity.study.StudyMedalGroup.ITEM_TYPE_HEADER
 import kotlinx.android.synthetic.main.frame_layout_recycler.*
 import kotlinx.android.synthetic.main.frame_layout_refresh_recycler.*
 
@@ -21,7 +23,7 @@ import kotlinx.android.synthetic.main.frame_layout_refresh_recycler.*
  * @Email: 971613168@qq.com
  */
 class StudyMedalRecordActivity : BaseTitleActivity() {
-    private var adapter : StudyMedalAdapter ?= null
+    private var adapter: StudyMedalAdapter? = null
     override fun getContentLayout(): Int {
         return R.layout.activity_study_record_medal
     }
@@ -36,9 +38,18 @@ class StudyMedalRecordActivity : BaseTitleActivity() {
         val manager = GridLayoutManager(mContext, 3)
         rvCommon.layoutManager = manager
         adapter?.bindToRecyclerView(rvCommon)
-        adapter?.setNewData(testData())
+        adapter?.setNewData(parseDataList(getGroup()))
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
+                when (adapter?.getItemViewType(position)) {
+                    ITEM_TYPE_HEADER -> {
+                        return 3
+                    }
+                    ITEM_TYPE_CONTENT -> {
+                        return 1
+                    }
+
+                }
                 return 1
             }
         }
@@ -61,21 +72,36 @@ class StudyMedalRecordActivity : BaseTitleActivity() {
                     ivModuleStatus.setImageResource(R.mipmap.icon_app_remove);
                 }*/
 
-    private fun testData() : ArrayList<StudyMedal>{
-        val data  =   ArrayList<StudyMedal>()
-        var  bean  = StudyMedal()
-        for(index in 0 until   12  ){
-            bean  = StudyMedal()
-            bean.medalDesc = "安培新星"+index
-            bean.groupName = " 学习勋章  （ 3 / 5 ）"
-            if(index % 2 ==0){
-                bean.itemType = ITEM_TYPE_CONTENT
-            }else{
-                bean.itemType = ITEM_TYPE_TITLE
+
+
+    private fun getGroup(): ArrayList<StudyMedalGroup>{
+        val groupList = ArrayList<StudyMedalGroup>()
+        for (index in 0 until 3) {
+            val group = StudyMedalGroup()
+            val data = ArrayList<StudyMedal>()
+            group.groupName = "学习勋章"+index
+            for (i in 0 until index+3) {
+              val  bean = StudyMedal()
+                bean.medalDesc = "安培新星" + index+""+i
+                bean.isHeader =false
+                data.add(bean)
             }
-            data.add(bean)
+            group.medalList=data
+            groupList.add(group)
         }
-        return data
+        return groupList
     }
 
+
+    private fun parseDataList( netData : ArrayList<StudyMedalGroup>) : ArrayList<StudyMedal>{
+        val resultList = ArrayList<StudyMedal>()
+        for (group in netData ){
+            val groupItem = StudyMedal()
+            groupItem.isHeader = true
+            groupItem.groupName = group.groupName
+            resultList.add(groupItem)
+            resultList.addAll(group.medalList)
+        }
+        return resultList
+    }
 }

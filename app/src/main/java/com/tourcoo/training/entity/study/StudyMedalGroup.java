@@ -14,7 +14,7 @@ import java.util.List;
 public class StudyMedalGroup implements MultiItemEntity {
 
     /*标题*/
-    public final static int ITEM_TYPE_TITLE = 0;
+    public final static int ITEM_TYPE_HEADER = 0;
     /*item*/
     public final static int ITEM_TYPE_CONTENT = 1;
 

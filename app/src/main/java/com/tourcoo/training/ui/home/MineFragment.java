@@ -55,7 +55,6 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        setStatusBarModeWhite(this);
         rlTitle = mContentView.findViewById(R.id.rlTitle);
         rvMyAccount = mContentView.findViewById(R.id.rvMyAccount);
         rvStudyAchievement = mContentView.findViewById(R.id.rvStudyAchievement);
@@ -70,6 +69,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         rvStudyAchievement.setLayoutManager(new GridLayoutManager(mContext, 4));
         mContentView.findViewById(R.id.ivSetting).setOnClickListener(this);
         mContentView.findViewById(R.id.llMineInfo).setOnClickListener(this);
+        setStatusBarModeWhite(this);
     }
 
     @Override

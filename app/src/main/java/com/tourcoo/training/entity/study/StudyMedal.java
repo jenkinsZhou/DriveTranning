@@ -15,6 +15,10 @@ public class StudyMedal implements MultiItemEntity {
     public final static int ITEM_TYPE_TITLE = 0;
     /*item*/
     public final static int ITEM_TYPE_CONTENT = 1;
+
+    public boolean isHeader ;
+
+    public boolean isLock;
     @Override
     public int getItemType() {
         return itemType;
