@@ -3,7 +3,7 @@ package com.tourcoo.training.core.util;
 import android.app.Activity;
 
 
-import com.apkfuns.logutils.LogUtils;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 
 import java.util.Stack;
 
@@ -58,7 +58,7 @@ public class StackUtil {
     public Activity getCurrent() {
         if (mActivityStack != null && mActivityStack.size() != 0) {
             Activity activity = mActivityStack.lastElement();
-            LogUtils.tag(TAG).i( "get current activity:" + activity.getClass().getSimpleName());
+           TourCooLogUtil.i( "get current activity:" + activity.getClass().getSimpleName());
             return activity;
         } else {
             return null;
@@ -73,7 +73,7 @@ public class StackUtil {
     public Activity getPrevious() {
         if (mActivityStack != null && mActivityStack.size() >= 2) {
             Activity activity = mActivityStack.get(mActivityStack.size() - 2);
-            LogUtils.tag(TAG).i("get Previous Activity:" + activity.getClass().getSimpleName());
+           TourCooLogUtil.i("get Previous Activity:" + activity.getClass().getSimpleName());
             return activity;
         } else {
             return null;
@@ -108,7 +108,7 @@ public class StackUtil {
             mActivityStack = new Stack();
         }
         mActivityStack.add(activity);
-        LogUtils.tag(TAG).i( "push stack activity:" + activity.getClass().getSimpleName());
+       TourCooLogUtil.i( "push stack activity:" + activity.getClass().getSimpleName());
         return sInstance;
     }
 
@@ -125,10 +125,10 @@ public class StackUtil {
      */
     public StackUtil pop(Activity activity, boolean isFinish) {
         if (activity != null) {
-            LogUtils.tag(TAG).i(TAG, "remove current activity:" + activity.getClass().getSimpleName() + ";isFinishing" + activity.isFinishing());
+           TourCooLogUtil.i(TAG, "remove current activity:" + activity.getClass().getSimpleName() + ";isFinishing" + activity.isFinishing());
             if (mActivityStack != null && mActivityStack.contains(activity)) {
                 mActivityStack.remove(activity);
-                LogUtils.tag(TAG).i( "remove current activity:" + activity.getClass().getSimpleName() + ";size:" + mActivityStack.size());
+                TourCooLogUtil.tag(TAG).i( "remove current activity:" + activity.getClass().getSimpleName() + ";size:" + mActivityStack.size());
             }
             if (isFinish) {
                 activity.finish();
@@ -202,7 +202,7 @@ public class StackUtil {
             }
         } catch (Exception e) {
             System.exit(-1);
-            LogUtils.tag(TAG).i( "exit():" + e.getMessage());
+           TourCooLogUtil.i( "exit():" + e.getMessage());
         }
         return sInstance;
     }

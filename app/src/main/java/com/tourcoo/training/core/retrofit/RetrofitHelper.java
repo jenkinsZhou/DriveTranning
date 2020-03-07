@@ -5,7 +5,8 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 
-import com.apkfuns.logutils.LogUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.SSLUtil;
 
 import java.io.IOException;
@@ -185,7 +186,7 @@ public class RetrofitHelper {
     public <T> T createService(Class<T> apiService, boolean useCacheEnable) {
         if (useCacheEnable && apiService != null) {
             if (mServiceMap.containsKey(apiService.getName())) {
-                LogUtils.tag(TAG).i("className:" + apiService.getName() + ";service取自缓存");
+               TourCooLogUtil.i("className:" + apiService.getName() + ";service取自缓存");
                 return (T) mServiceMap.get(apiService.getName());
             }
             T tClass = getRetrofit().create(apiService);
@@ -449,10 +450,10 @@ public class RetrofitHelper {
                     boolean isJson = message.startsWith("[") || message.startsWith("{");
                     isJson = isJson && mLogJsonEnable;
                     if (isJson) {
-                        LogUtils.tag(TAG).json(message);
+                        LogUtils.json(message);
                         return;
                     }
-                    LogUtils.tag(TAG).d( message);
+                   TourCooLogUtil.d( message);
                 });
             }
             mLoggingInterceptor.setLevel(level);

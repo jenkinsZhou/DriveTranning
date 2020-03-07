@@ -11,36 +11,29 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.didichuxing.doraemonkit.ui.UniversalActivity;
 import com.luck.picture.lib.PictureBaseActivity;
-import com.luck.picture.lib.PicturePreviewActivity;
 import com.parfoismeng.slidebacklib.SlideBack;
-import com.tourcoo.training.BuildConfig;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.base.activity.BaseActivity;
-import com.tourcoo.training.core.base.activity.BaseMainActivity;
 import com.tourcoo.training.core.base.fragment.BaseFragment;
 import com.tourcoo.training.core.interfaces.ActivityDispatchEventControl;
 import com.tourcoo.training.core.interfaces.ActivityFragmentControl;
 import com.tourcoo.training.core.interfaces.ActivityKeyEventControl;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.CommonUtil;
-import com.tourcoo.training.core.util.FindViewUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.SnackBarUtil;
 import com.tourcoo.training.core.util.StackUtil;
@@ -109,7 +102,7 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mCurrentVolume, AudioManager.FLAG_PLAY_SOUND);
         // 获取当前音乐音量
         mCurrentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        LogUtils.tag(TAG).i( "max:" + mMaxVolume + ";min:" + mMinVolume + ";current:" + mCurrentVolume);
+       TourCooLogUtil.i( "max:" + mMaxVolume + ";min:" + mMinVolume + ";current:" + mCurrentVolume);
         SnackBarUtil.with(StackUtil.getInstance().getCurrent().getWindow().getDecorView())
                 .setBgColor(Color.WHITE)
                 .setMessageColor(Color.BLACK)
@@ -123,11 +116,11 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 volume(1, false);
-                LogUtils.tag(TAG).i(  "volumeDown-activity:" + activity.getClass().getSimpleName());
+               TourCooLogUtil.i(  "volumeDown-activity:" + activity.getClass().getSimpleName());
                 return true;
             case KeyEvent.KEYCODE_VOLUME_UP:
                 volume(1, true);
-                LogUtils.tag(TAG).i( "volumeUp-activity:" + activity.getClass().getSimpleName());
+               TourCooLogUtil.i( "volumeUp-activity:" + activity.getClass().getSimpleName());
                 return true;
         }
         return false;
@@ -173,7 +166,7 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
             if (activity instanceof UniversalActivity) {
                 contentView.setBackgroundColor(Color.WHITE);
             }
-            LogUtils.tag(TAG).i( "setContentViewBackground_activity:" + activity.getClass().getSimpleName() + ";cls:" + cls.getSimpleName());
+           TourCooLogUtil.i( "setContentViewBackground_activity:" + activity.getClass().getSimpleName() + ";cls:" + cls.getSimpleName());
         }
     }
 
@@ -186,7 +179,7 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
      */
     @Override
     public boolean setStatusBar(Activity activity, StatusViewHelper helper, View topView) {
-        LogUtils.tag(TAG).e( "setStatusBar:" + Thread.currentThread());
+       TourCooLogUtil.e( "setStatusBar:" + Thread.currentThread());
         boolean isSupportStatusBarFont = StatusBarUtil.isSupportStatusBarFontChange();
         helper.setTransEnable(isSupportStatusBarFont || isLeak(activity))
                 .setPlusStatusViewEnable(!isLeak(activity))
@@ -231,7 +224,7 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
 
     private KeyboardHelper.OnKeyboardVisibilityChangedListener mOnKeyboardVisibilityChangedListener = (activity, isOpen, heightDiff, navigationHeight) -> {
         View mContent = CommonUtil.getRootView(activity);
-        LogUtils.tag(TAG).i( "onKeyboardVisibilityChanged", "activity:" + activity + ";isOpen:" + isOpen + ";heightDiff:" + heightDiff + ";navigationHeight:" + navigationHeight);
+       TourCooLogUtil.i( "onKeyboardVisibilityChanged", "activity:" + activity + ";isOpen:" + isOpen + ";heightDiff:" + heightDiff + ";navigationHeight:" + navigationHeight);
         return false;
     };
 
@@ -246,7 +239,7 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
      * @param activity
      */
     public void setActivityOrientation(Activity activity) {
-        LogUtils.tag(TAG).i( "setRequestedOrientation:" + activity.getClass().getSimpleName() + ";:" + (BaseActivity.class.isAssignableFrom(activity.getClass()))
+       TourCooLogUtil.i( "setRequestedOrientation:" + activity.getClass().getSimpleName() + ";:" + (BaseActivity.class.isAssignableFrom(activity.getClass()))
                 + ";:" + (UniversalActivity.class.isAssignableFrom(activity.getClass())));
         if (BaseActivity.class.isAssignableFrom(activity.getClass())) {
             return;
@@ -258,7 +251,7 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             } catch (Exception e) {
                 e.printStackTrace();
-                LogUtils.tag(TAG).e(  "setRequestedOrientation:" + e.getMessage());
+               TourCooLogUtil.e(  "setRequestedOrientation:" + e.getMessage());
             }
         }
     }
@@ -359,14 +352,14 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
             @Override
             public void onFragmentResumed(FragmentManager fm, Fragment f) {
                 super.onFragmentResumed(fm, f);
-                LogUtils.tag(TAG).i(   "onFragmentResumed:统计Fragment:" + f.getClass().getSimpleName());
+               TourCooLogUtil.i(   "onFragmentResumed:统计Fragment:" + f.getClass().getSimpleName());
 //                MobclickAgent.onPageStart(f.getClass().getSimpleName());
             }
 
             @Override
             public void onFragmentPaused(FragmentManager fm, Fragment f) {
                 super.onFragmentPaused(fm, f);
-                LogUtils.tag(TAG).i( "onFragmentPaused:统计Fragment:" + f.getClass().getSimpleName());
+               TourCooLogUtil.i( "onFragmentPaused:统计Fragment:" + f.getClass().getSimpleName());
 //                MobclickAgent.onPageEnd(f.getClass().getSimpleName());
             }
 

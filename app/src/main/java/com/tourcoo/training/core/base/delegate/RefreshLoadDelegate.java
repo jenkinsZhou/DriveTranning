@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.interfaces.IRefreshLoadView;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.FindViewUtil;
 import com.tourcoo.training.core.widget.view.FrameLoadMoreView;
 
@@ -189,6 +189,6 @@ public class RefreshLoadDelegate<T> {
         mManager = null;
         mRootView = null;
         mTargetClass = null;
-        LogUtils.tag(TAG).i("onDestroy");
+       TourCooLogUtil.i("onDestroy");
     }
 }

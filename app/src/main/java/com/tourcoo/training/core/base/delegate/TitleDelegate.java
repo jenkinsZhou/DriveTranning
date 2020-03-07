@@ -3,11 +3,11 @@ package com.tourcoo.training.core.base.delegate;
 import android.app.Activity;
 import android.view.View;
 
-import com.apkfuns.logutils.LogUtils;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.interfaces.ITitleView;
 import com.tourcoo.training.core.interfaces.TitleBarViewControl;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.FindViewUtil;
 import com.tourcoo.training.core.util.StackUtil;
@@ -39,7 +39,7 @@ public class TitleDelegate {
         if (mTitleBar == null) {
             return;
         }
-        LogUtils.tag(TAG).i("class:" + cls.getSimpleName());
+       TourCooLogUtil.i("class:" + cls.getSimpleName());
         //默认的MD风格返回箭头icon如使用该风格可以不用设置
         final Activity activity = StackUtil.getInstance().getActivity(cls);
         //设置TitleBarView 所有TextView颜色
@@ -88,6 +88,6 @@ public class TitleDelegate {
     public void onDestroy() {
         mTitleBar = null;
         mTitleBarViewControl = null;
-        LogUtils.tag(TAG).i(  "onDestroy");
+       TourCooLogUtil.i(  "onDestroy");
     }
 }

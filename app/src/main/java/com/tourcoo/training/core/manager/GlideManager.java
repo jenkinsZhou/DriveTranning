@@ -15,7 +15,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
@@ -25,14 +24,9 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.ImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.tourcoo.training.R;
-import com.tourcoo.training.core.manager.glide.AutoFixSizeTransformation;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 
 import java.security.MessageDigest;
 
@@ -165,6 +159,15 @@ public class GlideManager {
                 .dontAnimate()
                 .transform(new CircleCrop())).into(iv);
     }
+
+    public static void loadImageAuto(Object obj, ImageView iv, int placeholderResource) {
+        Drawable drawable = getDrawable(iv.getContext(), placeholderResource);
+        loadImageAuto(obj, iv, drawable != null ? drawable : sCirclePlaceholderDrawable);
+    }
+
+    public static void loadImageAuto(Object obj, ImageView iv) {
+        loadImageAuto(obj, iv, sCirclePlaceholder);
+    }
     public static void loadImageAuto(Object obj, ImageView iv, Drawable placeholder) {
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptionsAuto()
                 .error(placeholder)
@@ -177,21 +180,21 @@ public class GlideManager {
                     return;
                 }
                 view.setImageDrawable(resource);
+
                 //获取原图的宽高
                 int width = resource.getIntrinsicWidth();
                 int height = resource.getIntrinsicHeight();
 
                 //获取imageView的宽
                 int imageViewWidth = iv.getWidth();
-
                 //计算缩放比例
-                float sy = (float) (imageViewWidth * 0.1) / (float) (width * 0.1);
-
+                float sy = (float) (imageViewWidth ) / (float) (width );
                 //计算图片等比例放大后的高
                 int imageViewHeight = (int) (height * sy);
                 ViewGroup.LayoutParams params = iv.getLayoutParams();
                 params.height = imageViewHeight;
                 iv.setLayoutParams(params);
+              TourCooLogUtil.i("GlideManager","比例:"+sy+"width="+width+""+"height="+height+"放大后的高:"+imageViewHeight);
             }
         });
 

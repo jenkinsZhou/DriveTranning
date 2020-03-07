@@ -4,8 +4,8 @@ package com.tourcoo.training.core.retrofit;
 import android.content.Context;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -97,7 +97,7 @@ public class RetryWhen implements Function<Observable<? extends Throwable>, Obse
                         || throwable instanceof SocketException
                         || throwable instanceof TimeoutException) {
                     if (++mRetryCount <= mRetryMaxTime) {
-                        LogUtils.tag(TAG).e("网络请求错误,将在 " + mRetryDelay + " ms后进行重试, 重试次数 " + mRetryCount + ";throwable:" + throwable);
+                       TourCooLogUtil.e("网络请求错误,将在 " + mRetryDelay + " ms后进行重试, 重试次数 " + mRetryCount + ";throwable:" + throwable);
                         return Observable.timer(mRetryDelay, TimeUnit.MILLISECONDS);
                     }
                 }

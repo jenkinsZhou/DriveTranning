@@ -13,13 +13,13 @@ import android.widget.FrameLayout;
 import androidx.fragment.app.FragmentManager;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.constant.FrameConstant;
 import com.tourcoo.training.core.interfaces.IBasicView;
 import com.tourcoo.training.core.interfaces.IRefreshLoadView;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.RxJavaManager;
 import com.tourcoo.training.core.retrofit.BaseObserver;
 import com.tourcoo.training.core.util.CommonUtil;
@@ -64,7 +64,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
             manager.getFragments();
             size = manager.getFragments().size();
         }
-        LogUtils.tag(TAG).i(TAG + ";FragmentManager承载Fragment数量:" + size);
+       TourCooLogUtil.i(TAG + ";FragmentManager承载Fragment数量:" + size);
         return size <= 1;
     }
 
@@ -113,7 +113,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
                 onVisibleChanged(true);
             }
         }
-        LogUtils.tag(TAG).d( ";mIsVisibleChanged:" + mIsVisibleChanged + ";getUserVisibleHint:" + getUserVisibleHint()
+       TourCooLogUtil.d( ";mIsVisibleChanged:" + mIsVisibleChanged + ";getUserVisibleHint:" + getUserVisibleHint()
                 + ";isHidden:" + isHidden() + ";isVisible:" + isVisible());
         return mContentView;
     }
@@ -152,7 +152,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
     @Override
     public void onResume() {
         super.onResume();
-        LogUtils.tag(TAG).i( "onResume-isAdded:" + isAdded() + ";getUserVisibleHint:" + getUserVisibleHint()
+       TourCooLogUtil.i( "onResume-isAdded:" + isAdded() + ";getUserVisibleHint:" + getUserVisibleHint()
                 + ";isHidden:" + isHidden() + ";isVisible:" + isVisible() + ";isResume:" + isResumed() + ";isVisibleToUser:" + isVisibleToUser(this) + ";host:");
         if (isAdded() && isVisibleToUser(this)) {
             onVisibleChanged(true);
@@ -230,7 +230,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
      * @param isVisibleToUser
      */
     protected void onVisibleChanged(final boolean isVisibleToUser) {
-        LogUtils.tag(TAG).i( "onVisibleChanged-isVisibleToUser:" + isVisibleToUser);
+       TourCooLogUtil.i( "onVisibleChanged-isVisibleToUser:" + isVisibleToUser);
         mIsVisibleChanged = true;
         if (isVisibleToUser) {
             //避免因视图未加载子类刷新UI抛出异常

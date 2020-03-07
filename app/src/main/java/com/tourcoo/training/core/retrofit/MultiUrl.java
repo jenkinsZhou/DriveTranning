@@ -3,8 +3,9 @@ package com.tourcoo.training.core.retrofit;
 import android.text.TextUtils;
 
 
-import com.apkfuns.logutils.LogUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.tourcoo.training.core.constant.FrameConstant;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -100,7 +101,7 @@ class MultiUrl {
                 }
                 //如果请求url不包含默认的BaseUrl也不进行拦截
                 if (request != null && request.url() != null && !request.url().toString().contains(mBaseUrl)) {
-                    LogUtils.tag(TAG).i( "无统一BaseUrl不拦截:" + request.url() + ";BaseUrl:" + mBaseUrl);
+                   TourCooLogUtil.i( "无统一BaseUrl不拦截:" + request.url() + ";BaseUrl:" + mBaseUrl);
                     return chain.proceed(request);
                 }
                 return chain.proceed(processRequest(request));
@@ -130,14 +131,14 @@ class MultiUrl {
         HttpUrl httpUrl = getHeaderHttpUrl(request, newBuilder);
         if (null != httpUrl) {
             HttpUrl newUrl = mUrlParser.parseUrl(httpUrl, request.url());
-            LogUtils.tag(MultiUrl.TAG).i( "Header 模式重定向Url:Base Url is { " + mBaseUrl + " }" + ";New Url is { " + newUrl + " }" + ";Old Url is { " + request.url() + " }");
+            TourCooLogUtil.tag(MultiUrl.TAG).i( "Header 模式重定向Url:Base Url is { " + mBaseUrl + " }" + ";New Url is { " + newUrl + " }" + ";Old Url is { " + request.url() + " }");
             return newBuilder
                     .url(newUrl)
                     .build();
         }
         httpUrl = getMethodHttpUrl(request);
         if (null != httpUrl) {
-            LogUtils.tag(MultiUrl.TAG).i("Method 模式重定向Url:Base Url is { " + mBaseUrl + " }" + ";New Url is { " + httpUrl + " }" + ";Old Url is { " + request.url() + " }");
+            TourCooLogUtil.tag(MultiUrl.TAG).i("Method 模式重定向Url:Base Url is { " + mBaseUrl + " }" + ";New Url is { " + httpUrl + " }" + ";Old Url is { " + request.url() + " }");
             return newBuilder
                     .url(httpUrl)
                     .build();
@@ -146,7 +147,7 @@ class MultiUrl {
         HttpUrl httpUrlBase = getGlobalBaseUrl();
         if (httpUrlBase != null && !httpUrlBase.toString().equals(mBaseUrl)) {
             HttpUrl httpNew = checkUrl(request.url().toString().replace(mBaseUrl, httpUrlBase.toString()));
-            LogUtils.tag(MultiUrl.TAG).i( "重定向Url:Base Url is { " + httpUrlBase.toString() + " }" + ";New Url is { " + httpNew + " }" + ";Old Url is { " + request.url() + " }");
+            TourCooLogUtil.tag(MultiUrl.TAG).i( "重定向Url:Base Url is { " + httpUrlBase.toString() + " }" + ";New Url is { " + httpNew + " }" + ";Old Url is { " + request.url() + " }");
             return newBuilder
                     .url(httpNew)
                     .build();
@@ -201,7 +202,7 @@ class MultiUrl {
         if (isContainKey) {
             methodKey = methodKey.substring(0, methodKey.indexOf("?"));
         }
-        LogUtils.tag(MultiUrl.TAG).i( "Base Url is { " + mBaseUrl + " }" + ";Old Url is{" + url.newBuilder().toString() + "};Method is <<" + methodKey + ">>");
+        TourCooLogUtil.tag(MultiUrl.TAG).i( "Base Url is { " + mBaseUrl + " }" + ";Old Url is{" + url.newBuilder().toString() + "};Method is <<" + methodKey + ">>");
         //如果
         if (!mHeaderPriorityEnable && mBaseUrlMap.containsKey(methodKey)) {
             return checkUrl(getBaseUrl(methodKey).toString() + method);
@@ -388,7 +389,7 @@ class MultiUrl {
     private String getHeaderBaseUrlKey(Request request) {
         Headers heads = request.headers();
         if (heads != null) {
-            LogUtils.tag(TAG).i("header:" + heads.toString());
+           TourCooLogUtil.i("header:" + heads.toString());
         }
         List<String> headers = request.headers(BASE_URL_NAME);
         if (headers == null || headers.size() == 0) {

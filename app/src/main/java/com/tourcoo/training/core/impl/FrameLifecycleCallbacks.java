@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.base.activity.BaseMainActivity;
 import com.tourcoo.training.core.base.activity.BaseRefreshLoadActivity;
@@ -27,6 +26,7 @@ import com.tourcoo.training.core.interfaces.IRefreshView;
 import com.tourcoo.training.core.interfaces.ITitleView;
 import com.tourcoo.training.core.interfaces.INavigationBar;
 import com.tourcoo.training.core.interfaces.IStatusBar;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.DelegateManager;
 import com.tourcoo.training.core.manager.RxJavaManager;
 import com.tourcoo.training.core.retrofit.BaseObserver;
@@ -61,7 +61,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivityCreated(final Activity activity, final Bundle savedInstanceState) {
-        LogUtils.tag(TAG).i( "onActivityCreated:" + activity.getClass().getSimpleName() + ";contentView:" + CommonUtil.getRootView(activity));
+       TourCooLogUtil.i( "onActivityCreated:" + activity.getClass().getSimpleName() + ";contentView:" + CommonUtil.getRootView(activity));
         getControl();
 
         //统一Activity堆栈管理
@@ -92,7 +92,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
     @Override
     public void onActivityStarted(Activity activity) {
         View contentView = CommonUtil.getRootView(activity);
-        LogUtils.tag(TAG).i( "onActivityStarted:" + activity.getClass().getSimpleName() + ";contentView:" + contentView);
+       TourCooLogUtil.i( "onActivityStarted:" + activity.getClass().getSimpleName() + ";contentView:" + contentView);
         boolean isSet = activity.getIntent().getBooleanExtra(FrameConstant.IS_SET_CONTENT_VIEW_BACKGROUND, false);
         if (!isSet) {
             setContentViewBackground(CommonUtil.getRootView(activity), activity.getClass());
@@ -132,7 +132,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivityResumed(Activity activity) {
-        LogUtils.tag(TAG).i( "onActivityResumed:" + activity.getClass().getSimpleName());
+       TourCooLogUtil.i( "onActivityResumed:" + activity.getClass().getSimpleName());
         if (mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onActivityResumed(activity);
         }
@@ -140,7 +140,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivityPaused(Activity activity) {
-        LogUtils.tag(TAG).i( "onActivityPaused:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
+       TourCooLogUtil.i( "onActivityPaused:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
         //Activity销毁前的时机需要关闭软键盘-在onActivityStopped及onActivityDestroyed生命周期内已无法关闭
         if (activity.isFinishing()) {
             KeyboardHelper.closeKeyboard(activity);
@@ -153,7 +153,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivityStopped(Activity activity) {
-        LogUtils.tag(TAG).i("onActivityStopped:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
+       TourCooLogUtil.i("onActivityStopped:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
         //回调给开发者实现自己应用逻辑
         if (mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onActivityStopped(activity);
@@ -162,7 +162,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-        LogUtils.tag(TAG).i("onActivitySaveInstanceState:" + activity.getClass().getSimpleName());
+       TourCooLogUtil.i("onActivitySaveInstanceState:" + activity.getClass().getSimpleName());
         //回调给开发者实现自己应用逻辑
         if (mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onActivitySaveInstanceState(activity, outState);
@@ -179,7 +179,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
             activity.getIntent().removeExtra(FrameConstant.IS_SET_REFRESH_VIEW);
             activity.getIntent().removeExtra(FrameConstant.IS_SET_TITLE_BAR_VIEW);
         }
-        LogUtils.tag(TAG).i("onActivityDestroyed:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
+       TourCooLogUtil.i("onActivityDestroyed:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
         StackUtil.getInstance().pop(activity, false);
 
         //清除下拉刷新代理FastRefreshDelegate
@@ -267,7 +267,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
         //不包含TitleBarView处理
         if (titleBarView == null && !(activity instanceof BaseMainActivity)) {
             View topView = getTopView(CommonUtil.getRootView(activity));
-            LogUtils.tag(TAG).i( "其它三方库设置状态栏沉浸");
+           TourCooLogUtil.i( "其它三方库设置状态栏沉浸");
             StatusViewHelper statusViewHelper = StatusViewHelper.with(activity)
                     .setControlEnable(true)
                     .setPlusStatusViewEnable(false)
@@ -308,7 +308,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
         if (isSet) {
             return;
         }
-        LogUtils.tag(TAG).i("setNavigationBars:设置虚拟导航栏");
+       TourCooLogUtil.i("setNavigationBars:设置虚拟导航栏");
         View bottomView = CommonUtil.getRootView(activity);
         //继承FastMainActivity底部View处理
         if (BaseMainActivity.class.isAssignableFrom(activity.getClass())) {

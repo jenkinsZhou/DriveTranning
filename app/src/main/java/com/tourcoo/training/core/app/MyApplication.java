@@ -2,19 +2,28 @@ package com.tourcoo.training.core.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.apkfuns.logutils.LogUtils;
+import com.blankj.utilcode.util.PermissionUtils;
 import com.simple.spiderman.SpiderMan;
-import com.tourcoo.training.BuildConfig;
+import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.config.RequestConfig;
 import com.tourcoo.training.core.impl.ActivityControlImpl;
 import com.tourcoo.training.core.impl.AppImpl;
 import com.tourcoo.training.core.impl.HttpRequestControlImpl;
+import com.tourcoo.training.core.log.TourCooLogUtil;
+import com.tourcoo.training.core.log.cores.LogFileEngineFactory;
+import com.tourcoo.training.core.log.cores.LogLevel;
+import com.tourcoo.training.core.log.cores.files.LogFileFilter;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
+
+import java.io.File;
+
+import static com.tourcoo.training.core.log.cores.LogLevel.TYPE_VERBOSE;
 
 /**
  * @author :JenkinsZhou
@@ -26,6 +35,7 @@ import com.tourcoo.training.core.retrofit.RetrofitHelper;
 public class MyApplication extends MultiDexApplication {
     public static final String TAG = "MyApplication";
     private static Application application;
+    private static final String PREFIX_TAG_GLOBAL = "DriverTraining";
 
     @Override
     public void onCreate() {
@@ -40,15 +50,10 @@ public class MyApplication extends MultiDexApplication {
      * 同步初始化 （重要组件初始化）
      */
     private void initSync() {
+        initLogConfig();
         SpiderMan.init(this);
-        LogUtils.getLogConfig()
-                .configAllowLog(BuildConfig.DEBUG)
-                .configTagPrefix("JenkinsZhou")
-                .configShowBorders(false)
-                .configFormatTag("%d{HH:mm:ss:SSS} %t %c{-5}");
-
 /*//# 支持写入日志到文件
-        LogUtils.getLog2FileConfig().configLog2FileEnable(true)
+        TourCooLogUtil.getLog2FileConfig().configLog2FileEnable(true)
                 // targetSdkVersion >= 23 需要确保有写sdcard权限
                 .configLog2FilePath("/sdcard/项目文件夹/logs/")
                 .configLog2FileNameFormat("%d{yyyyMMdd}.log")
@@ -124,10 +129,47 @@ public class MyApplication extends MultiDexApplication {
     }
 
 
-
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    private void initLogConfig() {
+        // 配置可展示日志等级
+        TourCooLogUtil.getLogConfig()
+                // 是否在Logcat显示日志
+                .configAllowLog(AppConfig.DEBUG_MODE)
+                // 配置统一的TAG 前缀
+                .configTagPrefix(PREFIX_TAG_GLOBAL)
+                // 首行显示信息(可配置日期，线程等等)
+                .configFormatTag("%d{HH:mm:ss:SSS} %t %c{-5}")
+                // 是否显示边框
+                .configShowBorders(false)
+                .configLevel(TYPE_VERBOSE);
+        TourCooLogUtil.getLog2FileConfig()
+                //不开启日志写入文件
+                .configLog2FileEnable(false);
+     /*   // 支持输入日志到文件
+        String filePath = Environment.getExternalStorageDirectory() + File.separator + "DriverTraining" + File.separator + "logs/";
+        TourCooLogUtil.getLog2FileConfig()
+                .configLog2FileEnable(true)
+                // 是否输出日志到文件
+                .configLogFileEngine(new LogFileEngineFactory(this))
+                // 日志文件引擎实现
+                .configLog2FilePath(filePath)
+                // 日志路径
+                .configLog2FileNameFormat("app-%d{yyyyMMdd}.log")
+                // 日志文件名称
+                .configLog2FileLevel(LogLevel.TYPE_VERBOSE)
+                // 文件日志等级
+                .configLogFileFilter(new LogFileFilter() {
+                    // 文件日志过滤
+                    @Override
+                    public boolean accept(int level, String tag, String logContent) {
+                        return true;
+                    }
+                });*/
+
     }
 }

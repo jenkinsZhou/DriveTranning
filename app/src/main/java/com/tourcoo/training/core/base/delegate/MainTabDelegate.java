@@ -14,10 +14,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.entity.FrameTabEntity;
 import com.tourcoo.training.core.interfaces.IMainView;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.TabLayoutManager;
 import com.tourcoo.training.core.util.FindViewUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
@@ -101,7 +101,7 @@ public class MainTabDelegate {
         if (mListFastTab == null || mListFastTab.size() == 0) {
             return;
         }
-        LogUtils.tag(TAG).i("position:" + mSelectedPosition + ";getCurrentTab:" + mTabLayout.getCurrentTab());
+       TourCooLogUtil.i("position:" + mSelectedPosition + ";getCurrentTab:" + mTabLayout.getCurrentTab());
         mTabLayout.setBackgroundResource(R.color.colorTabBackground);
         mTabLayout.getDelegate()
                 .setTextSelectColor(ContextCompat.getColor(mContext, R.color.colorTabTextSelect))
@@ -249,6 +249,6 @@ public class MainTabDelegate {
             mSavedInstanceState.clear();
             mSavedInstanceState = null;
         }
-        LogUtils.tag(TAG).i( "onDestroy");
+       TourCooLogUtil.i( "onDestroy");
     }
 }

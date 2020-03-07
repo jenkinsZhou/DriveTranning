@@ -18,7 +18,7 @@ public class IosLoadingDialog extends Dialog {
     private TextView tvLoadingText;
 
     public IosLoadingDialog(Context context) {
-        super(context, R.style.DefaultLoadingDialogStyle);
+        super(context);
         this.context = context;
         setCancelable(true);
         setCanceledOnTouchOutside(false);

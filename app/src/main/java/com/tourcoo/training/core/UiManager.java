@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 
-import com.apkfuns.logutils.LogUtils;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.app.MyApplication;
@@ -25,6 +24,7 @@ import com.tourcoo.training.core.interfaces.MultiStatusView;
 import com.tourcoo.training.core.interfaces.QuitAppControl;
 import com.tourcoo.training.core.interfaces.TitleBarViewControl;
 import com.tourcoo.training.core.interfaces.ToastControl;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.dialog.LoadingDialogWrapper;
@@ -47,10 +47,10 @@ public class UiManager {
     static {
         Application application = MyApplication.getContext();
         if (application != null) {
-            LogUtils.tag(TAG).i(TAG, "initSuccess");
+           TourCooLogUtil.i(TAG, "initSuccess");
             init(application);
         }else {
-            LogUtils.tag(TAG).e(TAG, "初始化失败");
+           TourCooLogUtil.e(TAG, "初始化失败");
         }
     }
 
@@ -136,7 +136,7 @@ public class UiManager {
      * @return
      */
     static UiManager init(Application application) {
-        LogUtils.tag(TAG).i("init_mApplication:" + mApplication + ";application;" + application);
+       TourCooLogUtil.i("init_mApplication:" + mApplication + ";application;" + application);
         //保证只执行一次初始化属性
         if (mApplication == null && application != null) {
             mApplication = application;

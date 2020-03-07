@@ -2,7 +2,7 @@ package com.tourcoo.training.core;
 
 import android.app.Activity;
 
-import com.apkfuns.logutils.LogUtils;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.DelegateManager;
 
 
@@ -26,6 +26,6 @@ public class BaseHelper {
      * Activity 关闭onDestroy调用
      */
     public void onDestroy() {
-        LogUtils.tag(TAG).d( "onDestroy");
+       TourCooLogUtil.d( "onDestroy");
     }
 }

@@ -3,14 +3,13 @@ package com.tourcoo.training.ui.account
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.apkfuns.logutils.LogUtils
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
-import com.tourcoo.training.core.manager.DelegateManager
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.manager.GlideManager
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
@@ -138,7 +137,7 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
 //        ToastUtil.show("---"+ivSelectedImage.height)
         setViewGone(ivSelectedImage,true)
         selectFileList?.clear()
-        LogUtils.tag(TAG).i("高度:"+ivSelectedImage.layoutParams.height)
+       TourCooLogUtil.i("高度:"+ivSelectedImage.layoutParams.height)
     }
 
     private fun parsePath(imageList: List<String>?): String? {

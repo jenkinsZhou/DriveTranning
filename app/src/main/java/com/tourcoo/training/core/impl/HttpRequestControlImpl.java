@@ -4,7 +4,6 @@ import android.accounts.AccountsException;
 import android.accounts.NetworkErrorException;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.JsonParseException;
@@ -14,6 +13,7 @@ import com.tourcoo.training.R;
 import com.tourcoo.training.core.interfaces.HttpRequestControl;
 import com.tourcoo.training.core.interfaces.IHttpRequestControl;
 import com.tourcoo.training.core.interfaces.OnHttpRequestListener;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 
 import java.net.ConnectException;
@@ -48,7 +48,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
         int page = httpRequestControl.getCurrentPage();
         int size = httpRequestControl.getPageSize();
 
-        LogUtils.tag(TAG).i("smartRefreshLayout:" + smartRefreshLayout + ";adapter:" + adapter + ";status:" + ";page:" + page + ";class:" + httpRequestControl.getRequestClass());
+       TourCooLogUtil.i("smartRefreshLayout:" + smartRefreshLayout + ";adapter:" + adapter + ";status:" + ";page:" + page + ";class:" + httpRequestControl.getRequestClass());
         if (smartRefreshLayout != null) {
             smartRefreshLayout.finishRefresh();
         }
@@ -90,7 +90,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
 
     @Override
     public void httpRequestError(IHttpRequestControl httpRequestControl, Throwable e) {
-        LogUtils.tag(TAG).e( "httpRequestError:" + e.getMessage());
+       TourCooLogUtil.e( "httpRequestError:" + e.getMessage());
         int reason = R.string.frame_exception_other_error;
 //        int code = FastError.EXCEPTION_OTHER_ERROR;
         if (!NetworkUtils.isConnected()) {

@@ -4,13 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.apkfuns.logutils.LogUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.interfaces.IRefreshView;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.FindViewUtil;
 
 /**
@@ -113,6 +113,6 @@ public class RefreshDelegate {
         mContext = null;
         mManager = null;
         mRootView = null;
-        LogUtils.tag(TAG).i( "onDestroy");
+       TourCooLogUtil.i( "onDestroy");
     }
 }

@@ -3,10 +3,13 @@ package com.tourcoo.training.adapter.news;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.entity.news.NewsEntity;
 
@@ -37,13 +40,25 @@ public class NewsMultipleAdapter extends BaseMultiItemQuickAdapter<NewsEntity, B
             case NEWS_TYPE_IMAGE_HORIZONTAL:
                 helper.setText(R.id.tvNewsTitle, item.newsTitle);
                 ImageView ivImageNew = helper.getView(R.id.ivImageNew);
-             if(item.imageId > 0){
-                 GlideManager.loadImageAuto(item.imageId,ivImageNew,null);
-             }
+                if (item.imageId > 0) {
+                    GlideManager.loadImageAuto(item.imageId, ivImageNew);
+                }
                 break;
             case NEWS_TYPE_IMAGE_VERTICAL:
                 helper.setText(R.id.tvNewsTitle, item.newsTitle);
                 helper.setText(R.id.tvNewsTitle, item.newsTitle);
+                if (item.imagesList != null && !item.imagesList.isEmpty()) {
+                    helper.setGone(R.id.rvNewsImage, true);
+                    RecyclerView rvNewsImage = helper.getView(R.id.rvNewsImage);
+                    rvNewsImage.setLayoutManager(new GridLayoutManager(mContext,3));
+                    NewsImageAdapter adapter = new NewsImageAdapter();
+                    adapter.bindToRecyclerView(rvNewsImage);
+                    adapter.setNewData(item.imagesList);
+                    TourCooLogUtil.d("NewsMultipleAdapter","长度:"+item.imagesList);
+
+                } else {
+                    helper.setGone(R.id.rvNewsImage, false);
+                }
                 break;
         }
     }

@@ -13,6 +13,7 @@ import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
@@ -20,6 +21,7 @@ import android.media.ImageReader;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
+import android.util.Range;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
@@ -27,6 +29,7 @@ import android.view.TextureView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 
 import java.util.ArrayList;
@@ -54,7 +57,7 @@ public class Camera2Helper {
 
     public static final String CAMERA_ID_FRONT = "1";
     public static final String CAMERA_ID_BACK = "0";
-
+    private static Range<Integer>[] fpsRanges;
 
     private String mCameraId;
     private String specificCameraId;
@@ -68,7 +71,6 @@ public class Camera2Helper {
     /**
      * 相机捕捉会话
      * A {@link CameraCaptureSession } for camera preview.
-     *
      */
     private CameraCaptureSession mCaptureSession;
 
@@ -251,7 +253,7 @@ public class Camera2Helper {
 
         @Override
         public void onOpened(@NonNull CameraDevice cameraDevice) {
-            Log.i(TAG, "onOpened: ");
+            LogUtils.iTag(TAG, "onOpened: "+mPreviewSize.getWidth()+"---"+mPreviewSize.getHeight());
             // This method is called when the camera is opened.  We start camera preview here.
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
@@ -503,27 +505,27 @@ public class Camera2Helper {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
             if (PermissionUtils.isGranted(Manifest.permission.CAMERA)) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                   if(cameraManager == null){
-                       return;
-                   }
+                if (checkSelfPermission(Manifest.permission.CAMERA)) {
+                    if (cameraManager == null) {
+                        LogUtils.dTag(TAG, "权限结果:" + checkSelfPermission(Manifest.permission.CAMERA));
+                        return;
+                    }
                     cameraManager.openCamera(mCameraId, mDeviceStateCallback, mBackgroundHandler);
                 }
+            } else {
+                LogUtils.eTag(TAG, "权限结果:" + checkSelfPermission(Manifest.permission.CAMERA));
             }
 
-        } catch (CameraAccessException e) {
-            if (camera2Listener != null) {
-                camera2Listener.onCameraError(e);
-            }
-        } catch (InterruptedException e) {
+        } catch (CameraAccessException | InterruptedException e) {
+            LogUtils.eTag(TAG, e.toString());
             if (camera2Listener != null) {
                 camera2Listener.onCameraError(e);
             }
         }
     }
 
-    private int checkSelfPermission(String permission) {
-        return ContextCompat.checkSelfPermission(context,permission);
+    private boolean checkSelfPermission(String permission) {
+        return PermissionUtils.isGranted(permission);
     }
 
     /**
@@ -592,14 +594,36 @@ public class Camera2Helper {
 
             // This is the output Surface we need to start preview.
             Surface surface = new Surface(texture);
-
+// 该相机的FPS范围
+            CameraManager cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+            if (cameraManager == null){
+                return;
+            }
+            // 设置预览画面的帧率 视实际情况而定选择一个帧率范围
+//            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, fpsRanges[0]);
+//            Log.d("FPS", "SYNC_MAX_LATENCY_PER_FRAME_CONTROL: " + Arrays.toString(fpsRanges));
+            Log.d(TAG, "当前摄像头等级: " + isHardwareSupported(cameraManager.getCameraCharacteristics(specificCameraId)));
             // We set up a CaptureRequest.Builder with the output Surface.
             mPreviewRequestBuilder
-                    = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-
-            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
-                    CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-
+                    = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            //自动对焦
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+//设置自动曝光帧率范围
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE,getRange(mCameraId));
+            //对焦触发器设置为空闲状态
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,CaptureRequest.CONTROL_AF_TRIGGER_IDLE);
+//            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, getRange(mCameraId));
+            //List of metering areas to use for auto-exposure adjustment. 自动曝光
+//            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_REGIONS, getRange(mCameraId));
+            //传感器所需要捕获的区域
+//            mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, mCropRegion);
+//        float minimumLens = mCameraCharacteristics.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
+//        float num = (((float) 1) * minimumLens / 100);
+//        mCaptureRequestBuilder.set(CaptureRequest.LENS_FOCUS_DISTANCE, 0.0f);
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER, CameraMetadata.CONTROL_AE_PRECAPTURE_TRIGGER_START);
             mPreviewRequestBuilder.addTarget(surface);
             mPreviewRequestBuilder.addTarget(mImageReader.getSurface());
 
@@ -644,6 +668,57 @@ public class Camera2Helper {
         mTextureView.setTransform(matrix);
     }
 
+    private Range<Integer> getRange(String specificCameraId) {
+        CameraManager mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        CameraCharacteristics chars = null;
+        if (mCameraManager == null) {
+            return null;
+        }
+        try {
+            chars = mCameraManager.getCameraCharacteristics(specificCameraId);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+        Range<Integer>[] ranges = chars.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
 
+        Range<Integer> result = null;
+
+        for (Range<Integer> range : ranges) {
+            //帧率不能太低，大于10
+            if (range.getLower() < 10)
+                continue;
+            if (result == null)
+                result = range;
+                //FPS下限小于15，弱光时能保证足够曝光时间，提高亮度。range范围跨度越大越好，光源足够时FPS较高，预览更流畅，光源不够时FPS较低，亮度更好。
+            else if (range.getLower() <= 15 && (range.getUpper() - range.getLower()) > (result.getUpper() - result.getLower()))
+                result = range;
+        }
+        return result;
+    }
+
+
+    // CameraCharacteristics  可通过 CameraManager.getCameraCharacteristics() 获取
+    private int isHardwareSupported(CameraCharacteristics characteristics) {
+        Integer deviceLevel = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
+        if (deviceLevel == null) {
+            Log.e(TAG, "can not get INFO_SUPPORTED_HARDWARE_LEVEL");
+            return -1;
+        }
+        switch (deviceLevel) {
+            case CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL:
+                Log.w(TAG, "hardware supported level:LEVEL_FULL");
+                break;
+            case CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY:
+                Log.w(TAG, "hardware supported level:LEVEL_LEGACY");
+                break;
+            case CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3:
+                Log.w(TAG, "hardware supported level:LEVEL_3");
+                break;
+            case CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED:
+                Log.w(TAG, "hardware supported level:LEVEL_LIMITED");
+                break;
+        }
+        return deviceLevel;
+    }
 
 }

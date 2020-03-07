@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:paddingTop="@dimen/dp_12"
+    android:layout_marginStart="@dimen/dp_2"
+    android:layout_marginEnd="@dimen/dp_2"
     android:paddingStart="@dimen/dp_12"
     android:paddingEnd="@dimen/dp_12"
     android:orientation="vertical">
@@ -26,7 +28,7 @@
             android:layout_marginStart="@dimen/dp_5"
             android:src="@drawable/img_verso"
             android:layout_width="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:scaleType="fitXY"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -51,18 +53,29 @@
             android:layout_gravity="center_vertical"
             android:textColor="@color/gray999999"
             android:textSize="@dimen/sp_13" />
-        <TextView
+        <ImageView
             android:layout_gravity="center_vertical"
-            android:text="@string/app_name"
-            android:drawableLeft="@mipmap/ic_share_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_share_small" />
+        <TextView
+            android:layout_marginStart="@dimen/dp_3"
+            android:layout_gravity="center_vertical"
+            android:text="2545"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <TextView
+
+        <ImageView
             android:layout_marginStart="@dimen/dp_10"
             android:layout_gravity="center_vertical"
-            android:text="@string/app_name"
-            android:drawableStart="@mipmap/ic_comment_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_comment_small" />
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="1235"
+            android:layout_marginStart="@dimen/dp_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -25,11 +25,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
-import com.apkfuns.logutils.LogUtils;
-import com.tourcoo.training.core.app.ActivityThread;
-import com.tourcoo.training.core.app.AppGlobals;
 import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.constant.FrameConstant;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -57,8 +55,8 @@ public class CommonUtil {
       /*  try {
             //兼容android P，直接调用@hide注解的方法来获取application对象
             Application app = ActivityThread.currentApplication();
-            LogUtils.tag(TAG).e("getApplication0:" + app);
-            LogUtils.tag(TAG).d(app);
+            TourCooLogUtil.tag(TAG).e("getApplication0:" + app);
+            TourCooLogUtil.tag(TAG).d(app);
             if (app != null) {
                 return app;
             }
@@ -67,7 +65,7 @@ public class CommonUtil {
         try {
             //兼容android P，直接调用@hide注解的方法来获取application对象
             Application app = AppGlobals.getInitialApplication();
-            LogUtils.tag(TAG).e("getApplication1:" + app);
+            TourCooLogUtil.tag(TAG).e("getApplication1:" + app);
             if (app != null) {
                 return app;
             }
@@ -91,7 +89,7 @@ public class CommonUtil {
             int labelRes = packageInfo.applicationInfo.labelRes;
             return context.getResources().getText(labelRes);
         } catch (PackageManager.NameNotFoundException e) {
-            LogUtils.tag(TAG).e(TAG, "getAppName:" + e.getMessage());
+           TourCooLogUtil.e(TAG, "getAppName:" + e.getMessage());
         }
         return null;
     }
@@ -184,7 +182,7 @@ public class CommonUtil {
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
-            LogUtils.tag(TAG).e(TAG, "getVersionName:" + e.getMessage());
+            TourCooLogUtil.e(TAG, "getVersionName:" + e.getMessage());
         }
         return "";
     }
@@ -203,7 +201,7 @@ public class CommonUtil {
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
-            LogUtils.tag(TAG).e(TAG, "getVersionCode:" + e.getMessage());
+            TourCooLogUtil.e(TAG, "getVersionCode:" + e.getMessage());
         }
         return -1;
     }
@@ -334,7 +332,7 @@ public class CommonUtil {
             marketIntent.setData(Uri.parse(mAddress));
             mContext.startActivity(marketIntent);
         } catch (Exception e) {
-            LogUtils.tag(TAG).e(TAG, "jumpMarket:" + e.getMessage());
+            TourCooLogUtil.e(TAG, "jumpMarket:" + e.getMessage());
         }
     }
 

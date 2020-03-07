@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.tourcoo.training.core.BaseHelper;
 import com.tourcoo.training.core.base.delegate.RefreshDelegate;
 import com.tourcoo.training.core.base.delegate.TitleDelegate;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class DelegateManager {
      */
     public void removeFastRefreshDelegate(Class cls) {
         RefreshDelegate delegate = getFastRefreshDelegate(cls);
-        LogUtils.tag(TAG).i("removeFastRefreshDelegate_class:" + cls + ";delegate:" + delegate);
+       TourCooLogUtil.i("removeFastRefreshDelegate_class:" + cls + ";delegate:" + delegate);
         if (delegate != null) {
             delegate.onDestroy();
             mFastRefreshDelegateMap.remove(cls);
@@ -127,7 +127,7 @@ public class DelegateManager {
         if (mBasisHelperMap.containsKey(activity)) {
             List<BaseHelper> list = mBasisHelperMap.get(activity);
             if (list != null) {
-                LogUtils.tag(TAG).i("list:" + list.size());
+               TourCooLogUtil.i("list:" + list.size());
                 for (BaseHelper item : list) {
                     item.onDestroy();
                 }
