@@ -1,6 +1,7 @@
 package com.tourcoo.training.core.base.delegate;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.view.View;
 
 import com.tourcoo.training.R;
@@ -66,6 +67,11 @@ public class TitleDelegate {
         }
         iTitleBarView.beforeSetTitleBar(mTitleBar);
         iTitleBarView.setTitleBar(mTitleBar);
+        if(iTitleBarView.isMainTitleBold()){
+            mTitleBar.getMainTitleTextView().setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        }else {
+            mTitleBar.getMainTitleTextView().setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        }
     }
 
     /**

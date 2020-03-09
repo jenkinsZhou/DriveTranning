@@ -172,7 +172,7 @@
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
 
-            <TextView
+          <!--  <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_radius_20_blue53bfff"
@@ -184,6 +184,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_15" />
             <TextView
+                android:id="@+id/tvNextQuestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_radius_20_blue5087ff"
@@ -194,7 +195,7 @@
                 android:paddingBottom="@dimen/dp_10"
                 android:text="下一题"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_15" />
+                android:textSize="@dimen/sp_15" />-->
         </LinearLayout>
 
         <androidx.core.widget.NestedScrollView

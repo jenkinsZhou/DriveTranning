@@ -25,6 +25,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.MainTabActivity;
 import com.tourcoo.training.ui.account.IndustrialRegisterActivity;
+import com.tourcoo.training.ui.exam.OnlineExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.face.FaceRecognitionActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
@@ -164,6 +165,9 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 break;
             case R.id.llMineInfo:
                 CommonUtil.startActivity(mContext, IndustrialRegisterActivity.class);
+                break;
+            case R.id.ivAddCar:
+                CommonUtil.startActivity(mContext, OnlineExamActivity.class);
                 break;
             default:
                 break;

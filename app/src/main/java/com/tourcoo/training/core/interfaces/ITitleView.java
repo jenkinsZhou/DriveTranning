@@ -39,4 +39,8 @@ public interface ITitleView {
         return -SizeUtil.dp2px(10);
     }
 
+    default boolean isMainTitleBold(){
+        return true;
+    }
+
 }
