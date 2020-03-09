@@ -69,6 +69,8 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         rvStudyAchievement.setLayoutManager(new GridLayoutManager(mContext, 4));
         mContentView.findViewById(R.id.ivSetting).setOnClickListener(this);
         mContentView.findViewById(R.id.llMineInfo).setOnClickListener(this);
+        mContentView.findViewById(R.id.ivAddCar).setOnClickListener(this);
+
         setStatusBarModeWhite(this);
     }
 

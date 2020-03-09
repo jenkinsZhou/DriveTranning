@@ -44,6 +44,7 @@
         <activity android:name=".ui.account.LoginActivity" />
         <activity android:name=".ui.account.MyAccountActivity" />
         <activity android:name=".ui.study.StudyMedalRecordActivity" />
+        <activity android:name=".ui.exam.OnlineExamActivity" />
     </application>
 
 </manifest>
