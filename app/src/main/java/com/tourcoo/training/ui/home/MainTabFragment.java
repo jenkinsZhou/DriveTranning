@@ -1,19 +1,11 @@
 package com.tourcoo.training.ui.home;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.view.View;
 
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
-
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * @author :JenkinsZhou
@@ -22,7 +14,7 @@ import java.io.IOException;
  * @date 2020年02月24日16:05
  * @Email: 971613168@qq.com
  */
-public class MainFragment extends BaseTitleFragment implements View.OnClickListener  {
+public class MainTabFragment extends BaseTitleFragment implements View.OnClickListener  {
     @Override
     public void onClick(View v) {
 
@@ -41,9 +33,9 @@ public class MainFragment extends BaseTitleFragment implements View.OnClickListe
 
 
 
-    public static MainFragment newInstance() {
+    public static MainTabFragment newInstance() {
         Bundle args = new Bundle();
-        MainFragment fragment = new MainFragment();
+        MainTabFragment fragment = new MainTabFragment();
         fragment.setArguments(args);
         return fragment;
     }

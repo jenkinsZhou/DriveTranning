@@ -21,7 +21,7 @@ import com.tourcoo.training.entity.news.NewsEntity.NEWS_TYPE_IMAGE_VERTICAL
  * @date 2020年03月06日14:55
  * @Email: 971613168@qq.com
  */
-class NewsFragment : BaseBlueBgTitleFragment() {
+class NewsTabFragment : BaseBlueBgTitleFragment() {
     private var adapter: NewsMultipleAdapter? = null
     private var rvCommon: RecyclerView? = null
     private var mSmartRefreshLayout: SmartRefreshLayout? = null
@@ -35,15 +35,14 @@ class NewsFragment : BaseBlueBgTitleFragment() {
         mSmartRefreshLayout?.setRefreshHeader(ClassicsHeader(mContext))
         rvCommon?.layoutManager = LinearLayoutManager(mContext)
         adapter = NewsMultipleAdapter(ArrayList())
-
         adapter?.bindToRecyclerView(rvCommon)
         adapter?.setNewData(testData())
     }
 
     companion object {
-        fun newInstance(): NewsFragment {
+        fun newInstance(): NewsTabFragment {
             val args = Bundle()
-            val fragment = NewsFragment()
+            val fragment = NewsTabFragment()
             fragment.arguments = args
             return fragment
         }
@@ -51,8 +50,8 @@ class NewsFragment : BaseBlueBgTitleFragment() {
 
     override fun setTitleBar(titleBar: TitleBarView?) {
         super.setTitleBar(titleBar)
-        val leftView = titleBar?.getTextView(Gravity.START)
         titleBar?.setTitleMainText("资讯")
+        val leftView = titleBar?.getTextView(Gravity.START)
         setViewGone(leftView, false)
     }
 

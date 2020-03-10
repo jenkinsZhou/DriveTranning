@@ -3,8 +3,6 @@ package com.tourcoo.training.ui.home;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,18 +14,15 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.mine.MineItemAdapter;
-import com.tourcoo.training.control.listener.OnBackPressListener;
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
-import com.tourcoo.training.ui.MainTabActivity;
 import com.tourcoo.training.ui.account.IndustrialRegisterActivity;
 import com.tourcoo.training.ui.exam.OnlineExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
-import com.tourcoo.training.ui.face.FaceRecognitionActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 
 import java.util.ArrayList;
@@ -40,7 +35,7 @@ import java.util.List;
  * @date 2019年12月27日17:39
  * @Email: 971613168@qq.com
  */
-public class MineFragment extends BaseTitleFragment implements View.OnClickListener {
+public class MineTabFragment extends BaseTitleFragment implements View.OnClickListener {
     @Override
     public int getContentLayout() {
         return R.layout.fragement_mine;
@@ -119,9 +114,9 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         achievementAdapter.setNewData(accountList);
     }
 
-    public static MineFragment newInstance() {
+    public static MineTabFragment newInstance() {
         Bundle args = new Bundle();
-        MineFragment fragment = new MineFragment();
+        MineTabFragment fragment = new MineTabFragment();
         fragment.setArguments(args);
         return fragment;
     }

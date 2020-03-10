@@ -93,6 +93,8 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     //日志写入引擎
     implementation 'com.apkfuns.log2file:log2file:1.3.1'
+    //预览版
+    implementation 'com.youth.banner:banner:2.0.0-alpha02'
 
 
 }
