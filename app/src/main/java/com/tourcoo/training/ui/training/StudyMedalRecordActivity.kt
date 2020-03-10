@@ -1,8 +1,7 @@
-package com.tourcoo.training.ui.study
+package com.tourcoo.training.ui.training
 
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
-import com.blankj.utilcode.util.LogUtils
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.study.StudyMedalAdapter

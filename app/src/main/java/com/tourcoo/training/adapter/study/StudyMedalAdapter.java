@@ -1,6 +1,5 @@
 package com.tourcoo.training.adapter.study;
 
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 

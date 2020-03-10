@@ -48,7 +48,7 @@
         </LinearLayout>
 
 
-        <com.tourcoo.training.widget.reader.ReaderViewPager
+        <com.tourcoo.training.widget.viewpager.ReaderViewPager
             android:id="@+id/vpExamOnline"
             android:layout_above="@id/llBottom"
             android:layout_alignParentTop="true"

@@ -27,7 +27,7 @@
         </activity>
         <activity android:name="com.tourcoo.training.ui.MainActivity"/>
         <activity android:name="com.tourcoo.training.core.base.activity.QQTitleActivity"/>
-        <activity android:name=".ui.study.FreeStudyActivity" />
+        <activity android:name=".ui.training.FreeStudyActivity" />
         <activity android:name=".ui.SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -43,8 +43,9 @@
         <activity android:name=".ui.account.DriverRegisterActivity" />
         <activity android:name=".ui.account.LoginActivity" />
         <activity android:name=".ui.account.MyAccountActivity" />
-        <activity android:name=".ui.study.StudyMedalRecordActivity" />
+        <activity android:name=".ui.training.StudyMedalRecordActivity" />
         <activity android:name=".ui.exam.OnlineExamActivity" />
+        <activity android:name=".ui.training.ProfessionalTrainingFragment" />
     </application>
 
 </manifest>

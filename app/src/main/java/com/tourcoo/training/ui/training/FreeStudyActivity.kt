@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.study
+package com.tourcoo.training.ui.training
 
 import android.os.Bundle
 import com.tourcoo.training.core.base.activity.BaseTitleActivity

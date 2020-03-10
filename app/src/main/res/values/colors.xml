@@ -100,7 +100,8 @@
     <!--橙色区域-->
     <color name="orangeFE7000">#FE7000</color>
     <color name="orangeFEF4EC">#FEF4EC</color>
-
+    <color name="orangeEEA849">#EEA849</color>
+    <color name="orangeF46B45">#F46B45</color>
     <!--黄色区域-->
     <color name="yellowFFB400">#FFB400</color>
     <color name="yellowFBE945">#FBE945</color>

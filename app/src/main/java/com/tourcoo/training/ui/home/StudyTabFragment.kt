@@ -2,11 +2,19 @@ package com.tourcoo.training.ui.home
 
 import android.os.Bundle
 import android.view.Gravity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.tourcoo.training.R
+import com.tourcoo.training.adapter.exam.ExamFragmentPagerAdapter
 import com.tourcoo.training.core.base.fragment.BaseBlueBgTitleFragment
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.ui.training.ProfessionalTrainingFragment
+import com.tourcoo.training.ui.training.SafeTrainingFragment
+import com.tourcoo.training.ui.training.WorkProTrainingFragment
 import com.tourcoo.training.widget.banner.BannerEntity
 import com.tourcoo.training.widget.banner.ImageBannerAdapter
+import com.tourcoo.training.widget.viewpager.AutoHeightViewPager
 import com.youth.banner.indicator.CircleIndicator
 import kotlinx.android.synthetic.main.fragment_tab_study.*
 import java.util.*
@@ -19,6 +27,10 @@ import java.util.*
  * @Email: 971613168@qq.com
  */
 class StudyTabFragment : BaseBlueBgTitleFragment() {
+    private var fragmentExamAdapter: ExamFragmentPagerAdapter? = null
+    private var list: ArrayList<Fragment>? = null
+    private var currentPosition = 0
+    private var trainingViewPager: AutoHeightViewPager?= null
     override fun getContentLayout(): Int {
         return R.layout.fragment_tab_study
     }
@@ -33,7 +45,26 @@ class StudyTabFragment : BaseBlueBgTitleFragment() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        trainingViewPager = mContentView.findViewById(R.id.trainingViewPager)
+        list = ArrayList()
+        val activity = mContext as AppCompatActivity
+        fragmentExamAdapter = ExamFragmentPagerAdapter(activity.supportFragmentManager, list)
+        testLoadData()
+        trainingViewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
 
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                // 切换到当前页面，重置高度
+                trainingViewPager?.requestLayout();
+            }
+
+        })
     }
 
 
@@ -46,7 +77,7 @@ class StudyTabFragment : BaseBlueBgTitleFragment() {
         }
     }
 
-    fun getTestData3(): List<BannerEntity>? {
+  private  fun getTestData3(): List<BannerEntity>? {
         val list: MutableList<BannerEntity> = ArrayList()
         list.add(BannerEntity("https://img.zcool.cn/community/011ad05e27a173a801216518a5c505.jpg", null, 1))
         list.add(BannerEntity("https://img.zcool.cn/community/0148fc5e27a173a8012165184aad81.jpg", null, 1))
@@ -57,4 +88,19 @@ class StudyTabFragment : BaseBlueBgTitleFragment() {
         list.add(BannerEntity("https://img.zcool.cn/community/01f8735e27a174a8012165188aa959.jpg", null, 1))
         return list
     }
+
+
+    private fun testLoadData() {
+        list?.clear()
+      /*  for (i in 0 until 10) {
+            list?.add(OnlineExamFragment.newInstance())
+        }*/
+        list?.add(ProfessionalTrainingFragment.newInstance())
+        list?.add(WorkProTrainingFragment.newInstance())
+        list?.add(SafeTrainingFragment.newInstance())
+        trainingViewPager?.offscreenPageLimit = 4
+        trainingViewPager?.adapter = fragmentExamAdapter
+    }
+
+
 }

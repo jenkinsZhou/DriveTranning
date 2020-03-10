@@ -1,4 +1,4 @@
-package com.tourcoo.training.widget.reader;
+package com.tourcoo.training.widget.viewpager;
 
 import android.content.Context;
 import android.view.animation.Interpolator;
