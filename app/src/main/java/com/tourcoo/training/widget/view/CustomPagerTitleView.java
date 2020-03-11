@@ -1,7 +1,11 @@
 package com.tourcoo.training.widget.view;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,7 +15,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.ResourceUtil;
 
+import net.lucode.hackware.magicindicator.buildins.UIUtil;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IMeasurablePagerTitleView;
 
 /**
@@ -21,66 +28,105 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IMeasurab
  * @date 2020年03月11日17:17
  * @Email: 971613168@qq.com
  */
-public class CustomPagerTitleView extends View implements IMeasurablePagerTitleView {
+public class CustomPagerTitleView extends androidx.appcompat.widget.AppCompatTextView implements IMeasurablePagerTitleView {
 
-    private TextView tvPageTitle;
-    private RelativeLayout rlParentLayout;
+    protected int mSelectedColor;
+    protected int mNormalColor;
+
     public CustomPagerTitleView(Context context) {
-        super(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.view_pager_change_view,null);
-        rlParentLayout = (RelativeLayout) view;
-        tvPageTitle = view.findViewById(R.id.tvPageTitle);
+        super(context, null);
+        init(context);
     }
 
-    public CustomPagerTitleView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public CustomPagerTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public CustomPagerTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    @Override
-    public int getContentLeft() {
-        return 0;
-    }
-
-    @Override
-    public int getContentTop() {
-        return 0;
-    }
-
-    @Override
-    public int getContentRight() {
-        return 0;
-    }
-
-    @Override
-    public int getContentBottom() {
-        return 0;
+    private void init(Context context) {
+        setGravity(Gravity.CENTER);
+        int padding = UIUtil.dip2px(context, 10);
+        setPadding(padding, 0, padding, 0);
+        setSingleLine();
+        setEllipsize(TextUtils.TruncateAt.END);
     }
 
     @Override
     public void onSelected(int index, int totalCount) {
-
+        setTextColor(mSelectedColor);
+        setBackground(ResourceUtil.getDrawable(R.drawable.bg_radius_5_white));
     }
 
     @Override
     public void onDeselected(int index, int totalCount) {
-
+        setTextColor(mNormalColor);
+        setBackground(ResourceUtil.getDrawable(R.drawable.bg_radius_5_white));
     }
 
     @Override
     public void onLeave(int index, int totalCount, float leavePercent, boolean leftToRight) {
-
     }
 
     @Override
     public void onEnter(int index, int totalCount, float enterPercent, boolean leftToRight) {
+    }
 
+    @Override
+    public int getContentLeft() {
+        Rect bound = new Rect();
+        String longestString = "";
+        if (getText().toString().contains("\n")) {
+            String[] brokenStrings = getText().toString().split("\\n");
+            for (String each : brokenStrings) {
+                if (each.length() > longestString.length()) longestString = each;
+            }
+        } else {
+            longestString = getText().toString();
+        }
+        getPaint().getTextBounds(longestString, 0, longestString.length()*2, bound);
+        int contentWidth = bound.width();
+        return (getLeft() + getWidth() / 2 - contentWidth / 2)*2;
+    }
+
+    @Override
+    public int getContentTop() {
+        Paint.FontMetrics metrics = getPaint().getFontMetrics();
+        float contentHeight = metrics.bottom - metrics.top;
+        return (int) (getHeight() / 2 - contentHeight / 2);
+    }
+
+    @Override
+    public int getContentRight() {
+        Rect bound = new Rect();
+        String longestString = "";
+        if (getText().toString().contains("\n")) {
+            String[] brokenStrings = getText().toString().split("\\n");
+            for (String each : brokenStrings) {
+                if (each.length() > longestString.length()) longestString = each;
+            }
+        } else {
+            longestString = getText().toString();
+        }
+        getPaint().getTextBounds(longestString, 0, longestString.length(), bound);
+        int contentWidth = bound.width();
+        return (getLeft() + getWidth() / 2 + contentWidth / 2)*2;
+    }
+
+    @Override
+    public int getContentBottom() {
+        Paint.FontMetrics metrics = getPaint().getFontMetrics();
+        float contentHeight = metrics.bottom - metrics.top;
+        return (int) (getHeight() / 2 + contentHeight / 2);
+    }
+
+    public int getSelectedColor() {
+        return mSelectedColor;
+    }
+
+    public void setSelectedColor(int selectedColor) {
+        mSelectedColor = selectedColor;
+    }
+
+    public int getNormalColor() {
+        return mNormalColor;
+    }
+
+    public void setNormalColor(int normalColor) {
+        mNormalColor = normalColor;
     }
 }

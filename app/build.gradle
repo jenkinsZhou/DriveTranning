@@ -97,7 +97,7 @@ dependencies {
     implementation 'com.youth.banner:banner:2.0.0-alpha02'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
-
+    implementation 'com.shuyu:GSYVideoPlayer:7.1.2'
 
 }
 repositories {

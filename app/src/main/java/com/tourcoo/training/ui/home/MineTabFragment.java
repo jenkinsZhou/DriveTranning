@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tourcoo.training.R;
@@ -23,6 +24,7 @@ import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.account.IndustrialRegisterActivity;
 import com.tourcoo.training.ui.exam.OnlineExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
+import com.tourcoo.training.ui.training.online.StudyOnlineActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
         mContentView.findViewById(R.id.ivSetting).setOnClickListener(this);
         mContentView.findViewById(R.id.llMineInfo).setOnClickListener(this);
         mContentView.findViewById(R.id.ivAddCar).setOnClickListener(this);
-
+        initItemClick();
         setStatusBarModeWhite(this);
     }
 
@@ -192,5 +194,18 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
         }
     }
 
-
+private void initItemClick(){
+    achievementAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            switch (position) {
+                case 0:
+                    CommonUtil.startActivity(mContext, StudyOnlineActivity.class);
+                    break;
+                default:
+                    break;
+            }
+        }
+    });
+}
 }

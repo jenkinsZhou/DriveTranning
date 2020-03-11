@@ -14,6 +14,7 @@ import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.SizeUtil
+import com.tourcoo.training.widget.view.CustomPagerTitleView
 import com.tourcoo.training.widget.viewpager.AutoHeightViewPager
 import kotlinx.android.synthetic.main.fragment_training_safe.*
 import net.lucode.hackware.magicindicator.MagicIndicator
@@ -110,7 +111,7 @@ class SafeTrainingFragment : BaseFragment() {
 
             override fun getTitleView(context: Context, index: Int): IPagerTitleView {
                 val simplePagerTitleView = ColorTransitionPagerTitleView(context)
-                simplePagerTitleView.text = titleList[index]
+                simplePagerTitleView.setText(titleList[index])
                 simplePagerTitleView.normalColor = ResourceUtil.getColor(R.color.redE54E3F)
                 simplePagerTitleView.selectedColor = ResourceUtil.getColor(R.color.black000000)
                 simplePagerTitleView.setOnClickListener { safeTrainingViewPager!!.currentItem = index }
