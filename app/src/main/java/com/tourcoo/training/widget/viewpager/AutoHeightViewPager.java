@@ -7,6 +7,8 @@ import android.view.View;
 
 import androidx.viewpager.widget.ViewPager;
 
+import com.tourcoo.training.core.log.TourCooLogUtil;
+
 /**
  * @author :JenkinsZhou
  * @description :
@@ -31,7 +33,6 @@ public class AutoHeightViewPager  extends SwitchScrollViewPager {
             // measure the current child view with the specified measure spec
             view.measure(widthMeasureSpec, heightMeasureSpec);
         }
-
         setMeasuredDimension(getMeasuredWidth(), measureHeight(heightMeasureSpec, view));
     }
 
@@ -67,7 +68,7 @@ public class AutoHeightViewPager  extends SwitchScrollViewPager {
      *
      * @param view
      */
-    public void measeureView(View view) {
+    public void measure(View view) {
 
         int intw = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int inth = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -80,6 +81,7 @@ public class AutoHeightViewPager  extends SwitchScrollViewPager {
         // 获取测量后的view尺寸
         int intwidth = view.getMeasuredWidth();
         int intheight = view.getMeasuredHeight();
+        TourCooLogUtil.i("AutoHeightViewPager","当前宽高:"+intwidth+"----"+intheight);
     }
 
 

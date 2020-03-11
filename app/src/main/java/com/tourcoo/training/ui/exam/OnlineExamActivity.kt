@@ -5,9 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.tourcoo.training.R
-import com.tourcoo.training.adapter.exam.ExamFragmentPagerAdapter
+import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
-import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import kotlinx.android.synthetic.main.activity_exam_online.*
 
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_exam_online.*
  * @Email: 971613168@qq.com
  */
 class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
-    private var fragmentExamAdapter: ExamFragmentPagerAdapter? = null
+    private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
     override fun getContentLayout(): Int {
@@ -34,8 +33,12 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     override fun initView(savedInstanceState: Bundle?) {
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
+    }
+
+    override fun loadData() {
+        super.loadData()
         list = ArrayList()
-        fragmentExamAdapter = ExamFragmentPagerAdapter(supportFragmentManager, list)
+        fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
         testLoadData()
         vpExamOnline.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
@@ -46,8 +49,6 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
 
             override fun onPageSelected(position: Int) {
                 currentPosition = position
-                val currentPage = position+1
-                ToastUtil.show("当前为第"+currentPage+"共"+list?.size+"页")
             }
 
         })
@@ -58,7 +59,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         for (i in 0 until 10) {
             list?.add(OnlineExamFragment.newInstance())
         }
-        vpExamOnline.adapter = fragmentExamAdapter
+        vpExamOnline.adapter = fragmentCommonAdapter
     }
 
     override fun onClick(v: View?) {

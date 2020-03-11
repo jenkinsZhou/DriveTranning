@@ -41,7 +41,7 @@ import org.greenrobot.eventbus.EventBus;
  * 5、2019-12-19 11:54:20 增加EventBus Subscribe注解方法判断
  */
 public abstract class BaseFragment extends RxFragment implements IBasicView {
-
+    private long delay = 100;
     protected Handler baseHandler = new Handler();
     protected Activity mContext;
     protected View mContentView;
@@ -263,14 +263,14 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
         }
         baseHandler.postDelayed(() -> ImmersionBar.with(activity)
                 .statusBarColor(color)
-                .init(), 50);
+                .init(), delay);
     }
 
 
     protected void setStatusBarDarkMode(Activity activity, boolean isDarkFont) {
         baseHandler.postDelayed(() -> ImmersionBar.with(activity)
                 .statusBarDarkFont(isDarkFont, 0.2f)
-                .init(), 50);
+                .init(), delay);
     }
 
 
@@ -288,7 +288,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
         }
         baseHandler.postDelayed(() -> ImmersionBar.with(fragment)
                 .statusBarColor(color)
-                .init(), 50);
+                .init(), delay);
     }
 
     private void setStatusBar(RxFragment fragment, boolean isDarkFont) {
@@ -299,7 +299,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
                         .statusBarDarkFont(isDarkFont, 0.2f)
                         .init();
             }
-        }, 50);
+        }, delay);
     }
 
     protected void setViewVisible(View view, boolean visible) {

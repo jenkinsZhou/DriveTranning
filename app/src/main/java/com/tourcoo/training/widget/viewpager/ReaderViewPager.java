@@ -40,7 +40,7 @@ public class ReaderViewPager extends ViewPager {
             FixedSpeedScroller scroller = new FixedSpeedScroller(getContext(),
                     new DecelerateInterpolator());
             field.set(this, scroller);
-            scroller.setDuration(300);
+            scroller.setDuration(1200);
         } catch (Exception e) {
             Log.e("@", "", e);
         }

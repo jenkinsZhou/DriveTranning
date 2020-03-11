@@ -43,12 +43,11 @@ public class ResourceUtil {
         return result;
     }
 
-    public Drawable getDrawable(int res) {
+    public static Drawable getDrawable(int res) {
         Drawable drawable = null;
         try {
-            drawable = mContext.getResources().getDrawable(res);
+            drawable =ContextCompat.getDrawable(MyApplication.getContext(),res);
         } catch (Exception e) {
-
         }
         return drawable;
     }

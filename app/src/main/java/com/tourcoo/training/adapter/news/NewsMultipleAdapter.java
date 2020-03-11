@@ -54,7 +54,6 @@ public class NewsMultipleAdapter extends BaseMultiItemQuickAdapter<NewsEntity, B
                     NewsImageAdapter adapter = new NewsImageAdapter();
                     adapter.bindToRecyclerView(rvNewsImage);
                     adapter.setNewData(item.imagesList);
-                    TourCooLogUtil.d("NewsMultipleAdapter","长度:"+item.imagesList);
 
                 } else {
                     helper.setGone(R.id.rvNewsImage, false);

@@ -8,6 +8,8 @@ import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
 import com.blankj.utilcode.util.PermissionUtils;
+import com.didichuxing.doraemonkit.DoraemonKit;
+import com.didichuxing.doraemonkit.kit.webdoor.WebDoorManager;
 import com.simple.spiderman.SpiderMan;
 import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.UiManager;
@@ -20,6 +22,7 @@ import com.tourcoo.training.core.log.cores.LogFileEngineFactory;
 import com.tourcoo.training.core.log.cores.LogLevel;
 import com.tourcoo.training.core.log.cores.files.LogFileFilter;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
+import com.tourcoo.training.core.util.StackUtil;
 
 import java.io.File;
 
@@ -52,6 +55,7 @@ public class MyApplication extends MultiDexApplication {
     private void initSync() {
         initLogConfig();
         SpiderMan.init(this);
+        initDebugKit();
 /*//# 支持写入日志到文件
         TourCooLogUtil.getLog2FileConfig().configLog2FileEnable(true)
                 // targetSdkVersion >= 23 需要确保有写sdcard权限
@@ -170,6 +174,23 @@ public class MyApplication extends MultiDexApplication {
                         return true;
                     }
                 });*/
+
+    }
+
+    private void initDebugKit(){
+           if (AppConfig.DEBUG_MODE) {
+            //初始化哆啦A梦
+            DoraemonKit.install(this);
+            // H5任意门功能需要，非必须
+            DoraemonKit.setWebDoorCallback(new WebDoorManager.WebDoorCallback() {
+                @Override
+                public void overrideUrlLoading(Context context, String s) {
+                    // 使用自己的H5容器打开这个链接
+//                    LoggerManager.i("overrideUrlLoading", "url:" + s);
+//                    Web.start(StackUtil.getInstance().getCurrent(), s);
+                }
+            });
+        }
 
     }
 }

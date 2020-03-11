@@ -42,4 +42,8 @@ public class SwitchScrollViewPager extends ViewPager {
             return super.onInterceptTouchEvent(arg0);
         }
     }
+
+    public void setScollEnable(boolean canScroll){
+        noScroll = !canScroll;
+    }
 }
