@@ -26,6 +26,32 @@ public class ExaminationEntity {
     private String QuestionId;
     private String QuestionContent;
     private boolean HasAnswered;
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    /**
+     * 题目编号
+     */
+    private int number;
+    /**
+     * 是否回答正确
+     */
+    private boolean correct;
+
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
+    }
+
     private String QuestionType;
 
     public String getQuestionType() {

@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.tourcoo.training.R
+import com.tourcoo.training.adapter.exam.QuestionNumberAdapter
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.exam.ExaminationEntity
 import kotlinx.android.synthetic.main.activity_exam_online.*
 
 /**
@@ -21,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_exam_online.*
  */
 class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
+    private var questionNumAdapter: QuestionNumberAdapter? = null
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
     private val delayTime = 500L
@@ -37,13 +41,17 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     override fun initView(savedInstanceState: Bundle?) {
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
+        questionNumRv.layoutManager = GridLayoutManager(mContext,6)
     }
 
     override fun loadData() {
         super.loadData()
         list = ArrayList()
         fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
+        questionNumAdapter = QuestionNumberAdapter()
+        questionNumAdapter?.bindToRecyclerView(questionNumRv)
         testLoadData()
+        loadBottomSheetBar()
         vpExamOnline.offscreenPageLimit = list!!.size - 1
         vpExamOnline.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
@@ -115,5 +123,23 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                 skipNextQuestionNow()
             }
         }
+    }
+
+    private fun getQuestionList() : ArrayList<ExaminationEntity>{
+        val questionList = ArrayList<ExaminationEntity>()
+        for (i in 0 until  30){
+           val exam =  ExaminationEntity()
+            exam.number = i+1
+            questionList.add(exam)
+        }
+        return questionList
+    }
+
+
+    private fun loadBottomSheetBar(){
+        if(list == null){
+            return
+        }
+        questionNumAdapter?.setNewData(getQuestionList())
     }
 }
