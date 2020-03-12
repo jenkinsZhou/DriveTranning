@@ -1,12 +1,14 @@
 package com.tourcoo.training.ui.exam
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
+import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import kotlinx.android.synthetic.main.activity_exam_online.*
 
@@ -21,6 +23,8 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
+    private val delayTime = 500L
+    private val answerHandler = Handler()
     override fun getContentLayout(): Int {
         return R.layout.activity_exam_online
     }
@@ -40,6 +44,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         list = ArrayList()
         fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
         testLoadData()
+        vpExamOnline.offscreenPageLimit = list!!.size - 1
         vpExamOnline.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
@@ -65,15 +70,10 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvNextQuestion -> {
-                if (currentPosition < list!!.size - 1) {
-                    vpExamOnline.setCurrentItem(currentPosition + 1, true)
-                }
-
+                doAnswerQuestion()
             }
             R.id.tvLastQuestion -> {
-                if (currentPosition > 0) {
-                    vpExamOnline.setCurrentItem(currentPosition -1, true)
-                }
+                skipLastQuestion()
             }
             else -> {
             }
@@ -81,4 +81,39 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
+    private fun skipLastQuestion() {
+        if (currentPosition > 0) {
+            vpExamOnline.setCurrentItem(currentPosition - 1, true)
+        }
+    }
+
+    private fun skipNextQuestionNow() {
+        skipNextQuestionDelay(1)
+    }
+
+    private fun skipNextQuestionDelay(delay: Long) {
+        if (currentPosition < list!!.size - 1) {
+            answerHandler.postDelayed({
+                vpExamOnline.setCurrentItem(currentPosition + 1, true)
+            }, delay)
+        }
+    }
+
+
+    private fun doAnswerQuestion() {
+        if (currentPosition < list!!.size - 1) {
+            val fragment = list!![currentPosition] as OnlineExamFragment
+            val selectCount = fragment.getSelectCount()
+            if (fragment.isMultipleAnswer() && selectCount == 1) {
+                ToastUtil.show("这道题是多选哦")
+                return
+            }
+            val hasAnswer = fragment.answerQuestion()
+            if (hasAnswer) {
+                skipNextQuestionDelay(delayTime)
+            } else {
+                skipNextQuestionNow()
+            }
+        }
+    }
 }

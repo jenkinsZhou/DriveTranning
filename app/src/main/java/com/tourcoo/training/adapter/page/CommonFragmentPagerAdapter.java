@@ -18,7 +18,7 @@ public class CommonFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<Fragment> fragmentList;
     public CommonFragmentPagerAdapter(@NonNull FragmentManager fm, List<Fragment> fragmentList) {
-        super(fm, BEHAVIOR_SET_USER_VISIBLE_HINT);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.fragmentList = fragmentList;
     }
 
