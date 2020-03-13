@@ -66,12 +66,12 @@ public class QuestionAdapter extends BaseQuickAdapter<Answer, BaseViewHolder> {
 
     private void showWrong(ImageView imageView,TextView textView){
 //        GlideManager.loadImg(R.mipmap.ic_answer_wrong,imageView);
-        imageView.setImageResource(R.drawable.icon_cw);
+        imageView.setImageResource(R.mipmap.ic_answer_wrong);
         textView.setTextColor(ResourceUtil.getColor(R.color.redF35757));
     }
 
     private void showAnswerCorrect(ImageView imageView,TextView textView){
-        imageView.setImageResource(R.drawable.icon_zq);
+        imageView.setImageResource(R.mipmap.ic_answer_correct);
 //        GlideManager.loadImg(R.mipmap.ic_answer_correct,imageView);
         textView.setTextColor(ResourceUtil.getColor(R.color.green42AF3D));
     }

@@ -47,6 +47,12 @@
         <activity android:name=".ui.exam.OnlineExamActivity" />
         <activity android:name=".ui.training.ProfessionalTrainingFragment" />
         <activity android:name=".ui.training.online.StudyOnlineActivity" />
+        <activity android:name=".ui.account.UploadIdCardActivity" />
+        <activity android:name=".widget.idcardcamera.camera.CameraActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            />
+        <activity android:name=".ui.account.IdCardInfoActivity" />
     </application>
 
 </manifest>

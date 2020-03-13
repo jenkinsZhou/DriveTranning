@@ -3,4 +3,8 @@
     <string name="king_keyboard_key_done_text">完成</string>
     <string name="king_keyboard_key_more_text">更多</string>
     <string name="king_keyboard_key_back_text">返回</string>
+
+    <string name="touch_to_focus">触摸屏幕对焦</string>
+    <string name="crop_fail">裁剪失败</string>
+    <string name="no_flash">该设备不支持闪光灯</string>
 </resources>

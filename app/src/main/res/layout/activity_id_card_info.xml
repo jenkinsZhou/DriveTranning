@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grayF9F9F9"
+    android:orientation="vertical">
+
+    <include layout="@layout/frame_layout_title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_15"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:minHeight="@dimen/dp_20">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/ivSelectedImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:riv_corner_radius="@dimen/dp_15" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_12"
+            android:layout_marginBottom="@dimen/dp_12"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="姓名"
+                android:textColor="@color/black333333"
+                android:textSize="@dimen/sp_15" />
+
+            <TextView
+                android:textSize="@dimen/sp_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="尹世伟"
+                android:textColor="@color/gray999999" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0_5"
+            android:layout_marginStart="@dimen/dp_10"
+            android:background="@color/grayEAEAEA" />
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_12"
+            android:layout_marginBottom="@dimen/dp_12"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="身份证号码"
+                android:textColor="@color/black333333"
+                android:textSize="@dimen/sp_15" />
+
+            <TextView
+                android:textSize="@dimen/sp_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="341282198705063609"
+                android:textColor="@color/gray999999" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tvNextStep"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_18"
+        android:layout_marginEnd="@dimen/dp_18"
+        android:background="@drawable/selector_gradient_radius_25_blue"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="@dimen/dp_25"
+        android:gravity="center"
+        android:paddingStart="@dimen/dp_38"
+        android:paddingTop="@dimen/dp_7"
+        android:paddingEnd="@dimen/dp_38"
+        android:paddingBottom="@dimen/dp_7"
+        android:text="下一步"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15" />
+</LinearLayout>

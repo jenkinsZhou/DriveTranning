@@ -4,7 +4,7 @@ import android.accounts.NetworkErrorException;
 
 
 import com.tourcoo.training.core.base.entity.BaseResult;
-import com.tourcoo.training.core.config.RequestConfig;
+import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.retrofit.CommonTransformer;
 import com.tourcoo.training.core.retrofit.FrameNullException;
 import com.tourcoo.training.core.retrofit.RetryWhen;
@@ -33,7 +33,7 @@ public abstract class BaseRepository {
                             if (result == null) {
                                 return Observable.error(new NetworkErrorException());
                             } else {
-                                if (result.getStatus() == RequestConfig.CODE_REQUEST_SUCCESS) {
+                                if (result.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
                                     return result.getData() != null ? Observable.just(result.getData())
                                             : Observable.error(new FrameNullException());
                                 } else {

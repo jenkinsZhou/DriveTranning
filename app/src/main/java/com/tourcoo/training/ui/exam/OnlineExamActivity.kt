@@ -3,9 +3,11 @@ package com.tourcoo.training.ui.exam
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.exam.QuestionNumberAdapter
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
@@ -29,6 +31,9 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var currentPosition = 0
     private val delayTime = 500L
     private val answerHandler = Handler()
+    private var behavior: BottomSheetBehavior<NestedScrollView>? = null
+
+
     override fun getContentLayout(): Int {
         return R.layout.activity_exam_online
     }
@@ -42,6 +47,8 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
         questionNumRv.layoutManager = GridLayoutManager(mContext,6)
+        behavior = BottomSheetBehavior.from(nsvBottom)
+        llQuestionBar.setOnClickListener(this)
     }
 
     override fun loadData() {
@@ -82,6 +89,9 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             }
             R.id.tvLastQuestion -> {
                 skipLastQuestion()
+            }
+            R.id.llQuestionBar->{
+                handleBottomBarClick()
             }
             else -> {
             }
@@ -141,5 +151,13 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
         questionNumAdapter?.setNewData(getQuestionList())
+    }
+
+    private fun handleBottomBarClick(){
+        if(behavior!!.state == BottomSheetBehavior.STATE_COLLAPSED){
+            behavior!!.setState(BottomSheetBehavior.STATE_EXPANDED)
+        }else if(behavior!!.state ==BottomSheetBehavior.STATE_EXPANDED ){
+            behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 }

@@ -160,7 +160,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="个体工商户注册"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/blue004D8E"
                         android:textSize="@dimen/sp_13" />
 
                     <View
@@ -175,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_15"
                         android:text="注册"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/blue004D8E"
                         android:textSize="@dimen/sp_13" />
 
                 </LinearLayout>

@@ -2,7 +2,9 @@ package com.tourcoo.training.core.retrofit.service;
 
 
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
+import com.tourcoo.training.core.base.entity.BaseResult;
 
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -38,4 +40,20 @@ public interface ApiService {
      */
     @GET("{url}")
     Observable<BaseMovieEntity> getMovie(@Path("url") String url, @QueryMap Map<String, Object> map);
+
+
+    /**
+     * 获取行业类型
+     * @return
+     */
+    @GET("api/v1.0/open/config/get-trade-type")
+    Observable<BaseResult<List<Object>>> requestTradeType();
+
+    /**
+     * 个体工商户注册
+     * @return
+     */
+    @GET("api/v1.0/open/config/get-trade-type")
+    Observable<BaseResult<List<Object>>> requestIndustryRgister();
+
 }

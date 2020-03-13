@@ -18,7 +18,7 @@ public class IosLoadingDialog extends Dialog {
     private TextView tvLoadingText;
 
     public IosLoadingDialog(Context context) {
-        super(context);
+        super(context, R.style.frame_loading_dialog);
         this.context = context;
         setCancelable(true);
         setCanceledOnTouchOutside(false);
@@ -29,7 +29,7 @@ public class IosLoadingDialog extends Dialog {
     }
 
     public IosLoadingDialog(Context context, String loadingText) {
-        super(context, R.style.DefaultLoadingDialogStyle);
+        super(context, R.style.frame_loading_dialog);
         this.context = context;
         this.loadingText = loadingText;
         setCancelable(false);

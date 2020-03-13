@@ -99,6 +99,8 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
     implementation 'com.shuyu:GSYVideoPlayer:7.1.2'
 
+    implementation 'pub.devrel:easypermissions:2.0.1'
+
 }
 repositories {
     mavenCentral()

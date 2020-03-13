@@ -8,13 +8,18 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.tourcoo.training.R
+import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
+import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.manager.GlideManager
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver
+import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.widget.keyboard.KingKeyboard
+import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_register_industrial.*
 import org.apache.commons.lang.StringUtils
 
@@ -26,6 +31,7 @@ import org.apache.commons.lang.StringUtils
  * @Email: 971613168@qq.com
  */
 class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
+    private val mTag = "IndustrialRegisterActivity"
     private var selectFileList: MutableList<LocalMedia>? = ArrayList()
     private var imageDiskPathList: MutableList<String>? = ArrayList()
     private lateinit var kingKeyboard: KingKeyboard
@@ -40,6 +46,7 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
     override fun initView(savedInstanceState: Bundle?) {
         tvRegisterIndustrial.setOnClickListener(this)
         tvGoLogin.setOnClickListener(this)
+        ivSelectIndustry.setOnClickListener(this)
         rlPickImage.setOnClickListener(this)
         ivSelectedImage.setOnClickListener(this)
         initPlantKeyBoard()
@@ -49,15 +56,20 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
         when (v!!.id) {
             R.id.tvRegisterIndustrial -> {
                 CommonUtil.startActivity(mContext, DriverRegisterActivity::class.java)
+//                CommonUtil.startActivity(mContext, UploadIdCardActivity::class.java)
             }
             R.id.tvGoLogin -> {
-                CommonUtil.startActivity(mContext, LoginActivity::class.java)
+//                CommonUtil.startActivity(mContext, LoginActivity::class.java)
+                CommonUtil.startActivity(mContext, UploadIdCardActivity::class.java)
             }
             R.id.ivSelectedImage->{
                 selectPic()
             }
             R.id.rlPickImage -> {
                 selectPic()
+            }
+            R.id.ivSelectIndustry->{
+                requestTradeTypeList()
             }
             else -> {
             }
@@ -147,5 +159,17 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
         return if (imageList.size == 1) {
             CommonUtil.getNotNullValue(imageList[0])
         } else StringUtils.join(imageList, ",")
+    }
+
+
+
+    private fun requestTradeTypeList(){
+        ApiRepository.getInstance().requestTradeType().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object :BaseLoadingObserver<BaseResult<MutableList<*>>>("加载中..."){
+            override fun onSuccessNext(entity: BaseResult<MutableList<*>>?) {
+//                ToastUtil.show("en"+entity?.data)
+                TourCooLogUtil.i(mTag, entity?.data)
+            }
+
+        })
     }
 }

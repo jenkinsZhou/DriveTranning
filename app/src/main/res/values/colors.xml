@@ -90,11 +90,12 @@
     <color name="black434443">#434443</color>
 
     <!--红色区域-->
+    <color name="redD81E06">#D81E06</color>
     <color name="redF35757">#F35757</color>
     <color name="redFF4A5C">#FF4A5C</color>
     <color name="redD10303">#D10303</color>
     <color name="redE54E3F">#E54E3F</color>
-    <color name="redD81E06">#D81E06</color>
+
     <color name="redFF736C">#FF736C</color>
     <color name="redE8403E">#E8403E</color>
     <color name="redF56D43">#F56D43</color>
@@ -126,6 +127,7 @@
     <color name="blue358EB9">#358EB9</color>
     <color name="blue007AFF">#007AFF</color>
     <color name="blue53C2FF">#53C2FF</color>
+    <color name="blue004D8E">#004D8E</color>
     <color name="blue4E52FF">#4E52FF</color>
     <color name="blue5593FF">#5593FF</color>
     <color name="blue4287FF">#4287FF</color>
@@ -136,7 +138,10 @@
     <color name="blue79C6FA">#79C6FA</color>
     <color name="blue5087FF">#5087FF</color>
     <color name="blue4989E5">#4989E5</color>
+    <color name="blue8C91A9">#8C91A9</color>
     <color name="blueE9F2FF">#E9F2FF</color>
+
+
 
     <color name="blue53BFFF">#53BFFF</color>
 
@@ -171,5 +176,12 @@
     <color name="king_keyboard_none_key_bg_pressed">#ffefefef</color>
 
 
+    <color name="preview_mock">#9a000000</color>
+    <color name="color_000000">#000000</color>
+    <color name="color_afff">#afff</color>
 
+    <color name="alertdialog_line">#c6c6c6</color>
+    <color name="actionsheet_blue">#037BFF</color>
+    <color name="actionsheet_red">#FD4A2E</color>
+    <color name="actionsheet_gray">#8F8F8F</color>
 </resources>

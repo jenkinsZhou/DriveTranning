@@ -2,29 +2,21 @@ package com.tourcoo.training.core.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Environment;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.blankj.utilcode.util.PermissionUtils;
 import com.didichuxing.doraemonkit.DoraemonKit;
 import com.didichuxing.doraemonkit.kit.webdoor.WebDoorManager;
 import com.simple.spiderman.SpiderMan;
 import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.UiManager;
-import com.tourcoo.training.core.config.RequestConfig;
+import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.impl.ActivityControlImpl;
 import com.tourcoo.training.core.impl.AppImpl;
 import com.tourcoo.training.core.impl.HttpRequestControlImpl;
 import com.tourcoo.training.core.log.TourCooLogUtil;
-import com.tourcoo.training.core.log.cores.LogFileEngineFactory;
-import com.tourcoo.training.core.log.cores.LogLevel;
-import com.tourcoo.training.core.log.cores.files.LogFileFilter;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
-import com.tourcoo.training.core.util.StackUtil;
-
-import java.io.File;
 
 import static com.tourcoo.training.core.log.cores.LogLevel.TYPE_VERBOSE;
 
@@ -55,7 +47,7 @@ public class MyApplication extends MultiDexApplication {
     private void initSync() {
         initLogConfig();
         SpiderMan.init(this);
-        initDebugKit();
+//        initDebugKit();
 /*//# 支持写入日志到文件
         TourCooLogUtil.getLog2FileConfig().configLog2FileEnable(true)
                 // targetSdkVersion >= 23 需要确保有写sdcard权限
@@ -107,8 +99,8 @@ public class MyApplication extends MultiDexApplication {
                 .setLogEnable(true)
 //                .setLogEnable(BuildConfig.DEBUG, TAG, HttpLoggingInterceptor.Level.BODY)
                 //设置统一超时--也可单独调用read/write/connect超时(可以设置时间单位TimeUnit)
-                //默认20
-                .setTimeout(20);
+                //默认10
+                .setTimeout(10);
 
         //注意设置baseUrl要以/ 结尾 service 里的方法不要以/打头不然拦截到的url会有问题
         //以下为配置多BaseUrl--默认方式一优先级高 可通过FastRetrofit.getInstance().setHeaderPriorityEnable(true);设置方式二优先级

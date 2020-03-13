@@ -1,5 +1,7 @@
 package com.tourcoo.training.config;
 
+import android.Manifest;
+
 /**
  * @author :JenkinsZhou
  * @description :
@@ -15,4 +17,8 @@ public class AppConfig {
      * 标题栏主标题文字大小(sp)
      */
     public static final int TITLE_MAIN_TITLE_SIZE = 19;
+
+
+    //权限参数
+    public static  String[] PERMISSION = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
 }

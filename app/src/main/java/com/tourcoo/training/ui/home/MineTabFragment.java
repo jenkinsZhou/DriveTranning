@@ -22,6 +22,7 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.account.IndustrialRegisterActivity;
+import com.tourcoo.training.ui.account.UploadIdCardActivity;
 import com.tourcoo.training.ui.exam.OnlineExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.training.online.StudyOnlineActivity;
@@ -161,7 +162,8 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
                 CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity.class);
                 break;
             case R.id.llMineInfo:
-                CommonUtil.startActivity(mContext, IndustrialRegisterActivity.class);
+//                CommonUtil.startActivity(mContext, IndustrialRegisterActivity.class);
+                CommonUtil.startActivity(mContext, UploadIdCardActivity.class);
                 break;
             case R.id.ivAddCar:
                 CommonUtil.startActivity(mContext, OnlineExamActivity.class);

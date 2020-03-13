@@ -124,7 +124,8 @@ public class HttpRequestControlImpl implements HttpRequestControl {
             }
         }
         if (httpRequestControl == null || httpRequestControl.getStatusLayoutManager() == null) {
-            ToastUtil.show(reason);
+//            ToastUtil.show(reason);
+            ToastUtil.show(e.getMessage());
             return;
         }
         SmartRefreshLayout smartRefreshLayout = httpRequestControl.getRefreshLayout();

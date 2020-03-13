@@ -78,11 +78,12 @@
             android:orientation="vertical">
 
             <androidx.core.widget.NestedScrollView
+                android:id="@+id/nsvBottom"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:behavior_hideable="false"
-                app:behavior_peekHeight="@dimen/dp_60"
+                app:behavior_peekHeight="@dimen/dp_50"
                 app:layout_behavior="@string/bottom_sheet_behavior">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -90,6 +91,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/llQuestionBar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minHeight="@dimen/dp_50"
@@ -147,7 +149,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/questionNumRv"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_400" />
+                        android:layout_height="@dimen/dp_300" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 

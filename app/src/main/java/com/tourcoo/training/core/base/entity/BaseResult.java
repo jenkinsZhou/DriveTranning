@@ -5,25 +5,25 @@ package com.tourcoo.training.core.base.entity;
  */
 public class BaseResult<T> {
 
-    private int status;
-    private String errorMsg;
+    private int code;
+    private String message;
     private T data;
 
 
-    public int getStatus() {
-        return status;
+    public int getCode() {
+        return code;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public T getData() {
@@ -37,8 +37,8 @@ public class BaseResult<T> {
     @Override
     public String toString() {
         return "BaseResult{" +
-                "status=" + status +
-                ", errorMsg='" + errorMsg + '\'' +
+                "code=" + code +
+                ", message='" + message + '\'' +
                 ", data=" + data +
                 '}';
     }
