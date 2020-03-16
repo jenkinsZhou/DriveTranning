@@ -6,7 +6,7 @@ package com.tourcoo.training.core.base.entity;
 public class BaseResult<T> {
 
     private int code;
-    private String message;
+    public String message;
     private T data;
 
 

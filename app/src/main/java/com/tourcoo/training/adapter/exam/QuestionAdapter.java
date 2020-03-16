@@ -77,7 +77,7 @@ public class QuestionAdapter extends BaseQuickAdapter<Answer, BaseViewHolder> {
     }
 
     private void showCorrect(ImageView imageView,TextView textView){
-        imageView.setImageResource(R.drawable.icon_gx);
+        imageView.setImageResource(R.mipmap.ic_answer_correct_blue);
 //        GlideManager.loadImg(R.mipmap.ic_answer_correct,imageView);
         textView.setTextColor(ResourceUtil.getColor(R.color.blue007AFF));
     }

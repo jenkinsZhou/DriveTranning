@@ -15,6 +15,8 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.ui.account.contract.MessageContract;
 
+import java.util.HashMap;
+
 /**
  * @author :JenkinsZhou
  * @description :

@@ -12,6 +12,7 @@ import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.manager.GlideManager
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.RegisterTempHelper
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.idcardcamera.camera.IDCardCamera
 import kotlinx.android.synthetic.main.activity_upload_id_card.*
@@ -83,6 +84,7 @@ class UploadIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permissi
                     setViewGone(ivSelectedImage, true)
                     photoPath = path
                     ivSelectedImage.setImageBitmap(BitmapFactory.decodeFile(path))
+                    handleCallback()
 
                 } else if (requestCode == IDCardCamera.TYPE_IDCARD_BACK) {
                     //身份证反面
@@ -166,5 +168,11 @@ class UploadIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permissi
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
         skipCamera()
+    }
+
+
+    private fun handleCallback(){
+        RegisterTempHelper.getInstance().registerName = "张三"
+        RegisterTempHelper.getInstance().registerIdCard = "342401199501012690"
     }
 }

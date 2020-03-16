@@ -3,12 +3,16 @@ package com.tourcoo.training.core.retrofit.service;
 
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.BaseResult;
+import com.tourcoo.training.entity.account.TradeType;
+import com.tourcoo.training.entity.account.UserInfo;
 
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
@@ -25,6 +29,7 @@ public interface ApiService {
 
     /**
      * 用户认证状态列表
+     *
      * @return
      */
     @GET("meituApi")
@@ -44,16 +49,18 @@ public interface ApiService {
 
     /**
      * 获取行业类型
+     *
      * @return
      */
     @GET("api/v1.0/open/config/get-trade-type")
-    Observable<BaseResult<List<Object>>> requestTradeType();
+    Observable<BaseResult<List<TradeType>>> requestTradeType();
 
     /**
      * 个体工商户注册
+     *
      * @return
      */
-    @GET("api/v1.0/open/config/get-trade-type")
-    Observable<BaseResult<List<Object>>> requestIndustryRgister();
+    @POST("api/v1.0/open/user/register-individual-business")
+    Observable<BaseResult<UserInfo>> requestIndustryRegister(@Body Map<String, Object> map);
 
 }

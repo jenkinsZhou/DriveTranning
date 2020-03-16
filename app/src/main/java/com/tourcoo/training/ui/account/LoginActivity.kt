@@ -36,4 +36,7 @@ class LoginActivity : BaseTitleActivity(),View.OnClickListener {
     override fun isStatusBarDarkMode(): Boolean {
         return false
     }
+
+
+
 }

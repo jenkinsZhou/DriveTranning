@@ -2,13 +2,13 @@ package com.tourcoo.training.ui.account
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.tourcoo.training.R
-import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -18,10 +18,19 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountHelper
+import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.entity.account.TradeType
+import com.tourcoo.training.entity.account.UserInfo
+import com.tourcoo.training.widget.dialog.BottomSheetDialog
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_register_industrial.*
 import org.apache.commons.lang.StringUtils
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.MutableList
 
 /**
  *@description :
@@ -32,6 +41,7 @@ import org.apache.commons.lang.StringUtils
  */
 class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
     private val mTag = "IndustrialRegisterActivity"
+    private var selectTradeId = ""
     private var selectFileList: MutableList<LocalMedia>? = ArrayList()
     private var imageDiskPathList: MutableList<String>? = ArrayList()
     private lateinit var kingKeyboard: KingKeyboard
@@ -55,20 +65,21 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tvRegisterIndustrial -> {
-                CommonUtil.startActivity(mContext, DriverRegisterActivity::class.java)
+//                CommonUtil.startActivity(mContext, DriverRegisterActivity::class.java)
 //                CommonUtil.startActivity(mContext, UploadIdCardActivity::class.java)
+                doRegister()
             }
             R.id.tvGoLogin -> {
 //                CommonUtil.startActivity(mContext, LoginActivity::class.java)
                 CommonUtil.startActivity(mContext, UploadIdCardActivity::class.java)
             }
-            R.id.ivSelectedImage->{
+            R.id.ivSelectedImage -> {
                 selectPic()
             }
             R.id.rlPickImage -> {
                 selectPic()
             }
-            R.id.ivSelectIndustry->{
+            R.id.ivSelectIndustry -> {
                 requestTradeTypeList()
             }
             else -> {
@@ -136,6 +147,7 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun handlePictureSelectCallback() {
         for (localMedia in selectFileList!!) {
             imageDiskPathList?.add(localMedia.compressPath)
@@ -143,13 +155,13 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
 //        val path = parsePath(imageDiskPathList)
         GlideManager.loadImg(selectFileList!![0].compressPath, ivSelectedImage)
         val par = ivSelectedImage.layoutParams
-        ivSelectedImage.layoutParams.height =  rlPickImage.height
-        ToastUtil.show("--->"+rlPickImage.height)
+        ivSelectedImage.layoutParams.height = rlPickImage.height
+        ToastUtil.show("--->" + rlPickImage.height)
         ivSelectedImage.layoutParams = par
 //        ToastUtil.show("---"+ivSelectedImage.height)
-        setViewGone(ivSelectedImage,true)
+        setViewGone(ivSelectedImage, true)
         selectFileList?.clear()
-       TourCooLogUtil.i("高度:"+ivSelectedImage.layoutParams.height)
+        TourCooLogUtil.i("高度:" + ivSelectedImage.layoutParams.height)
     }
 
     private fun parsePath(imageList: List<String>?): String? {
@@ -162,14 +174,73 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-
-    private fun requestTradeTypeList(){
-        ApiRepository.getInstance().requestTradeType().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object :BaseLoadingObserver<BaseResult<MutableList<*>>>("加载中..."){
-            override fun onSuccessNext(entity: BaseResult<MutableList<*>>?) {
+    private fun requestTradeTypeList() {
+        ApiRepository.getInstance().requestTradeType().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MutableList<TradeType>>>("加载中...") {
+            override fun onSuccessNext(entity: BaseResult<MutableList<TradeType>>?) {
 //                ToastUtil.show("en"+entity?.data)
-                TourCooLogUtil.i(mTag, entity?.data)
+//                TourCooLogUtil.i(mTag, entity?.data)
+                showIndustryList(entity!!.data)
             }
-
         })
     }
+
+
+    private fun showIndustryList(list: MutableList<TradeType>?) {
+        if (list == null) {
+            ToastUtil.show("未获取到行业类型")
+            return
+        }
+        val dialog = BottomSheetDialog(mContext)
+        for (tradeType in list) {
+            val item = BottomSheetDialog.SheetItem(tradeType.name, BottomSheetDialog.OnSheetItemClickListener {
+                ToastUtil.show("点击了：行业id" + tradeType.id)
+                selectTradeId = tradeType.id
+                showSelectTradeType(tradeType.name)
+            })
+            dialog.addSheetItem(item)
+        }
+        dialog.create().show()
+    }
+
+    private fun showSelectTradeType(tradeTypeName: String) {
+        etTradeType.text = tradeTypeName
+    }
+
+    private fun doRegister() {
+        val hashMap = HashMap<String, Any>()
+        hashMap["name"] = RegisterTempHelper.getInstance().registerName
+        hashMap["idCard"] = RegisterTempHelper.getInstance().registerIdCard
+        hashMap["businessLicense"] = RegisterTempHelper.getInstance().businessLicensePath
+        if (TextUtils.isEmpty(getTextValue(etPhone))) {
+            ToastUtil.show("请输入驾驶员手机号")
+            return
+        }
+        hashMap["phone"] = getTextValue(etPhone)
+        if (TextUtils.isEmpty(getTextValue(etDriverPlantNum))) {
+            ToastUtil.show("请输入驾驶员车牌号")
+            return
+        }
+        hashMap["carNum"] = getTextValue(etDriverPlantNum)
+        if (TextUtils.isEmpty(getTextValue(etArea))) {
+            ToastUtil.show("请选择所属区域")
+            return
+        }
+        //所属区域
+        hashMap["addressId"] = "1"
+        if (TextUtils.isEmpty(getTextValue(etTradeType))) {
+            ToastUtil.show("请选择行业类型")
+            return
+        }
+        hashMap["tradeTypeId"] = selectTradeId
+        TourCooLogUtil.i("提交的参数", hashMap)
+        ApiRepository.getInstance().requestIndustryRegister(hashMap).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfo>>("加载中...") {
+            override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
+                ToastUtil.show(entity?.message)
+                TourCooLogUtil.i(mTag, entity?.data)
+                AccountHelper.getInstance().setUserInfo(entity?.data)
+            }
+        })
+    }
+
+
 }

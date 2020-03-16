@@ -92,11 +92,13 @@
 
 
                         <EditText
+                            android:id="@+id/etPhone"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/dp_30"
                             android:layout_weight="1"
+                            android:inputType="number"
                             android:background="@null"
                             android:hint="请输入户主联系电话"
                             android:padding="@dimen/dp_5"
@@ -213,6 +215,7 @@
 
 
                         <EditText
+                            android:id="@+id/etArea"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -253,7 +256,8 @@
                         </LinearLayout>
 
 
-                        <EditText
+                        <TextView
+                            android:id="@+id/etTradeType"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -273,8 +277,8 @@
                             android:layout_gravity="center_vertical"
                             android:paddingEnd="@dimen/dp_10"
                             android:paddingStart="@dimen/dp_10"
-                            android:paddingTop="@dimen/dp_5"
-                            android:paddingBottom="@dimen/dp_5"
+                            android:paddingTop="@dimen/dp_10"
+                            android:paddingBottom="@dimen/dp_10"
                             android:src="@drawable/icon_arrow_down" />
                     </LinearLayout>
 

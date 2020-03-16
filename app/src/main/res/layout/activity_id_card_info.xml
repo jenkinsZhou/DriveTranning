@@ -49,10 +49,10 @@
                 android:textSize="@dimen/sp_15" />
 
             <TextView
+                android:id="@+id/tvName"
                 android:textSize="@dimen/sp_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="尹世伟"
                 android:textColor="@color/gray999999" />
         </LinearLayout>
 
@@ -80,10 +80,10 @@
                 android:textSize="@dimen/sp_15" />
 
             <TextView
+                android:id="@+id/tvIdCard"
                 android:textSize="@dimen/sp_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="341282198705063609"
                 android:textColor="@color/gray999999" />
         </LinearLayout>
     </LinearLayout>

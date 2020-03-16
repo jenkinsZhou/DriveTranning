@@ -9,7 +9,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -355,5 +357,11 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    protected String getTextValue(TextView textView) {
+        return textView != null ? textView.getText().toString() : "";
+    }
 
+    protected String getTextValue(EditText editText) {
+        return editText != null ? editText.getText().toString() : "";
+    }
 }

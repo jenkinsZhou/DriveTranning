@@ -10,6 +10,8 @@ import com.tourcoo.training.core.retrofit.RetrofitHelper;
 import com.tourcoo.training.core.retrofit.RetryWhen;
 import com.tourcoo.training.core.retrofit.service.ApiService;
 import com.tourcoo.training.core.util.ToastUtil;
+import com.tourcoo.training.entity.account.TradeType;
+import com.tourcoo.training.entity.account.UserInfo;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import java.util.HashMap;
@@ -68,7 +70,12 @@ public class ApiRepository extends BaseRepository {
     }
 
 
-    public Observable<BaseResult<List<Object>>> requestTradeType() {
+    public Observable<BaseResult<List<TradeType>>> requestTradeType() {
         return CommonTransformer.switchSchedulers(getApiService().requestTradeType().retryWhen(new RetryWhen()));
     }
+
+    public Observable<BaseResult<UserInfo>> requestIndustryRegister(Map<String, Object> map) {
+        return CommonTransformer.switchSchedulers(getApiService().requestIndustryRegister(map).retryWhen(new RetryWhen()));
+    }
+
 }
