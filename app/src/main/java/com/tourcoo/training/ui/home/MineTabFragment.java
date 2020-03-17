@@ -21,7 +21,7 @@ import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
-import com.tourcoo.training.ui.account.IndustrialRegisterActivity;
+import com.tourcoo.training.ui.account.FindPassActivity;
 import com.tourcoo.training.ui.account.UploadIdCardActivity;
 import com.tourcoo.training.ui.exam.OnlineExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
@@ -52,9 +52,10 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
     private RecyclerView rvStudyAchievement;
     private MultiplePayDialog multiplePayDialog;
 
+
     @Override
     public void initView(Bundle savedInstanceState) {
-        rlTitle = mContentView.findViewById(R.id.rlTitle);
+        rlTitle = mContentView.findViewById(R.id.rlTitleBar);
         rvMyAccount = mContentView.findViewById(R.id.rvMyAccount);
         rvStudyAchievement = mContentView.findViewById(R.id.rvStudyAchievement);
         smartRefreshLayoutCommon = mContentView.findViewById(R.id.smartRefreshLayoutCommon);
@@ -67,8 +68,9 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
         rvMyAccount.setLayoutManager(new GridLayoutManager(mContext, 3));
         rvStudyAchievement.setLayoutManager(new GridLayoutManager(mContext, 4));
         mContentView.findViewById(R.id.ivSetting).setOnClickListener(this);
-        mContentView.findViewById(R.id.llMineInfo).setOnClickListener(this);
+        mContentView.findViewById(R.id.llAvatar).setOnClickListener(this);
         mContentView.findViewById(R.id.ivAddCar).setOnClickListener(this);
+        mContentView.findViewById(R.id.llGoldLevel).setOnClickListener(this);
         initItemClick();
         setStatusBarModeWhite(this);
     }
@@ -161,12 +163,15 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
                 multiplePayDialog.show();*/
                 CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity.class);
                 break;
-            case R.id.llMineInfo:
+            case R.id.llAvatar:
 //                CommonUtil.startActivity(mContext, IndustrialRegisterActivity.class);
                 CommonUtil.startActivity(mContext, UploadIdCardActivity.class);
                 break;
             case R.id.ivAddCar:
                 CommonUtil.startActivity(mContext, OnlineExamActivity.class);
+                break;
+            case R.id.llGoldLevel:
+                CommonUtil.startActivity(mContext, FindPassActivity.class);
                 break;
             default:
                 break;

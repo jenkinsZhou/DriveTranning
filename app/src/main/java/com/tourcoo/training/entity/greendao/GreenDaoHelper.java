@@ -35,7 +35,7 @@ public class GreenDaoHelper {
 
     public void initDatabase(Context context) {
         //这里之后会修改，关于升级数据库
-        dbHelper = new DaoMaster.DevOpenHelper(context, "driver_training", null);
+        dbHelper = new DaoMaster.DevOpenHelper(context, "smart_city_yixing", null);
         db = dbHelper.getWritableDatabase();
         mDaoMaster = new DaoMaster(db);
         mDaoSession = mDaoMaster.newSession();

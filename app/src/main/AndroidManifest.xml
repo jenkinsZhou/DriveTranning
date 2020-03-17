@@ -53,6 +53,7 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             />
         <activity android:name=".ui.account.IdCardInfoActivity" />
+        <activity android:name=".ui.account.FindPassActivity" />
     </application>
 
 </manifest>

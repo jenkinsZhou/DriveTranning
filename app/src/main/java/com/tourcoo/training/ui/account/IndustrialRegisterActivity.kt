@@ -237,10 +237,12 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
                 ToastUtil.show(entity?.message)
                 TourCooLogUtil.i(mTag, entity?.data)
-                AccountHelper.getInstance().setUserInfo(entity?.data)
+                AccountHelper.getInstance().userInfo = entity?.data
             }
         })
     }
+
+
 
 
 }

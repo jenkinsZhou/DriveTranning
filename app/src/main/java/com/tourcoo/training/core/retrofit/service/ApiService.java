@@ -63,4 +63,11 @@ public interface ApiService {
     @POST("api/v1.0/open/user/register-individual-business")
     Observable<BaseResult<UserInfo>> requestIndustryRegister(@Body Map<String, Object> map);
 
+
+    @GET("api/v1.0/open/common/smscode")
+    Observable<BaseResult> requestVCode(@QueryMap Map<String, Object> map);
+
+
+    @POST("api/v1.0/open/user/reset-password")
+    Observable<BaseResult> requestResetPass(@Body Map<String, Object> map);
 }

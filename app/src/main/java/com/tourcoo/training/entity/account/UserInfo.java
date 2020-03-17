@@ -1,22 +1,10 @@
 package com.tourcoo.training.entity.account;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.alibaba.fastjson.JSON;
-import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.SPUtils;
-import com.tourcoo.training.core.log.TourCooLogUtil;
-import com.tourcoo.training.entity.greendao.DaoSession;
-import com.tourcoo.training.entity.greendao.GreenDaoHelper;
-import com.tourcoo.training.entity.greendao.UserInfoDao;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Index;
-import org.greenrobot.greendao.annotation.ToOne;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
 /**
@@ -47,7 +35,6 @@ public class UserInfo  {
      * LearnLevel : 2
      * Car : {"CarNum":"车牌号","CarModel":"车型","CarBrand":"车辆品牌","ExpiredTime":"50"}
      */
-    private UserInfo userInfo;
     private String AccessToken;
     private int UserType;
     private int IsAuthenticate;
@@ -238,7 +225,7 @@ public class UserInfo  {
     public UserInfo() {
     }
 
-
+  
 
 
     public static class CarConverter implements PropertyConverter<CarInfo, String> {

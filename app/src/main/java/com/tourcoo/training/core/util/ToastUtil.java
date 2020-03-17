@@ -264,18 +264,18 @@ public class ToastUtil {
                 .setTextDrawable(sContext.getResources().getDrawable(res))
                 .setTextDrawableGravity(Gravity.TOP)
                 .setTextDrawablePadding(SizeUtil.dp2px(10))
-                .setTextDrawableWidth(SizeUtil.dp2px(36))
-                .setTextDrawableHeight(SizeUtil.dp2px(36))
+                .setTextDrawableWidth(SizeUtil.dp2px(26))
+                .setTextDrawableHeight(SizeUtil.dp2px(26))
                 .setTextGravity(Gravity.CENTER)
-                .setPaddingLeft(SizeUtil.dp2px(24))
-                .setPaddingTop(SizeUtil.dp2px(20))
-                .setPaddingRight(SizeUtil.dp2px(24))
-                .setPaddingBottom(SizeUtil.dp2px(20))
+                .setPaddingLeft(SizeUtil.dp2px(12))
+                .setPaddingTop(SizeUtil.dp2px(10))
+                .setPaddingRight(SizeUtil.dp2px(12))
+                .setPaddingBottom(SizeUtil.dp2px(10))
                 .setRadius(SizeUtil.dp2px(8))
-                .setTextSize(SizeUtil.dp2px(16))
+                .setTextSize(SizeUtil.dp2px(15))
                 .setGravityYOffset(0)
                 .setGravity(Gravity.CENTER)
-                .setMinWidth(SizeUtil.dp2px(140));
+                .setMinWidth(SizeUtil.dp2px(70));
 
     }
 

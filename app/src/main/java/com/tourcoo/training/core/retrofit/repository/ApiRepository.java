@@ -78,4 +78,21 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestIndustryRegister(map).retryWhen(new RetryWhen()));
     }
 
+    public Observable<BaseResult> requestVCode(int type, String phone) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("phone",phone);
+        params.put("type", type);
+        return CommonTransformer.switchSchedulers(getApiService().requestVCode(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult> requestResetPass(String phone,String pass, String smsCode) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("phoneNumber",phone);
+        params.put("password", pass);
+        params.put("smsCode", smsCode);
+        return CommonTransformer.switchSchedulers(getApiService().requestResetPass(params).retryWhen(new RetryWhen()));
+    }
+
+
+
 }
