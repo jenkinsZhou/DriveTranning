@@ -22,7 +22,7 @@ import com.tourcoo.training.core.widget.dialog.LoadingDialogWrapper;
  */
 public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     /**
-     * Dialog
+     * CommonListDialog
      */
     private LoadingDialogWrapper mDialog;
     protected String loadingText = "";

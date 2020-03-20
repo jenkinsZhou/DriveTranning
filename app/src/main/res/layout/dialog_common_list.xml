@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:maxHeight="@dimen/dp_100"
+    android:minHeight="@dimen/dp_200"
+    android:paddingBottom="@dimen/dp_10"
+    android:background="@drawable/bg_radius_5_white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_gradient_radius_5_top_blue_53c2ff_4e52ff">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/dp_13"
+            android:layout_marginBottom="@dimen/dp_13"
+            android:gravity="center"
+            android:text="选择课时"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_17" />
+
+        <ImageView
+            android:id="@+id/ivCloseRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/dp_10"
+            android:src="@mipmap/ic_close_rect" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/llBottomButtonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvBottomDesc"
+                android:layout_marginStart="@dimen/dp_35"
+                android:layout_marginEnd="@dimen/dp_35"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*此次选择将作为您课时分配时间的依据，选择后不可更改，请谨慎选择"
+                android:textColor="#FF736C"
+                android:textSize="@dimen/sp_13" />
+            <TextView
+                android:id="@+id/tvBottom"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_gradient_radius_25_blue_53c2ff_4e52ff"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:paddingStart="@dimen/dp_22"
+                android:paddingTop="@dimen/dp_6"
+                android:paddingEnd="@dimen/dp_22"
+                android:paddingBottom="@dimen/dp_6"
+                android:text="确认修改"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCommon"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/llBottomButtonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_200" />
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -285,7 +285,6 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
                     ToastUtil.showFailed(entity.message)
                 }
             }
-
         })
 
     }

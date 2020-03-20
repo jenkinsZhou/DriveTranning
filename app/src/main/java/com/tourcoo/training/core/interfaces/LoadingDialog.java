@@ -15,7 +15,7 @@ import com.tourcoo.training.core.widget.dialog.LoadingDialogWrapper;
 public interface LoadingDialog {
 
     /**
-     * 设置快速Loading Dialog
+     * 设置快速Loading CommonListDialog
      *
      * @param activity
      * @return

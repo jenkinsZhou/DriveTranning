@@ -398,7 +398,7 @@ public class KeyboardHelper {
      * @param isAutoCloseKeyboard 是否自动关闭键盘
      * @param currentFocusView    当前获取焦点的控件
      * @param motionEvent         触摸事件
-     * @param dialogOrActivity    Dialog 或 Activity
+     * @param dialogOrActivity    CommonListDialog 或 Activity
      */
     public static void handleAutoCloseKeyboard(boolean isAutoCloseKeyboard, View currentFocusView, MotionEvent motionEvent, Object dialogOrActivity) {
         if (isAutoCloseKeyboard && motionEvent.getAction() == MotionEvent.ACTION_DOWN && currentFocusView != null && (currentFocusView instanceof EditText) && dialogOrActivity != null) {
