@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tourcoo.training.R;
-import com.tourcoo.training.core.util.SizeUtil;
 
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class CommonListDialog<T> {
             Point size = new Point();
             display.getSize(size);
             lp.width = (int) (size.x * 0.85);
-            lp.height = (int) (size.y * 0.4);
+            lp.height = (int) (size.y * 0.55);
             dialogWindow.setAttributes(lp);
         }
 //        dialogWindow.setGravity(Gravity.LEFT | Gravity.BOTTOM);

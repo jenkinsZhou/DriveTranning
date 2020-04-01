@@ -1,6 +1,7 @@
 package com.tourcoo.training.adapter.dialog;
 
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,21 +26,24 @@ public class CourseSelectAdapter extends BaseQuickAdapter<CourseEntity, BaseView
     public CourseSelectAdapter() {
         super(R.layout.item_dialog_course_select);
     }
+
     @Override
     protected void convert(@NonNull BaseViewHolder helper, CourseEntity item) {
-        if(item == null){
+        if (item == null) {
             return;
         }
-        helper.setText(R.id.tvItemName,item.getCourseDurationDesc());
-        ImageView ivItemSelect =  helper.getView(R.id.ivItemSelect);
-        ImageView ivItemIcon =  helper.getView(R.id.ivItemIcon);
-
-        if(item.isSelect()){
+        helper.setText(R.id.tvItemName, item.getCourseDurationDesc());
+        ImageView ivItemSelect = helper.getView(R.id.ivItemSelect);
+        ImageView ivItemIcon = helper.getView(R.id.ivItemIcon);
+        TextView tvItemName = helper.getView(R.id.tvItemName);
+        if (item.isSelect()) {
             ivItemSelect.setImageResource(R.mipmap.ic_select_small_blue);
             ivItemIcon.setImageResource(R.mipmap.ic_class_type_select);
-        }else {
+            tvItemName.setTextColor(ResourceUtil.getColor(R.color.blue5087FF));
+        } else {
             ivItemSelect.setImageDrawable(ResourceUtil.getDrawable(R.drawable.shape_circle_white_hollow_gray_bfbfbf));
             ivItemIcon.setImageResource(R.mipmap.ic_class_type);
+            tvItemName.setTextColor(ResourceUtil.getColor(R.color.gray666666));
         }
     }
 }

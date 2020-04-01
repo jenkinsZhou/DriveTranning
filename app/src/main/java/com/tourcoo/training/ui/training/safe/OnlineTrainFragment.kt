@@ -23,7 +23,7 @@ import com.tourcoo.training.widget.dialog.CommonListDialog
  * @date 2020年03月11日10:55
  * @Email: 971613168@qq.com
  */
-class OnlineTrainFragment :BaseFragment(){
+class OnlineTrainFragment : BaseFragment() {
     private var adapter: ProfessionalTrainingAdapter? = null
     private var refreshLayout: SmartRefreshLayout? = null
     private var recyclerView: RecyclerView? = null
@@ -42,7 +42,7 @@ class OnlineTrainFragment :BaseFragment(){
         testData()
         baseHandler.postDelayed(Runnable {
             showCourseDialog()
-        },500)
+        }, 500)
     }
 
 
@@ -55,7 +55,7 @@ class OnlineTrainFragment :BaseFragment(){
         }
     }
 
-    private fun testData(){
+    private fun testData() {
         adapter?.addData(ProfessionTrainingEntity())
         adapter?.addData(ProfessionTrainingEntity())
         adapter?.addData(ProfessionTrainingEntity())
@@ -63,22 +63,31 @@ class OnlineTrainFragment :BaseFragment(){
     }
 
 
-    private fun showCourseDialog(){
+    private fun showCourseDialog() {
         val adapter = CourseSelectAdapter()
-        adapter.setOnItemClickListener( object : BaseQuickAdapter.OnItemClickListener{
+        adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
             override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
-            ToastUtil.show("点击了")
+                for (entity in adapter!!.data) {
+                    val item = entity as CourseEntity
+                    val clickEntity = adapter.data[position] as CourseEntity
+                    if (item.id == clickEntity.id) {
+                        clickEntity.isSelect = !clickEntity.isSelect
+                    } else {
+                        item.isSelect = false
+                    }
+                }
+                adapter.notifyDataSetChanged()
             }
         })
         val list = ArrayList<CourseEntity>()
-        for (i in 0 until 3){
+        for (i in 0 until 3) {
             var item = CourseEntity()
             item.id = "900$i"
             item.courseDurationDesc = "d"
             list.add(item)
         }
-       val dialog =  CommonListDialog<CourseEntity>(mContext).create().setDataAdapter(adapter)
-               .setDataList(list)
+        val dialog = CommonListDialog<CourseEntity>(mContext).create().setDataAdapter(adapter)
+                .setDataList(list)
         dialog.show()
     }
 }

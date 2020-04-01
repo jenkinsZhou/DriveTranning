@@ -2,8 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:maxHeight="@dimen/dp_100"
-    android:minHeight="@dimen/dp_200"
     android:paddingBottom="@dimen/dp_10"
     android:background="@drawable/bg_radius_5_white"
     android:orientation="vertical">
@@ -58,18 +56,19 @@
                 android:textSize="@dimen/sp_13" />
             <TextView
                 android:id="@+id/tvBottom"
+                android:layout_marginStart="@dimen/dp_35"
                 android:layout_marginTop="@dimen/dp_10"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_gradient_radius_25_blue_53c2ff_4e52ff"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_marginEnd="@dimen/dp_35"
                 android:paddingStart="@dimen/dp_22"
                 android:paddingTop="@dimen/dp_6"
                 android:paddingEnd="@dimen/dp_22"
                 android:paddingBottom="@dimen/dp_6"
-                android:text="确认修改"
+                android:text="确定"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12" />
         </LinearLayout>
@@ -79,7 +78,7 @@
             android:layout_alignParentTop="true"
             android:layout_above="@id/llBottomButtonContainer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_200" />
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 
