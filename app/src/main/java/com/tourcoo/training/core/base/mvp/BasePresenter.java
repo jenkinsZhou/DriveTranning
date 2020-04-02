@@ -15,7 +15,7 @@ import java.lang.reflect.Proxy;
  * @Email: 971613168@qq.com
  */
 @SuppressWarnings("unchecked")
-public abstract class BasePresenter <T extends IBaseModel,V extends  IBaseView> {
+public abstract class BasePresenter<T extends IBaseModel, V extends IBaseView> {
     public static final String TAG = "BasePresenter";
     protected V mProxyView;
     private T module;
@@ -33,7 +33,6 @@ public abstract class BasePresenter <T extends IBaseModel,V extends  IBaseView> 
      * 初始化方法
      */
     public abstract void start();
-
 
 
     protected V getView() {
@@ -98,15 +97,13 @@ public abstract class BasePresenter <T extends IBaseModel,V extends  IBaseView> 
         }
     }
 
-    protected  <T> T parseJavaBean(Object data, Class<T> tClass) {
+    protected <T> T parseJavaBean(Object data, Class<T> tClass) {
         try {
             return JSON.parseObject(JSON.toJSONString(data), tClass);
         } catch (Exception e) {
             return null;
         }
     }
-
-
 
 
 }

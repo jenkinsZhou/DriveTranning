@@ -25,6 +25,7 @@ import com.tourcoo.training.ui.account.FindPassActivity;
 import com.tourcoo.training.ui.account.UploadIdCardActivity;
 import com.tourcoo.training.ui.exam.OnlineExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
+import com.tourcoo.training.ui.pay.BuyNowActivity;
 import com.tourcoo.training.ui.training.online.StudyOnlineActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 
@@ -202,6 +203,19 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
     }
 
 private void initItemClick(){
+
+    accountAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            switch (position) {
+                case 0:
+                    CommonUtil.startActivity(mContext, BuyNowActivity.class);
+                    break;
+                default:
+                    break;
+            }
+        }
+    });
     achievementAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {

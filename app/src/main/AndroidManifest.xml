@@ -54,6 +54,7 @@
             />
         <activity android:name=".ui.account.IdCardInfoActivity" />
         <activity android:name=".ui.account.FindPassActivity" />
+        <activity android:name=".ui.pay.BuyNowActivity" />
     </application>
 
 </manifest>

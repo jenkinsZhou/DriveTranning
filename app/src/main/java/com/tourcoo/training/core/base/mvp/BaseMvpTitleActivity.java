@@ -29,7 +29,7 @@ public abstract class BaseMvpTitleActivity<P extends BasePresenter> extends Base
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = createPresenter();
-        if (presenter != null) {
+        if (presenter != null &&  !(presenter instanceof NullPresenter)) {
             presenter.attachView(this);
         }
         loadPresenter();
