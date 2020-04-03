@@ -126,12 +126,20 @@
         <item name="android:textColor">@color/black333333</item>
     </style>
 
+
     <style name="Text13spGray999999">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/sp_13</item>
         <item name="android:textColor">@color/gray999999</item>
     </style>
+    <style name="Text15spGray999999">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/sp_15</item>
+        <item name="android:textColor">@color/gray999999</item>
+    </style>
+
     <style name="Text12spGray999999">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

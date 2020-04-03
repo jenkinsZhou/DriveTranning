@@ -4,128 +4,276 @@
     android:layout_height="match_parent"
     android:background="@color/grayF9F9F9"
     android:orientation="vertical">
+
     <include layout="@layout/frame_layout_title_bar" />
+
     <LinearLayout
-        android:layout_marginStart="@dimen/dp_10"
-        android:layout_marginEnd="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
         android:background="@drawable/bg_radius_5_white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_20">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="@string/app_name"
+            android:text="安全员"
             android:textColor="#FF6600"
             android:textSize="@dimen/sp_18"
             android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_marginStart="@dimen/dp_10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_9"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
-                android:layout_gravity="center_vertical"
-                android:src="@mipmap/ic_training_safe_plan_time" />
-
-            <TextView
-                style="@style/Text13spGray999999"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dp_5"
-                android:text="计划时间" />
-
-            <TextView
-                style="@style/Text13spBlack333333"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dp_5"
-                android:text="2020-02-21 15:30" />
-        </LinearLayout>
-        <LinearLayout
             android:layout_marginStart="@dimen/dp_10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_9"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_20"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@mipmap/ic_training_safe_plan_time" />
+                android:minWidth="@dimen/dp_20"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_training_local_detail_course_name" />
+            </LinearLayout>
+
 
             <TextView
-                style="@style/Text13spGray999999"
+                style="@style/Text15spGray999999"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_5"
-                android:text="计划时间" />
+                android:text="课程名称：" />
 
             <TextView
-                style="@style/Text13spBlack333333"
+                style="@style/Text15spBlack333333"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_5"
-                android:text="2020-02-21 15:30" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_9"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
-                android:layout_gravity="center_vertical"
-                android:src="@mipmap/ic_training_safe_plan_time" />
-
-            <TextView
-                style="@style/Text13spGray999999"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dp_5"
-                android:text="计划时间" />
-
-            <TextView
-                style="@style/Text13spBlack333333"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dp_5"
-                android:text="2020-02-21 15:30" />
+                android:text="现场+线上安全教育培训" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginStart="@dimen/dp_10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_9"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_20"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@mipmap/ic_training_safe_plan_time" />
+                android:minWidth="@dimen/dp_20"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_training_local_detail_course_time" />
+            </LinearLayout>
 
             <TextView
-                style="@style/Text13spGray999999"
+                style="@style/Text15spGray999999"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_5"
-                android:text="计划时间" />
+                android:text="计划时间：" />
 
             <TextView
-                style="@style/Text13spBlack333333"
+                style="@style/Text15spBlack333333"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_5"
                 android:text="2020-02-21 15:30" />
         </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:minWidth="@dimen/dp_20"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_training_local_detail_address" />
+            </LinearLayout>
+
+
+            <TextView
+
+                style="@style/Text15spGray999999"
+                android:layout_gravity="top"
+                android:layout_marginStart="@dimen/dp_5"
+                android:text="地点        ：" />
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_gravity="top"
+                android:layout_marginStart="@dimen/dp_5"
+                android:text="安徽省合肥市蜀山区呼叫中心" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:minWidth="@dimen/dp_20"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_training_local_detail_course_length" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/Text15spGray999999"
+                android:layout_marginStart="@dimen/dp_5"
+                android:text="课时        ：" />
+
+            <TextView
+                style="@style/Text15spBlack333333"
+                android:layout_marginStart="@dimen/dp_5"
+                android:text="2020-02-21 15:30" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0_5"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:background="@color/grayE5E5E5" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_12"
+            android:src="@mipmap/ic_training_local_detail_sign" />
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:minWidth="@dimen/dp_20"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_training_local_detail_course_time" />
+                    </LinearLayout>
+
+                    <TextView
+                        style="@style/Text15spGray999999"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:text="签到时间：" />
+
+                    <TextView
+                        style="@style/Text15spBlack333333"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:text="2020-02-21 15:30" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:minWidth="@dimen/dp_20"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_training_local_detail_course_time" />
+                    </LinearLayout>
+
+                    <TextView
+                        style="@style/Text15spGray999999"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:text="结束时间：" />
+
+                    <TextView
+                        style="@style/Text15spBlack333333"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:text="2020-02-21 15:30" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_marginEnd="@dimen/dp_20"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/ic_training_state_no_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+
+
+        </LinearLayout>
+
     </LinearLayout>
+
 
 </LinearLayout>

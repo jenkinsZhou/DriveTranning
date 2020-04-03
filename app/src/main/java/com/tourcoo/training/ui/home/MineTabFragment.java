@@ -28,6 +28,8 @@ import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.pay.BuyNowActivity;
 import com.tourcoo.training.ui.training.online.StudyOnlineActivity;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
+import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert;
+import com.tourcoo.training.widget.dialog.training.LocalTrainingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,39 +196,55 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
         });
     }*/
 
-    public void closePayDialog(){
-        if(multiplePayDialog != null){
+    public void closePayDialog() {
+        if (multiplePayDialog != null) {
             ToastUtil.show("执行了");
 
             multiplePayDialog.dismiss();
         }
     }
 
-private void initItemClick(){
+    private void initItemClick() {
 
-    accountAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            switch (position) {
-                case 0:
-                    CommonUtil.startActivity(mContext, BuyNowActivity.class);
-                    break;
-                default:
-                    break;
+        accountAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (position) {
+                    case 0:
+                        CommonUtil.startActivity(mContext, BuyNowActivity.class);
+                        break;
+                    case 1:
+                        showDialog();
+                        break;
+                    case 2:
+                        showDialog1();
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-    });
-    achievementAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            switch (position) {
-                case 0:
-                    CommonUtil.startActivity(mContext, StudyOnlineActivity.class);
-                    break;
-                default:
-                    break;
+        });
+        achievementAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (position) {
+                    case 0:
+                        CommonUtil.startActivity(mContext, StudyOnlineActivity.class);
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-    });
-}
+        });
+    }
+
+    private void showDialog(){
+        LocalTrainingAlert alert = new LocalTrainingAlert(mContext);
+        alert.create().show();
+    }
+
+    private void showDialog1(){
+        LocalTrainingDialog dialog = new LocalTrainingDialog(mContext);
+        dialog.create().show();
+    }
 }
