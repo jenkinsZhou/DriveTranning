@@ -22,6 +22,7 @@ import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.RegisterTempHelper
 import com.tourcoo.training.entity.account.TradeType
 import com.tourcoo.training.entity.account.UserInfo
+import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_REGISTER_TYPE_INDUSTRY
 import com.tourcoo.training.widget.dialog.BottomSheetDialog
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -70,8 +71,7 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
                 doRegister()
             }
             R.id.tvGoLogin -> {
-//                CommonUtil.startActivity(mContext, LoginActivity::class.java)
-                CommonUtil.startActivity(mContext, UploadIdCardActivity::class.java)
+                CommonUtil.startActivity(mContext, RecognizeIdCardActivity::class.java)
             }
             R.id.ivSelectedImage -> {
                 selectPic()
@@ -235,7 +235,7 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
         TourCooLogUtil.i("提交的参数", hashMap)
         ApiRepository.getInstance().requestIndustryRegister(hashMap).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfo>>("加载中...") {
             override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
-                ToastUtil.show(entity?.message)
+                ToastUtil.show(entity?.msg)
                 TourCooLogUtil.i(mTag, entity?.data)
                 AccountHelper.getInstance().userInfo = entity?.data
             }

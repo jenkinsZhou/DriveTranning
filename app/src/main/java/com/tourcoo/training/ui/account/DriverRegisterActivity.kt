@@ -4,8 +4,14 @@ import android.os.Bundle
 import android.view.View
 import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
+import com.tourcoo.training.core.base.entity.BaseMovieEntity
+import com.tourcoo.training.core.base.mvp.BaseMvpActivity
+import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
+import com.tourcoo.training.core.base.mvp.NullPresenter
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.ui.account.register.DriverRegisterContract
+import com.tourcoo.training.ui.account.register.DriverRegisterPresenter
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import kotlinx.android.synthetic.main.activity_register_driver.*
@@ -17,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_register_driver.*
  * @date 2020年03月04日17:37
  * @Email: 971613168@qq.com
  */
-class DriverRegisterActivity  : BaseTitleActivity() , View.OnClickListener {
+class DriverRegisterActivity : BaseMvpTitleActivity<NullPresenter>(), View.OnClickListener {
 
     private lateinit var kingKeyboard: KingKeyboard
     override fun getContentLayout(): Int {
@@ -35,7 +41,7 @@ class DriverRegisterActivity  : BaseTitleActivity() , View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.tvGoLogin->{
+            R.id.tvGoLogin -> {
 //                CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
                 CommonUtil.startActivity(mContext, StudyMedalRecordActivity::class.java)
 
@@ -44,11 +50,24 @@ class DriverRegisterActivity  : BaseTitleActivity() , View.OnClickListener {
             }
         }
     }
-    
-    private fun initPlantKeyBoard(){
+
+    private fun initPlantKeyBoard() {
         kingKeyboard = KingKeyboard(this, keyboardParent)
         kingKeyboard.register(etDriverPlantNum, KingKeyboard.KeyboardType.LICENSE_PLATE)
         kingKeyboard.setKeyboardCustom(R.xml.keyboard_custom)
         kingKeyboard.setVibrationEffectEnabled(true)
     }
+
+    override fun loadPresenter() {
+    }
+
+    override fun createPresenter(): NullPresenter {
+        return NullPresenter()
+    }
+
+    private fun selectImage() {
+
+
+    }
+
 }

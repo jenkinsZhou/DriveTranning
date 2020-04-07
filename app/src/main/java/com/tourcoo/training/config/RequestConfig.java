@@ -9,7 +9,8 @@ package com.tourcoo.training.config;
  */
 public class RequestConfig {
 
-    public static String BASE_URL_NO_LINE = "http://192.168.1.76:8099";
+//    public static String BASE_URL_NO_LINE = "http://192.168.1.76:8099";
+    public static String BASE_URL_NO_LINE = "https://api.ggjtaq.com";
     public static String BASE_URL = BASE_URL_NO_LINE+"/";
     /**
      * 接口URL + ""

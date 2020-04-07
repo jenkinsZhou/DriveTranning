@@ -10,9 +10,8 @@ import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.RegisterTempHelper
-import com.tourcoo.training.ui.account.UploadIdCardActivity.Companion.EXTRA_PHOTO_PATH
+import com.tourcoo.training.ui.account.RecognizeIdCardActivity.Companion.EXTRA_PHOTO_PATH
 import kotlinx.android.synthetic.main.activity_id_card_info.*
-import kotlinx.android.synthetic.main.activity_upload_id_card.*
 import kotlinx.android.synthetic.main.activity_upload_id_card.ivSelectedImage
 import kotlinx.android.synthetic.main.activity_upload_id_card.tvNextStep
 
@@ -56,10 +55,12 @@ class IdCardInfoActivity : BaseTitleActivity(), View.OnClickListener {
         }
     }
 
-    private fun showIdInfo(){
-        tvName.text = RegisterTempHelper.getInstance().registerName
-        tvIdCard.text = RegisterTempHelper.getInstance().registerIdCard
-        RegisterTempHelper.getInstance().businessLicensePath ="awdad"
-//        tvName.text = RegisterTempHelper.getInstance().registerPhone
+    private fun showIdInfo() {
+        if (RegisterTempHelper.getInstance().idCardInfo == null) {
+            return
+        }
+        tvName.text = RegisterTempHelper.getInstance().idCardInfo.name
+        tvIdCard.text = RegisterTempHelper.getInstance().idCardInfo.idCard
+        RegisterTempHelper.getInstance().businessLicensePath = "awdad"
     }
 }

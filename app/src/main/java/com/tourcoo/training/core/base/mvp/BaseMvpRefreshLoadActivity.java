@@ -54,14 +54,7 @@ public abstract class BaseMvpRefreshLoadActivity<P extends BasePresenter, T> ext
         showLoading("");
     }
 
-    public void showLoading(String msg) {
-        if (loadingDialog != null && !loadingDialog.isShowing()) {
-            if (!TextUtils.isEmpty(msg)) {
-                loadingDialog.setLoadingText(msg);
-            }
-            loadingDialog.show();
-        }
-    }
+
 
     @Override
     public void closeLoading() {

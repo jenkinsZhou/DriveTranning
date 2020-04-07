@@ -1,7 +1,6 @@
 package com.tourcoo.training.core.retrofit.repository;
 
 
-
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
@@ -46,12 +45,10 @@ public class ApiRepository extends BaseRepository {
         return instance;
     }
 
-    private ApiService getApiService() {
+    public ApiService getApiService() {
         mApiService = RetrofitHelper.getInstance().createService(ApiService.class);
         return mApiService;
     }
-
-
 
 
     /**
@@ -63,7 +60,7 @@ public class ApiRepository extends BaseRepository {
      */
     public Observable<BaseMovieEntity> getMovie(int start, int count) {
         Map<String, Object> params = new HashMap<>(3);
-        params.put("apikey","0b2bdeda43b5688921839c8ecb20399b");
+        params.put("apikey", "0b2bdeda43b5688921839c8ecb20399b");
         params.put("start", start);
         params.put("count", count);
         return CommonTransformer.switchSchedulers(getApiService().getMovie("v2/movie/top250", params).retryWhen(new RetryWhen()));
@@ -80,19 +77,25 @@ public class ApiRepository extends BaseRepository {
 
     public Observable<BaseResult> requestVCode(int type, String phone) {
         Map<String, Object> params = new HashMap<>(3);
-        params.put("phone",phone);
+        params.put("phone", phone);
         params.put("type", type);
         return CommonTransformer.switchSchedulers(getApiService().requestVCode(params).retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult> requestResetPass(String phone,String pass, String smsCode) {
+    public Observable<BaseResult> requestResetPass(String phone, String pass, String smsCode) {
         Map<String, Object> params = new HashMap<>(3);
-        params.put("phoneNumber",phone);
+        params.put("phoneNumber", phone);
         params.put("password", pass);
         params.put("smsCode", smsCode);
         return CommonTransformer.switchSchedulers(getApiService().requestResetPass(params).retryWhen(new RetryWhen()));
     }
 
-
+    /*public Observable<BaseResult> requestIdCardRecognition(String phone, String pass, String smsCode) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("phoneNumber", phone);
+        params.put("password", pass);
+        params.put("smsCode", smsCode);
+        return CommonTransformer.switchSchedulers(getApiService().requestResetPass(params).retryWhen(new RetryWhen()));
+    }*/
 
 }

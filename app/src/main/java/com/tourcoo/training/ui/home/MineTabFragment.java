@@ -22,11 +22,13 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.account.FindPassActivity;
-import com.tourcoo.training.ui.account.UploadIdCardActivity;
+import com.tourcoo.training.ui.account.LoginActivity;
 import com.tourcoo.training.ui.exam.OnlineExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.pay.BuyNowActivity;
 import com.tourcoo.training.ui.training.online.StudyOnlineActivity;
+import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog;
+import com.tourcoo.training.widget.dialog.medal.MedalDialog;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert;
 import com.tourcoo.training.widget.dialog.training.LocalTrainingDialog;
@@ -167,8 +169,8 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
                 CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity.class);
                 break;
             case R.id.llAvatar:
-//                CommonUtil.startActivity(mContext, IndustrialRegisterActivity.class);
-                CommonUtil.startActivity(mContext, UploadIdCardActivity.class);
+                CommonUtil.startActivity(mContext, LoginActivity.class);
+//                CommonUtil.startActivity(mContext, UploadIdCardActivity.class);
                 break;
             case R.id.ivAddCar:
                 CommonUtil.startActivity(mContext, OnlineExamActivity.class);
@@ -217,7 +219,9 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
                         showDialog();
                         break;
                     case 2:
-                        showDialog1();
+//                        showDialog1();
+//                        showDialog2();
+                        showDialog3();
                         break;
                     default:
                         break;
@@ -247,4 +251,14 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
         LocalTrainingDialog dialog = new LocalTrainingDialog(mContext);
         dialog.create().show();
     }
+
+    private void showDialog2(){
+        MedalDialog dialog = new MedalDialog(mContext);
+        dialog.create().show();
+    }
+    private void showDialog3(){
+        CommitAnswerDialog dialog = new CommitAnswerDialog(mContext);
+        dialog.create().show();
+    }
+
 }

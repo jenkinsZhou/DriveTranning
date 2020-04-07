@@ -12,7 +12,7 @@ import android.Manifest;
 public class AppConfig {
 
 
-    public static final boolean DEBUG_MODE = true;
+    public static  boolean DEBUG_MODE = true;
     /**
      * 标题栏主标题文字大小(sp)
      */

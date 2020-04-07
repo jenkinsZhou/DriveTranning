@@ -3,6 +3,7 @@ package com.tourcoo.training.core.retrofit.service;
 
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.BaseResult;
+import com.tourcoo.training.entity.account.IdCardInfo;
 import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
 
@@ -10,8 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
@@ -70,4 +74,18 @@ public interface ApiService {
 
     @POST("api/v1.0/open/user/reset-password")
     Observable<BaseResult> requestResetPass(@Body Map<String, Object> map);
+
+
+
+
+    /**
+     * 多个文件上传
+     *
+     * @param files
+     * @return
+     */
+    @POST("v1.0/open/utils/idcard-recognition")
+    Call<BaseResult<IdCardInfo>> requestIdCardRecognition(@Body RequestBody files);
+
+
 }

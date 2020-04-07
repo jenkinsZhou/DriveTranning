@@ -183,7 +183,7 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
                     ToastUtil.showSuccess("发送成功")
                     countDownTime()
                 } else {
-                    ToastUtil.showFailed(entity.message)
+                    ToastUtil.showFailed(entity.msg)
                 }
             }
 
@@ -279,10 +279,10 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess(entity.message)
+                    ToastUtil.showSuccess(entity.msg)
                     finish()
                 } else {
-                    ToastUtil.showFailed(entity.message)
+                    ToastUtil.showFailed(entity.msg)
                 }
             }
         })

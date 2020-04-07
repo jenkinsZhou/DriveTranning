@@ -13,7 +13,9 @@ public class RegisterTempHelper {
     public static final String PREF_ACCESS_TOKEN = "access_token";
     public static final String PREF_REFRESH_TOKEN = "refresh_token";
 
-    private RegisterTempHelper(){}
+    private RegisterTempHelper() {
+    }
+
     private static class SingletonInstance {
         private static final RegisterTempHelper INSTANCE = new RegisterTempHelper();
     }
@@ -22,16 +24,25 @@ public class RegisterTempHelper {
         return SingletonInstance.INSTANCE;
     }
 
-    private int  registerType;
+    private int registerType;
 
+    private IdCardInfo idCardInfo;
 
-    private String  registerPhone;
+    public IdCardInfo getIdCardInfo() {
+        return idCardInfo;
+    }
 
-    private String  registerName;
+    public void setIdCardInfo(IdCardInfo idCardInfo) {
+        this.idCardInfo = idCardInfo;
+    }
 
-    private String  registerIdCard;
+    private String registerPhone;
 
-    private String  businessLicensePath;
+    private String registerName;
+
+    private String registerIdCard;
+
+    private String businessLicensePath;
 
     public String getBusinessLicensePath() {
         return businessLicensePath;

@@ -6,9 +6,16 @@ package com.tourcoo.training.core.base.entity;
 public class BaseResult<T> {
 
     private int code;
-    public String message;
+    public String msg;
     private T data;
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
     public int getCode() {
         return code;
@@ -18,13 +25,7 @@ public class BaseResult<T> {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
-    }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public T getData() {
         return data;
@@ -38,7 +39,7 @@ public class BaseResult<T> {
     public String toString() {
         return "BaseResult{" +
                 "code=" + code +
-                ", message='" + message + '\'' +
+                ", message='" + msg + '\'' +
                 ", data=" + data +
                 '}';
     }

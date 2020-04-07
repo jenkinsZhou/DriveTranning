@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -363,5 +364,22 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
 
     protected String getTextValue(EditText editText) {
         return editText != null ? editText.getText().toString() : "";
+    }
+
+
+    protected void showLoading(String msg) {
+        if (loadingDialog != null ) {
+            if (!TextUtils.isEmpty(msg)) {
+                loadingDialog.setLoadingText(msg);
+            }
+            loadingDialog.show();
+        }
+    }
+
+
+    protected void closeLoading() {
+        if (loadingDialog != null ) {
+            loadingDialog.dismiss();
+        }
     }
 }
