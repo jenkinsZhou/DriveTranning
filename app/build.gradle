@@ -14,6 +14,10 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+       /* ndk {
+            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
+            abiFilters "armeabi", "armeabi-v7a"
+        }*/
     }
     buildTypes {
         release {
@@ -124,6 +128,9 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.2.2'
 
     implementation 'com.kaopiz:kprogresshud:1.2.0'
+
+    //定位功能
+    implementation 'com.amap.api:location:4.9.0'
 
 }
 repositories {

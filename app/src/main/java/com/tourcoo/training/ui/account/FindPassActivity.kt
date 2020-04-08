@@ -21,9 +21,9 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.InputStatus
 import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.ui.account.register.IndustrialRegisterActivity
 import com.tourcoo.training.utils.TourCooUtil
 import com.trello.rxlifecycle3.android.ActivityEvent
 import io.reactivex.Observer

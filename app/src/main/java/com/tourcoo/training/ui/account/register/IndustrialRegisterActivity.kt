@@ -1,8 +1,7 @@
-package com.tourcoo.training.ui.account
+package com.tourcoo.training.ui.account.register
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -18,17 +17,12 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.AccountHelper
-import com.tourcoo.training.entity.account.RegisterTempHelper
 import com.tourcoo.training.entity.account.TradeType
-import com.tourcoo.training.entity.account.UserInfo
-import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_REGISTER_TYPE_INDUSTRY
 import com.tourcoo.training.widget.dialog.BottomSheetDialog
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_register_industrial.*
 import org.apache.commons.lang.StringUtils
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.List
 import kotlin.collections.MutableList
@@ -68,7 +62,7 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
             R.id.tvRegisterIndustrial -> {
 //                CommonUtil.startActivity(mContext, DriverRegisterActivity::class.java)
 //                CommonUtil.startActivity(mContext, UploadIdCardActivity::class.java)
-                doRegister()
+//                doRegister()
             }
             R.id.tvGoLogin -> {
                 CommonUtil.startActivity(mContext, RecognizeIdCardActivity::class.java)
@@ -206,7 +200,7 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
         etTradeType.text = tradeTypeName
     }
 
-    private fun doRegister() {
+   /* private fun doRegister() {
         val hashMap = HashMap<String, Any>()
         hashMap["name"] = RegisterTempHelper.getInstance().registerName
         hashMap["idCard"] = RegisterTempHelper.getInstance().registerIdCard
@@ -233,15 +227,15 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
         }
         hashMap["tradeTypeId"] = selectTradeId
         TourCooLogUtil.i("提交的参数", hashMap)
-        ApiRepository.getInstance().requestIndustryRegister(hashMap).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfo>>("加载中...") {
-            override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
+        ApiRepository.getInstance().requestIndustryRegister(hashMap).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfoOld>>("加载中...") {
+            override fun onSuccessNext(entity: BaseResult<UserInfoOld>?) {
                 ToastUtil.show(entity?.msg)
                 TourCooLogUtil.i(mTag, entity?.data)
-                AccountHelper.getInstance().userInfo = entity?.data
+                AccountHelper.getInstance().userInfoOld = entity?.data
             }
         })
     }
-
+*/
 
 
 

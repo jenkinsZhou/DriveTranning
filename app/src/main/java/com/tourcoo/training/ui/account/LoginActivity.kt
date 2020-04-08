@@ -7,6 +7,8 @@ import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
+import com.tourcoo.training.ui.account.register.RecognizeLicenseActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 /**
@@ -40,11 +42,11 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         when (v!!.id) {
             R.id.tvRegisterDriver -> {
                 RegisterTempHelper.getInstance().registerType = EXTRA_REGISTER_TYPE_DRIVER
-                skipRegister(EXTRA_REGISTER_TYPE_DRIVER)
+                skipRegisterDriver()
             }
             R.id.tvRegisterIndustrial -> {
                 RegisterTempHelper.getInstance().registerType = EXTRA_REGISTER_TYPE_INDUSTRY
-                skipRegister(EXTRA_REGISTER_TYPE_INDUSTRY)
+                skipRegisterIndustrial()
             }
         }
     }
@@ -53,9 +55,21 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         return false
     }
 
-    private fun skipRegister(type: Int) {
+    /**
+     * 驾驶员注册
+     */
+    private fun skipRegisterDriver() {
         val bundle = Bundle()
-        bundle.putInt(EXTRA_KEY_REGISTER_TYPE, type)
+        bundle.putInt(EXTRA_KEY_REGISTER_TYPE, EXTRA_REGISTER_TYPE_DRIVER)
         CommonUtil.startActivity(mContext, RecognizeIdCardActivity::class.java, bundle)
+    }
+
+    /**
+     * 个体公司户注册
+     */
+    private fun skipRegisterIndustrial() {
+        val bundle = Bundle()
+        bundle.putInt(EXTRA_KEY_REGISTER_TYPE, EXTRA_REGISTER_TYPE_INDUSTRY)
+        CommonUtil.startActivity(mContext, RecognizeLicenseActivity::class.java, bundle)
     }
 }

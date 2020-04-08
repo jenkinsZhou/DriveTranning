@@ -1,17 +1,18 @@
 package com.tourcoo.training.core.retrofit.repository;
 
 
+import com.blankj.utilcode.util.AppUtils;
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.BaseResult;
-import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.retrofit.CommonTransformer;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
 import com.tourcoo.training.core.retrofit.RetryWhen;
 import com.tourcoo.training.core.retrofit.service.ApiService;
-import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
-import com.trello.rxlifecycle3.android.ActivityEvent;
+import com.tourcoo.training.entity.account.register.CompanyInfo;
+import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ import io.reactivex.Observable;
  * @Description:
  */
 public class ApiRepository extends BaseRepository {
-
+    public static final String TAG = "ApiRepository";
     private static volatile ApiRepository instance;
     private ApiService mApiService;
 
@@ -71,9 +72,9 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestTradeType().retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult<UserInfo>> requestIndustryRegister(Map<String, Object> map) {
+   /* public Observable<BaseResult<UserInfoOld>> requestIndustryRegister(Map<String, Object> map) {
         return CommonTransformer.switchSchedulers(getApiService().requestIndustryRegister(map).retryWhen(new RetryWhen()));
-    }
+    }*/
 
     public Observable<BaseResult> requestVCode(int type, String phone) {
         Map<String, Object> params = new HashMap<>(3);
@@ -90,12 +91,21 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestResetPass(params).retryWhen(new RetryWhen()));
     }
 
-    /*public Observable<BaseResult> requestIdCardRecognition(String phone, String pass, String smsCode) {
-        Map<String, Object> params = new HashMap<>(3);
-        params.put("phoneNumber", phone);
-        params.put("password", pass);
-        params.put("smsCode", smsCode);
-        return CommonTransformer.switchSchedulers(getApiService().requestResetPass(params).retryWhen(new RetryWhen()));
-    }*/
+    public Observable<BaseResult<List<CompanyInfo>>> requestCompanyByKeyword(String keyword) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("needle", keyword);
+        return CommonTransformer.switchSchedulers(getApiService().requestCompanyByKeyword(params).retryWhen(new RetryWhen()));
+    }
+
+    @SuppressWarnings("unchecked")
+    public Observable<BaseResult<UserInfo>> requestRegisterDriver(Map<String, Object> map) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("appType", "Android");
+        params.put("appVersion", "v" + AppUtils.getAppVersionName());
+        Map newMap = MapUtil.mergeMaps(params, map);
+        TourCooLogUtil.i(TAG, newMap);
+        return CommonTransformer.switchSchedulers(getApiService().requestRegisterDriver(newMap).retryWhen(new RetryWhen()));
+    }
+
 
 }

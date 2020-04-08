@@ -38,6 +38,10 @@ import com.tourcoo.training.core.widget.navigation.NavigationViewHelper;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.core.widget.view.status.StatusViewHelper;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
+import com.tourcoo.training.ui.account.register.RecognizeLicenseActivity;
+import com.tourcoo.training.widget.idcardcamera.camera.LicenseCameraActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -61,9 +65,15 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivityCreated(final Activity activity, final Bundle savedInstanceState) {
-       TourCooLogUtil.i( "onActivityCreated:" + activity.getClass().getSimpleName() + ";contentView:" + CommonUtil.getRootView(activity));
+        TourCooLogUtil.i("onActivityCreated:" + activity.getClass().getSimpleName() + ";contentView:" + CommonUtil.getRootView(activity));
+        //回调实现自定义逻辑
+        if (mActivityLifecycleCallbacks != null) {
+            mActivityLifecycleCallbacks.onActivityCreated(activity, savedInstanceState);
+        }
+        if (activity instanceof LicenseCameraActivity) {
+            return;
+        }
         getControl();
-
         //统一Activity堆栈管理
         StackUtil.getInstance().push(activity);
         //统一横竖屏操作
@@ -83,16 +93,16 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
                 && !(activity instanceof BGASwipeBackHelper.Delegate)) {
             setSwipeBack(activity);
         }*/
-        //回调实现自己应用逻辑
-        if (mActivityLifecycleCallbacks != null) {
-            mActivityLifecycleCallbacks.onActivityCreated(activity, savedInstanceState);
-        }
+        
     }
 
     @Override
-    public void onActivityStarted(Activity activity) {
+    public void onActivityStarted(@NotNull Activity activity) {
+        if(activity instanceof LicenseCameraActivity){
+            return;
+        }
         View contentView = CommonUtil.getRootView(activity);
-       TourCooLogUtil.i( "onActivityStarted:" + activity.getClass().getSimpleName() + ";contentView:" + contentView);
+        TourCooLogUtil.i("onActivityStarted:" + activity.getClass().getSimpleName() + ";contentView:" + contentView);
         boolean isSet = activity.getIntent().getBooleanExtra(FrameConstant.IS_SET_CONTENT_VIEW_BACKGROUND, false);
         if (!isSet) {
             setContentViewBackground(CommonUtil.getRootView(activity), activity.getClass());
@@ -132,7 +142,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivityResumed(Activity activity) {
-       TourCooLogUtil.i( "onActivityResumed:" + activity.getClass().getSimpleName());
+        TourCooLogUtil.i("onActivityResumed:" + activity.getClass().getSimpleName());
         if (mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onActivityResumed(activity);
         }
@@ -140,7 +150,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivityPaused(Activity activity) {
-       TourCooLogUtil.i( "onActivityPaused:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
+        TourCooLogUtil.i("onActivityPaused:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
         //Activity销毁前的时机需要关闭软键盘-在onActivityStopped及onActivityDestroyed生命周期内已无法关闭
         if (activity.isFinishing()) {
             KeyboardHelper.closeKeyboard(activity);
@@ -153,7 +163,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivityStopped(Activity activity) {
-       TourCooLogUtil.i("onActivityStopped:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
+        TourCooLogUtil.i("onActivityStopped:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
         //回调给开发者实现自己应用逻辑
         if (mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onActivityStopped(activity);
@@ -162,7 +172,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-       TourCooLogUtil.i("onActivitySaveInstanceState:" + activity.getClass().getSimpleName());
+        TourCooLogUtil.i("onActivitySaveInstanceState:" + activity.getClass().getSimpleName());
         //回调给开发者实现自己应用逻辑
         if (mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onActivitySaveInstanceState(activity, outState);
@@ -179,7 +189,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
             activity.getIntent().removeExtra(FrameConstant.IS_SET_REFRESH_VIEW);
             activity.getIntent().removeExtra(FrameConstant.IS_SET_TITLE_BAR_VIEW);
         }
-       TourCooLogUtil.i("onActivityDestroyed:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
+        TourCooLogUtil.i("onActivityDestroyed:" + activity.getClass().getSimpleName() + ";isFinishing:" + activity.isFinishing());
         StackUtil.getInstance().pop(activity, false);
 
         //清除下拉刷新代理FastRefreshDelegate
@@ -267,7 +277,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
         //不包含TitleBarView处理
         if (titleBarView == null && !(activity instanceof BaseMainActivity)) {
             View topView = getTopView(CommonUtil.getRootView(activity));
-           TourCooLogUtil.i( "其它三方库设置状态栏沉浸");
+            TourCooLogUtil.i("其它三方库设置状态栏沉浸");
             StatusViewHelper statusViewHelper = StatusViewHelper.with(activity)
                     .setControlEnable(true)
                     .setPlusStatusViewEnable(false)
@@ -308,7 +318,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
         if (isSet) {
             return;
         }
-       TourCooLogUtil.i("setNavigationBars:设置虚拟导航栏");
+        TourCooLogUtil.i("setNavigationBars:设置虚拟导航栏");
         View bottomView = CommonUtil.getRootView(activity);
         //继承FastMainActivity底部View处理
         if (BaseMainActivity.class.isAssignableFrom(activity.getClass())) {

@@ -1,9 +1,16 @@
 package com.tourcoo.training.ui.account.register;
 
+import android.widget.EditText;
+
+import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.base.mvp.IBaseModel;
 import com.tourcoo.training.core.base.mvp.IBaseView;
+import com.tourcoo.training.core.retrofit.BaseObserver;
+import com.tourcoo.training.entity.account.IdCardInfo;
+import com.tourcoo.training.entity.account.UserInfo;
 
-import java.util.List;
+import java.util.Map;
+
 
 /**
  * @author :JenkinsZhou
@@ -15,21 +22,20 @@ import java.util.List;
 public interface DriverRegisterContract {
 
     interface RegisterView extends IBaseView {
-        List<String> getImages();
+        /*void showIdCardInfo(IdCardInfo idCardInfo);*/
 
-        void uploadImage(List<String> images);
+        String showCompanyByKeyword(String keyWord);
 
-        int getProgress();
-
+        void registerSuccess(UserInfo userInfo);
     }
 
     interface RegisterModel extends IBaseModel {
-        void recognizeIdCard();
+        void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<UserInfo>> observer);
     }
 
     interface RegisterPresenter {
-        void selectImages();
+        //        IdCardInfo getIdCardInfo();
+        void doRegister(Map<String, Object> values);
 
-        void uploadImage();
     }
 }

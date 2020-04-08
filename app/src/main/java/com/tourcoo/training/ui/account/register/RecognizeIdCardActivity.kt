@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.account
+package com.tourcoo.training.ui.account.register
 
 import android.Manifest
 import android.content.Intent
@@ -39,7 +39,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.lang.ref.WeakReference
-import java.util.*
 
 /**
  *@description :
@@ -205,6 +204,10 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
     }
 
     private fun handleCallback(imagePath: String) {
+        if (TextUtils.isEmpty(imagePath)) {
+            ToastUtil.show("请先上传身份证照片")
+            return
+        }
         uploadImage(imagePath)
     }
 
@@ -223,10 +226,6 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
      * @param path
      */
     private fun uploadImage(path: String) {
-        if (TextUtils.isEmpty(path)) {
-            ToastUtil.show("请先上传身份证照片")
-            return
-        }
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
         //注意，file是后台约定的参数，如果是多图，files，如果是单张图片，file就行
@@ -328,4 +327,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
         intent.putExtra(EXTRA_PHOTO_PATH, photoPath)
         startActivity(intent)
     }
+
+
+
 }

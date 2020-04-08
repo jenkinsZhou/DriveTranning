@@ -6,6 +6,8 @@ import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.entity.account.IdCardInfo;
 import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
+import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
+import com.tourcoo.training.entity.account.register.CompanyInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
@@ -64,8 +65,8 @@ public interface ApiService {
      *
      * @return
      */
-    @POST("api/v1.0/open/user/register-individual-business")
-    Observable<BaseResult<UserInfo>> requestIndustryRegister(@Body Map<String, Object> map);
+   /* @POST("api/v1.0/open/user/register-individual-business")
+    Observable<BaseResult<UserInfoOld>> requestIndustryRegister(@Body Map<String, Object> map);*/
 
 
     @GET("api/v1.0/open/common/smscode")
@@ -79,13 +80,38 @@ public interface ApiService {
 
 
     /**
-     * 多个文件上传
+     * 身份证识别
      *
      * @param files
      * @return
      */
     @POST("v1.0/open/utils/idcard-recognition")
     Call<BaseResult<IdCardInfo>> requestIdCardRecognition(@Body RequestBody files);
+
+    /**
+     * 身份证识别
+     *
+     * @param files
+     * @return
+     */
+    @POST("v1.0/open/utils/business-license-recognition")
+    Call<BaseResult<BusinessLicenseInfo>> requestBusinessRecognition(@Body RequestBody files);
+
+    /**
+     * 公司模糊匹配
+     * @param map
+     * @return
+     */
+    @POST("v1.0/open/utils/list-company-by-needle")
+    Observable<BaseResult<List<CompanyInfo>>> requestCompanyByKeyword(@Body Map<String, Object> map);
+
+    /**
+     * 驾驶员注册
+     * @param map
+     * @return
+     */
+    @POST("v1.0/open/User/register-driver")
+    Observable<BaseResult<UserInfo>> requestRegisterDriver(@Body Map<String, Object> map);
 
 
 }

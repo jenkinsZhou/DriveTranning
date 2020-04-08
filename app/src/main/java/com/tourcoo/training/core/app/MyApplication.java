@@ -17,7 +17,6 @@ import com.tourcoo.training.core.impl.AppImpl;
 import com.tourcoo.training.core.impl.HttpRequestControlImpl;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
-import com.tourcoo.training.entity.greendao.GreenDaoHelper;
 
 import static com.tourcoo.training.core.log.cores.LogLevel.TYPE_VERBOSE;
 
@@ -48,7 +47,7 @@ public class MyApplication extends MultiDexApplication {
     private void initSync() {
         initLogConfig();
         SpiderMan.init(this);
-        GreenDaoHelper.getInstance().initDatabase(this);
+//        GreenDaoHelper.getInstance().initDatabase(this);
 //        initDebugKit();
 /*//# 支持写入日志到文件
         TourCooLogUtil.getLog2FileConfig().configLog2FileEnable(true)

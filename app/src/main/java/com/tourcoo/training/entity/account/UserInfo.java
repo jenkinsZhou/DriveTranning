@@ -1,77 +1,58 @@
 package com.tourcoo.training.entity.account;
 
-import com.alibaba.fastjson.JSON;
-
-import org.greenrobot.greendao.annotation.Convert;
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.converter.PropertyConverter;
-
 /**
  * @author :JenkinsZhou
  * @description :
  * @company :途酷科技
- * @date 2020年03月16日14:14
+ * @date 2020年04月08日14:36
  * @Email: 971613168@qq.com
  */
-@Entity
 public class UserInfo  {
 
+
     /**
-     * AccessToken : token
+     * AccessToken : bf13e42bfb360422cbcb2e821c03a1e84bbb9c9c
+     * Enabled : 1
+     * FVEnable : 0
      * UserType : 1
-     * IsAuthenticate : 0
-     * Status : 0
-     * SelectCourseDuration : 2
-     * SelectTradeType : 0
-     * Name : 顶哥
-     * LearnCurrency : 2000
-     * Avatar : https://www.postman.com/img/pages/downloads/canary-treated-logo.svg
-     * Phone : 17730212464
-     * IdCard : 341124199202174815
-     * CompanyName : 顶级公司
-     * IdCardImg : https://www.postman.com/img/pages/downloads/canary-treated-logo.svg
-     * LearnProcess : 80
-     * LearnLevel : 2
-     * Car : {"CarNum":"车牌号","CarModel":"车型","CarBrand":"车辆品牌","ExpiredTime":"50"}
+     * IsAuthenticated : 0
+     * Status : 2
+     * IndustryCateID :
+     * Name : 测试驾驶员03
+     * CoinsTotal : 0
+     * CoinsRemain : 0
+     * Avatar :
+     * Phone : 15255999917
+     * IDCard : 340104199210101525
+     * IDCardUrl :
+     * CompanyName : 测试驾驶员03
+     * IsMandatoryUpdate : 0
+     * OnlineLearnProgress : 0
+     * OnsiteLearnProgress : 0
+     * MonthRanking : 0
+     * Vehicle : {"PlateNumber":"皖P5121169","PlateColor":"","Model":"","Brand":"","ExpiredTime":"2022-01-01"}
      */
+
     private String AccessToken;
+    private int Enabled;
+    private int FVEnable;
     private int UserType;
-    private int IsAuthenticate;
+    private int IsAuthenticated;
     private int Status;
-    private int SelectCourseDuration;
-    private int SelectTradeType;
+    private String IndustryCateID;
     private String Name;
-    private int LearnCurrency;
+    private double CoinsTotal;
+    private double CoinsRemain;
     private String Avatar;
     private String Phone;
-    private String IdCard;
+    private String IDCard;
+    private String IDCardUrl;
     private String CompanyName;
-    private String IdCardImg;
-    private int LearnProcess;
-    private int LearnLevel;
-    //和person关联的id
-    private Long pid;
-
-    public Long getPid() {
-        return pid;
-    }
-
-    public void setPid(Long pid) {
-        this.pid = pid;
-    }
-
-
-    public CarInfo getCar() {
-        return Car;
-    }
-
-    public void setCar(CarInfo car) {
-        Car = car;
-    }
-    
-    @Convert(converter = CarConverter.class, columnType = String.class)
-    private CarInfo Car;
+    private double IsMandatoryUpdate;
+    private double OnlineLearnProgress;
+    private double OnsiteLearnProgress;
+    private double MonthRanking;
+    private VehicleInfo Vehicle;
 
     public String getAccessToken() {
         return AccessToken;
@@ -79,6 +60,22 @@ public class UserInfo  {
 
     public void setAccessToken(String AccessToken) {
         this.AccessToken = AccessToken;
+    }
+
+    public int getEnabled() {
+        return Enabled;
+    }
+
+    public void setEnabled(int Enabled) {
+        this.Enabled = Enabled;
+    }
+
+    public int getFVEnable() {
+        return FVEnable;
+    }
+
+    public void setFVEnable(int FVEnable) {
+        this.FVEnable = FVEnable;
     }
 
     public int getUserType() {
@@ -89,12 +86,12 @@ public class UserInfo  {
         this.UserType = UserType;
     }
 
-    public int getIsAuthenticate() {
-        return IsAuthenticate;
+    public int getIsAuthenticated() {
+        return IsAuthenticated;
     }
 
-    public void setIsAuthenticate(int IsAuthenticate) {
-        this.IsAuthenticate = IsAuthenticate;
+    public void setIsAuthenticated(int IsAuthenticated) {
+        this.IsAuthenticated = IsAuthenticated;
     }
 
     public int getStatus() {
@@ -105,20 +102,12 @@ public class UserInfo  {
         this.Status = Status;
     }
 
-    public int getSelectCourseDuration() {
-        return SelectCourseDuration;
+    public String getIndustryCateID() {
+        return IndustryCateID;
     }
 
-    public void setSelectCourseDuration(int SelectCourseDuration) {
-        this.SelectCourseDuration = SelectCourseDuration;
-    }
-
-    public int getSelectTradeType() {
-        return SelectTradeType;
-    }
-
-    public void setSelectTradeType(int SelectTradeType) {
-        this.SelectTradeType = SelectTradeType;
+    public void setIndustryCateID(String IndustryCateID) {
+        this.IndustryCateID = IndustryCateID;
     }
 
     public String getName() {
@@ -129,12 +118,20 @@ public class UserInfo  {
         this.Name = Name;
     }
 
-    public int getLearnCurrency() {
-        return LearnCurrency;
+    public double getCoinsTotal() {
+        return CoinsTotal;
     }
 
-    public void setLearnCurrency(int LearnCurrency) {
-        this.LearnCurrency = LearnCurrency;
+    public void setCoinsTotal(double CoinsTotal) {
+        this.CoinsTotal = CoinsTotal;
+    }
+
+    public double getCoinsRemain() {
+        return CoinsRemain;
+    }
+
+    public void setCoinsRemain(double CoinsRemain) {
+        this.CoinsRemain = CoinsRemain;
     }
 
     public String getAvatar() {
@@ -153,12 +150,20 @@ public class UserInfo  {
         this.Phone = Phone;
     }
 
-    public String getIdCard() {
-        return IdCard;
+    public String getIDCard() {
+        return IDCard;
     }
 
-    public void setIdCard(String IdCard) {
-        this.IdCard = IdCard;
+    public void setIDCard(String IDCard) {
+        this.IDCard = IDCard;
+    }
+
+    public String getIDCardUrl() {
+        return IDCardUrl;
+    }
+
+    public void setIDCardUrl(String IDCardUrl) {
+        this.IDCardUrl = IDCardUrl;
     }
 
     public String getCompanyName() {
@@ -169,78 +174,44 @@ public class UserInfo  {
         this.CompanyName = CompanyName;
     }
 
-    public String getIdCardImg() {
-        return IdCardImg;
+    public double getIsMandatoryUpdate() {
+        return IsMandatoryUpdate;
     }
 
-    public void setIdCardImg(String IdCardImg) {
-        this.IdCardImg = IdCardImg;
+    public void setIsMandatoryUpdate(double IsMandatoryUpdate) {
+        this.IsMandatoryUpdate = IsMandatoryUpdate;
     }
 
-    public int getLearnProcess() {
-        return LearnProcess;
+    public double getOnlineLearnProgress() {
+        return OnlineLearnProgress;
     }
 
-    public void setLearnProcess(int LearnProcess) {
-        this.LearnProcess = LearnProcess;
+    public void setOnlineLearnProgress(double OnlineLearnProgress) {
+        this.OnlineLearnProgress = OnlineLearnProgress;
     }
 
-    public int getLearnLevel() {
-        return LearnLevel;
+    public double getOnsiteLearnProgress() {
+        return OnsiteLearnProgress;
     }
 
-    public void setLearnLevel(int LearnLevel) {
-        this.LearnLevel = LearnLevel;
+    public void setOnsiteLearnProgress(double OnsiteLearnProgress) {
+        this.OnsiteLearnProgress = OnsiteLearnProgress;
     }
 
-
-
-
-
-    @Generated(hash = 497647764)
-    public UserInfo(String AccessToken, int UserType, int IsAuthenticate, int Status,
-            int SelectCourseDuration, int SelectTradeType, String Name, int LearnCurrency,
-            String Avatar, String Phone, String IdCard, String CompanyName, String IdCardImg,
-            int LearnProcess, int LearnLevel, Long pid, CarInfo Car) {
-        this.AccessToken = AccessToken;
-        this.UserType = UserType;
-        this.IsAuthenticate = IsAuthenticate;
-        this.Status = Status;
-        this.SelectCourseDuration = SelectCourseDuration;
-        this.SelectTradeType = SelectTradeType;
-        this.Name = Name;
-        this.LearnCurrency = LearnCurrency;
-        this.Avatar = Avatar;
-        this.Phone = Phone;
-        this.IdCard = IdCard;
-        this.CompanyName = CompanyName;
-        this.IdCardImg = IdCardImg;
-        this.LearnProcess = LearnProcess;
-        this.LearnLevel = LearnLevel;
-        this.pid = pid;
-        this.Car = Car;
+    public double getMonthRanking() {
+        return MonthRanking;
     }
 
-    @Generated(hash = 1279772520)
-    public UserInfo() {
+    public void setMonthRanking(double MonthRanking) {
+        this.MonthRanking = MonthRanking;
     }
 
-  
+    public VehicleInfo getVehicle() {
+        return Vehicle;
+    }
 
-
-    public static class CarConverter implements PropertyConverter<CarInfo, String> {
-        @Override
-        public CarInfo convertToEntityProperty(String databaseValue) {
-            if (databaseValue == null ) {
-                return null;
-            }
-            return JSON.parseObject(databaseValue,CarInfo.class);
-        }
-
-        @Override
-        public String convertToDatabaseValue(CarInfo entityProperty) {
-            return entityProperty == null ? null : JSON.toJSONString(entityProperty);
-        }
+    public void setVehicle(VehicleInfo Vehicle) {
+        this.Vehicle = Vehicle;
     }
 
 

@@ -46,7 +46,7 @@ public abstract class BaseObserver<T> extends DefaultObserver<T> {
         if (UiManager.getInstance().getHttpRequestControl() != null) {
             UiManager.getInstance().getHttpRequestControl().httpRequestError(mHttpRequestControl, e);
         }
-        onDoError(e);
+        onFailedNext(e);
     }
 
     @Override
@@ -62,7 +62,7 @@ public abstract class BaseObserver<T> extends DefaultObserver<T> {
      */
     public abstract void onSuccessNext(T entity);
 
-    public void onDoError(Throwable e) {
+    public void onFailedNext(Throwable e) {
 
     }
 }

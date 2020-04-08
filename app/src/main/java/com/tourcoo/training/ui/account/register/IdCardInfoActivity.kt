@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.account
+package com.tourcoo.training.ui.account.register
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -10,7 +10,8 @@ import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.RegisterTempHelper
-import com.tourcoo.training.ui.account.RecognizeIdCardActivity.Companion.EXTRA_PHOTO_PATH
+import com.tourcoo.training.ui.account.LoginActivity
+import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity.Companion.EXTRA_PHOTO_PATH
 import kotlinx.android.synthetic.main.activity_id_card_info.*
 import kotlinx.android.synthetic.main.activity_upload_id_card.ivSelectedImage
 import kotlinx.android.synthetic.main.activity_upload_id_card.tvNextStep
@@ -47,8 +48,7 @@ class IdCardInfoActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvNextStep -> {
-                val intent = Intent(this, IndustrialRegisterActivity::class.java)
-                startActivity(intent)
+                skipRegisterByType()
             }
             else -> {
             }
@@ -62,5 +62,14 @@ class IdCardInfoActivity : BaseTitleActivity(), View.OnClickListener {
         tvName.text = RegisterTempHelper.getInstance().idCardInfo.name
         tvIdCard.text = RegisterTempHelper.getInstance().idCardInfo.idCard
         RegisterTempHelper.getInstance().businessLicensePath = "awdad"
+    }
+
+    private fun skipRegisterByType() {
+        val intent = if (RegisterTempHelper.getInstance().registerType == LoginActivity.EXTRA_REGISTER_TYPE_DRIVER) {
+            Intent(this, DriverRegisterActivity::class.java)
+        } else {
+            Intent(this, IndustrialRegisterActivity::class.java)
+        }
+        startActivity(intent)
     }
 }

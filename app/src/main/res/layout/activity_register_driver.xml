@@ -6,321 +6,333 @@
     android:orientation="vertical">
     <!--驾驶员注册-->
     <include layout="@layout/frame_layout_title_bar" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/dp_36"
+                    android:paddingEnd="@dimen/dp_36">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:orientation="vertical"
-                        android:paddingStart="@dimen/dp_36"
-                        android:paddingEnd="@dimen/dp_36">
+                        android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
+                        android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
-                            android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
-                            android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_8"
-                                android:minWidth="@dimen/dp_25"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/icon_name" />
-                            </LinearLayout>
-
-
-                            <EditText
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_30"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                android:hint="请输入户主姓名"
-                                android:padding="@dimen/dp_5"
-                                android:textColor="@color/grayBFBFBF"
-                                android:textColorHint="@color/grayBFBFBF"
-                                android:textSize="@dimen/sp_14" />
-                        </LinearLayout>
-
-                        <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
-
-                        <!--电话-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
-                            android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_8"
-                                android:minWidth="@dimen/dp_25"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:src="@drawable/icon_cellphone" />
-
-                            </LinearLayout>
-
-                            <EditText
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_30"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                android:hint="请输入户主联系电话"
-                                android:padding="@dimen/dp_5"
-                                android:textColor="@color/grayBFBFBF"
-                                android:textColorHint="@color/grayBFBFBF"
-                                android:textSize="@dimen/sp_14" />
-                        </LinearLayout>
-
-                        <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
-                            android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
-                            android:orientation="horizontal">
-
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_8"
-                                android:minWidth="@dimen/dp_25"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:src="@drawable/icon_number" />
-
-                            </LinearLayout>
-
-
-                            <EditText
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_register_industry_edit_margin_start"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                android:hint="请输入户主身份证号码"
-                                android:padding="@dimen/dp_5"
-                                android:textColor="@color/grayBFBFBF"
-                                android:textColorHint="@color/grayBFBFBF"
-                                android:textSize="@dimen/sp_14" />
-                        </LinearLayout>
-
-                        <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
-
-                        <!--驾驶员车牌-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
-                            android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_8"
-                                android:minWidth="@dimen/dp_25"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center_vertical"
-                                    android:src="@mipmap/icon_number" />
-
-                            </LinearLayout>
-
-
-                            <EditText
-                                android:id="@+id/etDriverPlantNum"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_register_industry_edit_margin_start"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                android:hint="请填写驾驶员车牌"
-                                android:padding="@dimen/dp_5"
-                                android:textColor="@color/grayBFBFBF"
-                                android:textColorHint="@color/grayBFBFBF"
-                                android:textSize="@dimen/sp_14" />
-                        </LinearLayout>
-
-                        <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
-
-                        <!--所属公司-->
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
-                            android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_8"
-                                android:minWidth="@dimen/dp_25"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:src="@mipmap/icon_company" />
-
-
-                            </LinearLayout>
-
-
-                            <EditText
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_register_industry_edit_margin_start"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                android:hint="请填写所属公司"
-                                android:padding="@dimen/dp_5"
-                                android:textColor="@color/grayBFBFBF"
-                                android:textColorHint="@color/grayBFBFBF"
-                                android:textSize="@dimen/sp_14" />
-
-
-                        </LinearLayout>
-
-                        <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
-                        <!--登录密码-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
-                            android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
-                            android:orientation="horizontal">
-
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_8"
-                                android:minWidth="@dimen/dp_25"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:src="@mipmap/icon_password" />
-
-                            </LinearLayout>
-
-
-                            <EditText
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="@dimen/dp_register_industry_edit_margin_start"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                android:hint="请输入登录密码"
-                                android:padding="@dimen/dp_5"
-                                android:textColor="@color/grayBFBFBF"
-                                android:textColorHint="@color/grayBFBFBF"
-                                android:textSize="@dimen/sp_14" />
-                        </LinearLayout>
-
-                        <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
-
-
-                    </LinearLayout>
-
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:orientation="vertical">
-
-
-
-
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dp_36"
-                            android:layout_marginTop="@dimen/dp_25"
-                            android:layout_marginEnd="@dimen/dp_36"
-                            android:background="@drawable/selector_gradient_radius_25_blue"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:gravity="center"
-                            android:paddingStart="@dimen/dp_38"
-                            android:paddingTop="@dimen/dp_7"
-                            android:paddingEnd="@dimen/dp_38"
-                            android:paddingBottom="@dimen/dp_7"
-                            android:text="立即注册"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/sp_15" />
-
-
-                        <TextView
-                            android:id="@+id/tvGoLogin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="@dimen/dp_140"
-                            android:layout_marginBottom="@dimen/dp_27"
-                            android:text="已有账户返回登录>"
-                            android:textColor="@color/blue5087FF"
-                            android:textSize="@dimen/sp_15" />
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:minWidth="@dimen/dp_25"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/icon_name" />
+                        </LinearLayout>
+
+
+                        <EditText
+                            android:id="@+id/etName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_30"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="请输入户主姓名"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="@color/grayBFBFBF"
+                            android:textColorHint="@color/grayBFBFBF"
+                            android:textSize="@dimen/sp_14" />
                     </LinearLayout>
 
+                    <!--   <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />-->
+
+                    <!--电话-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
+                        android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:minWidth="@dimen/dp_25"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/icon_cellphone" />
+
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/etPhone"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_30"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="请输入户主联系电话"
+                            android:inputType="phone"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="@color/grayBFBFBF"
+                            android:textColorHint="@color/grayBFBFBF"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+
+                    <!-- <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />-->
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
+                        android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:minWidth="@dimen/dp_25"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/icon_number" />
+
+                        </LinearLayout>
+
+
+                        <EditText
+                            android:id="@+id/etIdCard"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_register_industry_edit_margin_start"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="请输入户主身份证号码"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="@color/grayBFBFBF"
+                            android:textColorHint="@color/grayBFBFBF"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+
+                    <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
+
+                    <!--驾驶员车牌-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
+                        android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:minWidth="@dimen/dp_25"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:src="@mipmap/icon_number" />
+
+                        </LinearLayout>
+
+
+                        <EditText
+                            android:id="@+id/etDriverPlantNum"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_register_industry_edit_margin_start"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="请填写驾驶员车牌"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="@color/grayBFBFBF"
+                            android:textColorHint="@color/grayBFBFBF"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+
+                    <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
+
+                    <!--所属公司-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
+                        android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:minWidth="@dimen/dp_25"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@mipmap/icon_company" />
+
+
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:id="@+id/tvCompany"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_register_industry_edit_margin_start"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="请填写所属公司"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="@color/grayBFBFBF"
+                            android:textColorHint="@color/grayBFBFBF"
+                            android:textSize="@dimen/sp_14" />
+
+
+                    </LinearLayout>
+
+                    <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />
+                    <!--登录密码-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_register_industry_edit_margin_top"
+                        android:layout_marginBottom="@dimen/dp_register_industry_edit_margin_bottom"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:minWidth="@dimen/dp_25"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@mipmap/icon_password" />
+
+                        </LinearLayout>
+
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_register_industry_edit_margin_start"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="请输入登录密码"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="@color/grayBFBFBF"
+                            android:textColorHint="@color/grayBFBFBF"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+
+                    <!--  <include layout="@layout/line_horizontal_gray_e8e8e8_0_5dp" />-->
+
+
                 </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/tvRegisterDriver"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_36"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:layout_marginEnd="@dimen/dp_36"
+                        android:background="@drawable/selector_gradient_radius_25_blue"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingStart="@dimen/dp_38"
+                        android:paddingTop="@dimen/dp_7"
+                        android:paddingEnd="@dimen/dp_38"
+                        android:paddingBottom="@dimen/dp_7"
+                        android:text="立即注册"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_15" />
+
+
+                    <TextView
+                        android:id="@+id/tvGoLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="280dp"
+                        android:layout_marginBottom="@dimen/dp_27"
+                        android:text="已有账户返回登录>"
+                        android:textColor="@color/blue5087FF"
+                        android:textSize="@dimen/sp_15" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
@@ -332,8 +344,6 @@
             android:minHeight="@dimen/dp_150"
             android:orientation="vertical" />
     </RelativeLayout>
-
-
 
 
 </LinearLayout>
