@@ -134,6 +134,7 @@
 
 
                         <EditText
+                            android:id="@+id/etIdCard"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -213,8 +214,8 @@
                         </LinearLayout>
 
 
-                        <EditText
-                            android:id="@+id/etArea"
+                        <TextView
+                            android:id="@+id/tvAreaSelect"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

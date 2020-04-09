@@ -4,6 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.ViewGroup
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener
+import com.bigkoo.pickerview.view.OptionsPickerView
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
@@ -58,6 +62,9 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
 
     private var supervisor: Supervisors? = null
 
+    private var pvCustomOptions: OptionsPickerView<String>? = null
+    private val options1Items: ArrayList<String> = ArrayList()
+
     override fun getContentLayout(): Int {
         return R.layout.activity_register_industrial
     }
@@ -67,12 +74,20 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        businessLicenseInfo = RegisterTempHelper.getInstance().businessLicenseInfo
+        if(businessLicenseInfo == null || businessLicenseInfo!!.supervisors == null){
+            ToastUtil.show("未识别出营业执照信息")
+            finish()
+            return
+        }
         tvRegisterIndustrial.setOnClickListener(this)
         tvGoLogin.setOnClickListener(this)
         ivSelectIndustry.setOnClickListener(this)
         rlPickImage.setOnClickListener(this)
+        tvAreaSelect.setOnClickListener(this)
         ivSelectedImage.setOnClickListener(this)
         tvTradeType.setOnClickListener(this)
+        initPicker(businessLicenseInfo!!.supervisors)
         initPlantKeyBoard()
         initCityPickerConfig()
 
@@ -99,6 +114,9 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             }
             R.id.ivSelectIndustry -> {
                 requestTradeTypeList()
+            }
+            R.id.tvAreaSelect->{
+                pvCustomOptions!!.show()
             }
             else -> {
             }
@@ -241,29 +259,31 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
 
 
     private fun doRegister() {
-        if (RegisterTempHelper.getInstance().idCardInfo == null) {
-            ToastUtil.show("未获取到身份证信息")
+        if (businessLicenseInfo == null) {
+            ToastUtil.show("请选择所属公司")
             return
         }
         if (TextUtils.isEmpty(getTextValue(etPhone))) {
             ToastUtil.show("请填写驾驶员联系电话")
             return
         }
+        if (TextUtils.isEmpty(getTextValue(etIdCard))) {
+            ToastUtil.show("未获取到身份证信息")
+            return
+        }
         if (TextUtils.isEmpty(getTextValue(etDriverPlantNum))) {
             ToastUtil.show("请填写驾驶员车牌号")
             return
         }
-        if (businessLicenseInfo == null) {
-            ToastUtil.show("请选择所属公司")
-            return
-        }
+
+
         val map = HashMap<String, Any>()
         map["name"] = RegisterTempHelper.getInstance().idCardInfo.name
-        map["idCard"] = RegisterTempHelper.getInstance().idCardInfo.idCard
+        map["idCard"] = getTextValue(etIdCard)
         map["plateNumber"] = getTextValue(etDriverPlantNum)
         map["phone"] = getTextValue(etPhone)
         //todo
-//        map["companyId"] = businessLicenseInfo!!.id
+        map["creditCode"] = businessLicenseInfo!!.creditCode
         presenter.doRegister(map)
     }
 
@@ -324,5 +344,30 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             return
         }
         cityPicker!!.showCityPicker()
+    }
+
+
+    /**
+     * @description 注意事项：
+     * 自定义布局中，id为 optionspicker 或者 timepicker 的布局以及其子控件必须要有，否则会报空指针。
+     * 具体可参考demo 里面的两个自定义layout布局。
+     */
+    private fun initPicker(list: MutableList<Supervisors>?) {
+        for (sup in list!!){
+            options1Items.add(sup.name)
+        }
+        pvCustomOptions = OptionsPickerBuilder(context, OnOptionsSelectListener { options1, options2, options3, v ->
+            tvAreaSelect.text = businessLicenseInfo!!.supervisors[options1].name
+        })
+                .setCyclic(false, false, false)
+                .isDialog(false)
+                .setContentTextSize(18)
+                .setLineSpacingMultiplier(2.0f)
+                .setDividerColor(CommonUtil.getColor(R.color.transparent))
+                .setTextColorOut(CommonUtil.getColor(R.color.gray999999))
+                .setTextColorCenter(CommonUtil.getColor(R.color.black333333))
+                .build()
+        pvCustomOptions!!.setPicker(options1Items)
+        //添加数据
     }
 }
