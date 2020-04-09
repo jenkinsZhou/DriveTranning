@@ -2,14 +2,15 @@ package com.tourcoo.training.ui.account.register
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.tourcoo.training.R
-import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.manager.GlideManager
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
@@ -17,15 +18,23 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.RegisterTempHelper
 import com.tourcoo.training.entity.account.TradeType
+import com.tourcoo.training.entity.account.UserInfo
+import com.tourcoo.training.entity.account.register.BusinessLicenseInfo
+import com.tourcoo.training.entity.account.register.IndustryCategory
+import com.tourcoo.training.entity.account.register.Supervisors
+import com.tourcoo.training.widget.citypicker.OnCityItemClickListener
+import com.tourcoo.training.widget.citypicker.bean.CityBean
+import com.tourcoo.training.widget.citypicker.bean.DistrictBean
+import com.tourcoo.training.widget.citypicker.bean.ProvinceBean
+import com.tourcoo.training.widget.citypicker.cityjd.JDCityConfig
+import com.tourcoo.training.widget.citypicker.cityjd.JDCityPicker
 import com.tourcoo.training.widget.dialog.BottomSheetDialog
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_register_industrial.*
 import org.apache.commons.lang.StringUtils
-import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.MutableList
 
 /**
  *@description :
@@ -34,12 +43,21 @@ import kotlin.collections.MutableList
  * @date 2020年03月04日17:38
  * @Email: 971613168@qq.com
  */
-class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
+class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>(), View.OnClickListener, IndustryRegisterContract.RegisterView {
     private val mTag = "IndustrialRegisterActivity"
     private var selectTradeId = ""
     private var selectFileList: MutableList<LocalMedia>? = ArrayList()
     private var imageDiskPathList: MutableList<String>? = ArrayList()
     private lateinit var kingKeyboard: KingKeyboard
+    private var businessLicenseInfo: BusinessLicenseInfo? = null
+
+    private var cityPicker: JDCityPicker? = null
+    private var mWheelType: JDCityConfig.ShowType = JDCityConfig.ShowType.PRO_CITY
+
+    private val jdCityConfig: JDCityConfig = JDCityConfig.Builder().build()
+
+    private var supervisor: Supervisors? = null
+
     override fun getContentLayout(): Int {
         return R.layout.activity_register_industrial
     }
@@ -54,19 +72,25 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
         ivSelectIndustry.setOnClickListener(this)
         rlPickImage.setOnClickListener(this)
         ivSelectedImage.setOnClickListener(this)
+        tvTradeType.setOnClickListener(this)
         initPlantKeyBoard()
+        initCityPickerConfig()
+
     }
 
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tvRegisterIndustrial -> {
-//                CommonUtil.startActivity(mContext, DriverRegisterActivity::class.java)
-//                CommonUtil.startActivity(mContext, UploadIdCardActivity::class.java)
-//                doRegister()
+                doRegister()
+            }
+            R.id.tvTradeType -> {
+                showJD()
             }
             R.id.tvGoLogin -> {
                 CommonUtil.startActivity(mContext, RecognizeIdCardActivity::class.java)
             }
+
+
             R.id.ivSelectedImage -> {
                 selectPic()
             }
@@ -197,46 +221,108 @@ class IndustrialRegisterActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private fun showSelectTradeType(tradeTypeName: String) {
-        etTradeType.text = tradeTypeName
+        tvTradeType.text = tradeTypeName
     }
 
-   /* private fun doRegister() {
-        val hashMap = HashMap<String, Any>()
-        hashMap["name"] = RegisterTempHelper.getInstance().registerName
-        hashMap["idCard"] = RegisterTempHelper.getInstance().registerIdCard
-        hashMap["businessLicense"] = RegisterTempHelper.getInstance().businessLicensePath
+    override fun loadPresenter() {
+        presenter.start()
+    }
+
+    override fun createPresenter(): IndustryRegisterPresenter {
+        return IndustryRegisterPresenter()
+    }
+
+    override fun registerSuccess(userInfo: UserInfo?) {
+    }
+
+    override fun initIndustry(list: MutableList<IndustryCategory>?) {
+        initCityPicker(list)
+    }
+
+
+    private fun doRegister() {
+        if (RegisterTempHelper.getInstance().idCardInfo == null) {
+            ToastUtil.show("未获取到身份证信息")
+            return
+        }
         if (TextUtils.isEmpty(getTextValue(etPhone))) {
-            ToastUtil.show("请输入驾驶员手机号")
+            ToastUtil.show("请填写驾驶员联系电话")
             return
         }
-        hashMap["phone"] = getTextValue(etPhone)
         if (TextUtils.isEmpty(getTextValue(etDriverPlantNum))) {
-            ToastUtil.show("请输入驾驶员车牌号")
+            ToastUtil.show("请填写驾驶员车牌号")
             return
         }
-        hashMap["carNum"] = getTextValue(etDriverPlantNum)
-        if (TextUtils.isEmpty(getTextValue(etArea))) {
-            ToastUtil.show("请选择所属区域")
+        if (businessLicenseInfo == null) {
+            ToastUtil.show("请选择所属公司")
             return
         }
-        //所属区域
-        hashMap["addressId"] = "1"
-        if (TextUtils.isEmpty(getTextValue(etTradeType))) {
-            ToastUtil.show("请选择行业类型")
-            return
+        val map = HashMap<String, Any>()
+        map["name"] = RegisterTempHelper.getInstance().idCardInfo.name
+        map["idCard"] = RegisterTempHelper.getInstance().idCardInfo.idCard
+        map["plateNumber"] = getTextValue(etDriverPlantNum)
+        map["phone"] = getTextValue(etPhone)
+        //todo
+//        map["companyId"] = businessLicenseInfo!!.id
+        presenter.doRegister(map)
+    }
+
+    private fun initCityPickerConfig() {
+        mWheelType = JDCityConfig.ShowType.PRO_CITY
+        setWheelType(mWheelType)
+        jdCityConfig.showType = mWheelType
+    }
+
+    /**
+     * @param wheelType
+     */
+    private fun setWheelType(wheelType: JDCityConfig.ShowType) {
+        if (wheelType === JDCityConfig.ShowType.PRO_CITY) {
+            /*  mTwoTv.setBackgroundResource(R.drawable.city_wheeltype_selected)
+              mThreeTv.setBackgroundResource(R.drawable.city_wheeltype_normal)
+              mTwoTv.setTextColor(Color.parseColor("#ffffff"))
+              mThreeTv.setTextColor(Color.parseColor("#333333"))*/
+        } else {
+            /* mTwoTv.setBackgroundResource(R.drawable.city_wheeltype_normal)
+             mThreeTv.setBackgroundResource(R.drawable.city_wheeltype_selected)
+             mTwoTv.setTextColor(Color.parseColor("#333333"))
+             mThreeTv.setTextColor(Color.parseColor("#ffffff"))*/
         }
-        hashMap["tradeTypeId"] = selectTradeId
-        TourCooLogUtil.i("提交的参数", hashMap)
-        ApiRepository.getInstance().requestIndustryRegister(hashMap).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfoOld>>("加载中...") {
-            override fun onSuccessNext(entity: BaseResult<UserInfoOld>?) {
-                ToastUtil.show(entity?.msg)
-                TourCooLogUtil.i(mTag, entity?.data)
-                AccountHelper.getInstance().userInfoOld = entity?.data
+    }
+
+
+    private fun initCityPicker(list: MutableList<IndustryCategory>?) {
+        cityPicker = JDCityPicker()
+        //初始化数据
+        //初始化数据
+        cityPicker!!.init(this, list)
+        //设置JD选择器样式位只显示省份和城市两级
+        //设置JD选择器样式位只显示省份和城市两级
+        cityPicker!!.setConfig(jdCityConfig)
+        cityPicker!!.setOnCityItemClickListener(object : OnCityItemClickListener() {
+            override fun onSelected(province: ProvinceBean?, city: CityBean?, district: DistrictBean?) {
+                var proData: String? = null
+                if (province != null) {
+                    proData = "name:  " + province.getName().toString() + "   id:  " + province.getId()
+                }
+                var cituData: String? = null
+                if (city != null) {
+                    cituData = "name:  " + city.getName().toString() + "   id:  " + city.getId()
+                    showSelectTradeType(city.name)
+                }
+
             }
+
+            override fun onCancel() {}
         })
     }
-*/
 
 
-
+    private fun showJD() {
+        if (cityPicker == null) {
+            ToastUtil.show("未获取到行业类型")
+            return
+        }
+        cityPicker!!.showCityPicker()
+    }
 }

@@ -23,13 +23,13 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.InputStatus
 import com.tourcoo.training.entity.account.RegisterTempHelper
-import com.tourcoo.training.ui.account.register.IndustrialRegisterActivity
+import com.tourcoo.training.ui.account.register.IndustryRegisterActivity
 import com.tourcoo.training.utils.TourCooUtil
 import com.trello.rxlifecycle3.android.ActivityEvent
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_find_password.*
-import kotlinx.android.synthetic.main.activity_id_card_info.*
+import kotlinx.android.synthetic.main.activity_recognize_result.*
 
 /**
  *@description :
@@ -75,7 +75,7 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvNextStep -> {
-                val intent = Intent(this, IndustrialRegisterActivity::class.java)
+                val intent = Intent(this, IndustryRegisterActivity::class.java)
                 startActivity(intent)
             }
             R.id.tvConfirmPass -> {

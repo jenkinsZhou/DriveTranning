@@ -1,5 +1,7 @@
 package com.tourcoo.training.entity.account;
 
+import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
+
 /**
  * @author :JenkinsZhou
  * @description :
@@ -27,6 +29,27 @@ public class RegisterTempHelper {
     private int registerType;
 
     private IdCardInfo idCardInfo;
+
+    private boolean isRecognizeIdCard;
+
+    public boolean isRecognizeIdCard() {
+        return isRecognizeIdCard;
+    }
+
+    public void setRecognizeIdCard(boolean recognizeIdCard) {
+        isRecognizeIdCard = recognizeIdCard;
+    }
+
+    private BusinessLicenseInfo businessLicenseInfo;
+
+
+    public BusinessLicenseInfo getBusinessLicenseInfo() {
+        return businessLicenseInfo;
+    }
+
+    public void setBusinessLicenseInfo(BusinessLicenseInfo businessLicenseInfo) {
+        this.businessLicenseInfo = businessLicenseInfo;
+    }
 
     public IdCardInfo getIdCardInfo() {
         return idCardInfo;

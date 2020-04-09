@@ -4,8 +4,14 @@
     <color name="colorPrimaryDark">#004D8E</color>
     <color name="colorAccent">@color/blue55A9FF</color>
     <color name="transparent">#00000000</color>
-
+    <color name="province_line_border">#C7C7C7</color>
+    <color name="material_red_50">#e1f5fe</color>
+    <color name="material_red_500">#e51c23</color>
+    <color name="material_red_700">#d01716</color>
     <color name="colorQQBackgroundStart">#4e8cfc</color>
+    <color name="color_text_01">#ffc5c9ce</color>
+    <color name="color_text_03">#ffb1b7be</color>
+    <color name="color_text_02">#ff181c20</color>
     <color name="colorQQBackgroundEnd">#33bafc</color>
     <color name="colorQQBackgroundCenter">#34b0fc</color>
     <color name="defaultTextColorPrimary">@color/blue5087FF</color>

@@ -12,6 +12,7 @@ import com.tourcoo.training.core.retrofit.service.ApiService;
 import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
+import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
@@ -106,6 +107,18 @@ public class ApiRepository extends BaseRepository {
         TourCooLogUtil.i(TAG, newMap);
         return CommonTransformer.switchSchedulers(getApiService().requestRegisterDriver(newMap).retryWhen(new RetryWhen()));
     }
+    public Observable<BaseResult<List<IndustryCategory>>> requestCategory() {
+        return CommonTransformer.switchSchedulers(getApiService().requestCategory().retryWhen(new RetryWhen()));
+    }
 
+    @SuppressWarnings("unchecked")
+    public Observable<BaseResult<UserInfo>> requestRegisterIndustry(Map<String, Object> map) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("appType", "Android");
+        params.put("appVersion", "v" + AppUtils.getAppVersionName());
+        Map newMap = MapUtil.mergeMaps(params, map);
+        TourCooLogUtil.i(TAG, newMap);
+        return CommonTransformer.switchSchedulers(getApiService().requestRegisterIndustry(newMap).retryWhen(new RetryWhen()));
+    }
 
 }

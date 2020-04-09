@@ -61,7 +61,7 @@
         </activity>
         <activity android:name=".ui.face.FaceRecognitionActivity" />
         <activity android:name=".ui.face.DialogFaceRecognitionActivity" />
-        <activity android:name=".ui.account.register.IndustrialRegisterActivity" />
+        <activity android:name=".ui.account.register.IndustryRegisterActivity" />
         <activity android:name=".ui.account.register.DriverRegisterActivity" />
         <activity android:name=".ui.account.LoginActivity" />
         <activity android:name=".ui.account.MyAccountActivity" />
@@ -74,7 +74,7 @@
             android:name=".widget.idcardcamera.camera.CameraActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-        <activity android:name=".ui.account.register.IdCardInfoActivity" />
+        <activity android:name=".ui.account.register.RecognizeResultActivity" />
         <activity android:name=".ui.account.FindPassActivity" />
         <activity android:name=".ui.pay.BuyNowActivity" />
         <activity android:name=".ui.account.register.SelectCompanyActivity" />

@@ -314,16 +314,17 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
             return
         }
         RegisterTempHelper.getInstance().idCardInfo = idCardInfo
-        skipIdInfo()
+        skipResultInfo()
     }
 
 
-    private fun skipIdInfo(){
+    private fun skipResultInfo(){
         if(TextUtils.isEmpty(photoPath)){
             ToastUtil.show("请先上传身份证正面照")
             return
         }
-        val intent = Intent(this, IdCardInfoActivity::class.java)
+        RegisterTempHelper.getInstance().isRecognizeIdCard = true
+        val intent = Intent(this, RecognizeResultActivity::class.java)
         intent.putExtra(EXTRA_PHOTO_PATH, photoPath)
         startActivity(intent)
     }

@@ -8,6 +8,7 @@ import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
+import com.tourcoo.training.entity.account.register.IndustryCategory;
 
 import java.util.List;
 import java.util.Map;
@@ -67,16 +68,12 @@ public interface ApiService {
      */
    /* @POST("api/v1.0/open/user/register-individual-business")
     Observable<BaseResult<UserInfoOld>> requestIndustryRegister(@Body Map<String, Object> map);*/
-
-
     @GET("api/v1.0/open/common/smscode")
     Observable<BaseResult> requestVCode(@QueryMap Map<String, Object> map);
 
 
     @POST("api/v1.0/open/user/reset-password")
     Observable<BaseResult> requestResetPass(@Body Map<String, Object> map);
-
-
 
 
     /**
@@ -99,6 +96,7 @@ public interface ApiService {
 
     /**
      * 公司模糊匹配
+     *
      * @param map
      * @return
      */
@@ -107,11 +105,16 @@ public interface ApiService {
 
     /**
      * 驾驶员注册
+     *
      * @param map
      * @return
      */
     @POST("v1.0/open/User/register-driver")
     Observable<BaseResult<UserInfo>> requestRegisterDriver(@Body Map<String, Object> map);
 
+    @POST("v1.0/open/utils/get-industry-category")
+    Observable<BaseResult<List<IndustryCategory>>> requestCategory();
 
+    @POST("v1.0/open/user/register-individual-business")
+    Observable<BaseResult<List<IndustryCategory>>> requestRegisterIndustry(@Body Map<String, Object> map);
 }

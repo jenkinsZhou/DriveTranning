@@ -21,14 +21,13 @@ import com.tourcoo.training.core.retrofit.UploadRequestListener
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.RegisterTempHelper
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo
 import com.tourcoo.training.widget.dialog.IosAlertDialog
-import com.tourcoo.training.widget.idcardcamera.camera.IDCardCamera
 import com.tourcoo.training.widget.idcardcamera.camera.LicenseCameraActivity
 import kotlinx.android.synthetic.main.activity_upload_business_license.*
 import kotlinx.android.synthetic.main.activity_upload_business_license.llTakePhoto
 import kotlinx.android.synthetic.main.activity_upload_business_license.tvNextStep
-import kotlinx.android.synthetic.main.activity_upload_id_card.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -76,7 +75,7 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
             R.id.ivSelectedImage -> {
                 doTakePhoto()
             }
-            R.id.tvNextStep->{
+            R.id.tvNextStep -> {
                 handleCallback(photoPath)
             }
             R.id.llTakePhoto -> {
@@ -170,16 +169,16 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        ToastUtil.showSuccess("requestCode:"+requestCode+"resultCode="+resultCode)
+        ToastUtil.showSuccess("requestCode:" + requestCode + "resultCode=" + resultCode)
 //        if (resultCode == LicenseCameraActivity.REQUEST_CODE && resultCode == LicenseCameraActivity.RESULT_CODE) {
-            //获取图片路径，显示图片
-            val path = LicenseCameraActivity.getResult(data)
-            if (!TextUtils.isEmpty(path)) {
-                //身份证正面
-                setViewGone(ivSelectedLicense, true)
-                photoPath = path
-                ivSelectedLicense.setImageBitmap(BitmapFactory.decodeFile(path))
-            }
+        //获取图片路径，显示图片
+        val path = LicenseCameraActivity.getResult(data)
+        if (!TextUtils.isEmpty(path)) {
+            //身份证正面
+            setViewGone(ivSelectedLicense, true)
+            photoPath = path
+            ivSelectedLicense.setImageBitmap(BitmapFactory.decodeFile(path))
+        }
 //        }
     }
 
@@ -295,21 +294,34 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
         if (info == null) {
             return
         }
+        RegisterTempHelper.getInstance().businessLicenseInfo = info
         ToastUtil.showSuccess("识别成功")
+        skipResultInfo()
     }
 
 
     private fun handleCallback(imagePath: String) {
-            if (TextUtils.isEmpty(imagePath)) {
-                ToastUtil.show("请先上传身份证照片")
-                return
-            }
-            uploadImage(imagePath)
+        if (TextUtils.isEmpty(imagePath)) {
+            ToastUtil.show("请先上传身份证照片")
+            return
         }
+        uploadImage(imagePath)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         mHandler.removeCallbacksAndMessages(null)
+    }
+
+    private fun skipResultInfo(){
+        if(TextUtils.isEmpty(photoPath)){
+            ToastUtil.show("请先上传身份证正面照")
+            return
+        }
+        RegisterTempHelper.getInstance().isRecognizeIdCard = false
+        val intent = Intent(this, RecognizeResultActivity::class.java)
+        intent.putExtra(RecognizeIdCardActivity.EXTRA_PHOTO_PATH, photoPath)
+        startActivity(intent)
     }
 }
 

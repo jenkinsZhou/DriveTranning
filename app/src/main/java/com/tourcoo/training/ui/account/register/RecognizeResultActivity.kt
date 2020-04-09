@@ -12,7 +12,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.RegisterTempHelper
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity.Companion.EXTRA_PHOTO_PATH
-import kotlinx.android.synthetic.main.activity_id_card_info.*
+import kotlinx.android.synthetic.main.activity_recognize_result.*
 import kotlinx.android.synthetic.main.activity_upload_id_card.ivSelectedImage
 import kotlinx.android.synthetic.main.activity_upload_id_card.tvNextStep
 
@@ -23,14 +23,20 @@ import kotlinx.android.synthetic.main.activity_upload_id_card.tvNextStep
  * @date 2020年03月13日16:18
  * @Email: 971613168@qq.com
  */
-class IdCardInfoActivity : BaseTitleActivity(), View.OnClickListener {
+class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
     private var photoPath: String? = null
+    private val isRecognizeId = RegisterTempHelper.getInstance().isRecognizeIdCard
     override fun getContentLayout(): Int {
-        return R.layout.activity_id_card_info
+        return R.layout.activity_recognize_result
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
-        titleBar?.setTitleMainText("身份证上传")
+        if (isRecognizeId) {
+            titleBar?.setTitleMainText("身份证上传")
+        } else {
+            titleBar?.setTitleMainText("营业执照上传")
+        }
+
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -42,7 +48,7 @@ class IdCardInfoActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
         ivSelectedImage.setImageBitmap(BitmapFactory.decodeFile(photoPath))
-        showIdInfo()
+        showResultInfo()
     }
 
     override fun onClick(v: View?) {
@@ -55,20 +61,26 @@ class IdCardInfoActivity : BaseTitleActivity(), View.OnClickListener {
         }
     }
 
-    private fun showIdInfo() {
-        if (RegisterTempHelper.getInstance().idCardInfo == null) {
-            return
+    private fun showResultInfo() {
+        if (isRecognizeId) {
+            if (RegisterTempHelper.getInstance().idCardInfo != null) {
+                tvName.text = RegisterTempHelper.getInstance().idCardInfo.name
+                tvIdCard.text = RegisterTempHelper.getInstance().idCardInfo.idCard
+            }
+        } else {
+            if (RegisterTempHelper.getInstance().businessLicenseInfo != null) {
+                tvName.text = RegisterTempHelper.getInstance().businessLicenseInfo.name
+                tvIdCard.text = RegisterTempHelper.getInstance().businessLicenseInfo.creditCode
+            }
         }
-        tvName.text = RegisterTempHelper.getInstance().idCardInfo.name
-        tvIdCard.text = RegisterTempHelper.getInstance().idCardInfo.idCard
-        RegisterTempHelper.getInstance().businessLicensePath = "awdad"
+
     }
 
     private fun skipRegisterByType() {
         val intent = if (RegisterTempHelper.getInstance().registerType == LoginActivity.EXTRA_REGISTER_TYPE_DRIVER) {
             Intent(this, DriverRegisterActivity::class.java)
         } else {
-            Intent(this, IndustrialRegisterActivity::class.java)
+            Intent(this, IndustryRegisterActivity::class.java)
         }
         startActivity(intent)
     }

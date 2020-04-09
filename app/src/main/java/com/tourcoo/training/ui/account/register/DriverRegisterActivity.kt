@@ -83,15 +83,7 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
     }
 
 
-    /* override fun showIdCardInfo(idCardInfo: IdCardInfo?) {
-         if (idCardInfo == null) {
-             ToastUtil.show("未获取到身份证信息")
-             finish()
-             return
-         }
-         etIdCard.setText(idCardInfo.idCard)
-         etName.setText(idCardInfo.name)
-     }*/
+
 
 
     override fun showCompanyByKeyword(keyWord: String?): String {
