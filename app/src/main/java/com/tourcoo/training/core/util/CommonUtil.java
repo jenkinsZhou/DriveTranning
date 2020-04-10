@@ -1,5 +1,6 @@
 package com.tourcoo.training.core.util;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -25,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.constant.FrameConstant;
 import com.tourcoo.training.core.log.TourCooLogUtil;
@@ -32,6 +34,7 @@ import com.tourcoo.training.core.log.TourCooLogUtil;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author :JenkinsZhou
@@ -45,7 +48,7 @@ public class CommonUtil {
     public static final String TAG = "CommonUtil";
 
     private static int ACTIVITY_SINGLE_FLAG = Intent.FLAG_ACTIVITY_SINGLE_TOP;
-
+    public static final String SP_KEY_DEVICE = "SP_KEY_DEVICE";
     /**
      * 反射获取application对象
      *
@@ -452,5 +455,54 @@ public class CommonUtil {
             return "";
         }
         return number;
+    }
+
+
+    //获得独一无二的Psuedo ID
+    @SuppressLint("MissingPermission")
+    public static String getUniquePsuedoID() {
+        String cacheUuid = SPUtils.getInstance().getString(SP_KEY_DEVICE);
+        if (!TextUtils.isEmpty(cacheUuid)) {
+            return cacheUuid;
+        }
+        String uuid = getUuid();
+        SPUtils.getInstance().put(SP_KEY_DEVICE, uuid);
+        return uuid;
+    }
+
+
+    @SuppressLint("MissingPermission")
+    private static String getUuid() {
+        String serial = null;
+
+        String m_szDevIDShort = "35" +
+                Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
+
+                Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
+
+                Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
+
+                Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
+
+                Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
+
+                Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
+
+                Build.USER.length() % 10; //13 位
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                serial = android.os.Build.getSerial();
+            } else {
+                serial = Build.SERIAL;
+            }
+            //API>=9 使用serial号
+            return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString();
+        } catch (Exception exception) {
+            //serial需要一个初始化
+            serial = "serial"; // 随便一个初始化
+        }
+        //使用硬件信息拼凑出来的15位号码
+        return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString();
     }
 }

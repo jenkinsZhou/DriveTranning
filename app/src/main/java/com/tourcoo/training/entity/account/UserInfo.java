@@ -1,5 +1,14 @@
 package com.tourcoo.training.entity.account;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+
+import java.util.List;
+
 /**
  * @author :JenkinsZhou
  * @description :
@@ -7,8 +16,17 @@ package com.tourcoo.training.entity.account;
  * @date 2020年04月08日14:36
  * @Email: 971613168@qq.com
  */
-public class UserInfo  {
+@Entity
+public class UserInfo implements Parcelable {
 
+
+    public String getMonthRanking() {
+        return MonthRanking;
+    }
+
+    public void setMonthRanking(String monthRanking) {
+        MonthRanking = monthRanking;
+    }
 
     /**
      * AccessToken : bf13e42bfb360422cbcb2e821c03a1e84bbb9c9c
@@ -51,8 +69,18 @@ public class UserInfo  {
     private double IsMandatoryUpdate;
     private double OnlineLearnProgress;
     private double OnsiteLearnProgress;
-    private double MonthRanking;
-    private VehicleInfo Vehicle;
+    private String MonthRanking;
+
+    @Convert(converter = VehicleInfo.VehicleInfoListConverter.class, columnType = String.class)
+    private List<VehicleInfo> Vehicles;
+
+    public List<VehicleInfo> getVehicles() {
+        return Vehicles;
+    }
+
+    public void setVehicles(List<VehicleInfo> vehicles) {
+        Vehicles = vehicles;
+    }
 
     public String getAccessToken() {
         return AccessToken;
@@ -198,21 +226,99 @@ public class UserInfo  {
         this.OnsiteLearnProgress = OnsiteLearnProgress;
     }
 
-    public double getMonthRanking() {
-        return MonthRanking;
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setMonthRanking(double MonthRanking) {
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.AccessToken);
+        dest.writeInt(this.Enabled);
+        dest.writeInt(this.FVEnable);
+        dest.writeInt(this.UserType);
+        dest.writeInt(this.IsAuthenticated);
+        dest.writeInt(this.Status);
+        dest.writeString(this.IndustryCateID);
+        dest.writeString(this.Name);
+        dest.writeDouble(this.CoinsTotal);
+        dest.writeDouble(this.CoinsRemain);
+        dest.writeString(this.Avatar);
+        dest.writeString(this.Phone);
+        dest.writeString(this.IDCard);
+        dest.writeString(this.IDCardUrl);
+        dest.writeString(this.CompanyName);
+        dest.writeDouble(this.IsMandatoryUpdate);
+        dest.writeDouble(this.OnlineLearnProgress);
+        dest.writeDouble(this.OnsiteLearnProgress);
+        dest.writeString(this.MonthRanking);
+        dest.writeTypedList(this.Vehicles);
+    }
+
+    public UserInfo() {
+    }
+
+    protected UserInfo(Parcel in) {
+        this.AccessToken = in.readString();
+        this.Enabled = in.readInt();
+        this.FVEnable = in.readInt();
+        this.UserType = in.readInt();
+        this.IsAuthenticated = in.readInt();
+        this.Status = in.readInt();
+        this.IndustryCateID = in.readString();
+        this.Name = in.readString();
+        this.CoinsTotal = in.readDouble();
+        this.CoinsRemain = in.readDouble();
+        this.Avatar = in.readString();
+        this.Phone = in.readString();
+        this.IDCard = in.readString();
+        this.IDCardUrl = in.readString();
+        this.CompanyName = in.readString();
+        this.IsMandatoryUpdate = in.readDouble();
+        this.OnlineLearnProgress = in.readDouble();
+        this.OnsiteLearnProgress = in.readDouble();
+        this.MonthRanking = in.readString();
+        this.Vehicles = in.createTypedArrayList(VehicleInfo.CREATOR);
+    }
+
+    @Generated(hash = 1498218983)
+    public UserInfo(String AccessToken, int Enabled, int FVEnable, int UserType, int IsAuthenticated, int Status,
+            String IndustryCateID, String Name, double CoinsTotal, double CoinsRemain, String Avatar,
+            String Phone, String IDCard, String IDCardUrl, String CompanyName, double IsMandatoryUpdate,
+            double OnlineLearnProgress, double OnsiteLearnProgress, String MonthRanking,
+            List<VehicleInfo> Vehicles) {
+        this.AccessToken = AccessToken;
+        this.Enabled = Enabled;
+        this.FVEnable = FVEnable;
+        this.UserType = UserType;
+        this.IsAuthenticated = IsAuthenticated;
+        this.Status = Status;
+        this.IndustryCateID = IndustryCateID;
+        this.Name = Name;
+        this.CoinsTotal = CoinsTotal;
+        this.CoinsRemain = CoinsRemain;
+        this.Avatar = Avatar;
+        this.Phone = Phone;
+        this.IDCard = IDCard;
+        this.IDCardUrl = IDCardUrl;
+        this.CompanyName = CompanyName;
+        this.IsMandatoryUpdate = IsMandatoryUpdate;
+        this.OnlineLearnProgress = OnlineLearnProgress;
+        this.OnsiteLearnProgress = OnsiteLearnProgress;
         this.MonthRanking = MonthRanking;
+        this.Vehicles = Vehicles;
     }
 
-    public VehicleInfo getVehicle() {
-        return Vehicle;
-    }
+    public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
+        @Override
+        public UserInfo createFromParcel(Parcel source) {
+            return new UserInfo(source);
+        }
 
-    public void setVehicle(VehicleInfo Vehicle) {
-        this.Vehicle = Vehicle;
-    }
-
-
+        @Override
+        public UserInfo[] newArray(int size) {
+            return new UserInfo[size];
+        }
+    };
 }

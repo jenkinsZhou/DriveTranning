@@ -37,9 +37,9 @@ public class IndustryRegisterPresenter extends BasePresenter<IndustryRegisterCon
         if (!isViewAttached()) {
             return;
         }
-        getModule().requestRegister(values, new BaseLoadingObserver<BaseResult<UserInfo>>() {
+        getModule().requestRegister(values, new BaseLoadingObserver<BaseResult<Object>>() {
             @Override
-            public void onSuccessNext(BaseResult<UserInfo> entity) {
+            public void onSuccessNext(BaseResult<Object> entity) {
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
                     getView().registerSuccess(entity.getData());
                 } else {
@@ -49,7 +49,6 @@ public class IndustryRegisterPresenter extends BasePresenter<IndustryRegisterCon
 
             @Override
             public void onFailedNext(Throwable e) {
-                super.onFailedNext(e);
                 if (AppConfig.DEBUG_MODE) {
                     ToastUtil.showFailed(e.toString());
                 }
@@ -57,7 +56,6 @@ public class IndustryRegisterPresenter extends BasePresenter<IndustryRegisterCon
 
             @Override
             public void onError(Throwable e) {
-                super.onError(e);
                 if (AppConfig.DEBUG_MODE) {
                     ToastUtil.showFailed(e.toString());
                 }

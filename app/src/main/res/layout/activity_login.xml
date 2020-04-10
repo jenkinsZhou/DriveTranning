@@ -55,6 +55,7 @@
                         android:src="@drawable/icon_identity_card_selected" />
 
                     <EditText
+                        android:id="@+id/etIdCard"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -96,6 +97,7 @@
                         android:src="@drawable/icon_password_normal" />
 
                     <EditText
+                        android:id="@+id/etPass"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -136,6 +138,7 @@
 
 
                 <TextView
+                    android:id="@+id/tvLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_20"

@@ -116,5 +116,8 @@ public interface ApiService {
     Observable<BaseResult<List<IndustryCategory>>> requestCategory();
 
     @POST("v1.0/open/user/register-individual-business")
-    Observable<BaseResult<List<IndustryCategory>>> requestRegisterIndustry(@Body Map<String, Object> map);
+    Observable<BaseResult<Object>> requestRegisterIndustry(@Body Map<String, Object> map);
+
+    @POST("v1.0/open/user/id-card-login")
+    Observable<BaseResult<UserInfo>> requestLoginByIdCard(@Body Map<String, Object> map);
 }

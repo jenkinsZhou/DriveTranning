@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.view.ViewGroup
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.view.OptionsPickerView
@@ -20,8 +19,10 @@ import com.tourcoo.training.core.manager.GlideManager
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
+import com.tourcoo.training.core.util.StackUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.RegisterTempHelper
 import com.tourcoo.training.entity.account.TradeType
 import com.tourcoo.training.entity.account.UserInfo
@@ -54,7 +55,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
     private var imageDiskPathList: MutableList<String>? = ArrayList()
     private lateinit var kingKeyboard: KingKeyboard
     private var businessLicenseInfo: BusinessLicenseInfo? = null
-
+    private var industryId = ""
     private var cityPicker: JDCityPicker? = null
     private var mWheelType: JDCityConfig.ShowType = JDCityConfig.ShowType.PRO_CITY
 
@@ -75,7 +76,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
 
     override fun initView(savedInstanceState: Bundle?) {
         businessLicenseInfo = RegisterTempHelper.getInstance().businessLicenseInfo
-        if(businessLicenseInfo == null || businessLicenseInfo!!.supervisors == null){
+        if (businessLicenseInfo == null || businessLicenseInfo!!.supervisors == null) {
             ToastUtil.show("未识别出营业执照信息")
             finish()
             return
@@ -115,7 +116,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             R.id.ivSelectIndustry -> {
                 requestTradeTypeList()
             }
-            R.id.tvAreaSelect->{
+            R.id.tvAreaSelect -> {
                 pvCustomOptions!!.show()
             }
             else -> {
@@ -250,7 +251,16 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
         return IndustryRegisterPresenter()
     }
 
-    override fun registerSuccess(userInfo: UserInfo?) {
+    override fun registerSuccess(userInfo: Any?) {
+        if (userInfo != null) {
+            //保存用户信息
+//            AccountHelper.getInstance().userInfo = userInfo
+            ToastUtil.show("注册成功")
+            finish()
+            StackUtil.getInstance().previous?.finish()
+            StackUtil.getInstance().getActivity(RecognizeLicenseActivity::class.java)?.finish()
+        }
+
     }
 
     override fun initIndustry(list: MutableList<IndustryCategory>?) {
@@ -263,26 +273,40 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             ToastUtil.show("请选择所属公司")
             return
         }
+        if (TextUtils.isEmpty(getTextValue(etName))) {
+            ToastUtil.show("请填写姓名")
+            return
+        }
         if (TextUtils.isEmpty(getTextValue(etPhone))) {
-            ToastUtil.show("请填写驾驶员联系电话")
+            ToastUtil.show("请填写电话")
             return
         }
         if (TextUtils.isEmpty(getTextValue(etIdCard))) {
-            ToastUtil.show("未获取到身份证信息")
+            ToastUtil.show("请填写身份证号")
             return
         }
         if (TextUtils.isEmpty(getTextValue(etDriverPlantNum))) {
-            ToastUtil.show("请填写驾驶员车牌号")
+            ToastUtil.show("请填写车牌号")
             return
         }
-
-
+        if (supervisor == null) {
+            ToastUtil.show("请选择所属区域")
+            return
+        }
+        if (TextUtils.isEmpty(industryId)) {
+            ToastUtil.show("请输入行业类型")
+            return
+        }
         val map = HashMap<String, Any>()
-        map["name"] = RegisterTempHelper.getInstance().idCardInfo.name
+        map["name"] = getTextValue(etName)
         map["idCard"] = getTextValue(etIdCard)
         map["plateNumber"] = getTextValue(etDriverPlantNum)
         map["phone"] = getTextValue(etPhone)
         //todo
+        //行业类型
+        map["industryCategoryId"] = industryId
+        //区域选择
+        map["supervisorId"] = supervisor!!.id
         map["creditCode"] = businessLicenseInfo!!.creditCode
         presenter.doRegister(map)
     }
@@ -328,7 +352,9 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
                 var cituData: String? = null
                 if (city != null) {
                     cituData = "name:  " + city.getName().toString() + "   id:  " + city.getId()
+                    industryId = city.id
                     showSelectTradeType(city.name)
+
                 }
 
             }
@@ -353,11 +379,12 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
      * 具体可参考demo 里面的两个自定义layout布局。
      */
     private fun initPicker(list: MutableList<Supervisors>?) {
-        for (sup in list!!){
+        for (sup in list!!) {
             options1Items.add(sup.name)
         }
         pvCustomOptions = OptionsPickerBuilder(context, OnOptionsSelectListener { options1, options2, options3, v ->
-            tvAreaSelect.text = businessLicenseInfo!!.supervisors[options1].name
+            supervisor = businessLicenseInfo!!.supervisors[options1]
+            tvAreaSelect.text = supervisor?.name
         })
                 .setCyclic(false, false, false)
                 .isDialog(false)

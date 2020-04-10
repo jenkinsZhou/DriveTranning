@@ -169,7 +169,6 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        ToastUtil.showSuccess("requestCode:" + requestCode + "resultCode=" + resultCode)
 //        if (resultCode == LicenseCameraActivity.REQUEST_CODE && resultCode == LicenseCameraActivity.RESULT_CODE) {
         //获取图片路径，显示图片
         val path = LicenseCameraActivity.getResult(data)

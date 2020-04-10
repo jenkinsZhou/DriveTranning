@@ -1,6 +1,12 @@
 package com.tourcoo.training.entity.account;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.tourcoo.training.core.log.TourCooLogUtil;
+import com.tourcoo.training.entity.greendao.DaoSession;
+import com.tourcoo.training.entity.greendao.GreenDaoHelper;
+import com.tourcoo.training.entity.greendao.UserInfoDao;
+
+import java.util.List;
 
 /**
  * @author :JenkinsZhou
@@ -12,7 +18,7 @@ import com.tourcoo.training.core.log.TourCooLogUtil;
 public class AccountHelper {
      public static final String TAG = "AccountHelper";
     private AccountHelper(){}
-
+    private UserInfo userInfo;
     private static class SingletonInstance {
         private static final AccountHelper INSTANCE = new AccountHelper();
     }
@@ -23,70 +29,66 @@ public class AccountHelper {
 
 
 
-   /* private void saveToDisk(UserInfoOld userInfoOld) {
-        if (userInfoOld == null) {
-            setUserInfoOld(null);
+    private void saveToDisk(UserInfo userInfo) {
+        if (userInfo == null) {
+            setUserInfo(null);
         }
         DaoSession daoSession = GreenDaoHelper.getInstance().getDaoSession();
         UserInfoDao userInfoDao = daoSession.getUserInfoDao();
         userInfoDao.deleteAll();
-        if (userInfoOld != null) {
-            userInfoDao.insertOrReplace(userInfoOld);
+        if (userInfo != null) {
+            userInfoDao.insert(userInfo);
             int size = userInfoDao.queryBuilder().build().list().size();
-            TourCooLogUtil.i(TAG,"用户信息已保存到本地 = " + size);
+            LogUtils.i("用户信息已保存到本地 = " + size);
         } else {
-            TourCooLogUtil.w(TAG,"用户信息已被清空 ");
+            LogUtils.w("用户信息已被清空 ");
+        }}
+
+
+    public void setUserInfo(UserInfo userInfo) {
+        if (userInfo == null) {
+            logout();
+        } else {
+            this.userInfo = userInfo;
+            saveToDisk(userInfo);
         }
     }
 
-    public void setUserInfoOld(UserInfoOld userInfoOld) {
-        if (userInfoOld == null) {
-            logout();
+    public UserInfo getUserInfo() {
+        if (userInfo != null) {
+            return userInfo;
         } else {
-            this.userInfoOld = userInfoOld;
-            saveToDisk(userInfoOld);
+            //从本地获取用户信息
+            userInfo = getUserInfoFromDisk();
+            boolean isNull = userInfo != null;
+            LogUtils.d("用户信息改为从缓存获取 本地是否有数据 ？" + isNull);
+            return userInfo;
         }
-    }*/
+    }
 
+    private UserInfo getUserInfoFromDisk() {
+        DaoSession daoSession = GreenDaoHelper.getInstance().getDaoSession();
+        UserInfoDao userInfoDao = daoSession.getUserInfoDao();
+        List<UserInfo> userInfoList = userInfoDao.queryBuilder().build().list();
+        if (userInfoList != null && !userInfoList.isEmpty()) {
+            return userInfoList.get(0);
+        }
+        return null;
+    }
 
     /**
      * 退出登录
      */
     public void logout() {
-//        userInfoOld = null;
-//        deleteUserInfoFromDisk();
+        userInfo = null;
+        deleteUserInfoFromDisk();
         TourCooLogUtil.e(TAG, "退出登录了");
     }
 
-
-
-   /* private void deleteUserInfoFromDisk() {
+    private void deleteUserInfoFromDisk() {
         DaoSession daoSession = GreenDaoHelper.getInstance().getDaoSession();
         UserInfoDao userInfoDao = daoSession.getUserInfoDao();
         userInfoDao.deleteAll();
-    }*/
+    }
 
-
-   /* private UserInfoOld getUserInfoFromDisk() {
-        DaoSession daoSession = GreenDaoHelper.getInstance().getDaoSession();
-        UserInfoDao userInfoDao = daoSession.getUserInfoDao();
-        List<UserInfoOld> userInfoOldList = userInfoDao.queryBuilder().build().list();
-        if (userInfoOldList != null && !userInfoOldList.isEmpty()) {
-            return userInfoOldList.get(0);
-        }
-        return null;
-    }*/
-
-
-   /* public UserInfoOld getUserInfoOld() {
-        if (userInfoOld != null) {
-            return userInfoOld;
-        } else {
-            //从本地获取用户信息
-            userInfoOld = getUserInfoFromDisk();
-            boolean isNull = userInfoOld != null;
-            LogUtils.d("用户信息改为从缓存获取 本地是否有数据 ？" + isNull);
-            return userInfoOld;
-        }
-    }*/
 }

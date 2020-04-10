@@ -21,6 +21,8 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 
+import static com.tourcoo.training.core.util.CommonUtil.getUniquePsuedoID;
+
 /**
  * @Author: JenkinsZhou on 2018/11/19 14:25
  * @E-Mail: 971613168@qq.com
@@ -102,7 +104,7 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult<UserInfo>> requestRegisterDriver(Map<String, Object> map) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("appType", "Android");
-        params.put("appVersion", "v" + AppUtils.getAppVersionName());
+        params.put("appVersion", AppUtils.getAppVersionName());
         Map newMap = MapUtil.mergeMaps(params, map);
         TourCooLogUtil.i(TAG, newMap);
         return CommonTransformer.switchSchedulers(getApiService().requestRegisterDriver(newMap).retryWhen(new RetryWhen()));
@@ -112,13 +114,25 @@ public class ApiRepository extends BaseRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public Observable<BaseResult<UserInfo>> requestRegisterIndustry(Map<String, Object> map) {
+    public Observable<BaseResult<Object>> requestRegisterIndustry(Map<String, Object> map) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("appType", "Android");
-        params.put("appVersion", "v" + AppUtils.getAppVersionName());
+        params.put("appVersion", AppUtils.getAppVersionName());
         Map newMap = MapUtil.mergeMaps(params, map);
         TourCooLogUtil.i(TAG, newMap);
         return CommonTransformer.switchSchedulers(getApiService().requestRegisterIndustry(newMap).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<UserInfo>> requestLoginByIdCard(String idCard,String password) {
+        Map<String, Object> params = new HashMap<>(5);
+        params.put("idCard", idCard);
+        params.put("password", password);
+        params.put("appType", "Android");
+        params.put("appVersion", AppUtils.getAppVersionName());
+        params.put("deviceID",getUniquePsuedoID());
+        params.put("deviceOS",android.os.Build.VERSION.RELEASE);
+        TourCooLogUtil.i(TAG, params);
+        return CommonTransformer.switchSchedulers(getApiService().requestLoginByIdCard(params).retryWhen(new RetryWhen()));
     }
 
 }
