@@ -251,26 +251,7 @@
                        </RelativeLayout>
 
 
-                       <RelativeLayout
-                           android:layout_marginStart="@dimen/dp_10"
-                           android:layout_width="0dp"
-                           android:layout_weight="1"
-                           android:layout_height="wrap_content">
 
-
-                           <ImageView
-                               android:layout_width="match_parent"
-                               android:layout_height="wrap_content"
-                               android:scaleType="fitXY"
-                               android:src="@drawable/img_front" />
-
-                           <ImageView
-                               android:src="@drawable/btn_uploading"
-                               android:layout_width="wrap_content"
-                               android:layout_centerVertical="true"
-                               android:layout_centerHorizontal="true"
-                               android:layout_height="wrap_content"/>
-                       </RelativeLayout>
 
                                </LinearLayout>
 

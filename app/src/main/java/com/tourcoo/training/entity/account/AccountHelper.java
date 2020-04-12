@@ -91,4 +91,9 @@ public class AccountHelper {
         userInfoDao.deleteAll();
     }
 
+
+    public boolean isLogin(){
+        return getUserInfo() != null;
+    }
+
 }

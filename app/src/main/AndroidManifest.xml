@@ -82,6 +82,7 @@
         <activity android:name=".ui.account.register.SelectCompanyActivity" />
         <activity android:name=".widget.idcardcamera.camera.LicenseCameraActivity" />
         <activity android:name=".ui.account.register.RecognizeLicenseActivity" />
+        <activity android:name=".ui.account.PersonalInfoActivity" />
 
         <service android:name="com.amap.api.location.APSService">
 

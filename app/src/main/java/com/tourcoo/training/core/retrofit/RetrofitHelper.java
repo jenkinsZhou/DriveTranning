@@ -111,7 +111,7 @@ public class RetrofitHelper {
 
     private RetrofitHelper() {
         sClientBuilder = new OkHttpClient.Builder();
-        sClientBuilder.addInterceptor(mHeaderInterceptor);
+        sClientBuilder.addInterceptor(mHeaderInterceptor).addInterceptor(new TokenInterceptor());
         sRetrofitBuilder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
