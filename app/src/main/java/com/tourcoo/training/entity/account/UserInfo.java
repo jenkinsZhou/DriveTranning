@@ -82,8 +82,11 @@ public class UserInfo implements Parcelable {
         Vehicles = vehicles;
     }
 
+    /*   public String getAccessToken() {
+           return AccessToken;
+       }*/
     public String getAccessToken() {
-        return AccessToken;
+        return "21efff2af0ffaaaf4e11528b1382fba8ec4b0c26";
     }
 
     public void setAccessToken(String AccessToken) {
@@ -284,10 +287,10 @@ public class UserInfo implements Parcelable {
 
     @Generated(hash = 1498218983)
     public UserInfo(String AccessToken, int Enabled, int FVEnable, int UserType, int IsAuthenticated, int Status,
-            String IndustryCateID, String Name, double CoinsTotal, double CoinsRemain, String Avatar,
-            String Phone, String IDCard, String IDCardUrl, String CompanyName, double IsMandatoryUpdate,
-            double OnlineLearnProgress, double OnsiteLearnProgress, String MonthRanking,
-            List<VehicleInfo> Vehicles) {
+                    String IndustryCateID, String Name, double CoinsTotal, double CoinsRemain, String Avatar,
+                    String Phone, String IDCard, String IDCardUrl, String CompanyName, double IsMandatoryUpdate,
+                    double OnlineLearnProgress, double OnsiteLearnProgress, String MonthRanking,
+                    List<VehicleInfo> Vehicles) {
         this.AccessToken = AccessToken;
         this.Enabled = Enabled;
         this.FVEnable = FVEnable;

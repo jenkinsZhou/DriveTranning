@@ -132,6 +132,8 @@ dependencies {
     //定位功能
     implementation 'com.amap.api:location:4.9.0'
 
+    implementation  'com.netease.nimlib:neliveplayer:2.4.0'
+
 }
 repositories {
     mavenCentral()

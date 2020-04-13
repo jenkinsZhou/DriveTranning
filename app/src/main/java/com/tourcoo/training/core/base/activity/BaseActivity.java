@@ -286,11 +286,11 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
                         }
                     });
         } else {
-            fastLazyLoad();
+            lazyLoad();
         }
     }
 
-    private void fastLazyLoad() {
+    private void lazyLoad() {
         if (mIsFirstShow) {
             mIsFirstShow = false;
             loadData();

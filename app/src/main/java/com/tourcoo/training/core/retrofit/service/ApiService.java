@@ -3,12 +3,14 @@ package com.tourcoo.training.core.retrofit.service;
 
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.BaseResult;
+import com.tourcoo.training.core.retrofit.TokenInterceptor;
 import com.tourcoo.training.entity.account.IdCardInfo;
 import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
+import com.tourcoo.training.entity.course.CourseInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -18,9 +20,12 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
+
+import static com.tourcoo.training.core.retrofit.TokenInterceptor.HEADER_NOT_SKIP_LOGIN;
 
 /**
  * @Author: JenkinsZhou on 2018/7/30 14:01
@@ -120,4 +125,15 @@ public interface ApiService {
 
     @POST("v1.0/open/user/id-card-login")
     Observable<BaseResult<UserInfo>> requestLoginByIdCard(@Body Map<String, Object> map);
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/open/trainee/details")
+    Observable<BaseResult<UserInfo>> requestUserInfo();
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/training/list-online-training-present-month-plan")
+    Observable<BaseResult<List<CourseInfo>>> requestOnLineTrainingList();
+
 }

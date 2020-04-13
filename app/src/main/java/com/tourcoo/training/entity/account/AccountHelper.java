@@ -1,6 +1,9 @@
 package com.tourcoo.training.entity.account;
 
+import android.text.TextUtils;
+
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.entity.greendao.DaoSession;
 import com.tourcoo.training.entity.greendao.GreenDaoHelper;
@@ -16,9 +19,18 @@ import java.util.List;
  * @Email: 971613168@qq.com
  */
 public class AccountHelper {
-     public static final String TAG = "AccountHelper";
-    private AccountHelper(){}
+    public static final String TAG = "AccountHelper";
+    public static final String PREF_ACCESS_TOKEN = "access_token";
+
+    private AccountHelper() {
+    }
+
+    /**
+     * 访问需要的token
+     */
+    private String accessToken = "";
     private UserInfo userInfo;
+
     private static class SingletonInstance {
         private static final AccountHelper INSTANCE = new AccountHelper();
     }
@@ -26,7 +38,6 @@ public class AccountHelper {
     public static AccountHelper getInstance() {
         return AccountHelper.SingletonInstance.INSTANCE;
     }
-
 
 
     private void saveToDisk(UserInfo userInfo) {
@@ -42,13 +53,20 @@ public class AccountHelper {
             LogUtils.i("用户信息已保存到本地 = " + size);
         } else {
             LogUtils.w("用户信息已被清空 ");
-        }}
+        }
+    }
 
 
     public void setUserInfo(UserInfo userInfo) {
+        TourCooLogUtil.i(TAG, userInfo);
         if (userInfo == null) {
             logout();
         } else {
+            if (TextUtils.isEmpty(userInfo.getAccessToken())) {
+                userInfo.setAccessToken(getAccessToken());
+            } else {
+                setAccessToken(userInfo.getAccessToken());
+            }
             this.userInfo = userInfo;
             saveToDisk(userInfo);
         }
@@ -92,8 +110,16 @@ public class AccountHelper {
     }
 
 
-    public boolean isLogin(){
+    public boolean isLogin() {
         return getUserInfo() != null;
     }
 
+    public String getAccessToken() {
+        return SPUtils.getInstance().getString(PREF_ACCESS_TOKEN, "");
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+        SPUtils.getInstance().put(PREF_ACCESS_TOKEN, accessToken);
+    }
 }

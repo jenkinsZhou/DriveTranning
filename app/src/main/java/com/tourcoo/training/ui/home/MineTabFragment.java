@@ -5,21 +5,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.mine.MineItemAdapter;
+import com.tourcoo.training.config.RequestConfig;
+import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment;
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
+import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
+import com.tourcoo.training.entity.account.AccountHelper;
+import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.account.FindPassActivity;
 import com.tourcoo.training.ui.account.LoginActivity;
@@ -32,6 +42,7 @@ import com.tourcoo.training.widget.dialog.medal.MedalDialog;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert;
 import com.tourcoo.training.widget.dialog.training.LocalTrainingDialog;
+import com.trello.rxlifecycle3.android.FragmentEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +54,10 @@ import java.util.List;
  * @date 2019年12月27日17:39
  * @Email: 971613168@qq.com
  */
-public class MineTabFragment extends BaseTitleFragment implements View.OnClickListener {
+public class MineTabFragment extends BaseTitleFragment implements View.OnClickListener, OnRefreshListener {
     @Override
     public int getContentLayout() {
-        return R.layout.fragement_mine;
+        return R.layout.fragment_mine_tab_new;
     }
 
     private RelativeLayout rlTitle;
@@ -56,11 +67,13 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
     private RecyclerView rvMyAccount;
     private RecyclerView rvStudyAchievement;
     private MultiplePayDialog multiplePayDialog;
+    private ProgressBar progressBarLocal;
+    private ProgressBar progressBarOnLine;
 
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        rlTitle = mContentView.findViewById(R.id.rlTitleBar);
+//        rlTitle = mContentView.findViewById(R.id.rlTitleBar);
         rvMyAccount = mContentView.findViewById(R.id.rvMyAccount);
         rvStudyAchievement = mContentView.findViewById(R.id.rvStudyAchievement);
         smartRefreshLayoutCommon = mContentView.findViewById(R.id.smartRefreshLayoutCommon);
@@ -76,14 +89,18 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
         mContentView.findViewById(R.id.llAvatar).setOnClickListener(this);
         mContentView.findViewById(R.id.ivAddCar).setOnClickListener(this);
         mContentView.findViewById(R.id.llGoldLevel).setOnClickListener(this);
+        mContentView.findViewById(R.id.progressBarLocal).setOnClickListener(this);
+        mContentView.findViewById(R.id.progressBarOnLine).setOnClickListener(this);
         initItemClick();
         setStatusBarModeWhite(this);
     }
 
     @Override
     public void loadData() {
+        smartRefreshLayoutCommon.setOnRefreshListener(this);
         loadMineAccount();
         loadAchievement();
+        requestUserInfo();
     }
 
     private void loadMineAccount() {
@@ -242,23 +259,68 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
         });
     }
 
-    private void showDialog(){
+    private void showDialog() {
         LocalTrainingAlert alert = new LocalTrainingAlert(mContext);
         alert.create().show();
     }
 
-    private void showDialog1(){
+    private void showDialog1() {
         LocalTrainingDialog dialog = new LocalTrainingDialog(mContext);
         dialog.create().show();
     }
 
-    private void showDialog2(){
+    private void showDialog2() {
         MedalDialog dialog = new MedalDialog(mContext);
         dialog.create().show();
     }
-    private void showDialog3(){
+
+    private void showDialog3() {
         CommitAnswerDialog dialog = new CommitAnswerDialog(mContext);
         dialog.create().show();
     }
 
+
+    private void requestUserInfo() {
+        if(!AccountHelper.getInstance().isLogin()){
+//            ,
+            return;
+        }
+        ApiRepository.getInstance().requestUserInfo().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<UserInfo>>() {
+            @Override
+            public void onSuccessNext(BaseResult<UserInfo> entity) {
+                smartRefreshLayoutCommon.finishRefresh(true);
+                if (entity == null) {
+                    return;
+                }
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    ToastUtil.showSuccess("获取成功");
+                } else if (RequestConfig.CODE_REQUEST_TOKEN_INVALID == entity.getCode()) {
+                } else {
+                    ToastUtil.show(entity.msg);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                smartRefreshLayoutCommon.finishRefresh();
+            }
+        });
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        requestUserInfo();
+    }
+
+
+    private void showUnLogin(){
+//        ,
+    }
+
+
+    private void showUserInfo(UserInfo userInfo){
+        progressBarOnLine.setProgress((int)userInfo.getOnlineLearnProgress());
+        progressBarLocal.setProgress((int)userInfo.getOnlineLearnProgress());
+
+    }
 }

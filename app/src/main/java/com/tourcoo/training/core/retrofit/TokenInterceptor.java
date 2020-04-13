@@ -52,12 +52,12 @@ public class TokenInterceptor implements Interceptor {
         Request originalRequest = chain.request();
         String needToken = originalRequest.header(TOKEN_FLAG);
         String optionalTokenFlag = originalRequest.header(OPTIONAL_TOKEN_FLAG);
-
-        if(!TextUtils.isEmpty(needToken)&&needToken.equalsIgnoreCase(NO)){
+        Response originalResponse = chain.proceed(originalRequest);
+        if (!TextUtils.isEmpty(needToken) && needToken.equalsIgnoreCase(NO)) {
             //说明该接口不需要传token 不做任何处理
             TourCooLogUtil.d(TAG, "不需要token验证 不做任何处理");
-            return chain.proceed(originalRequest);
-        }else if(optionalTokenFlag != null){
+            return originalResponse;
+        } else if (optionalTokenFlag != null) {
             //根据用户的登录状态 决定是否传入token
             if (AccountHelper.getInstance().isLogin()) {
                 String skipLoginFlag = originalRequest.header(SKIP_LOGIN_FLAG);
@@ -67,7 +67,7 @@ public class TokenInterceptor implements Interceptor {
                 //需要token校验
                 Request tokenRequest = chain.request().newBuilder()
                         .removeHeader(KEY_TOKEN)
-                        .addHeader(KEY_TOKEN,   AccountHelper.getInstance().getUserInfo().getAccessToken())
+                        .addHeader(KEY_TOKEN, AccountHelper.getInstance().getUserInfo().getAccessToken())
                         .build();
                 Response tokenResponse = chain.proceed(tokenRequest);
                 if (tokenResponse.code() == RequestConfig.CODE_REQUEST_TOKEN_INVALID) {
@@ -80,29 +80,40 @@ public class TokenInterceptor implements Interceptor {
                     //todo 通知其他页面
 //                    EventBus.getDefault().post(new UserInfoEvent());
                 }
-                return chain.proceed(tokenRequest);
+                return tokenResponse;
 
-            }else {
+            } else {
                 TourCooLogUtil.d(TAG, "未登录，不传Token");
-                return chain.proceed(originalRequest);
+                return originalResponse;
             }
-        }else {
+        } else {
             //说明该接口要传token
             TourCooLogUtil.d(TAG, "该接口要传token");
-            //判断当前接口 token过期后是否要跳转至登录页面
-            String skipLoginFlag = originalRequest.header(SKIP_LOGIN_FLAG);
-            boolean skipLoginEnable = skipLoginFlag == null || skipLoginFlag.equalsIgnoreCase(YES);
-            if (skipLoginEnable) {
-                //表示 token过期后 需要跳转至登录页
-                skipLogin();
+            if (AccountHelper.getInstance().isLogin()) {
+                //判断当前接口 token过期后是否要跳转至登录页面
+                  TourCooLogUtil.e(TAG,AccountHelper.getInstance().getUserInfo());
+                Request newTokenRequest = chain.request().newBuilder()
+                        .removeHeader(KEY_TOKEN)
+                        .addHeader(KEY_TOKEN, AccountHelper.getInstance().getUserInfo().getAccessToken())
+                        .build();
+                String skipLoginFlag = originalRequest.header(SKIP_LOGIN_FLAG);
+                boolean skipLoginEnable = skipLoginFlag == null || skipLoginFlag.equalsIgnoreCase(YES);
+                if (skipLoginEnable) {
+                    //表示 token过期后 需要跳转至登录页
+                    skipLogin();
+                }
+                return chain.proceed(newTokenRequest);
+            } else {
+                Request newTokenRequest = chain.request().newBuilder()
+                        .removeHeader(KEY_TOKEN)
+                        .build();
+                return chain.proceed(newTokenRequest);
             }
-           return chain.proceed(originalRequest);
         }
 
     }
 
     private void skipLogin() {
-        TourCooLogUtil.i("需要跳转至登录页");
         startActivity(MyApplication.getContext(), LoginActivity.class);
     }
 
@@ -115,8 +126,6 @@ public class TokenInterceptor implements Interceptor {
             return null;
         }
     }
-
-
 
 
     /**

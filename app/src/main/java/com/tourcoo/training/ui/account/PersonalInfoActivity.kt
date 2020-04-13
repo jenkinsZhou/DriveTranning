@@ -18,6 +18,7 @@ class PersonalInfoActivity :BaseTitleActivity() {
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
+        titleBar?.setTitleMainText("个人信息")
     }
 
     override fun initView(savedInstanceState: Bundle?) {

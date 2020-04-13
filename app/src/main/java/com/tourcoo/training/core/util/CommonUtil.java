@@ -27,11 +27,13 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.blankj.utilcode.util.SPUtils;
+import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.constant.FrameConstant;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -46,7 +48,11 @@ import java.util.UUID;
 public class CommonUtil {
 
     public static final String TAG = "CommonUtil";
-
+    private static final String STRING_LINE = "/";
+    private static final String STRING_EMPTY = "";
+    private static final String URL_TAG = "http";
+    private static final String URL_TAG_HTTPS = "https";
+    private static final int LENGTH_PHONE = 11;
     private static int ACTIVITY_SINGLE_FLAG = Intent.FLAG_ACTIVITY_SINGLE_TOP;
     public static final String SP_KEY_DEVICE = "SP_KEY_DEVICE";
     /**
@@ -505,4 +511,43 @@ public class CommonUtil {
         //使用硬件信息拼凑出来的15位号码
         return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString();
     }
+
+    public static String getUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return STRING_EMPTY;
+        }
+        if (url.contains(URL_TAG) || url.contains(URL_TAG_HTTPS)) {
+            return url;
+        } else {
+            if (url.startsWith(STRING_LINE)) {
+                return RequestConfig.BASE_URL_NO_LINE + url;
+            } else {
+                return RequestConfig.BASE_URL + url;
+            }
+        }
+    }
+
+
+    public static boolean isMobileNumber(String mobileNums) {
+        if (TextUtils.isEmpty(mobileNums)) {
+            return false;
+        } else {
+            String startValue = "1";
+            return mobileNums.length() == LENGTH_PHONE && mobileNums.startsWith(startValue);
+        }
+    }
+
+
+
+    public static String doubleTransStringZhen(double d) {
+        if (Math.round(d) - d == 0) {
+            return String.valueOf((long) d);
+        }
+        //四舍五入 并保留两位小数
+        double value = Double.parseDouble(FormatUtil.formatDoubleSize(d, 2));
+        DecimalFormat df = new DecimalFormat("#0.00");
+        return df.format(value);
+    }
+
+
 }

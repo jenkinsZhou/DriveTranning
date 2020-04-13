@@ -13,6 +13,7 @@ import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
+import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
@@ -133,6 +134,14 @@ public class ApiRepository extends BaseRepository {
         params.put("deviceOS",android.os.Build.VERSION.RELEASE);
         TourCooLogUtil.i(TAG, params);
         return CommonTransformer.switchSchedulers(getApiService().requestLoginByIdCard(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<UserInfo>> requestUserInfo() {
+        return CommonTransformer.switchSchedulers(getApiService().requestUserInfo().retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<List<CourseInfo>>> requestOnLineTrainingList() {
+        return CommonTransformer.switchSchedulers(getApiService().requestOnLineTrainingList().retryWhen(new RetryWhen()));
     }
 
 }

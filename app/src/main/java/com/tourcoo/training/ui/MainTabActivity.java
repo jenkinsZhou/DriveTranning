@@ -10,6 +10,7 @@ import com.tourcoo.training.core.base.entity.FrameTabEntity;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
 import com.tourcoo.training.ui.home.MainTabFragment;
 import com.tourcoo.training.ui.home.MineTabFragment;
+import com.tourcoo.training.ui.home.MineTabFragmentNew;
 import com.tourcoo.training.ui.home.NewsTabFragment;
 import com.tourcoo.training.ui.home.StudyTabFragment;
 
@@ -38,7 +39,7 @@ public class MainTabActivity extends BaseMainActivity {
         mTabEntities = new ArrayList<>();
         mTabEntities.add(new FrameTabEntity("发现", R.drawable.ic_home_normal, R.drawable.ic_home_selected, NewsTabFragment.Companion.newInstance()));
         mTabEntities.add(new FrameTabEntity("主页", R.drawable.ic_home_normal, R.drawable.ic_home_selected, StudyTabFragment.Companion.newInstance()));
-        mTabEntities.add(new FrameTabEntity("我的", R.drawable.ic_home_normal, R.drawable.ic_home_selected, MineTabFragment.newInstance()));
+        mTabEntities.add(new FrameTabEntity("我的", R.drawable.ic_home_normal, R.drawable.ic_home_selected, MineTabFragmentNew.Companion.newInstance()));
         return mTabEntities;
     }
 
