@@ -9,7 +9,7 @@ import java.util.List;
  * @date 2020年03月12日9:34
  * @Email: 971613168@qq.com
  */
-public class ExaminationEntity {
+public class ExaminationEntityOld {
     public static final String QUESTION_TYPE_SINGLE = "1";
     public static final String QUESTION_TYPE_MULTIPLE = "2";
     public static final String QUESTION_TYPE_JUDGE = "3";
@@ -62,8 +62,8 @@ public class ExaminationEntity {
         QuestionType = questionType;
     }
 
-    private List<Answer> AnswerList;
-    private List<Answer> CorrectAnswerList;
+    private List<AnswerOld> answerOldList;
+    private List<AnswerOld> correctAnswerOldList;
 
     public String getQuestionId() {
         return QuestionId;
@@ -89,19 +89,19 @@ public class ExaminationEntity {
         HasAnswered = hasAnswered;
     }
 
-    public List<Answer> getAnswerList() {
-        return AnswerList;
+    public List<AnswerOld> getAnswerOldList() {
+        return answerOldList;
     }
 
-    public void setAnswerList(List<Answer> answerList) {
-        AnswerList = answerList;
+    public void setAnswerOldList(List<AnswerOld> answerOldList) {
+        this.answerOldList = answerOldList;
     }
 
-    public List<Answer> getCorrectAnswerList() {
-        return CorrectAnswerList;
+    public List<AnswerOld> getCorrectAnswerOldList() {
+        return correctAnswerOldList;
     }
 
-    public void setCorrectAnswerList(List<Answer> correctAnswerList) {
-        CorrectAnswerList = correctAnswerList;
+    public void setCorrectAnswerOldList(List<AnswerOld> correctAnswerOldList) {
+        this.correctAnswerOldList = correctAnswerOldList;
     }
 }

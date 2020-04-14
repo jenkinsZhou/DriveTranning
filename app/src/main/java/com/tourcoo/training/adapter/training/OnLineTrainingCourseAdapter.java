@@ -10,7 +10,6 @@ import com.tourcoo.training.R;
 import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.entity.course.CourseInfo;
-import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
 
 /**
  * @author :JenkinsZhou
@@ -55,4 +54,9 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
                 break;
         }
     }
+
+
+
+
+
 }

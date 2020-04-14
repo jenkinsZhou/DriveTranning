@@ -11,6 +11,7 @@ import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.entity.course.CourseInfo;
+import com.tourcoo.training.entity.exam.ExamEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -135,5 +136,10 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
     @POST("v1.0/training/list-online-training-present-month-plan")
     Observable<BaseResult<List<CourseInfo>>> requestOnLineTrainingList();
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/training/get-exam-detail")
+    Observable<BaseResult<ExamEntity>> requestExam(@Body Map<String, Object> map);
 
 }

@@ -1,7 +1,9 @@
 package com.tourcoo.training.ui.exam
 
+import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
 import android.view.View
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -11,10 +13,21 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.exam.QuestionNumberAdapter
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
+import com.tourcoo.training.config.AppConfig
+import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
+import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver
+import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.exam.ExaminationEntity
+import com.tourcoo.training.entity.course.CourseInfo
+import com.tourcoo.training.entity.exam.ExamEntity
+import com.tourcoo.training.entity.exam.ExamTempHelper
+import com.tourcoo.training.entity.exam.ExaminationEntityOld
+import com.tourcoo.training.entity.exam.Question
+import com.trello.rxlifecycle3.android.ActivityEvent
+import com.trello.rxlifecycle3.android.FragmentEvent
 import kotlinx.android.synthetic.main.activity_exam_online.*
 
 /**
@@ -32,7 +45,13 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     private val delayTime = 500L
     private val answerHandler = Handler()
     private var behavior: BottomSheetBehavior<NestedScrollView>? = null
+    private var examId = ""
+    private var trainPlanId = ""
 
+    companion object {
+        const val EXTRA_TRAINING_PLAN_ID = "EXTRA_TRAINING_PLAN_ID"
+        const val EXTRA_EXAM_ID = "EXTRA_EXAM_ID"
+    }
 
     override fun getContentLayout(): Int {
         return R.layout.activity_exam_online
@@ -44,34 +63,26 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        if (intent != null) {
+            trainPlanId = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID) as String
+            examId = intent!!.getStringExtra(EXTRA_EXAM_ID) as String
+        }
+        if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
+            ToastUtil.show("未获取到考试题数据")
+            finish()
+            return
+        }
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
-        questionNumRv.layoutManager = GridLayoutManager(mContext,6)
+        questionNumRv.layoutManager = GridLayoutManager(mContext, 6)
         behavior = BottomSheetBehavior.from(nsvBottom)
+        nsvBottom.isNestedScrollingEnabled = false
         llQuestionBar.setOnClickListener(this)
     }
 
     override fun loadData() {
         super.loadData()
-        list = ArrayList()
-        fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
-        questionNumAdapter = QuestionNumberAdapter()
-        questionNumAdapter?.bindToRecyclerView(questionNumRv)
-        testLoadData()
-        loadBottomSheetBar()
-        vpExamOnline.offscreenPageLimit = list!!.size - 1
-        vpExamOnline.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            }
-
-            override fun onPageSelected(position: Int) {
-                currentPosition = position
-            }
-
-        })
+        requestExam(trainPlanId, examId)
     }
 
     private fun testLoadData() {
@@ -90,7 +101,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             R.id.tvLastQuestion -> {
                 skipLastQuestion()
             }
-            R.id.llQuestionBar->{
+            R.id.llQuestionBar -> {
                 handleBottomBarClick()
             }
             else -> {
@@ -135,29 +146,76 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
     }
 
-    private fun getQuestionList() : ArrayList<ExaminationEntity>{
-        val questionList = ArrayList<ExaminationEntity>()
-        for (i in 0 until  30){
-           val exam =  ExaminationEntity()
-            exam.number = i+1
-            questionList.add(exam)
+    private fun setQuestionNumber(questions: MutableList<Question>): MutableList<Question> {
+        for (i in 0 until questions.size - 1) {
+            questions[i].questionNumber = "" + i + 1
         }
-        return questionList
+        return questions
     }
 
 
-    private fun loadBottomSheetBar(){
-        if(list == null){
+    private fun loadBottomSheetBar(questions: MutableList<Question>?) {
+        if (questions == null) {
             return
         }
-        questionNumAdapter?.setNewData(getQuestionList())
+        questionNumAdapter?.setNewData(setQuestionNumber(questions))
     }
 
-    private fun handleBottomBarClick(){
-        if(behavior!!.state == BottomSheetBehavior.STATE_COLLAPSED){
+    private fun handleBottomBarClick() {
+        if (behavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
             behavior!!.setState(BottomSheetBehavior.STATE_EXPANDED)
-        }else if(behavior!!.state ==BottomSheetBehavior.STATE_EXPANDED ){
+        } else if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
             behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+    }
+
+
+    private fun requestExam(trainId: String, examId: String) {
+        ApiRepository.getInstance().requestExam(trainId, examId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamEntity>?>() {
+            override fun onSuccessNext(entity: BaseResult<ExamEntity>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    handleExamResult(entity.data)
+                } else {
+                    ToastUtil.show(entity.msg)
+                }
+
+            }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                if (AppConfig.DEBUG_MODE) {
+                    ToastUtil.showFailed(e.toString())
+                }
+            }
+        })
+    }
+
+    private fun handleExamResult(examEntity: ExamEntity?) {
+        if (examEntity == null || examEntity.questions == null) {
+            return
+        }
+        ExamTempHelper.getInstance().examInfo = examEntity
+        list = ArrayList()
+        fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
+        questionNumAdapter = QuestionNumberAdapter()
+        questionNumAdapter?.bindToRecyclerView(questionNumRv)
+        testLoadData()
+        loadBottomSheetBar(examEntity.questions)
+        vpExamOnline.offscreenPageLimit = list!!.size - 1
+        vpExamOnline.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                currentPosition = position
+            }
+
+        })
     }
 }

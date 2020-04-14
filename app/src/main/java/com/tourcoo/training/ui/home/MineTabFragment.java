@@ -36,7 +36,7 @@ import com.tourcoo.training.ui.account.LoginActivity;
 import com.tourcoo.training.ui.exam.OnlineExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.pay.BuyNowActivity;
-import com.tourcoo.training.ui.training.online.StudyOnlineActivity;
+import com.tourcoo.training.ui.training.online.PlayVideoActivity;
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog;
 import com.tourcoo.training.widget.dialog.medal.MedalDialog;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
@@ -250,7 +250,7 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (position) {
                     case 0:
-                        CommonUtil.startActivity(mContext, StudyOnlineActivity.class);
+                        CommonUtil.startActivity(mContext, PlayVideoActivity.class);
                         break;
                     default:
                         break;

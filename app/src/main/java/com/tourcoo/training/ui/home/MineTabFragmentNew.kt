@@ -34,7 +34,7 @@ import com.tourcoo.training.ui.account.PersonalInfoActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
-import com.tourcoo.training.ui.training.online.StudyOnlineActivity
+import com.tourcoo.training.ui.training.online.PlayVideoActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert
@@ -143,7 +143,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         }
         achievementAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
-                0 -> CommonUtil.startActivity(mContext, StudyOnlineActivity::class.java)
+                0 -> CommonUtil.startActivity(mContext, PlayVideoActivity::class.java)
                 else -> {
                 }
             }

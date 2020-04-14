@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.training.safe
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +11,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.dialog.CourseSelectAdapter
 import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
+import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter.*
 import com.tourcoo.training.adapter.training.ProfessionalTrainingAdapter
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
@@ -23,6 +25,9 @@ import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.course.CourseEntity
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.entity.training.ProfessionTrainingEntity
+import com.tourcoo.training.ui.exam.OnlineExamActivity
+import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
+import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
 import kotlinx.android.synthetic.main.fragment_mine_tab_new.*
@@ -50,6 +55,7 @@ class OnlineTrainFragment : BaseFragment() {
         recyclerView?.layoutManager = LinearLayoutManager(mContext)
         adapter = OnLineTrainingCourseAdapter()
         adapter?.bindToRecyclerView(recyclerView)
+        initTrainingPlanClick()
         /* testData()
          baseHandler.postDelayed(Runnable {
              showCourseDialog()
@@ -110,7 +116,7 @@ class OnlineTrainFragment : BaseFragment() {
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     handleOnLineCourseList(entity?.data)
-                }else{
+                } else {
                     ToastUtil.show(entity.msg)
                 }
 
@@ -136,5 +142,34 @@ class OnlineTrainFragment : BaseFragment() {
             return
         }
         adapter?.setNewData(list)
+    }
+
+    private fun initTrainingPlanClick() {
+        if (adapter == null) {
+            return
+        }
+        adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+            doSkipByStatus(adapter!!.data[position] as CourseInfo)
+        }
+    }
+
+    private fun doSkipByStatus(courseInfo: CourseInfo?) {
+        if (courseInfo == null) {
+            return
+        }
+        when (courseInfo.status) {
+            COURSE_STATUS_NEED_PAY -> {
+                val intent = Intent(mContext, OnlineExamActivity::class.java)
+                //培训计划id
+                intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
+                //考试题id
+                intent.putExtra(EXTRA_EXAM_ID, "0")
+                startActivity(intent)
+            }
+            else -> {
+                ToastUtil.show("未匹配到类型")
+            }
+        }
+
     }
 }

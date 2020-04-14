@@ -26,7 +26,7 @@ public class CourseInfo {
     private String Title;
     private double Progress;
     private String TimeRange;
-    private int TrainingPlanID;
+    private String TrainingPlanID;
 
     public String getCoverUrl() {
         return CoverUrl;
@@ -76,11 +76,11 @@ public class CourseInfo {
         this.TimeRange = TimeRange;
     }
 
-    public int getTrainingPlanID() {
+    public String getTrainingPlanID() {
         return TrainingPlanID;
     }
 
-    public void setTrainingPlanID(int TrainingPlanID) {
+    public void setTrainingPlanID(String TrainingPlanID) {
         this.TrainingPlanID = TrainingPlanID;
     }
 }

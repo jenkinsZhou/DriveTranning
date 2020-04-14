@@ -14,6 +14,7 @@ import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.entity.course.CourseInfo;
+import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
@@ -110,6 +111,7 @@ public class ApiRepository extends BaseRepository {
         TourCooLogUtil.i(TAG, newMap);
         return CommonTransformer.switchSchedulers(getApiService().requestRegisterDriver(newMap).retryWhen(new RetryWhen()));
     }
+
     public Observable<BaseResult<List<IndustryCategory>>> requestCategory() {
         return CommonTransformer.switchSchedulers(getApiService().requestCategory().retryWhen(new RetryWhen()));
     }
@@ -124,14 +126,14 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestRegisterIndustry(newMap).retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult<UserInfo>> requestLoginByIdCard(String idCard,String password) {
+    public Observable<BaseResult<UserInfo>> requestLoginByIdCard(String idCard, String password) {
         Map<String, Object> params = new HashMap<>(5);
         params.put("idCard", idCard);
         params.put("password", password);
         params.put("appType", "Android");
         params.put("appVersion", AppUtils.getAppVersionName());
-        params.put("deviceID",getUniquePsuedoID());
-        params.put("deviceOS",android.os.Build.VERSION.RELEASE);
+        params.put("deviceID", getUniquePsuedoID());
+        params.put("deviceOS", android.os.Build.VERSION.RELEASE);
         TourCooLogUtil.i(TAG, params);
         return CommonTransformer.switchSchedulers(getApiService().requestLoginByIdCard(params).retryWhen(new RetryWhen()));
     }
@@ -142,6 +144,13 @@ public class ApiRepository extends BaseRepository {
 
     public Observable<BaseResult<List<CourseInfo>>> requestOnLineTrainingList() {
         return CommonTransformer.switchSchedulers(getApiService().requestOnLineTrainingList().retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<ExamEntity>> requestExam(String trainingPlanID, String examId) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("trainingPlanID", trainingPlanID);
+        params.put("examId", examId);
+        return CommonTransformer.switchSchedulers(getApiService().requestExam(params).retryWhen(new RetryWhen()));
     }
 
 }

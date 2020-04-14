@@ -1,13 +1,12 @@
 package com.tourcoo.training.adapter.exam;
 
-import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;
-import com.tourcoo.training.entity.exam.ExaminationEntity;
+import com.tourcoo.training.entity.exam.ExaminationEntityOld;
+import com.tourcoo.training.entity.exam.Question;
 
 /**
  * @author :JenkinsZhou
@@ -16,7 +15,7 @@ import com.tourcoo.training.entity.exam.ExaminationEntity;
  * @date 2020年03月12日23:09
  * @Email: 971613168@qq.com
  */
-public class QuestionNumberAdapter extends BaseQuickAdapter<ExaminationEntity, BaseViewHolder> {
+public class QuestionNumberAdapter extends BaseQuickAdapter<Question, BaseViewHolder> {
 
 
     public QuestionNumberAdapter() {
@@ -24,7 +23,7 @@ public class QuestionNumberAdapter extends BaseQuickAdapter<ExaminationEntity, B
     }
 
     @Override
-    protected void convert(@NonNull BaseViewHolder helper, ExaminationEntity item) {
-        helper.setText(R.id.tvQuestionNum, "" + item.getNumber());
+    protected void convert(@NonNull BaseViewHolder helper, Question item) {
+        helper.setText(R.id.tvQuestionNum, "" + item.getQuestionNumber());
     }
 }
