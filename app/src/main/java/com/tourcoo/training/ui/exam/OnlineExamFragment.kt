@@ -9,10 +9,8 @@ import com.tourcoo.training.R
 import com.tourcoo.training.adapter.exam.QuestionAdapter
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.util.ToastUtil
-import com.tourcoo.training.entity.exam.AnswerOld
-import com.tourcoo.training.entity.exam.ExamTempHelper
-import com.tourcoo.training.entity.exam.ExaminationEntityOld
-import com.tourcoo.training.entity.exam.ExaminationEntityOld.*
+import com.tourcoo.training.entity.exam.*
+import com.tourcoo.training.entity.exam.Question.*
 
 /**
  *@description :
@@ -27,12 +25,17 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
     private var questionRecyclerView: RecyclerView? = null
     private var tvCurrentQuestion: TextView? = null
     private var tvQuestionType: TextView? = null
-    private var examinationEntityOld: ExaminationEntityOld? = null
+    private var question: Question? = null
     override fun getContentLayout(): Int {
         return R.layout.fragment_exam_content_online
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+    }
+
+    override fun loadData() {
+        super.loadData()
+        question =      arguments?.getParcelable("question")
         questionRecyclerView = mContentView.findViewById(R.id.questionRecyclerView)
         tvCurrentQuestion = mContentView.findViewById(R.id.tvCurrentQuestion)
         tvQuestionType = mContentView.findViewById(R.id.tvQuestionType)
@@ -43,17 +46,15 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
         }
         adapter = QuestionAdapter()
         adapter?.bindToRecyclerView(questionRecyclerView)
-        examinationEntityOld = assemblyExamEntity()
-        showQuestion(examinationEntityOld!!)
-        adapter?.setNewData(examinationEntityOld!!.answerOldList)
-        loadItemClick(examinationEntityOld!!)
+        showQuestion(question!!)
+        adapter?.setNewData(question!!.answerItems)
+        loadItemClick(question!!)
     }
 
-
-
     companion object {
-        fun newInstance(): OnlineExamFragment {
+        fun newInstance(question : Question): OnlineExamFragment {
             val args = Bundle()
+            args.putParcelable("question",question)
             val fragment = OnlineExamFragment()
             fragment.arguments = args
             return fragment
@@ -147,12 +148,12 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
         return answerList
     }
 
-    private fun loadItemClick(examinationEntityOld: ExaminationEntityOld) {
+    private fun loadItemClick(question: Question) {
         if (adapter == null) {
             return
         }
         adapter!!.setOnItemClickListener { adapter, view, position ->
-            when (examinationEntityOld.questionType) {
+            when (question.type) {
                 QUESTION_TYPE_SINGLE -> {
                     handleClickSingle(position)
                 }
@@ -167,7 +168,7 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
     }
 
 
-    private fun assemblyExamEntity(): ExaminationEntityOld {
+    /*private fun assemblyExamEntity(): ExaminationEntityOld {
         val entity = ExaminationEntityOld()
         entity.questionId = "1001"
 //        entity.questionType = QUESTION_TYPE_SINGLE
@@ -184,11 +185,11 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
             }
         }
         return entity
-    }
+    }*/
 
 
-    private fun showQuestion(examinationEntityOld: ExaminationEntityOld) {
-        when (examinationEntityOld.questionType) {
+    private fun showQuestion(question: Question ?) {
+        when (question?.type) {
             QUESTION_TYPE_SINGLE -> {
                 tvQuestionType?.text = "单选"
             }
@@ -201,19 +202,19 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
             else -> {
             }
         }
-        tvCurrentQuestion?.text = examinationEntityOld.questionContent
+        tvCurrentQuestion?.text = question?.question
     }
 
 
     private fun handleClickSingle(position: Int) {
-        //单选
-        val allAnswerList = examinationEntityOld!!.answerOldList
-        val clickedAnswer = adapter!!.data[position] as AnswerOld
+        //所有答案选项
+        val allAnswerList = question!!.answerItems
+        val clickedAnswer = adapter!!.data[position] as Answer
         for (current in allAnswerList) {
             if (current.answerId == clickedAnswer.answerId) {
-                clickedAnswer.isSelected = !clickedAnswer.isSelected
+                clickedAnswer.isSelect = !clickedAnswer.isSelect
             } else {
-                current.isSelected = false
+                current.isSelect = false
             }
         }
         adapter!!.notifyDataSetChanged()
@@ -221,11 +222,11 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
 
     private fun handleClickMultiple(position: Int) {
         //多选
-        val allAnswerList = examinationEntityOld!!.answerOldList
-        val clickedAnswer = adapter!!.data[position] as AnswerOld
+        val allAnswerList = question!!.answerItems
+        val clickedAnswer = adapter!!.data[position] as Answer
         for (current in allAnswerList) {
             if (current.answerId == clickedAnswer.answerId) {
-                clickedAnswer.isSelected = !clickedAnswer.isSelected
+                clickedAnswer.isSelect = !clickedAnswer.isSelect
             }
         }
         adapter!!.notifyDataSetChanged()
@@ -235,31 +236,38 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
      * 回答问题
      */
     fun answerQuestion(): Boolean {
-        if (examinationEntityOld == null || examinationEntityOld?.answerOldList == null) {
+        if (question == null || question?.answerItems == null) {
             ToastUtil.show("未获取到题目信息")
             return false
         }
-        val answerList = examinationEntityOld!!.answerOldList
+        val answerList = question!!.answerItems
         if (!hasSelect()) {
             return false
         }
-        examinationEntityOld!!.isHasAnswered = true
+        question!!.isHasAnswered = true
         for (answer in answerList) {
+            //已经回答过问题
             answer!!.isHasAnswered = true
         }
+        //
         adapter?.notifyDataSetChanged()
         return true
     }
 
-
+    /**
+     * 判断题目是否选中
+     */
     private fun hasSelect(): Boolean {
         return getSelectCount() > 0
     }
 
+    /**
+     * 判断是否选中答案
+     */
     fun getSelectCount(): Int {
         var count = 0
-        for (answer in examinationEntityOld!!.answerOldList) {
-            if (answer.isSelected) {
+        for (answer in adapter!!.data) {
+            if (answer.isSelect) {
                 count++
             } else {
                 continue
@@ -272,7 +280,7 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
      * 是否是多选题
      */
     fun isMultipleAnswer(): Boolean {
-        return QUESTION_TYPE_MULTIPLE == examinationEntityOld!!.questionType
+        return QUESTION_TYPE_MULTIPLE == question!!.type
     }
 
 

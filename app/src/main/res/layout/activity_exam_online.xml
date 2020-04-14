@@ -149,7 +149,6 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/questionNumRv"
                         android:layout_width="match_parent"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         android:layout_height="@dimen/dp_300" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

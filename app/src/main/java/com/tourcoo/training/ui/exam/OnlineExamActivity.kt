@@ -1,6 +1,5 @@
 package com.tourcoo.training.ui.exam
 
-import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
@@ -85,10 +84,14 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         requestExam(trainPlanId, examId)
     }
 
-    private fun testLoadData() {
+    private fun loadQuestion(examEntity: ExamEntity?) {
+        if(examEntity == null){
+            return
+        }
         list?.clear()
-        for (i in 0 until 10) {
-            list?.add(OnlineExamFragment.newInstance())
+        val questions = examEntity.questions
+        for (i in 0 until questions.size-1) {
+            list?.add(OnlineExamFragment.newInstance(questions[i]))
         }
         vpExamOnline.adapter = fragmentCommonAdapter
     }
@@ -148,7 +151,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun setQuestionNumber(questions: MutableList<Question>): MutableList<Question> {
         for (i in 0 until questions.size - 1) {
-            questions[i].questionNumber = "" + i + 1
+            questions[i].questionNumber = ( i + 1).toString()
         }
         return questions
     }
@@ -202,9 +205,9 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
         questionNumAdapter = QuestionNumberAdapter()
         questionNumAdapter?.bindToRecyclerView(questionNumRv)
-        testLoadData()
+        loadQuestion(examEntity)
         loadBottomSheetBar(examEntity.questions)
-        vpExamOnline.offscreenPageLimit = list!!.size - 1
+        vpExamOnline.offscreenPageLimit = 10
         vpExamOnline.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }

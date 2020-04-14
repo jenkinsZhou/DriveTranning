@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.widget.view.tab.listener.CustomTabEntity;
 
+
 /**
  * @Author: JenkinsZhou on 2018/7/16 9:16
  * @E-Mail: 971613168@qq.com

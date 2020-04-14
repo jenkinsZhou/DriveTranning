@@ -10,9 +10,7 @@ import java.util.List;
  * @Email: 971613168@qq.com
  */
 public class ExaminationEntityOld {
-    public static final String QUESTION_TYPE_SINGLE = "1";
-    public static final String QUESTION_TYPE_MULTIPLE = "2";
-    public static final String QUESTION_TYPE_JUDGE = "3";
+
 
     /**
      * QuestionId : 题目Id

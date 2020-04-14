@@ -1,5 +1,8 @@
 package com.tourcoo.training.entity.exam;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -9,8 +12,15 @@ import java.util.List;
  * @date 2020年04月14日15:56
  * @Email: 971613168@qq.com
  */
-public class Question {
-
+public class Question implements Parcelable {
+    //判断
+    public static final String QUESTION_TYPE_SINGLE = "2";
+    //多选
+    public static final String QUESTION_TYPE_MULTIPLE = "3";
+    //判断
+    public static final String QUESTION_TYPE_JUDGE = "1";
+    //问答
+    public static final String QUESTION_TYPE_ANSWER = "4";
 
     /**
      * ID : 2221654
@@ -27,7 +37,7 @@ public class Question {
      */
 
     private int ID;
-    private int Type;
+    private String Type;
     private String Question;
     private String ImageUrl;
     private String MaxScore;
@@ -38,6 +48,15 @@ public class Question {
     private List<Answer> AnswerItems;
     private List<String> Answer;
     private String questionNumber;
+    private boolean hasAnswered;
+
+    public boolean isHasAnswered() {
+        return hasAnswered;
+    }
+
+    public void setHasAnswered(boolean hasAnswered) {
+        this.hasAnswered = hasAnswered;
+    }
 
     public String getQuestionNumber() {
         return questionNumber;
@@ -55,11 +74,11 @@ public class Question {
         this.ID = ID;
     }
 
-    public int getType() {
+    public String getType() {
         return Type;
     }
 
-    public void setType(int Type) {
+    public void setType(String Type) {
         this.Type = Type;
     }
 
@@ -136,4 +155,56 @@ public class Question {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.ID);
+        dest.writeString(this.Type);
+        dest.writeString(this.Question);
+        dest.writeString(this.ImageUrl);
+        dest.writeString(this.MaxScore);
+        dest.writeString(this.Analysis);
+        dest.writeString(this.CreateTime);
+        dest.writeString(this.Score);
+        dest.writeStringList(this.CorrectAnswer);
+        dest.writeTypedList(this.AnswerItems);
+        dest.writeStringList(this.Answer);
+        dest.writeString(this.questionNumber);
+        dest.writeByte(this.hasAnswered ? (byte) 1 : (byte) 0);
+    }
+
+    public Question() {
+    }
+
+    protected Question(Parcel in) {
+        this.ID = in.readInt();
+        this.Type = in.readString();
+        this.Question = in.readString();
+        this.ImageUrl = in.readString();
+        this.MaxScore = in.readString();
+        this.Analysis = in.readString();
+        this.CreateTime = in.readString();
+        this.Score = in.readString();
+        this.CorrectAnswer = in.createStringArrayList();
+        this.AnswerItems = in.createTypedArrayList(com.tourcoo.training.entity.exam.Answer.CREATOR);
+        this.Answer = in.createStringArrayList();
+        this.questionNumber = in.readString();
+        this.hasAnswered = in.readByte() != 0;
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel source) {
+            return new Question(source);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
 }
