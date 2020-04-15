@@ -1,60 +1,38 @@
 package com.tourcoo.training.core.base.entity;
 
-import java.util.List;
-
 /**
  * @author :JenkinsZhou
- * @description :分页实体基类
+ * @description :
  * @company :途酷科技
- * @date 2019年12月04日17:46
+ * @date 2020年04月15日9:10
  * @Email: 971613168@qq.com
  */
 public class BasePageResult<T> {
+    public int code;
+    public String msg;
+    public PageData<T> data;
 
-
-    /**
-     * currentPage : 0
-     * elements : [{"bankCard":{"bank":"","cardNum":""},"failReason":"","id":"","name":"","withdrawGold":0,"withdrawMoney":0,"withdrawStatus":""}]
-     * pages : 0
-     * totalElements : 0
-     */
-
-    private int currentPage;
-    private int pages;
-    private int totalElements;
-    private List<T> elements;
-
-    public int getCurrentPage() {
-        return currentPage;
+    public int getCode() {
+        return code;
     }
 
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public int getPages() {
-        return pages;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setPages(int pages) {
-        this.pages = pages;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public int getTotalElements() {
-        return totalElements;
+    public PageData<T> getData() {
+        return data;
     }
 
-    public void setTotalElements(int totalElements) {
-        this.totalElements = totalElements;
+    public void setData(PageData<T> data) {
+        this.data = data;
     }
-
-    public List<T> getElements() {
-        return elements;
-    }
-
-    public void setElements(List<T> elements) {
-        this.elements = elements;
-    }
-
-
 }

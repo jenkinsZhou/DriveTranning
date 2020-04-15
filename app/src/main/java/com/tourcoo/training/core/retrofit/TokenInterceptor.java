@@ -98,10 +98,10 @@ public class TokenInterceptor implements Interceptor {
                         .build();
                 String skipLoginFlag = originalRequest.header(SKIP_LOGIN_FLAG);
                 boolean skipLoginEnable = skipLoginFlag == null || skipLoginFlag.equalsIgnoreCase(YES);
-                if (skipLoginEnable) {
+               /* if (skipLoginEnable) {
                     //表示 token过期后 需要跳转至登录页
                     skipLogin();
-                }
+                }*/
                 return chain.proceed(newTokenRequest);
             } else {
                 Request newTokenRequest = chain.request().newBuilder()

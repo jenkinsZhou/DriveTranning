@@ -11,6 +11,7 @@ import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.exam.*
 import com.tourcoo.training.entity.exam.Question.*
+import kotlinx.android.synthetic.main.fragment_exam_content_online.*
 
 /**
  *@description :
@@ -168,7 +169,7 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
     }
 
 
-    /*private fun assemblyExamEntity(): ExaminationEntityOld {
+    private fun assemblyExamEntity(): ExaminationEntityOld {
         val entity = ExaminationEntityOld()
         entity.questionId = "1001"
 //        entity.questionType = QUESTION_TYPE_SINGLE
@@ -185,9 +186,15 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
             }
         }
         return entity
-    }*/
+    }
 
+   /* private fun transformQuestion(question :Question ){
+        //todo
+        if(question.){
 
+        }
+    }
+*/
     private fun showQuestion(question: Question ?) {
         when (question?.type) {
             QUESTION_TYPE_SINGLE -> {
@@ -203,6 +210,7 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
             }
         }
         tvCurrentQuestion?.text = question?.question
+        tvAnswerParsing.text = question?.analysis
     }
 
 

@@ -64,34 +64,39 @@ public class QuestionAdapter extends BaseQuickAdapter<Answer, BaseViewHolder> {
        }
     }
 
-    private void showWrong(TextView imageView,TextView textView){
+    private void showWrong(TextView labelTextView,TextView textView){
 //        GlideManager.loadImg(R.mipmap.ic_answer_wrong,imageView);
-        imageView.setBackgroundResource(R.mipmap.ic_answer_wrong);
+        labelTextView.setBackgroundResource(R.mipmap.ic_answer_wrong);
+        labelTextView.setText("");
         textView.setTextColor(ResourceUtil.getColor(R.color.redF35757));
     }
 
-    private void showAnswerCorrect(TextView imageView,TextView textView){
-        imageView.setBackgroundResource(R.mipmap.ic_answer_correct);
+    private void showAnswerCorrect(TextView labelTextView,TextView textView){
+        labelTextView.setBackgroundResource(R.mipmap.ic_answer_correct);
+        labelTextView.setText("");
 //        GlideManager.loadImg(R.mipmap.ic_answer_correct,imageView);
         textView.setTextColor(ResourceUtil.getColor(R.color.green42AF3D));
     }
 
-    private void showCorrect(TextView imageView,TextView textView){
-        imageView.setBackgroundResource(R.mipmap.ic_answer_correct_blue);
+    private void showCorrect(TextView labelTextView,TextView textView){
+        labelTextView.setBackgroundResource(R.mipmap.ic_answer_correct_blue);
+        labelTextView.setText("");
 //        GlideManager.loadImg(R.mipmap.ic_answer_correct,imageView);
         textView.setTextColor(ResourceUtil.getColor(R.color.blue007AFF));
     }
 
     private void showUnSelect(Answer answer, TextView labelTextView, TextView textView){
         textView.setTextColor(ResourceUtil.getColor(R.color.black333333));
-        labelTextView.setBackgroundResource(R.drawable.shape_circle_white_dp_28);
+        labelTextView.setBackgroundResource(R.drawable.ic_answer_bg_white);
+        labelTextView.setTextColor(ResourceUtil.getColor(R.color.black333333));
         labelTextView.setText(answer.getAnswerId());
     }
 
     private void showSelect(Answer answer, TextView labelTextView, TextView textView){
 //        GlideManager.loadImg(answer.getSelectedIcon(),imageView);
-        labelTextView.setBackgroundResource(R.drawable.shape_circle_green_67c23a);
+        labelTextView.setBackgroundResource(R.drawable.ic_answer_bg_blue);
         labelTextView.setText(answer.getAnswerId());
+        labelTextView.setTextColor(ResourceUtil.getColor(R.color.white));
         textView.setTextColor(ResourceUtil.getColor(R.color.black333333));
     }
 }

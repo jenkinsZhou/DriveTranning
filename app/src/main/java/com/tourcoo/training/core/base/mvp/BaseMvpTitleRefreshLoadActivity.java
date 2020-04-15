@@ -2,11 +2,10 @@ package com.tourcoo.training.core.base.mvp;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
-import com.tourcoo.training.core.base.activity.BaseRefreshLoadActivity;
+import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity;
 import com.trello.rxlifecycle3.LifecycleTransformer;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
@@ -18,7 +17,7 @@ import com.trello.rxlifecycle3.android.ActivityEvent;
  * @Email: 971613168@qq.com
  */
 @SuppressWarnings("unchecked")
-public abstract class BaseMvpRefreshLoadActivity<P extends BasePresenter, T> extends BaseRefreshLoadActivity<T> implements IBaseView {
+public abstract class BaseMvpTitleRefreshLoadActivity<P extends BasePresenter, T> extends BaseTitleRefreshLoadActivity<T> implements IBaseView {
     protected P presenter;
 
 

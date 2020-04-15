@@ -15,12 +15,13 @@
 
     <TextView
         android:id="@+id/tvAnswerLabel"
-        android:layout_width="@dimen/dp_28"
-        android:layout_height="@dimen/dp_28"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textStyle="bold"
         android:gravity="center"
-        android:background="@drawable/shape_circle_green_67c23a"
+        android:textColor="@color/black333333"
+        android:background="@drawable/ic_answer_bg_white"
         android:text="" />
 
     <TextView

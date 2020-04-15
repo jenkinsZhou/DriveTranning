@@ -2,20 +2,13 @@ package com.tourcoo.training.ui.account;
 
 import android.os.Bundle;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tourcoo.training.R;
-import com.tourcoo.training.core.base.activity.BaseRefreshLoadActivity;
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.SubjectMovieAdapter;
-import com.tourcoo.training.core.base.mvp.BaseMvpRefreshLoadActivity;
-import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
-import com.tourcoo.training.core.retrofit.repository.ApiRepository;
-import com.tourcoo.training.core.util.ToastUtil;
+import com.tourcoo.training.core.base.mvp.BaseMvpTitleRefreshLoadActivity;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.ui.account.contract.MessageContract;
-
-import java.util.HashMap;
 
 /**
  * @author :JenkinsZhou
@@ -24,7 +17,7 @@ import java.util.HashMap;
  * @date 2020年02月24日19:15
  * @Email: 971613168@qq.com
  */
-public class TestMvpActivity extends BaseMvpRefreshLoadActivity<MessagePresenter, BaseMovieEntity> implements MessageContract.View {
+public class TestMvpActivityTitle extends BaseMvpTitleRefreshLoadActivity<MessagePresenter, BaseMovieEntity> implements MessageContract.View {
     @Override
     public int getContentLayout() {
         return R.layout.frame_layout_title_refresh_recycler;

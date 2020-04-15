@@ -25,7 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/viewBottom"
             android:layout_alignParentTop="true"
-            android:background="@color/redF35757"
             />
 
         <RelativeLayout

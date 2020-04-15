@@ -6,7 +6,7 @@
     <string name="frame_multi_empty">暂无数据</string>
     <string name="frame_multi_error">加载错误</string>
     <string name="frame_web_alert_title">温馨提示</string>
-    <string name="frame_web_alert_msg">Are you sure to close this page?</string>
+    <string name="frame_web_alert_msg">确定关闭此页吗?</string>
     <string name="frame_web_alert_left">返回</string>
     <string name="frame_web_alert_right">关闭</string>
     <string name="frame_copy_success">复制成功</string>
@@ -23,7 +23,7 @@
     <string name="frame_exception_other_error">Other Exception</string>
     <string name="frame_loading">Loading...</string>
     <string name="frame_cancel">取消</string>
-    <string name="frame_load_more_load_end">No more data</string>
-    <string name="frame_load_more_load_failed">Load more failed</string>
-    <string name="frame_load_more_loading">Loading...</string>
+    <string name="frame_load_more_load_end">没有更多了</string>
+    <string name="frame_load_more_load_failed">加载失败</string>
+    <string name="frame_load_more_loading">加载中...</string>
 </resources>

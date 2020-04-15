@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
+import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.interfaces.IHttpRequestControl;
 import com.tourcoo.training.core.util.StackUtil;
@@ -104,11 +105,14 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     public void onError(Throwable e) {
         dismissProgressDialog();
         super.onError(e);
+        if (AppConfig.DEBUG_MODE) {
+            ToastUtil.showFailed(e.toString());
+        }
     }
 
     public void showProgressDialog() {
         if (mDialog != null) {
-            if(!TextUtils.isEmpty(loadingText)){
+            if (!TextUtils.isEmpty(loadingText)) {
                 mDialog.setMessage(loadingText);
             }
             mDialog.show();

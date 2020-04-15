@@ -31,11 +31,16 @@ import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.constant.FrameConstant;
 import com.tourcoo.training.core.log.TourCooLogUtil;
+import com.tourcoo.training.entity.certificate.CertificateInfo;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.UUID;
 
 /**
@@ -55,6 +60,7 @@ public class CommonUtil {
     private static final int LENGTH_PHONE = 11;
     private static int ACTIVITY_SINGLE_FLAG = Intent.FLAG_ACTIVITY_SINGLE_TOP;
     public static final String SP_KEY_DEVICE = "SP_KEY_DEVICE";
+
     /**
      * 反射获取application对象
      *
@@ -98,7 +104,7 @@ public class CommonUtil {
             int labelRes = packageInfo.applicationInfo.labelRes;
             return context.getResources().getText(labelRes);
         } catch (PackageManager.NameNotFoundException e) {
-           TourCooLogUtil.e(TAG, "getAppName:" + e.getMessage());
+            TourCooLogUtil.e(TAG, "getAppName:" + e.getMessage());
         }
         return null;
     }
@@ -538,7 +544,6 @@ public class CommonUtil {
     }
 
 
-
     public static String doubleTransStringZhen(double d) {
         if (Math.round(d) - d == 0) {
             return String.valueOf((long) d);
@@ -549,5 +554,26 @@ public class CommonUtil {
         return df.format(value);
     }
 
-
+    public static Map<String, ArrayList<CertificateInfo>> sort(List<CertificateInfo> list) {
+        TreeMap tm = new TreeMap();
+        for (int i = 0; i < list.size(); i++) {
+            CertificateInfo certificateInfo = (CertificateInfo) list.get(i);
+            if (certificateInfo == null || certificateInfo.getDate() == null) {
+                continue;
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(certificateInfo.getDate());
+            if (tm.containsKey("" + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH))) {//
+                ArrayList<CertificateInfo> l11 = (ArrayList) tm.get("" + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH));
+                l11.add(certificateInfo);
+            } else {
+                ArrayList<CertificateInfo> tem = new ArrayList<>();
+                if (certificateInfo.getDate() != null) {
+                    tem.add(certificateInfo);
+                    tm.put("" + calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH), tem);
+                }
+            }
+        }
+        return tm;
+    }
 }

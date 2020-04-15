@@ -3,6 +3,7 @@ package com.tourcoo.training.core.retrofit.repository;
 
 import com.blankj.utilcode.util.AppUtils;
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
+import com.tourcoo.training.core.base.entity.BasePageResult;
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.retrofit.CommonTransformer;
@@ -13,6 +14,7 @@ import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
+import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.utils.MapUtil;
@@ -151,6 +153,17 @@ public class ApiRepository extends BaseRepository {
         params.put("trainingPlanID", trainingPlanID);
         params.put("examId", examId);
         return CommonTransformer.switchSchedulers(getApiService().requestExam(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BasePageResult<CertificateInfo>> requestCertificate(int page) {
+        Map<String, Object> params = new HashMap<>(2);
+        if (page == 0) {
+            page = 1;
+        }
+        params.put("page", page);
+        //每次请求10条
+        params.put("rows", 10);
+        return CommonTransformer.switchSchedulers(getApiService().requestCertificate(params).retryWhen(new RetryWhen()));
     }
 
 }

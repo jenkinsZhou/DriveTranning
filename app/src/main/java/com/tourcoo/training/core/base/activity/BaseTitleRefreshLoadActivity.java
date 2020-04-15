@@ -25,14 +25,14 @@ import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
  * 2、2018-7-20 16:54:47 设置StatusLayoutManager 目标View
  * 3、2019-4-19 09:41:28 修改IFastTitleView 逻辑
  */
-public abstract class BaseRefreshLoadActivity<T>
+public abstract class BaseTitleRefreshLoadActivity<T>
         extends BaseTitleActivity implements IRefreshLoadView<T> {
     protected SmartRefreshLayout mRefreshLayout;
     protected RecyclerView mRecyclerView;
     protected StatusLayoutManager mStatusManager;
     private BaseQuickAdapter mQuickAdapter;
-    protected int mDefaultPage = 0;
-    protected int mDefaultPageSize = 15;
+    protected int mDefaultPage = 1;
+    protected int mDefaultPageSize = 10;
 
     protected RefreshLoadDelegate<T> mFastRefreshLoadDelegate;
     private Class<?> mClass;
@@ -86,7 +86,7 @@ public abstract class BaseRefreshLoadActivity<T>
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        mDefaultPage = 0;
+        mDefaultPage = 1;
         mFastRefreshLoadDelegate.setLoadMore(isLoadMoreEnable());
         loadData(mDefaultPage);
     }

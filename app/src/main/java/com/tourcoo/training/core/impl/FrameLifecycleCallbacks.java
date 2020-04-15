@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.core.base.activity.BaseMainActivity;
-import com.tourcoo.training.core.base.activity.BaseRefreshLoadActivity;
+import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity;
 import com.tourcoo.training.core.base.delegate.RefreshDelegate;
 import com.tourcoo.training.core.base.delegate.TitleDelegate;
 import com.tourcoo.training.core.base.fragment.BaseRefreshLoadFragment;
@@ -38,7 +38,6 @@ import com.tourcoo.training.core.widget.navigation.NavigationViewHelper;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.core.widget.view.status.StatusViewHelper;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
-import com.tourcoo.training.ui.account.register.RecognizeLicenseActivity;
 import com.tourcoo.training.widget.idcardcamera.camera.LicenseCameraActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -122,7 +121,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
         }
         //配置下拉刷新
         if (activity instanceof IRefreshView
-                && !(BaseRefreshLoadActivity.class.isAssignableFrom(activity.getClass()))
+                && !(BaseTitleRefreshLoadActivity.class.isAssignableFrom(activity.getClass()))
                 && !activity.getIntent().getBooleanExtra(FrameConstant.IS_SET_REFRESH_VIEW, false)) {
             IRefreshView refreshView = (IRefreshView) activity;
             if (contentView != null

@@ -2,6 +2,7 @@ package com.tourcoo.training.core.retrofit.service;
 
 
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
+import com.tourcoo.training.core.base.entity.BasePageResult;
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.retrofit.TokenInterceptor;
 import com.tourcoo.training.entity.account.IdCardInfo;
@@ -10,6 +11,7 @@ import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
+import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 
@@ -27,6 +29,7 @@ import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 import static com.tourcoo.training.core.retrofit.TokenInterceptor.HEADER_NOT_SKIP_LOGIN;
+import static com.tourcoo.training.core.retrofit.TokenInterceptor.HEADER_SKIP_LOGIN;
 
 /**
  * @Author: JenkinsZhou on 2018/7/30 14:01
@@ -141,5 +144,12 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
     @POST("v1.0/training/get-exam-detail")
     Observable<BaseResult<ExamEntity>> requestExam(@Body Map<String, Object> map);
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/list-certificate")
+    Observable<BasePageResult<CertificateInfo>> requestCertificate(@Body Map<String, Object> map);
+
+
 
 }

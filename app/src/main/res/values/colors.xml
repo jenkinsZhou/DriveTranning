@@ -84,6 +84,8 @@
     <color name="grayBFBFBF">#BFBFBF</color>
     <color name="grayF0F0E9">#F0F0E9</color>
     <color name="grayF7F4F8">#F7F4F8</color>
+    <color name="grayB3B3B3">#B3B3B3</color>
+
 
     <!--黑色区域-->
     <color name="black333333">#333333</color>
