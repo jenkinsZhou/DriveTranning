@@ -22,10 +22,8 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.StackUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.AccountHelper
-import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.TradeType
-import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo
 import com.tourcoo.training.entity.account.register.IndustryCategory
 import com.tourcoo.training.entity.account.register.Supervisors
@@ -75,7 +73,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        businessLicenseInfo = RegisterTempHelper.getInstance().businessLicenseInfo
+        businessLicenseInfo = AccountTempHelper.getInstance().businessLicenseInfo
         if (businessLicenseInfo == null || businessLicenseInfo!!.supervisors == null) {
             ToastUtil.show("未识别出营业执照信息")
             finish()

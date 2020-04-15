@@ -16,8 +16,7 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
-import com.tourcoo.training.entity.account.RegisterTempHelper
-import com.tourcoo.training.entity.account.TradeType
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
@@ -58,11 +57,11 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tvRegisterDriver -> {
-                RegisterTempHelper.getInstance().registerType = EXTRA_REGISTER_TYPE_DRIVER
+                AccountTempHelper.getInstance().recognizeType = EXTRA_REGISTER_TYPE_DRIVER
                 skipRegisterDriver()
             }
             R.id.tvRegisterIndustrial -> {
-                RegisterTempHelper.getInstance().registerType = EXTRA_REGISTER_TYPE_INDUSTRY
+                AccountTempHelper.getInstance().recognizeType = EXTRA_REGISTER_TYPE_INDUSTRY
                 skipRegisterIndustrial()
             }
             R.id.tvLogin -> {
@@ -102,7 +101,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("请输入密码")
             return
         }
-        ApiRepository.getInstance().requestLoginByIdCard(getTextValue(etIdCard), getTextValue(etPass)).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfo>>("正在登陆...") {
+        ApiRepository.getInstance().requestLoginByIdCard(getTextValue(etIdCard), getTextValue(etPass)).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfo>>("正在登录...") {
             override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
                 if (entity != null) {
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
@@ -126,7 +125,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun handleLoginCallback(userInfo: UserInfo?) {
         if (userInfo == null) {
-            ToastUtil.show("登陆失败")
+            ToastUtil.show("登录失败")
             return
         }
         AccountHelper.getInstance().userInfo = userInfo

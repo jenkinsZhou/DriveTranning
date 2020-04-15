@@ -14,19 +14,17 @@ import com.tourcoo.training.adapter.exam.QuestionNumberAdapter
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.entity.exam.ExamEntity
 import com.tourcoo.training.entity.exam.ExamTempHelper
-import com.tourcoo.training.entity.exam.ExaminationEntityOld
 import com.tourcoo.training.entity.exam.Question
 import com.trello.rxlifecycle3.android.ActivityEvent
-import com.trello.rxlifecycle3.android.FragmentEvent
 import kotlinx.android.synthetic.main.activity_exam_online.*
 
 /**
@@ -48,7 +46,6 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var trainPlanId = ""
 
     companion object {
-        const val EXTRA_TRAINING_PLAN_ID = "EXTRA_TRAINING_PLAN_ID"
         const val EXTRA_EXAM_ID = "EXTRA_EXAM_ID"
     }
 
@@ -184,7 +181,6 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                 } else {
                     ToastUtil.show(entity.msg)
                 }
-
             }
 
             override fun onError(e: Throwable) {

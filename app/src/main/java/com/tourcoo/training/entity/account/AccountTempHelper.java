@@ -9,24 +9,24 @@ import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
  * @date 2020年03月16日11:01
  * @Email: 971613168@qq.com
  */
-public class RegisterTempHelper {
+public class AccountTempHelper {
 
     public static final String TAG = "AccountHelper";
     public static final String PREF_ACCESS_TOKEN = "access_token";
     public static final String PREF_REFRESH_TOKEN = "refresh_token";
 
-    private RegisterTempHelper() {
+    private AccountTempHelper() {
     }
 
     private static class SingletonInstance {
-        private static final RegisterTempHelper INSTANCE = new RegisterTempHelper();
+        private static final AccountTempHelper INSTANCE = new AccountTempHelper();
     }
 
-    public static RegisterTempHelper getInstance() {
+    public static AccountTempHelper getInstance() {
         return SingletonInstance.INSTANCE;
     }
 
-    private int registerType;
+    private int recognizeType;
 
     private IdCardInfo idCardInfo;
 
@@ -83,12 +83,12 @@ public class RegisterTempHelper {
         this.registerIdCard = registerIdCard;
     }
 
-    public int getRegisterType() {
-        return registerType;
+    public int getRecognizeType() {
+        return recognizeType;
     }
 
-    public void setRegisterType(int registerType) {
-        this.registerType = registerType;
+    public void setRecognizeType(int recognizeType) {
+        this.recognizeType = recognizeType;
     }
 
     public String getRegisterPhone() {

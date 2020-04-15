@@ -21,7 +21,7 @@ import com.tourcoo.training.core.retrofit.UploadRequestListener
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.idcardcamera.camera.LicenseCameraActivity
@@ -293,7 +293,7 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
         if (info == null) {
             return
         }
-        RegisterTempHelper.getInstance().businessLicenseInfo = info
+        AccountTempHelper.getInstance().businessLicenseInfo = info
         ToastUtil.showSuccess("识别成功")
         skipResultInfo()
     }
@@ -317,7 +317,7 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
             ToastUtil.show("请先上传身份证正面照")
             return
         }
-        RegisterTempHelper.getInstance().isRecognizeIdCard = false
+        AccountTempHelper.getInstance().isRecognizeIdCard = false
         val intent = Intent(this, RecognizeResultActivity::class.java)
         intent.putExtra(RecognizeIdCardActivity.EXTRA_PHOTO_PATH, photoPath)
         startActivity(intent)

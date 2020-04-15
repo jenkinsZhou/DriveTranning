@@ -22,7 +22,7 @@ import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.InputStatus
-import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.ui.account.register.IndustryRegisterActivity
 import com.tourcoo.training.utils.TourCooUtil
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -91,10 +91,10 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private fun showIdInfo() {
-        tvName.text = RegisterTempHelper.getInstance().registerName
-        tvIdCard.text = RegisterTempHelper.getInstance().registerIdCard
-        RegisterTempHelper.getInstance().businessLicensePath = "awdad"
-//        tvName.text = RegisterTempHelper.getInstance().registerPhone
+        tvName.text = AccountTempHelper.getInstance().registerName
+        tvIdCard.text = AccountTempHelper.getInstance().registerIdCard
+        AccountTempHelper.getInstance().businessLicensePath = "awdad"
+//        tvName.text = AccountTempHelper.getInstance().registerPhone
     }
 
     private fun listenInputFocus(editText: EditText, lineView: View) {

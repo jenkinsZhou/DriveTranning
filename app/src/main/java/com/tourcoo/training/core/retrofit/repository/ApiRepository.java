@@ -17,6 +17,7 @@ import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
+import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
@@ -164,6 +165,15 @@ public class ApiRepository extends BaseRepository {
         //每次请求10条
         params.put("rows", 10);
         return CommonTransformer.switchSchedulers(getApiService().requestCertificate(params).retryWhen(new RetryWhen()));
+    }
+
+
+    public Observable<BaseResult<FaceRecognizeResult>> requestFaceVerify(String trainingPlanID, String photoBase64) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("trainingPlanID", trainingPlanID);
+        params.put("scene", 2);
+        params.put("photo", photoBase64);
+        return CommonTransformer.switchSchedulers(getApiService().requestFaceVerify(params).retryWhen(new RetryWhen()));
     }
 
 }

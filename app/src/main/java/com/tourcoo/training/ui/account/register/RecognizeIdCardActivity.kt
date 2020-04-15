@@ -23,7 +23,7 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.IdCardInfo
-import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_KEY_REGISTER_TYPE
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.idcardcamera.camera.IDCardCamera
@@ -313,7 +313,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
         if (idCardInfo == null) {
             return
         }
-        RegisterTempHelper.getInstance().idCardInfo = idCardInfo
+        AccountTempHelper.getInstance().idCardInfo = idCardInfo
         skipResultInfo()
     }
 
@@ -323,7 +323,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
             ToastUtil.show("请先上传身份证正面照")
             return
         }
-        RegisterTempHelper.getInstance().isRecognizeIdCard = true
+        AccountTempHelper.getInstance().isRecognizeIdCard = true
         val intent = Intent(this, RecognizeResultActivity::class.java)
         intent.putExtra(EXTRA_PHOTO_PATH, photoPath)
         startActivity(intent)

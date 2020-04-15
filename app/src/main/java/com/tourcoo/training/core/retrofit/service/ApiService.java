@@ -14,6 +14,7 @@ import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
+import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 
 import java.util.List;
 import java.util.Map;
@@ -151,5 +152,8 @@ public interface ApiService {
     Observable<BasePageResult<CertificateInfo>> requestCertificate(@Body Map<String, Object> map);
 
 
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/face-verify")
+    Observable<BaseResult<FaceRecognizeResult>> requestFaceVerify(@Body Map<String, Object> map);
 
 }

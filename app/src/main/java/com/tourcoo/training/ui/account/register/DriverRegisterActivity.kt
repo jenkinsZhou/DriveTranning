@@ -10,7 +10,7 @@ import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.account.register.CompanyInfo
 import com.tourcoo.training.ui.account.register.SelectCompanyActivity.Companion.EXTRA_KEY_COMPANY
@@ -119,7 +119,7 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
 
 
     private fun doRegister() {
-        if (RegisterTempHelper.getInstance().idCardInfo == null) {
+        if (AccountTempHelper.getInstance().idCardInfo == null) {
             ToastUtil.show("未获取到身份证信息")
             return
         }
@@ -136,8 +136,8 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
             return
         }
         val map = HashMap<String, Any>()
-        map["name"] = RegisterTempHelper.getInstance().idCardInfo.name
-        map["idCard"] = RegisterTempHelper.getInstance().idCardInfo.idCard
+        map["name"] = AccountTempHelper.getInstance().idCardInfo.name
+        map["idCard"] = AccountTempHelper.getInstance().idCardInfo.idCard
         map["plateNumber"] = getTextValue(etDriverPlantNum)
         map["phone"] = getTextValue(etPhone)
         map["companyId"] = mCompanyInfo!!.id

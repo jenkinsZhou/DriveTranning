@@ -9,7 +9,7 @@ import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.RegisterTempHelper
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity.Companion.EXTRA_PHOTO_PATH
 import kotlinx.android.synthetic.main.activity_recognize_result.*
@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_upload_id_card.tvNextStep
  */
 class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
     private var photoPath: String? = null
-    private val isRecognizeId = RegisterTempHelper.getInstance().isRecognizeIdCard
+    private val isRecognizeId = AccountTempHelper.getInstance().isRecognizeIdCard
     override fun getContentLayout(): Int {
         return R.layout.activity_recognize_result
     }
@@ -63,21 +63,21 @@ class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun showResultInfo() {
         if (isRecognizeId) {
-            if (RegisterTempHelper.getInstance().idCardInfo != null) {
-                tvName.text = RegisterTempHelper.getInstance().idCardInfo.name
-                tvIdCard.text = RegisterTempHelper.getInstance().idCardInfo.idCard
+            if (AccountTempHelper.getInstance().idCardInfo != null) {
+                tvName.text = AccountTempHelper.getInstance().idCardInfo.name
+                tvIdCard.text = AccountTempHelper.getInstance().idCardInfo.idCard
             }
         } else {
-            if (RegisterTempHelper.getInstance().businessLicenseInfo != null) {
-                tvName.text = RegisterTempHelper.getInstance().businessLicenseInfo.name
-                tvIdCard.text = RegisterTempHelper.getInstance().businessLicenseInfo.creditCode
+            if (AccountTempHelper.getInstance().businessLicenseInfo != null) {
+                tvName.text = AccountTempHelper.getInstance().businessLicenseInfo.name
+                tvIdCard.text = AccountTempHelper.getInstance().businessLicenseInfo.creditCode
             }
         }
 
     }
 
     private fun skipRegisterByType() {
-        val intent = if (RegisterTempHelper.getInstance().registerType == LoginActivity.EXTRA_REGISTER_TYPE_DRIVER) {
+        val intent = if (AccountTempHelper.getInstance().recognizeType == LoginActivity.EXTRA_REGISTER_TYPE_DRIVER) {
             Intent(this, DriverRegisterActivity::class.java)
         } else {
             Intent(this, IndustryRegisterActivity::class.java)

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.ui.MainActivity;
 
 import java.io.BufferedOutputStream;
@@ -417,7 +418,13 @@ public class CameraHelper implements Camera.PreviewCallback {
      */
     public void takePhoto(Camera.PictureCallback pictureCallback) {
         if (mCamera != null) {
-            mCamera.takePicture(null, null, pictureCallback);
+            try {
+                mCamera.takePicture(null, null, pictureCallback);
+            }catch (Exception e){
+                e.printStackTrace();
+                TourCooLogUtil.e(e.toString());
+            }
+
         }
     }
 
