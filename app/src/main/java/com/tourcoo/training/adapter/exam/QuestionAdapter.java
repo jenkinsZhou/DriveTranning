@@ -45,7 +45,7 @@ public class QuestionAdapter extends BaseQuickAdapter<Answer, BaseViewHolder> {
                 //未选中
                 //当前答案 需要判断当前是否是正确的答案
                if(item.isCorrectAnswer()){
-                   //显示正确图标
+                   //显示正确答案图标
                    showCorrect(tvAnswerLabel,tvAnswer);
                }else {
                    //显示答题默认图标

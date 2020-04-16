@@ -189,4 +189,12 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/finish-exam")
     Observable<BaseResult<ExamResultEntity>> requestFinishExam(@Body Map<String, Object> map);
+
+    /**
+     * 保存考试状态
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/save-exam-answers")
+    Observable<BaseResult> requestSaveAnswer(@Body Map<String, Object> map);
+
 }

@@ -108,6 +108,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <View
+                        android:background="#FAFAFA"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_6"/>
                     <LinearLayout
                         android:id="@+id/llQuestionBar"
                         android:layout_width="match_parent"

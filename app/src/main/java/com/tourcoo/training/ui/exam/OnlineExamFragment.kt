@@ -37,14 +37,16 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
         tvCurrentQuestion = mContentView.findViewById(R.id.tvCurrentQuestion)
         tvQuestionType = mContentView.findViewById(R.id.tvQuestionType)
         questionRecyclerView?.layoutManager = LinearLayoutManager(mContext)
-        if (ExamTempHelper.getInstance().examInfo == null) {
-            ToastUtil.show("未获取到考试信息")
+        if (ExamTempHelper.getInstance().examInfo == null || question == null) {
+            ToastUtil.show("未获取到题目信息")
             return
         }
         adapter = QuestionAdapter()
         adapter?.bindToRecyclerView(questionRecyclerView)
         showQuestion(question!!)
         loadCorrectAdapter(question!!)
+        testData(question!!)
+        loadQuestionHistory(question!!)
         adapter?.setNewData(question!!.answerItems)
         loadItemClick(question!!)
     }
@@ -321,4 +323,34 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
         return question!!
     }
 
+    private fun loadQuestionHistory(question: Question){
+       if( question.answer == null || question.answer.isEmpty() || question.answerItems == null  ){
+           return
+       }
+        for (answerId in question.answer) {
+            for (answerItem in question.answerItems) {
+                if(answerId == answerItem.answerId){
+                    //说明该题目已经被回答过
+                    setHasAnswer(question.answerItems)
+                    answerItem.isSelect = true
+                    question.isHasAnswered = true
+
+                }
+            }
+        }
+    }
+
+    private fun setHasAnswer(allAnswer: MutableList<Answer>){
+        for (answer in allAnswer) {
+            answer.isHasAnswered = true
+        }
+    }
+
+
+    private fun testData(question: Question){
+        if(question.type == QUESTION_TYPE_SINGLE ){
+            question.answer = ArrayList<String>()
+            question.answer.add("C")
+        }
+    }
 }

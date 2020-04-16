@@ -8,6 +8,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.exam.QuestionNumberAdapter
@@ -68,6 +69,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             finish()
             return
         }
+        list = ArrayList()
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
         tvCommitExam.setOnClickListener(this)
@@ -79,7 +81,8 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun loadData() {
         super.loadData()
-        requestExam(trainPlanId, examId)
+        //获取考试类型
+        requestExamQuestions(trainPlanId, examId)
     }
 
     private fun loadQuestion(examEntity: ExamEntity?) {
@@ -88,7 +91,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
         list?.clear()
         val questions = examEntity.questions
-        for (i in 0 until questions.size - 1) {
+        for (i in 0 until questions.size ) {
             list?.add(OnlineExamFragment.newInstance(questions[i]))
         }
         vpExamOnline.adapter = fragmentCommonAdapter
@@ -159,7 +162,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private fun setQuestionNumber(questions: MutableList<Question>): MutableList<Question> {
-        for (i in 0 until questions.size - 1) {
+        for (i in 0 until questions.size) {
             questions[i].questionNumber = (i + 1).toString()
         }
         return questions
@@ -182,7 +185,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun requestExam(trainId: String, examId: String) {
+    private fun requestExamQuestions(trainId: String, examId: String) {
         ApiRepository.getInstance().requestExam(trainId, examId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamEntity>?>() {
             override fun onSuccessNext(entity: BaseResult<ExamEntity>?) {
                 if (entity == null) {
@@ -209,10 +212,14 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
         ExamTempHelper.getInstance().examInfo = examEntity
-        list = ArrayList()
         fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
         questionNumAdapter = QuestionNumberAdapter()
         questionNumAdapter?.bindToRecyclerView(questionNumRv)
+        //处理底部题目弹窗
+        questionNumAdapter?.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+            vpExamOnline.setCurrentItem(position,false)
+            handleBottomBarClick()
+        })
         loadQuestion(examEntity)
         loadBottomSheetBar(examEntity.questions)
         vpExamOnline.offscreenPageLimit = list!!.size
@@ -273,5 +280,43 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             }
         }
         return results
+    }
+
+
+    /**
+     * 保存答题状态
+     */
+    private fun saveExam(questions: MutableList<Question>) {
+        val commitList = ArrayList<CommitAnswer>()
+        for (question in questions) {
+            //如果回答过答案 才保存
+            if(question.isHasAnswered){
+                val commit = CommitAnswer()
+                commit.id = question.id.toString()
+                commit.answer = StringUtils.join(question.answer, ",")
+                commitList.add(commit)
+            }
+        }
+        if(commitList.isEmpty()){
+            return
+        }
+        ApiRepository.getInstance().requestSaveAnswer("131483", commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
+            override fun onSuccessNext(entity: BaseResult<Any>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    ToastUtil.showSuccess("保存成功")
+                } else {
+                    ToastUtil.show(entity.msg)
+                }
+            }
+        })
+    }
+
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        saveExam(getAllQuestions())
     }
 }

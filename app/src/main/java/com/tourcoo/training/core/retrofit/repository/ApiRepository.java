@@ -207,5 +207,12 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestFinishExam(params).retryWhen(new RetryWhen()));
     }
 
+    public Observable<BaseResult> requestSaveAnswer(String examId, List<CommitAnswer> commitAnswerList) {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("examId", examId);
+        params.put("questions", commitAnswerList);
+        return CommonTransformer.switchSchedulers(getApiService().requestSaveAnswer(params).retryWhen(new RetryWhen()));
+    }
+
 
 }
