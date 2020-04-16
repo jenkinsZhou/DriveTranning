@@ -11,11 +11,18 @@ import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
  */
 public class AccountTempHelper {
 
-    public static final String TAG = "AccountHelper";
-    public static final String PREF_ACCESS_TOKEN = "access_token";
-    public static final String PREF_REFRESH_TOKEN = "refresh_token";
+    public static final String TAG = "AccountTempHelper";
 
     private AccountTempHelper() {
+    }
+    private String facePhotoPath;
+
+    public String getFacePhotoPath() {
+        return facePhotoPath;
+    }
+
+    public void setFacePhotoPath(String facePhotoPath) {
+        this.facePhotoPath = facePhotoPath;
     }
 
     private static class SingletonInstance {

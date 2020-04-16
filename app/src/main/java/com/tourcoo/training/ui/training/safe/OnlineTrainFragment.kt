@@ -13,8 +13,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.dialog.CourseSelectAdapter
 import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
-import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter.*
-import com.tourcoo.training.adapter.training.ProfessionalTrainingAdapter
+import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter.COURSE_STATUS_NEED_PAY
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
@@ -22,16 +21,16 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
-import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.course.CourseEntity
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.ui.account.LoginActivity
+import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_TYPE_RECOGNIZE_COMPARE
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
-import com.tourcoo.training.ui.face.FaceRecognitionActivity.Companion.EXTRA_FACE_IMAGE_PATH
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
@@ -47,7 +46,7 @@ class OnlineTrainFragment : BaseFragment() {
     private var adapter: OnLineTrainingCourseAdapter? = null
     private var refreshLayout: SmartRefreshLayout? = null
     private var recyclerView: RecyclerView? = null
-
+    private var currentPlanId: String? = null
     private var dialog: RecognizeStepDialog? = null
     override fun getContentLayout(): Int {
         return R.layout.fragment_training_profressional
@@ -78,6 +77,8 @@ class OnlineTrainFragment : BaseFragment() {
         }
 
         const val REQUEST_CODE_FACE_RECORD = 201
+
+        const val REQUEST_CODE_FACE_COMPARE = 202
     }
 
     /* private fun testData() {
@@ -158,7 +159,12 @@ class OnlineTrainFragment : BaseFragment() {
         }
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             //todo
-            showRecognize((adapter!!.data[position] as CourseInfo).trainingPlanID)
+            if(position == 2){
+                currentPlanId = (adapter!!.data[position] as CourseInfo).trainingPlanID
+                showRecognize(currentPlanId)
+            }else{
+                doSkipByStatus(adapter!!.data[position] as CourseInfo)
+            }
 //            doSkipByStatus(adapter!!.data[position] as CourseInfo)
         }
     }
@@ -173,26 +179,37 @@ class OnlineTrainFragment : BaseFragment() {
                 //培训计划id
                 intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
                 //考试题id
+                //todo 考试id 暂时写死
                 intent.putExtra(EXTRA_EXAM_ID, "0")
                 startActivity(intent)
             }
             else -> {
-                ToastUtil.show("未匹配到类型")
+                val intent = Intent(mContext, OnlineExamActivity::class.java)
+                //培训计划id
+                intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
+                //考试题id
+                //todo 考试id 暂时写死
+                intent.putExtra(EXTRA_EXAM_ID, "0")
+                startActivity(intent)
             }
         }
     }
 
 
-    private fun showRecognize(trainingId : String) {
+    private fun showRecognize(trainingId: String?) {
+        if (TextUtils.isEmpty(trainingId)) {
+            ToastUtil.show("'未获取到培训信息")
+            return
+        }
         dialog = RecognizeStepDialog(mContext).create().setPositiveButton {
-            skipFaceRecord(trainingId)
+            skipFaceRecord(trainingId!!)
         }
         dialog?.show()
     }
 
-    private fun skipFaceRecord(trainingId : String) {
+    private fun skipFaceRecord(trainingId: String) {
         val intent = Intent(mContext, FaceRecognitionActivity::class.java)
-        intent.putExtra(EXTRA_TRAINING_PLAN_ID,trainingId)
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
         startActivityForResult(intent, REQUEST_CODE_FACE_RECORD)
     }
 
@@ -202,31 +219,48 @@ class OnlineTrainFragment : BaseFragment() {
             when (requestCode) {
                 REQUEST_CODE_FACE_RECORD -> {
                     if (data != null) {
-                            handleStepOneSuccess()
+                        handleStepOneSuccess()
                     }
                 }
+                REQUEST_CODE_FACE_COMPARE -> {
+                    ToastUtil.showSuccess("验证通过")
+                    closeFaceDialog()
+                }
             }
-        }else{
+        } else {
             baseHandler.postDelayed({
-                dialog?.dismiss()
-            },500)
+                closeFaceDialog()
+            }, 500)
         }
     }
 
 
-
-    private fun handleStepOneSuccess(){
-      dialog?.showStepOneSuccess()
+    private fun handleStepOneSuccess() {
+        dialog?.showStepOneSuccess()
         dialog?.setPositiveButton(View.OnClickListener {
-            skipIdCardRecognize()
+            skipIdCardRecognize(currentPlanId)
         })
     }
 
-
-    private fun skipIdCardRecognize() {
+    /**
+     * 人脸和身份证比对
+     */
+    private fun skipIdCardRecognize(trainingId: String?) {
+        if (TextUtils.isEmpty(trainingId)) {
+            ToastUtil.show("'未获取到培训信息")
+            return
+        }
         val bundle = Bundle()
         bundle.putInt(LoginActivity.EXTRA_KEY_REGISTER_TYPE, LoginActivity.EXTRA_REGISTER_TYPE_DRIVER)
-        CommonUtil.startActivity(mContext, RecognizeIdCardActivity::class.java, bundle)
+        AccountTempHelper.getInstance().recognizeType = EXTRA_TYPE_RECOGNIZE_COMPARE
+        val intent = Intent(mContext, RecognizeIdCardActivity::class.java)
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
+        intent.putExtras(bundle)
+        startActivityForResult(intent, REQUEST_CODE_FACE_COMPARE)
     }
 
+
+    private fun closeFaceDialog() {
+        dialog?.dismiss()
+    }
 }

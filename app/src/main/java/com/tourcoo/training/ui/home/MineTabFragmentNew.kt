@@ -30,6 +30,7 @@ import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.mine.MineItem
 import com.tourcoo.training.ui.account.FindPassActivity
 import com.tourcoo.training.ui.account.LoginActivity
+import com.tourcoo.training.ui.account.MyAccountActivity
 import com.tourcoo.training.ui.account.PersonalInfoActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
@@ -133,7 +134,10 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     private fun initItemClick() {
         accountAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
-                0 -> CommonUtil.startActivity(mContext, BuyNowActivity::class.java)
+                0 ->{
+//                    CommonUtil.startActivity(mContext, BuyNowActivity::class.java)
+                    CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
+                }
                 1 -> showDialog()
                 2 ->  //                        showDialog1();
 //                        showDialog2();

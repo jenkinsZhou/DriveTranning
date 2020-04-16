@@ -12,21 +12,30 @@ public class RechargeEntity {
     /**
      * 充值金额
      */
-    public double rechargeMoney;
+    public String rechargeMoney;
     public String rechargeDesc;
+    public int id;
 
-    public RechargeEntity(double rechargeMoney) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public RechargeEntity(String rechargeMoney) {
         this.rechargeMoney = rechargeMoney;
     }
 
-    public RechargeEntity(double rechargeMoney, boolean selected) {
+    public RechargeEntity(String rechargeMoney, boolean selected) {
         this.rechargeMoney = rechargeMoney;
         this.selected = selected;
     }
     /**
      * 账户余额
      */
-    public double accountBalance;
+    public String accountBalance;
 
     /**
      * 充值时间

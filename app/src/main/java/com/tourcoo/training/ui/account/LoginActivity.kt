@@ -38,6 +38,8 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         const val EXTRA_KEY_REGISTER_TYPE = "EXTRA_KEY_REGISTER_TYPE"
         const val EXTRA_REGISTER_TYPE_INDUSTRY = 1
         const val EXTRA_REGISTER_TYPE_DRIVER = 2
+        //身份证比对比对
+        const val EXTRA_TYPE_RECOGNIZE_COMPARE = 3
     }
 
     override fun getContentLayout(): Int {

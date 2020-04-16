@@ -43,6 +43,7 @@
                             android:textSize="@dimen/sp_13" />
 
                         <TextView
+                            android:id="@+id/tvCurrentCoin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
@@ -78,7 +79,7 @@
 
 
                     <TextView
-                        android:id="@+id/tvRegisterIndustrial"
+                        android:id="@+id/tvConfirmPay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_28"

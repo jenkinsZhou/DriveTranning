@@ -24,6 +24,9 @@ public class QuestionNumberAdapter extends BaseQuickAdapter<Question, BaseViewHo
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, Question item) {
+        if (item == null) {
+            return;
+        }
         helper.setText(R.id.tvQuestionNum, "" + item.getQuestionNumber());
     }
 }

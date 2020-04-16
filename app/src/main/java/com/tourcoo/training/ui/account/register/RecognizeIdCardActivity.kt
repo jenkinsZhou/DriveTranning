@@ -1,7 +1,9 @@
 package com.tourcoo.training.ui.account.register
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
@@ -13,20 +15,27 @@ import android.view.View
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
+import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.manager.GlideManager
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.UploadProgressBody
 import com.tourcoo.training.core.retrofit.UploadRequestListener
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.Base64Util
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.IdCardInfo
 import com.tourcoo.training.entity.account.AccountTempHelper
+import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_KEY_REGISTER_TYPE
+import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_TYPE_RECOGNIZE_COMPARE
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.idcardcamera.camera.IDCardCamera
+import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_upload_id_card.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -50,6 +59,7 @@ import java.lang.ref.WeakReference
 class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, PermissionCallbacks {
     private var photoPath = ""
     private var type: Int = -1
+    private var trainId = ""
     private val mTag = "RecognizeIdCardActivity"
     private var hud: KProgressHUD? = null
     private val mHandler: MyHandler = MyHandler(this)
@@ -76,6 +86,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
 
     override fun initView(savedInstanceState: Bundle?) {
         type = intent.getIntExtra(EXTRA_KEY_REGISTER_TYPE, -1)
+        trainId = intent.getStringExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID) as String
         TourCooLogUtil.i(mTag, "跳转类型=" + type)
         tvNextStep.setOnClickListener(this)
         llTakePhoto.setOnClickListener(this)
@@ -86,7 +97,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tvNextStep -> {
-             handleCallback(photoPath)
+                handleCallback(photoPath)
             }
             R.id.ivSelectedImage -> {
                 doTakePhoto()
@@ -208,7 +219,11 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
             ToastUtil.show("请先上传身份证照片")
             return
         }
-        uploadImage(imagePath)
+        if (AccountTempHelper.getInstance().recognizeType == EXTRA_TYPE_RECOGNIZE_COMPARE) {
+            uploadFaceImage(BitmapFactory.decodeFile(imagePath), AccountTempHelper.getInstance().facePhotoPath)
+        } else {
+            uploadImage(imagePath)
+        }
     }
 
     private fun showHudProgressDialog() {
@@ -318,8 +333,8 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
     }
 
 
-    private fun skipResultInfo(){
-        if(TextUtils.isEmpty(photoPath)){
+    private fun skipResultInfo() {
+        if (TextUtils.isEmpty(photoPath)) {
             ToastUtil.show("请先上传身份证正面照")
             return
         }
@@ -329,6 +344,45 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
         startActivity(intent)
     }
 
+    /**
+     * 人脸和身份证比对
+     */
+    private fun uploadFaceImage(bitmap: Bitmap?, facePhotoPath: String) {
+        if (bitmap == null || TextUtils.isEmpty(facePhotoPath) || TextUtils.isEmpty(trainId)) {
+            ToastUtil.show("未获取到图像信息")
+            return
+        }
+        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+        val base64FaceImage = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(BitmapFactory.decodeFile(facePhotoPath))
+        ApiRepository.getInstance().requestIdCardVerify(trainId, base64Image, base64FaceImage).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
+            override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    ToastUtil.showSuccess("" + entity.data.confidence)
+                    handleRecognizeSuccessCallback()
+                } else {
+                    ToastUtil.show(entity.msg)
+                    //todo 暂时模拟成功
+                    handleRecognizeSuccessCallback()
+                }
+            }
 
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                if (AppConfig.DEBUG_MODE) {
+                    ToastUtil.showFailed(e.toString())
+                }
+            }
+        })
+    }
+
+    private fun handleRecognizeSuccessCallback() {
+        val intent = Intent()
+//        intent.putExtra(EXTRA_FACE_IMAGE_PATH,faceImagePath)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
 
 }

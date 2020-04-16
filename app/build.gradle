@@ -134,6 +134,9 @@ dependencies {
 
     implementation  'com.netease.nimlib:neliveplayer:2.4.0'
 
+    //eventbus
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
 }
 repositories {
     mavenCentral()

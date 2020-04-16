@@ -14,7 +14,9 @@ import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
+import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
+import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -156,4 +158,35 @@ public interface ApiService {
     @POST("v1.0/training/face-verify")
     Observable<BaseResult<FaceRecognizeResult>> requestFaceVerify(@Body Map<String, Object> map);
 
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/user/face-and-idcard-verify")
+    Observable<BaseResult<FaceRecognizeResult>> requestIdCardVerify(@Body Map<String, Object> map);
+
+
+    /**
+     * 学币套餐列表
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/trainee/list-coin-package")
+    Observable<BaseResult<CoinPackageEntity>> requestCoinPackage();
+
+
+    /**
+     * 充值
+     * @param map
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/trainee/recharge")
+    Observable<BaseResult> requestRecharge(@Body Map<String, Object> map);
+
+
+    /**
+     * 交卷接口
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/finish-exam")
+    Observable<BaseResult<ExamResultEntity>> requestFinishExam(@Body Map<String, Object> map);
 }

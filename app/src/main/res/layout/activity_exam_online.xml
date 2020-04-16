@@ -43,13 +43,15 @@
 
                 <TextView
                     android:id="@+id/tvLastQuestion"
+                    android:minWidth="@dimen/dp_100"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:layout_gravity="center_vertical"
                     android:background="@drawable/bg_radius_20_blue53bfff"
-                    android:paddingStart="@dimen/dp_25"
-                    android:paddingTop="@dimen/dp_10"
-                    android:paddingEnd="@dimen/dp_25"
-                    android:paddingBottom="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_8"
+                    android:paddingBottom="@dimen/dp_8"
                     android:text="上一题"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_15" />
@@ -58,13 +60,30 @@
                     android:id="@+id/tvNextQuestion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_gravity="center_vertical"
+                    android:minWidth="@dimen/dp_100"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@drawable/bg_radius_20_blue5087ff"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/dp_8"
+                    android:paddingBottom="@dimen/dp_8"
+                    android:text="下一题"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_15" />
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tvCommitExam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="@dimen/dp_100"
+                    android:gravity="center"
+                    android:layout_marginEnd="@dimen/dp_10"
                     android:background="@drawable/bg_radius_20_blue5087ff"
                     android:paddingStart="@dimen/dp_25"
-                    android:paddingTop="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_8"
                     android:paddingEnd="@dimen/dp_25"
-                    android:paddingBottom="@dimen/dp_10"
-                    android:text="下一题"
+                    android:paddingBottom="@dimen/dp_8"
+                    android:text="交卷"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_15" />
             </LinearLayout>
@@ -104,6 +123,7 @@
                             android:src="@drawable/icon_zq" />
 
                         <TextView
+                            android:id="@+id/tvAnswerCorrectCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -120,6 +140,7 @@
                             android:src="@drawable/icon_cw" />
 
                         <TextView
+                            android:id="@+id/tvAnswerErrorCount"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -135,6 +156,7 @@
                             android:src="@drawable/icon_video_play" />
 
                         <TextView
+                            android:id="@+id/tvCurrentAnswerResult"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

@@ -16,8 +16,11 @@ import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
+import com.tourcoo.training.entity.exam.CommitAnswer;
 import com.tourcoo.training.entity.exam.ExamEntity;
+import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
+import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
@@ -175,5 +178,34 @@ public class ApiRepository extends BaseRepository {
         params.put("photo", photoBase64);
         return CommonTransformer.switchSchedulers(getApiService().requestFaceVerify(params).retryWhen(new RetryWhen()));
     }
+
+    public Observable<BaseResult<FaceRecognizeResult>> requestIdCardVerify(String trainingPlanID, String idPhotoBase64,String facePhotoBase64 ) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("idCardPhoto", idPhotoBase64);
+        params.put("facePhoto", facePhotoBase64);
+       /* params.put("trainingPlanID", trainingPlanID);
+        params.put("scene", 2);*/
+        return CommonTransformer.switchSchedulers(getApiService().requestIdCardVerify(params).retryWhen(new RetryWhen()));
+    }
+    public Observable<BaseResult<CoinPackageEntity>> requestCoinPackage( ) {
+        return CommonTransformer.switchSchedulers(getApiService().requestCoinPackage().retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult> requestRecharge(String coinPackageID, int  payType,String amount,String coinPackageCount) {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("coinPackageID", coinPackageID);
+        params.put("amount", amount);
+        params.put("payType", payType);
+        params.put("coinPackageCount", coinPackageCount);
+        return CommonTransformer.switchSchedulers(getApiService().requestRecharge(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<ExamResultEntity>> requestFinishExam(String examId, List<CommitAnswer> commitAnswerList) {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("examId", examId);
+        params.put("questions", commitAnswerList);
+        return CommonTransformer.switchSchedulers(getApiService().requestFinishExam(params).retryWhen(new RetryWhen()));
+    }
+
 
 }

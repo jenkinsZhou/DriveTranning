@@ -1,17 +1,30 @@
 package com.tourcoo.training.ui.account.register
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
+import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
+import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver
+import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.Base64Util
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountTempHelper
+import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.ui.account.LoginActivity
+import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_REGISTER_TYPE_DRIVER
+import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_REGISTER_TYPE_INDUSTRY
+import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_TYPE_RECOGNIZE_COMPARE
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity.Companion.EXTRA_PHOTO_PATH
+import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_recognize_result.*
 import kotlinx.android.synthetic.main.activity_upload_id_card.ivSelectedImage
 import kotlinx.android.synthetic.main.activity_upload_id_card.tvNextStep
@@ -25,6 +38,7 @@ import kotlinx.android.synthetic.main.activity_upload_id_card.tvNextStep
  */
 class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
     private var photoPath: String? = null
+    private var mBitmap: Bitmap? = null
     private val isRecognizeId = AccountTempHelper.getInstance().isRecognizeIdCard
     override fun getContentLayout(): Int {
         return R.layout.activity_recognize_result
@@ -47,14 +61,15 @@ class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
             finish()
             return
         }
-        ivSelectedImage.setImageBitmap(BitmapFactory.decodeFile(photoPath))
+        mBitmap = BitmapFactory.decodeFile(photoPath)
+        ivSelectedImage.setImageBitmap(mBitmap)
         showResultInfo()
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvNextStep -> {
-                skipRegisterByType()
+                handleRecognizeResultByType()
             }
             else -> {
             }
@@ -76,12 +91,27 @@ class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
 
     }
 
-    private fun skipRegisterByType() {
-        val intent = if (AccountTempHelper.getInstance().recognizeType == LoginActivity.EXTRA_REGISTER_TYPE_DRIVER) {
-            Intent(this, DriverRegisterActivity::class.java)
-        } else {
-            Intent(this, IndustryRegisterActivity::class.java)
+    private fun handleRecognizeResultByType() {
+        /*  val intent = if (AccountTempHelper.getInstance().recognizeType == LoginActivity.EXTRA_REGISTER_TYPE_DRIVER) {
+              Intent(this, DriverRegisterActivity::class.java)
+          } else if(AccountTempHelper.getInstance().recognizeType == EXTRA_REGISTER_TYPE_INDUSTRY ) {
+              Intent(this, IndustryRegisterActivity::class.java)
+          }
+          startActivity(intent)*/
+        when (AccountTempHelper.getInstance().recognizeType) {
+            EXTRA_REGISTER_TYPE_DRIVER -> {
+                Intent(this, DriverRegisterActivity::class.java)
+                startActivity(intent)
+            }
+            EXTRA_REGISTER_TYPE_INDUSTRY -> {
+                Intent(this, IndustryRegisterActivity::class.java)
+                startActivity(intent)
+            }
+            else -> {
+            }
         }
-        startActivity(intent)
     }
+
+
+
 }

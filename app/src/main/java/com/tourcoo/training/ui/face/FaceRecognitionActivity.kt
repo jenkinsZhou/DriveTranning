@@ -31,6 +31,7 @@ import com.tourcoo.training.core.util.Base64Util
 import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.exam.ExamEntity
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
@@ -55,11 +56,12 @@ import java.io.*
  * @date 2020年03月03日14:52
  * @Email: 971613168@qq.com
  */
-class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClickListener,EasyPermissions.PermissionCallbacks {
+class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClickListener, EasyPermissions.PermissionCallbacks {
     companion object {
         const val tag = "FaceRecognitionActivity"
         const val EXTRA_FACE_IMAGE_PATH = "EXTRA_FACE_IMAGE_PATH"
     }
+
     private val photoName = "test.jpg"
     private var trainId = ""
     private var cameraHelper: CameraHelper? = null
@@ -73,8 +75,8 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        trainId =    intent.getStringExtra(EXTRA_TRAINING_PLAN_ID) as String
-        if(TextUtils.isEmpty(trainId)){
+        trainId = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID) as String
+        if (TextUtils.isEmpty(trainId)) {
             ToastUtil.show("未获取到培训计划")
             finish()
             return
@@ -143,7 +145,7 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
 
     override fun onDestroy() {
         super.onDestroy()
-        if(cameraHelper != null){
+        if (cameraHelper != null) {
             cameraHelper!!.release()
         }
 
@@ -151,29 +153,33 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
 
 
     private fun takePhoto() {
-        if(cameraHelper == null){
+        if (cameraHelper == null) {
             return
         }
         cameraHelper!!.takePhoto(object : Camera.PictureCallback {
             override fun onPictureTaken(data: ByteArray?, camera: Camera?) {
-                if(!sdCardIsAvailable()){
+                if (!sdCardIsAvailable()) {
                     ToastUtil.show("存储空间不足或异常")
-                  return
+                    return
                 }
                 baseHandler.postDelayed(Runnable {
                     val resource = BitmapFactory.decodeByteArray(data, 0, data!!.size)
                     if (resource == null) {
                         ToastUtil.show("拍照失败")
-                    }else{
-                        val photoPath =com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory()+File.separator+photoName
+                    } else {
+                        val photoPath = com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory() + File.separator + photoName
                         //todo
-                        uploadFaceImage(trainId,toTurn(resource)!!)
-                      /*  saveImage(photoPath, toTurn(resource)!!)
+                        val faceBitmap = toTurn(resource)!!
+                        saveImage(photoPath, faceBitmap)
                         notifyMedia(photoPath)
-                        setResult(photoPath)
-                        finish()*/
+                        AccountTempHelper.getInstance().facePhotoPath = photoPath
+                        uploadFaceImage(trainId, faceBitmap)
+                        /*  saveImage(photoPath, toTurn(resource)!!)
+                          notifyMedia(photoPath)
+                          setResult(photoPath)
+                          finish()*/
                     }
-                },200)
+                }, 200)
 
             }
         })
@@ -190,8 +196,8 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
      * @param path 保存为本地图片的地址
      * @param bitmap 要转化的Bitmap
      */
-   private fun saveImage(path: String?, bitmap: Bitmap) {
-        if(TextUtils.isEmpty(path)){
+    private fun saveImage(path: String?, bitmap: Bitmap) {
+        if (TextUtils.isEmpty(path)) {
             return
         }
         try {
@@ -205,6 +211,7 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
             e.printStackTrace()
         }
     }
+
     private fun sdCardIsAvailable(): Boolean { //首先判断外部存储是否可用
         return if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
             val sd = File(getExternalFilesDir(null)!!.path)
@@ -234,7 +241,8 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
         }
         return degree
     }
-    private  fun toTurn(img: Bitmap): Bitmap? {
+
+    private fun toTurn(img: Bitmap): Bitmap? {
         var img = img
         val matrix = Matrix()
         matrix.postRotate(270f) /*翻转90度*/
@@ -263,7 +271,6 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
             }
         }, 500)
     }
-
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -321,39 +328,31 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
     }
 
 
-
-    private fun handleRecognizeSuccessCallback(){
+    private fun handleRecognizeSuccessCallback() {
         val intent = Intent()
 //        intent.putExtra(EXTRA_FACE_IMAGE_PATH,faceImagePath)
-        setResult(Activity.RESULT_OK,intent)
+        setResult(Activity.RESULT_OK, intent)
         finish()
     }
 
 
-    private fun uploadFaceImage(trainId : String,bitmap: Bitmap?){
-        if(bitmap == null){
+    private fun uploadFaceImage(trainId: String, bitmap: Bitmap?) {
+        if (bitmap == null) {
             return
         }
-     val base64Image =  "data:image/jpeg;base64,"+ Base64Util. bitmapToBase64(bitmap)
+        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
         ApiRepository.getInstance().requestFaceVerify(trainId, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
             override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
                 if (entity == null) {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess(""+entity.data.confidence)
+                    ToastUtil.showSuccess("" + entity.data.confidence)
                     handleRecognizeSuccessCallback()
                 } else {
                     ToastUtil.show(entity.msg)
                     //todo 暂时模拟成功
                     handleRecognizeSuccessCallback()
-                }
-            }
-
-            override fun onError(e: Throwable) {
-                super.onError(e)
-                if (AppConfig.DEBUG_MODE) {
-                    ToastUtil.showFailed(e.toString())
                 }
             }
         })

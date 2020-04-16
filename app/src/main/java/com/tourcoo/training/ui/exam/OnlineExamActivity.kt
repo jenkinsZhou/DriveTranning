@@ -21,11 +21,11 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.exam.ExamEntity
-import com.tourcoo.training.entity.exam.ExamTempHelper
-import com.tourcoo.training.entity.exam.Question
+import com.tourcoo.training.entity.exam.*
+import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_exam_online.*
+import org.apache.commons.lang.StringUtils
 
 /**
  *@description :线上考试
@@ -70,6 +70,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
+        tvCommitExam.setOnClickListener(this)
         questionNumRv.layoutManager = GridLayoutManager(mContext, 6)
         behavior = BottomSheetBehavior.from(nsvBottom)
         nsvBottom.isNestedScrollingEnabled = false
@@ -82,12 +83,12 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private fun loadQuestion(examEntity: ExamEntity?) {
-        if(examEntity == null){
+        if (examEntity == null) {
             return
         }
         list?.clear()
         val questions = examEntity.questions
-        for (i in 0 until questions.size-1) {
+        for (i in 0 until questions.size - 1) {
             list?.add(OnlineExamFragment.newInstance(questions[i]))
         }
         vpExamOnline.adapter = fragmentCommonAdapter
@@ -104,6 +105,10 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             R.id.llQuestionBar -> {
                 handleBottomBarClick()
             }
+            R.id.tvCommitExam -> {
+                //交卷
+                doCommitExam()
+            }
             else -> {
             }
         }
@@ -113,6 +118,8 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     private fun skipLastQuestion() {
         if (currentPosition > 0) {
             vpExamOnline.setCurrentItem(currentPosition - 1, true)
+            setViewGone(tvCommitExam, false)
+            setViewGone(tvNextQuestion, true)
         }
     }
 
@@ -131,6 +138,8 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun doAnswerQuestion() {
         if (currentPosition < list!!.size - 1) {
+            setViewGone(tvCommitExam, false)
+            setViewGone(tvNextQuestion, true)
             val fragment = list!![currentPosition] as OnlineExamFragment
             val selectCount = fragment.getSelectCount()
             if (fragment.isMultipleAnswer() && selectCount == 1) {
@@ -143,12 +152,15 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             } else {
                 skipNextQuestionNow()
             }
+        } else {
+            setViewGone(tvCommitExam, true)
+            setViewGone(tvNextQuestion, false)
         }
     }
 
     private fun setQuestionNumber(questions: MutableList<Question>): MutableList<Question> {
         for (i in 0 until questions.size - 1) {
-            questions[i].questionNumber = ( i + 1).toString()
+            questions[i].questionNumber = (i + 1).toString()
         }
         return questions
     }
@@ -203,9 +215,10 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         questionNumAdapter?.bindToRecyclerView(questionNumRv)
         loadQuestion(examEntity)
         loadBottomSheetBar(examEntity.questions)
-        vpExamOnline.offscreenPageLimit = 10
+        vpExamOnline.offscreenPageLimit = list!!.size
         vpExamOnline.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
+
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -214,7 +227,51 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onPageSelected(position: Int) {
                 currentPosition = position
             }
-
         })
+    }
+
+    /**
+     * 交卷
+     */
+    private fun doCommitExam() {
+        val dialog = CommitAnswerDialog(mContext)
+        dialog.create().show()
+        dialog.setPositiveButtonListener(View.OnClickListener {
+            commitExam(getAllQuestions())
+            dialog.dismiss()
+        })
+    }
+
+    private fun commitExam(questions: MutableList<Question>) {
+        val commitList = ArrayList<CommitAnswer>()
+        for (question in questions) {
+            val commit = CommitAnswer()
+            commit.id = question.id.toString()
+            commit.answer = StringUtils.join(question.answer, ",")
+            commitList.add(commit)
+        }
+        ApiRepository.getInstance().requestFinishExam(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamResultEntity>?>() {
+            override fun onSuccessNext(entity: BaseResult<ExamResultEntity>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    ToastUtil.showSuccess(entity.data.toString())
+                } else {
+                    ToastUtil.show(entity.msg)
+                }
+            }
+        })
+    }
+
+    private fun getAllQuestions(): MutableList<Question> {
+        val results = ArrayList<Question>()
+        for (fragment in list!!) {
+            val onlineExamFragment = fragment as OnlineExamFragment?
+            if (onlineExamFragment != null) {
+                results.add(onlineExamFragment.getQuestion())
+            }
+        }
+        return results
     }
 }

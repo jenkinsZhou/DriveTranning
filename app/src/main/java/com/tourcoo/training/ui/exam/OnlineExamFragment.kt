@@ -32,30 +32,28 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-    }
-
-    override fun loadData() {
-        super.loadData()
-        question =      arguments?.getParcelable("question")
+        question = arguments?.getParcelable("question")
         questionRecyclerView = mContentView.findViewById(R.id.questionRecyclerView)
         tvCurrentQuestion = mContentView.findViewById(R.id.tvCurrentQuestion)
         tvQuestionType = mContentView.findViewById(R.id.tvQuestionType)
         questionRecyclerView?.layoutManager = LinearLayoutManager(mContext)
-        if(  ExamTempHelper.getInstance().examInfo == null){
+        if (ExamTempHelper.getInstance().examInfo == null) {
             ToastUtil.show("未获取到考试信息")
             return
         }
         adapter = QuestionAdapter()
         adapter?.bindToRecyclerView(questionRecyclerView)
         showQuestion(question!!)
+        loadCorrectAdapter(question!!)
         adapter?.setNewData(question!!.answerItems)
         loadItemClick(question!!)
     }
 
+
     companion object {
-        fun newInstance(question : Question): OnlineExamFragment {
+        fun newInstance(question: Question): OnlineExamFragment {
             val args = Bundle()
-            args.putParcelable("question",question)
+            args.putParcelable("question", question)
             val fragment = OnlineExamFragment()
             fragment.arguments = args
             return fragment
@@ -154,6 +152,9 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
             return
         }
         adapter!!.setOnItemClickListener { adapter, view, position ->
+            if (question.isHasAnswered) {
+                return@setOnItemClickListener
+            }
             when (question.type) {
                 QUESTION_TYPE_SINGLE -> {
                     handleClickSingle(position)
@@ -161,6 +162,10 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
                 QUESTION_TYPE_MULTIPLE -> {
                     //多选
                     handleClickMultiple(position)
+                }
+                //判断
+                QUESTION_TYPE_JUDGE -> {
+                    handleClickSingle(position)
                 }
                 else -> {
                 }
@@ -188,14 +193,14 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
         return entity
     }
 
-   /* private fun transformQuestion(question :Question ){
-        //todo
-        if(question.){
+    /* private fun transformQuestion(question :Question ){
+         //todo
+         if(question.){
 
-        }
-    }
-*/
-    private fun showQuestion(question: Question ?) {
+         }
+     }
+ */
+    private fun showQuestion(question: Question?) {
         when (question?.type) {
             QUESTION_TYPE_SINGLE -> {
                 tvQuestionType?.text = "单选"
@@ -210,7 +215,7 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
             }
         }
         tvCurrentQuestion?.text = question?.question
-        tvAnswerParsing.text = question?.analysis
+        tvAnswerParsing?.text = question?.analysis
     }
 
 
@@ -253,9 +258,15 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
             return false
         }
         question!!.isHasAnswered = true
+//        回答问题后每次都创建一个新的用户选择集合
+        question!!.answer = ArrayList()
         for (answer in answerList) {
             //已经回答过问题
             answer!!.isHasAnswered = true
+            if (answer.isSelect) {
+                //关键点 如果改题目被选中 则添加到用户选择集合中 表示用户选择了这些答案
+                question!!.answer.add(answer.answerId)
+            }
         }
         //
         adapter?.notifyDataSetChanged()
@@ -291,5 +302,23 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
         return QUESTION_TYPE_MULTIPLE == question!!.type
     }
 
+
+    private fun loadCorrectAdapter(question: Question) {
+        if (question.correctAnswer == null) {
+            return
+        }
+        for (answerItem in question.answerItems) {
+            for (s in question.correctAnswer) {
+                if (answerItem.answerId == s) {
+                    answerItem.isCorrectAnswer = true
+                }
+            }
+        }
+    }
+
+
+    fun getQuestion(): Question {
+        return question!!
+    }
 
 }

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dp_5"
+    android:layout_marginEnd="@dimen/dp_10"
     android:orientation="horizontal">
 
   <!--  <ImageView
@@ -13,16 +14,16 @@
         android:scaleType="fitXY"
         android:src="@drawable/icon_gx" />-->
 
-    <TextView
-        android:id="@+id/tvAnswerLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textColor="@color/black333333"
-        android:background="@drawable/ic_answer_bg_white"
-        android:text="" />
+  <TextView
+      android:id="@+id/tvAnswerLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:background="@drawable/ic_answer_bg_white"
+      android:gravity="center"
+      android:text=""
+      android:textColor="@color/black333333"
+      android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvAnswer"
