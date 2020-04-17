@@ -195,10 +195,8 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     private fun requestUserInfo() {
         ApiRepository.getInstance().requestUserInfo().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfo?>?>() {
             override fun onError(e: Throwable) {
+                super.onError(e)
                 smartRefreshLayoutCommon.finishRefresh()
-                if (AppConfig.DEBUG_MODE) {
-                    ToastUtil.showFailed(e.toString())
-                }
 
             }
 
@@ -211,7 +209,6 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                     entity.code == RequestConfig.CODE_REQUEST_SUCCESS -> {
                         AccountHelper.getInstance().userInfo = entity.data
                         showUserInfo(entity.data)
-                        ToastUtil.showSuccess("显示用户信息")
                     }
                     RequestConfig.CODE_REQUEST_TOKEN_INVALID == entity.code -> {
                         ToastUtil.show("登录已过期")

@@ -116,13 +116,6 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
                     }
                 }
             }
-
-            override fun onError(e: Throwable) {
-                if(AppConfig.DEBUG_MODE){
-                    ToastUtil.showFailed(e.toString())
-                }
-            }
-
         })
     }
 

@@ -21,6 +21,7 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.course.CourseEntity
@@ -31,6 +32,7 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
+import com.tourcoo.training.ui.training.online.PlayVideoActivity
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
@@ -159,10 +161,10 @@ class OnlineTrainFragment : BaseFragment() {
         }
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             //todo
-            if(position == 2){
+            if (position == 2) {
                 currentPlanId = (adapter!!.data[position] as CourseInfo).trainingPlanID
                 showRecognize(currentPlanId)
-            }else{
+            } else {
                 doSkipByStatus(adapter!!.data[position] as CourseInfo)
             }
 //            doSkipByStatus(adapter!!.data[position] as CourseInfo)
@@ -175,13 +177,7 @@ class OnlineTrainFragment : BaseFragment() {
         }
         when (courseInfo.status) {
             COURSE_STATUS_NEED_PAY -> {
-                val intent = Intent(mContext, OnlineExamActivity::class.java)
-                //培训计划id
-                intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
-                //考试题id
-                //todo 考试id 暂时写死
-                intent.putExtra(EXTRA_EXAM_ID, "0")
-                startActivity(intent)
+                skipPlayVideo("")
             }
             else -> {
                 val intent = Intent(mContext, OnlineExamActivity::class.java)
@@ -262,5 +258,12 @@ class OnlineTrainFragment : BaseFragment() {
 
     private fun closeFaceDialog() {
         dialog?.dismiss()
+    }
+
+
+    private fun skipPlayVideo(trainingId: String?) {
+        val intent = Intent(mContext, PlayVideoActivity::class.java)
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
+        startActivity(intent)
     }
 }
