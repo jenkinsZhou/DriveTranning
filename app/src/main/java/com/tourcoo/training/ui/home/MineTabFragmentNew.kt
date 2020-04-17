@@ -27,6 +27,8 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.UserInfo
+import com.tourcoo.training.entity.account.UserInfoEvent
+import com.tourcoo.training.entity.account.VehicleInfo
 import com.tourcoo.training.entity.mine.MineItem
 import com.tourcoo.training.ui.account.FindPassActivity
 import com.tourcoo.training.ui.account.LoginActivity
@@ -36,6 +38,7 @@ import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
+import com.tourcoo.training.ui.setting.SettingActivity
 import com.tourcoo.training.ui.training.online.PlayVideoActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
@@ -43,6 +46,9 @@ import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
 import kotlinx.android.synthetic.main.fragment_mine_tab_new.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 /**
@@ -70,7 +76,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.ivSetting -> {
-                CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity::class.java)
+                CommonUtil.startActivity(mContext, SettingActivity::class.java)
             }
 
             R.id.llAvatar -> {
@@ -97,6 +103,10 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
 
     override fun loadData() {
         super.loadData()
+        ivSetting.setOnClickListener(this)
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this)
+        }
         setStatusBarModeWhite(this)
         setMarginTop()
         smartRefreshLayoutCommon.setRefreshHeader(ClassicsHeader(mContext))
@@ -112,9 +122,9 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         initItemClick()
         loadMineAccount()
         loadAchievement()
-        if(AccountHelper.getInstance().isLogin){
+        if (AccountHelper.getInstance().isLogin) {
             showUserInfo(AccountHelper.getInstance().userInfo)
-        }else{
+        } else {
             refreshUserInfo()
         }
 
@@ -134,7 +144,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     private fun initItemClick() {
         accountAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
-                0 ->{
+                0 -> {
 //                    CommonUtil.startActivity(mContext, BuyNowActivity::class.java)
                     CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
                 }
@@ -151,7 +161,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 0 -> {
                     CommonUtil.startActivity(mContext, MyCertificationActivity::class.java)
                 }
-                1->{
+                1 -> {
                     CommonUtil.startActivity(mContext, PlayVideoActivity::class.java)
                 }
 
@@ -186,7 +196,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         ApiRepository.getInstance().requestUserInfo().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfo?>?>() {
             override fun onError(e: Throwable) {
                 smartRefreshLayoutCommon.finishRefresh()
-                if(AppConfig.DEBUG_MODE){
+                if (AppConfig.DEBUG_MODE) {
                     ToastUtil.showFailed(e.toString())
                 }
 
@@ -194,13 +204,14 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
 
             override fun onSuccessNext(entity: BaseResult<UserInfo?>?) {
                 smartRefreshLayoutCommon.finishRefresh(true)
-                if (entity == null ||entity.data == null) {
+                if (entity == null || entity.data == null) {
                     return
                 }
                 when {
                     entity.code == RequestConfig.CODE_REQUEST_SUCCESS -> {
                         AccountHelper.getInstance().userInfo = entity.data
                         showUserInfo(entity.data)
+                        ToastUtil.showSuccess("显示用户信息")
                     }
                     RequestConfig.CODE_REQUEST_TOKEN_INVALID == entity.code -> {
                         ToastUtil.show("登录已过期")
@@ -218,6 +229,16 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         if (userInfo == null) {
             showUnLogin()
             return
+        }
+        if (userInfo.vehicles != null && userInfo.vehicles.isNotEmpty()) {
+            //有车辆
+            setViewGone(rlMyCarInfo, true)
+            setViewGone(llNoCar, false)
+            showCarInfo(userInfo.vehicles[0])
+        } else {
+            //没有车辆
+            setViewGone(llNoCar, true)
+            setViewGone(rlMyCarInfo, false)
         }
         setViewVisible(llGoldLevel, true)
         setViewVisible(monthRate, true)
@@ -239,11 +260,11 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     }
 
     private fun showUnLogin() {
-        setViewVisible(llGoldLevel, false)
-        setViewVisible(monthRate, false)
+        showNoCar()
         tvCoinsRemain.text = "剩余学币：0"
         tvUserNickName.text = "登录/注册"
         GlideManager.loadImg(R.mipmap.ic_avatar_default, civAvatar)
+
     }
 
     companion object {
@@ -312,5 +333,45 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         val intent = Intent()
         intent.setClass(mContext, LoginActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun showNoCar() {
+        setViewGone(llNoCar, true)
+        setViewGone(rlMyCarInfo, false)
+    }
+
+    private fun showCarInfo(vehicleInfo: VehicleInfo?) {
+        if (vehicleInfo == null) {
+            showNoCar()
+            return
+        }
+        tvCarPlantNum.text = "车牌号：" + CommonUtil.getNotNullValue(vehicleInfo.plateNumber)
+        tvCarModule.text = " 车型：" + CommonUtil.getNotNullValue(vehicleInfo.model)
+        tvCarBrand.text = "品牌：" + CommonUtil.getNotNullValue(vehicleInfo.brand)
+        tvCarExpire.text = "年审到期 " + CommonUtil.getNotNullValue(vehicleInfo.expiredTime)
+    }
+
+
+    /**
+     * 收到消息
+     *
+     * @param userInfoEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUserInfoRefreshEvent(userInfoEvent: UserInfoEvent?) {
+        if (userInfoEvent == null) {
+            return
+        }
+        if (userInfoEvent.userInfo == null) {
+            showUnLogin()
+        } else {
+            showUserInfo(userInfoEvent.userInfo)
+        }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }

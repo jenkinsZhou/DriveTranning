@@ -214,5 +214,8 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestSaveAnswer(params).retryWhen(new RetryWhen()));
     }
 
+    public Observable<BaseResult> requestLogout() {
+        return CommonTransformer.switchSchedulers(getApiService().requestLogout().retryWhen(new RetryWhen()));
+    }
 
 }

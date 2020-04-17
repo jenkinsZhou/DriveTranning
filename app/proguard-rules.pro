@@ -274,5 +274,8 @@ public static java.lang.String TABLENAME;
     public static void createTable(org.greenrobot.greendao.database.Database, boolean);
 }
 
+# 网易云
+-keep class com.netease.neliveplayer.**{*;}
+
 
 

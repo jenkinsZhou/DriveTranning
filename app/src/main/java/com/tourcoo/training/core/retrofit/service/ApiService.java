@@ -197,4 +197,8 @@ public interface ApiService {
     @POST("v1.0/training/save-exam-answers")
     Observable<BaseResult> requestSaveAnswer(@Body Map<String, Object> map);
 
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/user/logout")
+    Observable<BaseResult> requestLogout();
 }

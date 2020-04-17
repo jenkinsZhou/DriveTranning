@@ -9,6 +9,8 @@ import com.tourcoo.training.entity.greendao.DaoSession;
 import com.tourcoo.training.entity.greendao.GreenDaoHelper;
 import com.tourcoo.training.entity.greendao.UserInfoDao;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 /**
@@ -100,6 +102,7 @@ public class AccountHelper {
     public void logout() {
         userInfo = null;
         deleteUserInfoFromDisk();
+        EventBus.getDefault().post(new UserInfoEvent());
         TourCooLogUtil.e(TAG, "退出登录了");
     }
 

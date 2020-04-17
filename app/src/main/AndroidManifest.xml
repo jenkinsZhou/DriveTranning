@@ -86,6 +86,7 @@
         <activity android:name=".ui.account.register.RecognizeLicenseActivity" />
         <activity android:name=".ui.account.PersonalInfoActivity" />
         <activity android:name=".ui.certificate.MyCertificationActivity" />
+        <activity android:name=".ui.setting.SettingActivity" />
 
         <service android:name="com.amap.api.location.APSService">
 

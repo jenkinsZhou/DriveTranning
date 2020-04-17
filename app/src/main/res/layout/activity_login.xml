@@ -61,6 +61,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_11"
                         android:layout_weight="1"
+                        android:text="340811199311135335"
                         android:background="@null"
                         android:hint="请输入身份证号码"
                         android:padding="@dimen/dp_5"
@@ -105,6 +106,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="请输入登录密码"
+                        android:text="135335"
                         android:padding="@dimen/dp_5"
                         android:textColor="@color/gray999999"
                         android:textSize="@dimen/sp_13" />

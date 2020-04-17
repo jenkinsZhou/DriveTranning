@@ -18,11 +18,13 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfo
+import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.account.register.RecognizeLicenseActivity
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_login.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@description :
@@ -131,6 +133,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
         AccountHelper.getInstance().userInfo = userInfo
+        EventBus.getDefault().post(UserInfoEvent(userInfo))
         val intent = Intent(this, MainTabActivity::class.java)
         startActivity(intent)
         finish()

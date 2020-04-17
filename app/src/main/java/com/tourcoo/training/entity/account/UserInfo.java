@@ -86,7 +86,7 @@ public class UserInfo implements Parcelable {
            return AccessToken;
        }*/
     public String getAccessToken() {
-        return "21efff2af0ffaaaf4e11528b1382fba8ec4b0c26";
+         return AccessToken;
     }
 
     public void setAccessToken(String AccessToken) {
