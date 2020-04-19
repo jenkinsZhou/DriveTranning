@@ -21,7 +21,6 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
-import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.course.CourseEntity
@@ -32,7 +31,7 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
-import com.tourcoo.training.ui.training.online.PlayVideoActivity
+import com.tourcoo.training.ui.training.online.PlayVideoActivityNewOld1
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
@@ -262,7 +261,7 @@ class OnlineTrainFragment : BaseFragment() {
 
 
     private fun skipPlayVideo(trainingId: String?) {
-        val intent = Intent(mContext, PlayVideoActivity::class.java)
+        val intent = Intent(mContext, PlayVideoActivityNewOld1::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
         startActivity(intent)
     }

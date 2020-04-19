@@ -44,7 +44,9 @@ public class NEVideoControlLayout extends FrameLayout {
     private ProgressBar mProgress;
     private ImageView mPauseButton;
     private ImageView mSetPlayerScaleButton;
-    private ImageView mSnapshotButton;
+    /**
+     * 静音按钮
+     */
     private ImageView mMuteButton;
 
     private long mDuration;
@@ -194,13 +196,13 @@ public class NEVideoControlLayout extends FrameLayout {
 
         if(controller.isLocalAudio()) {
         	mSetPlayerScaleButton.setVisibility(View.INVISIBLE); //播放音乐不需要设置显示模式，该按钮不显示
-        	mSnapshotButton.setVisibility(View.INVISIBLE);       //播放音乐不需要截图，该按钮不显示
+//        	mSnapshotButton.setVisibility(View.INVISIBLE);       //播放音乐不需要截图，该按钮不显示
         	show();
         }
 
-        if (controller.isHwDecoder()) {
-        	mSnapshotButton.setVisibility(View.GONE); //硬件解码不支持截图，该按钮不显示
-        }
+     /*   if (controller.isHwDecoder()) {
+//        	mSnapshotButton.setVisibility(View.GONE); //硬件解码不支持截图，该按钮不显示
+        }*/
     }
 
     /**
@@ -208,13 +210,13 @@ public class NEVideoControlLayout extends FrameLayout {
      * @param v
      */
     private void blindView(View v) {
-     /*   mPauseButton = (ImageView) v.findViewById(R.id.mediacontroller_play_pause); //播放暂停按钮
+        mPauseButton = (ImageView) v.findViewById(R.id.mediacontroller_play_pause); //播放暂停按钮
         mSetPlayerScaleButton = (ImageView) v.findViewById(R.id.video_player_scale);  //画面显示模式按钮
-        mSnapshotButton = (ImageView) v.findViewById(R.id.snapShot);  //截图按钮
+//        mSnapshotButton = (ImageView) v.findViewById(R.id.snapShot);  //截图按钮
         mMuteButton = (ImageView) v.findViewById(R.id.video_player_mute);  //静音按钮
         mProgress = (SeekBar) v.findViewById(R.id.mediacontroller_seekbar);  //进度条
         mEndTime = (TextView) v.findViewById(R.id.mediacontroller_time_total); //总时长
-        mCurrentTime = (TextView) v.findViewById(R.id.mediacontroller_time_current); //当前播放位置*/
+        mCurrentTime = (TextView) v.findViewById(R.id.mediacontroller_time_current); //当前播放位置
     }
 
     /**
@@ -232,9 +234,9 @@ public class NEVideoControlLayout extends FrameLayout {
         mSetPlayerScaleButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-             /*   if (isFullScreen) {
+                if (isFullScreen) {
                     mVideoScalingMode = VideoConstant.VIDEO_SCALING_MODE_NONE;
-                    mSetPlayerScaleButton.setImageResource(R.drawable.ic_screen_landscape);
+                    mSetPlayerScaleButton.setImageResource(R.mipmap.ic_play_full_screen);
                     mCurrentTime.setVisibility(View.GONE);
                     mEndTime.setVisibility(View.GONE);
                     isFullScreen = false;
@@ -243,7 +245,7 @@ public class NEVideoControlLayout extends FrameLayout {
                     }
                 } else {
                     mVideoScalingMode = VideoConstant.VIDEO_SCALING_MODE_FILL_BLACK;
-                    mSetPlayerScaleButton.setImageResource(R.drawable.ic_screen_portrail);
+                    mSetPlayerScaleButton.setImageResource(R.mipmap.ic_play_full_screen);
                     mCurrentTime.setVisibility(View.VISIBLE);
                     mEndTime.setVisibility(View.VISIBLE);
                     isFullScreen = true;
@@ -257,30 +259,24 @@ public class NEVideoControlLayout extends FrameLayout {
                 } catch (NumberFormatException e) {
 
                 }
-                show(DEFAULT_TIMEOUT);*/
-            }
-        });
-
-        mSnapshotButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.getSnapshot();
                 show(DEFAULT_TIMEOUT);
             }
         });
 
+
+
         mMuteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-              /*  if (isMute) {
-                    mMuteButton.setImageResource(R.drawable.nemediacontroller_mute02);
+                if (isMute) {
+                    mMuteButton.setImageResource(R.mipmap.ic_voice_open);
                     isMute = false;
                 } else {
-                    mMuteButton.setImageResource(R.drawable.nemediacontroller_mute01);
+                    mMuteButton.setImageResource(R.mipmap.nemediacontroller_mute01);
                     isMute = true;
                 }
                 controller.setMute(isMute);
-                show(DEFAULT_TIMEOUT);*/
+                show(DEFAULT_TIMEOUT);
             }
         });
     }
@@ -419,12 +415,12 @@ public class NEVideoControlLayout extends FrameLayout {
     private void updatePausePlay(boolean isPlaying) {
         if (mRoot == null || mPauseButton == null)
             return;
-     /*   if (isPlaying) {
-            mPauseButton.setImageResource(R.drawable.nemediacontroller_play);
+        if (isPlaying) {
+            mPauseButton.setImageResource(R.mipmap.ic_play_start);
         }
         else {
-            mPauseButton.setImageResource(R.drawable.nemediacontroller_pause);
-        }*/
+            mPauseButton.setImageResource(R.mipmap.ic_play_pause);
+        }
     }
 
     private SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
@@ -502,9 +498,7 @@ public class NEVideoControlLayout extends FrameLayout {
         if (mSetPlayerScaleButton != null) {
             mSetPlayerScaleButton.setEnabled(enabled);
         }
-        if (mSnapshotButton != null) {
-            mSnapshotButton.setEnabled(enabled);
-        }
+
         if (mMuteButton != null) {
             mMuteButton.setEnabled(enabled);
         }

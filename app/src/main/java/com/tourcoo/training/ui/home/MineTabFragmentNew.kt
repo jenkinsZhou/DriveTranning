@@ -14,7 +14,6 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.mine.MineItemAdapter
-import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment
@@ -36,10 +35,9 @@ import com.tourcoo.training.ui.account.MyAccountActivity
 import com.tourcoo.training.ui.account.PersonalInfoActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
-import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity
-import com.tourcoo.training.ui.pay.BuyNowActivity
 import com.tourcoo.training.ui.setting.SettingActivity
 import com.tourcoo.training.ui.training.online.PlayVideoActivity
+import com.tourcoo.training.ui.training.online.PlayVideoActivityOld
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert

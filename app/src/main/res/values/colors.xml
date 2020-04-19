@@ -196,5 +196,9 @@
     <color name="actionsheet_red">#FD4A2E</color>
     <color name="actionsheet_gray">#8F8F8F</color>
 
+    <color name="video_detail_subtitle_bg">#e3e6ea</color>
+    <color name="video_detail_divide_line">#cbd0d8</color>
+    <color name="bg_color_input_divide">#cbd0d8</color>
+    <color name="bg_media_player_controller">#7f000000</color>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.tourcoo.training.widget.player;
+package com.tourcoo.training.widget.oldplayer;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -28,7 +28,7 @@ import java.util.List;
  * 这里是切换清晰度，稍微修改下也可以作为切换下一集等
  */
 
-public class SmartPickVideo extends StandardGSYVideoPlayer {
+public class SmartPickVideoOld extends StandardGSYVideoPlayer {
 
 
     private TextView mSwitchSize;
@@ -53,15 +53,15 @@ public class SmartPickVideo extends StandardGSYVideoPlayer {
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
      */
-    public SmartPickVideo(Context context, Boolean fullFlag) {
+    public SmartPickVideoOld(Context context, Boolean fullFlag) {
         super(context, fullFlag);
     }
 
-    public SmartPickVideo(Context context) {
+    public SmartPickVideoOld(Context context) {
         super(context);
     }
 
-    public SmartPickVideo(Context context, AttributeSet attrs) {
+    public SmartPickVideoOld(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -127,7 +127,7 @@ public class SmartPickVideo extends StandardGSYVideoPlayer {
      */
     @Override
     public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
-        SmartPickVideo sampleVideo = (SmartPickVideo) super.startWindowFullscreen(context, actionBar, statusBar);
+        SmartPickVideoOld sampleVideo = (SmartPickVideoOld) super.startWindowFullscreen(context, actionBar, statusBar);
         sampleVideo.mSourcePosition = mSourcePosition;
         sampleVideo.mListItemRect = mListItemRect;
         sampleVideo.mListItemSize = mListItemSize;
@@ -149,7 +149,7 @@ public class SmartPickVideo extends StandardGSYVideoPlayer {
     protected void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
         super.resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
         if (gsyVideoPlayer != null) {
-            SmartPickVideo sampleVideo = (SmartPickVideo) gsyVideoPlayer;
+            SmartPickVideoOld sampleVideo = (SmartPickVideoOld) gsyVideoPlayer;
             mSourcePosition = sampleVideo.mSourcePosition;
             mType = sampleVideo.mType;
             mTypeText = sampleVideo.mTypeText;

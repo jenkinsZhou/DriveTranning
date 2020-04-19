@@ -75,9 +75,9 @@ public class NEVideoView extends SurfaceView {
                 //Log.i("@@@", "image too wide, correcting");
                 //width = height * mVideoWidth / mVideoHeight;
             } else {
-                //Log.i("@@@", "aspect ratio is correct: " +
-                        //width+"/"+height+"="+
-                        //mVideoWidth+"/"+mVideoHeight);
+               /* Log.i("@@@", "aspect ratio is correct: " +
+                        width+"/"+height+"="+
+                        mVideoWidth+"/"+mVideoHeight);*/
             }
         }
         setMeasuredDimension(width, height);

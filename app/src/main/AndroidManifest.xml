@@ -70,7 +70,7 @@
         <activity android:name=".ui.training.StudyMedalRecordActivity" />
         <activity android:name=".ui.exam.OnlineExamActivity" />
         <activity android:name=".ui.training.ProfessionalTrainingFragment" />
-        <activity android:name=".ui.training.online.PlayVideoActivity"
+        <activity android:name=".ui.training.online.PlayVideoActivityOld"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             />
         <activity android:name=".ui.account.register.RecognizeIdCardActivity" />
@@ -87,6 +87,10 @@
         <activity android:name=".ui.account.PersonalInfoActivity" />
         <activity android:name=".ui.certificate.MyCertificationActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
+        <activity android:name=".ui.training.online.PlayVideoActivityNewOld1" />
+        <activity android:name=".ui.training.online.PlayVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            />
 
         <service android:name="com.amap.api.location.APSService">
 

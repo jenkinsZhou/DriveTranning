@@ -1,4 +1,4 @@
-package com.tourcoo.training.widget.player;
+package com.tourcoo.training.widget.oldplayer;
 
 /**
  * Created by shuyu on 2016/12/7.

@@ -11,16 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_200">
 
-      <!--  <com.tourcoo.training.widget.oldplayer.Sma
+        <com.tourcoo.training.widget.oldplayer.SmartPickVideoOld
             android:id="@+id/videoPlayer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </com.tourcoo.training.widget.oldplayer.Sma>-->
-<com.tourcoo.training.widget.player.SmartPickPlayer
-    android:id="@+id/smartVideoPlayer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+        </com.tourcoo.training.widget.oldplayer.SmartPickVideoOld>
+
 
     </FrameLayout>
 

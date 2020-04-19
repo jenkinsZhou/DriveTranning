@@ -10,17 +10,11 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_200">
-
-      <!--  <com.tourcoo.training.widget.oldplayer.Sma
-            android:id="@+id/videoPlayer"
+        <com.tourcoo.training.widget.neplayer.NEVideoView
+            android:id="@+id/mVideoView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="@dimen/dp_200"/>
 
-        </com.tourcoo.training.widget.oldplayer.Sma>-->
-<com.tourcoo.training.widget.player.SmartPickPlayer
-    android:id="@+id/smartVideoPlayer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
 
     </FrameLayout>
 

@@ -35,7 +35,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import static com.netease.neliveplayer.sdk.constant.NEBufferStrategy.NELPANTIJITTER;
 
@@ -43,7 +42,7 @@ import static com.netease.neliveplayer.sdk.constant.NEBufferStrategy.NELPANTIJIT
  * Created by zhukkun on 3/23/17.
  * 点播视频播放控制器
  */
-public class VideoPlayerController implements PlayerContract.MediaPlayControllerBase {
+public class VideoPlayerController implements PlayerContract.MediaPlayControllerBase, NELivePlayer.OnErrorListener {
     public static final String TAG = VideoPlayerController.class.getSimpleName();
     public static final int _10S = 10000;
 
@@ -216,7 +215,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
      */
     SurfaceHolder.Callback mSHCallback = new SurfaceHolder.Callback() {
         public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-            Log.d(TAG, "onSurfaceChanged");
+            TourCooLogUtil.d(TAG, "onSurfaceChanged");
             mSurfaceHolder = holder;
             if (mMediaPlayer != null) {
                 mMediaPlayer.setDisplay(mSurfaceHolder);
@@ -235,7 +234,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
         }
 
         public void surfaceCreated(SurfaceHolder holder) {
-            Log.d(TAG, "onSurfaceCreated");
+            TourCooLogUtil.d(TAG, "onSurfaceCreated");
             mSurfaceHolder = holder;
 
             if (mNextState == RESUME || isBackground) {
@@ -250,7 +249,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
         }
 
         public void surfaceDestroyed(SurfaceHolder holder) {
-            Log.d(TAG, "onSurfaceDestroyed");
+            TourCooLogUtil.d(TAG, "onSurfaceDestroyed");
             mSurfaceHolder = null;
             if (mMediaControlLayout != null) mMediaControlLayout.hide();
             if (mMediaPlayer != null) {
@@ -276,6 +275,12 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
         }
     };
 
+    @Override
+    public boolean onError(NELivePlayer mp, int what, int extra) {
+        ToastUtil.show("onError");
+        return false;
+    }
+
     /**
      * 底层状态监听器
      */
@@ -286,14 +291,14 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
 
         public void onVideoSizeChanged(NELivePlayer mp, int width, int height,
                                        int sarNum, int sarDen) {
-            Log.d(TAG, "onVideoSizeChanged: " + width + "x" + height + "sarNum:" + sarNum + "sarDen:" + sarDen);
+            TourCooLogUtil.d(TAG, "onVideoSizeChanged: " + width + "x" + height + "sarNum:" + sarNum + "sarDen:" + sarDen);
             mVideoView.upDateVideoSize(mp.getVideoWidth(), mp.getVideoHeight(), sarNum, sarDen);
             if (mp.getVideoWidth() != 0 && mp.getVideoHeight() != 0)
                 setVideoScalingMode(mVideoScalingMode);
         }
 
         public void onPrepared(NELivePlayer mp) {
-            Log.d(TAG, "onPrepared");
+            TourCooLogUtil.d(TAG, "onPrepared");
             mCurrState = PREPARED;
             mNextState = STARTED;
             // briefly show the controlLayout
@@ -355,7 +360,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
         }
 
         public boolean onError(NELivePlayer mp, int a, int b) {
-            Log.d(TAG, "Error: " + a + "," + b);
+            TourCooLogUtil.e(TAG, "Error: " + a + "," + b);
             mCurrState = ERROR;
             if (mMediaControlLayout != null) {
                 mMediaControlLayout.hide();
@@ -375,9 +380,9 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
 
         @Override
         public boolean onInfo(NELivePlayer mp, int what, final int extra) {
-            Log.d(TAG, "onInfo: " + what + ", " + extra);
+            TourCooLogUtil.d(TAG, "onInfo: " + what + ", " + extra);
             if (mMediaPlayer != null) {
-                Log.d(TAG, "mMediaPlayer != null");
+                TourCooLogUtil.d(TAG, "mMediaPlayer != null");
                 if (what == NEPlayStatusType.NELP_BUFFERING_START) {
                     TourCooLogUtil.d(TAG, "onInfo: NELP_BUFFERING_START");
                     mUi.showLoading(true);
@@ -411,7 +416,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
 
         @Override
         public void onSeekComplete(NELivePlayer mp) {
-            Log.d(TAG, "onSeekComplete");
+            TourCooLogUtil.d(TAG, "onSeekComplete");
             mUi.onSeekComplete();
         }
 
@@ -590,6 +595,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
             }
         } catch (IOException e) {
             e.printStackTrace();
+            ToastUtil.showFailed(e.toString());
             sdkStateListener.onError(mMediaPlayer, -1, 0);
         }
         new Thread(new Runnable() {
@@ -604,6 +610,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
                     mMediaPlayer.prepareAsync();
                     mCurrState = PREPARING;
                 } catch (Exception e) {
+                    ToastUtil.showFailed(e.toString());
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -613,6 +620,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
                 }
             }
         }).start();
+        mMediaPlayer.start();
     }
 
     public void release_resource() {
@@ -639,7 +647,11 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
 
     @Override
     public void start() {
+        mMediaPlayer.start();
+
         if (mMediaPlayer != null && mIsPrepared) {
+            TourCooLogUtil.i(TAG, "onSurfaceCreated");
+            ToastUtil.show("执行播放");
             mMediaPlayer.start();
             mCurrState = STARTED;
         }
@@ -725,53 +737,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
     public void getSnapshot() {
         if (!supportSnapShot()) return;
         ToastUtil.show("截图方案");
-       /* NEMediaInfo mediaInfo = mMediaPlayer.getMediaInfo();
-        TourCooLogUtil.d(TAG, "VideoDecoderMode = " + mediaInfo.mVideoDecoderMode);
-        Log.d(TAG, "MediaPlayerName = " + mediaInfo.mMediaPlayerName);
-        Log.d(TAG, "VideoStreamType = " + mediaInfo.mVideoStreamType);
-        Log.d(TAG, "AudioDecoderMode = " + mediaInfo.mAudioDecoderMode);
-        Log.d(TAG, "AudioStreamType = " + mediaInfo.mAudioStreamType);
 
-        if (mediaInfo == null || mediaInfo.mVideoDecoderMode == null) {
-            Toast.makeText(mContext, "暂无视频流，无法截图", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (mediaInfo.mVideoDecoderMode.equals("MediaCodec")) {
-            TourCooLogUtil.d(TAG, "================= hardware unsupport snapshot ==============");
-        } else {
-            Bitmap bitmap = Bitmap.createBitmap(mVideoView.getVideoWidth(), mVideoView.getVideoHeight(), Bitmap.Config.ARGB_8888);
-            mMediaPlayer.getSnapshot(bitmap);
-//            String picName = StorageUtil.getWritePath(
-//                    mContext,
-//                    "snap_image_" + StringUtil.get36UUID() + ".jpg",
-//                    StorageType.TYPE_IMAGE);
-            String picName = VcloudFileUtils.getScreenshotFilePath();
-            File f = new File(picName);
-            try {
-                f.createNewFile();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            FileOutputStream fOut = null;
-            try {
-                fOut = new FileOutputStream(f);
-                if (picName.substring(picName.lastIndexOf(".") + 1, picName.length()).equals("jpg")) {
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-                } else if (picName.substring(picName.lastIndexOf(".") + 1, picName.length()).equals("png")) {
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                }
-                fOut.flush();
-                fOut.close();
-                VcloudFileUtils.sendUpdateBroadcast(picName);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Toast.makeText(mContext, "截图成功,可在相册中查看", Toast.LENGTH_SHORT).show();
-     }*/
     }
 
     private boolean supportSnapShot() {
@@ -861,5 +827,7 @@ public class VideoPlayerController implements PlayerContract.MediaPlayController
         NELivePlayer.init(MyApplication.getContext(), config);
         return NELivePlayer.create();
     }
+
+
 
 }

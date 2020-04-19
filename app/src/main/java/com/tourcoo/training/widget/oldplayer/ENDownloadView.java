@@ -1,4 +1,4 @@
-package com.tourcoo.training.widget.player;
+package com.tourcoo.training.widget.oldplayer;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

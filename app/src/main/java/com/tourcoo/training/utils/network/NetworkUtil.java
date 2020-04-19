@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.netease.demo.live.DemoCache;
-import com.netease.demo.live.server.DemoServerHttpClient;
+
+import com.tourcoo.training.core.app.MyApplication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class NetworkUtil {
 
 
     public static int getNetworkType(){
-        ConnectivityManager connMgr = (ConnectivityManager) DemoCache.getContext()
+        ConnectivityManager connMgr = (ConnectivityManager) MyApplication.getContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if(networkInfo!=null){
@@ -48,7 +48,7 @@ public class NetworkUtil {
      * @return
      */
     public static boolean isNetworkConnected(boolean needReliable){
-        ConnectivityManager connMgr = (ConnectivityManager) DemoCache.getContext()
+        ConnectivityManager connMgr = (ConnectivityManager) MyApplication.getContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if(networkInfo!=null){
@@ -56,7 +56,8 @@ public class NetworkUtil {
 
             boolean connect =  networkInfo.isAvailable() && networkInfo.isConnected();
             if(needReliable){
-                return connect && ping(DemoServerHttpClient.TEST_HOST, 1, builder);
+//                return connect && ping(DemoServerHttpClient.TEST_HOST, 1, builder);
+                return true;
             }else{
                 return connect;
             }
