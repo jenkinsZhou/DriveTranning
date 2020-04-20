@@ -24,7 +24,9 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.SizeUtil
+import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
@@ -53,7 +55,7 @@ class PlayVideoActivity : BaseTitleActivity() {
 
     private var mCourseList: MutableList<Course>? = null
 
-    private var mCourseHashMap : HashMap<Course,View>? = null
+    private var mCourseHashMap: HashMap<Course, View>? = null
 
     companion object {
         const val IMG_TRANSITION = "IMG_TRANSITION"
@@ -224,11 +226,18 @@ class PlayVideoActivity : BaseTitleActivity() {
             loadCatalogs(subject.catalogs)
         }
         parseTrainingStatus(mCourseList)
-
-        for (index in 0 until mCourseList!!.size ){
-            TourCooLogUtil.i("mTag", "item的状态："+mCourseList!![index].currentPlayStatus)
+        var count = 0
+        for (index in 0 until mCourseList!!.size) {
+            mCourseList!![index]
+            /* if (mCourseList!![index].currentPlayStatus == COURSE_STATUS_PLAYING) {
+                 count++
+             }*/
         }
-        TourCooLogUtil.i("mTag", "数量："+mCourseList!!.size)
+        for (entry in mCourseHashMap!!.entries) {
+            showCourseStatus(entry.value, entry.key)
+        }
+
+
     }
 
 
@@ -296,9 +305,8 @@ class PlayVideoActivity : BaseTitleActivity() {
                 tvPlanDesc.textSize = 12f
                 setViewGone(tvPlanDesc, true)
                 setViewGone(ivCourseStatus, true)
-                showCourseStatus(ivCourseStatus, course.completed)
                 //关键
-                mCourseHashMap!!.put(course,contentView)
+                mCourseHashMap!!.put(course, contentView)
                 mCourseList!!.add(course)
             }
 
@@ -317,16 +325,24 @@ class PlayVideoActivity : BaseTitleActivity() {
     }
 
 
-    private fun showCourseStatus(imageView: ImageView, status: Int) {
-        when (status) {
+    private fun showCourseStatus(view: View, course: Course) {
+        val tvPlanDesc = view.findViewById<TextView>(R.id.tvPlanDesc)
+        val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
+        val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
+        when (course.currentPlayStatus) {
             COURSE_STATUS_NO_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
+                setViewGone(tvPlanDesc, false)
             }
             COURSE_STATUS_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_finish)
+                setViewGone(tvPlanDesc, false)
             }
             COURSE_STATUS_PLAYING -> {
                 imageView.setImageResource(R.mipmap.ic_playing)
+                tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
+                setViewGone(tvPlanDesc, true)
+                view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
             }
             else -> {
             }
@@ -338,20 +354,21 @@ class PlayVideoActivity : BaseTitleActivity() {
         if (list == null) {
             return
         }
-        for (index in 0 until list.size) {
-            val course = list[index]
-            if (course.completed <= 0) {
+        var index = -1
+        for (i in 0 until list.size) {
+            val course = list[i]
+            if (course.completed <= 0 && index == -1) {
+                //该视频没有播放过,当前正在播放的视频
+                course.currentPlayStatus = COURSE_STATUS_PLAYING
+                index = i
+            } else if (course.completed <= 0 && index != -1) {
                 course.currentPlayStatus = COURSE_STATUS_NO_COMPLETE
             } else {
-                course.currentPlayStatus = COURSE_STATUS_PLAYING
-                break
-            }
-        }
-        for (index in 0 until list.size) {
-            val course = list[index]
-            if (course.currentPlayStatus != COURSE_STATUS_NO_COMPLETE && course.currentPlayStatus != COURSE_STATUS_PLAYING) {
                 course.currentPlayStatus = COURSE_STATUS_COMPLETE
             }
         }
+//
+
+
     }
 }

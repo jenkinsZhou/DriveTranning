@@ -1,7 +1,9 @@
 package com.tourcoo.training.core.retrofit.repository;
 
 
+import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.AppUtils;
+import com.google.gson.Gson;
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.BasePageResult;
 import com.tourcoo.training.core.base.entity.BaseResult;
@@ -211,7 +213,7 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult> requestSaveAnswer(String examId, List<CommitAnswer> commitAnswerList) {
         Map<String, Object> params = new HashMap<>(4);
         params.put("examId", examId);
-        params.put("questions", commitAnswerList);
+        params.put("questions",JSON.toJSONString(commitAnswerList) );
         return CommonTransformer.switchSchedulers(getApiService().requestSaveAnswer(params).retryWhen(new RetryWhen()));
     }
 

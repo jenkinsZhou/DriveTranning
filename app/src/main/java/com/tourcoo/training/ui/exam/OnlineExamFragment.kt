@@ -45,7 +45,7 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
         adapter?.bindToRecyclerView(questionRecyclerView)
         showQuestion(question!!)
         loadCorrectAdapter(question!!)
-        testData(question!!)
+//        testData(question!!)
         loadQuestionHistory(question!!)
         adapter?.setNewData(question!!.answerItems)
         loadItemClick(question!!)

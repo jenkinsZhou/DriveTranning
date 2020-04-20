@@ -293,7 +293,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             if(question.isHasAnswered){
                 val commit = CommitAnswer()
                 commit.id = question.id.toString()
-                commit.answer = StringUtils.join(question.answer, ",")
+                commit.answer = StringUtils.join(question.answer, "")
                 commitList.add(commit)
             }
         }

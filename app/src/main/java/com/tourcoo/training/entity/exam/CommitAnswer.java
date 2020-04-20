@@ -1,5 +1,7 @@
 package com.tourcoo.training.entity.exam;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * @author :JenkinsZhou
  * @description :
@@ -13,10 +15,15 @@ public class CommitAnswer {
      * ID : 2221649
      * Answer : A
      */
-
-    private String ID;
     private String Answer;
+    private String ID;
+    @JSONField(name = "Answer")
+    public String getAnswer() {
+        return Answer;
+    }
 
+
+    @JSONField(name = "ID")
     public String getID() {
         return ID;
     }
@@ -25,9 +32,6 @@ public class CommitAnswer {
         this.ID = ID;
     }
 
-    public String getAnswer() {
-        return Answer;
-    }
 
     public void setAnswer(String Answer) {
         this.Answer = Answer;
