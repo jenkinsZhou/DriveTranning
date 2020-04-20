@@ -16,6 +16,7 @@ import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.widget.dialog.loading.IosLoadingDialog;
 import com.tourcoo.training.entity.training.VideoStream;
 
@@ -51,6 +52,26 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
     private List<VideoStream> mUrlList = new ArrayList<>();
 
     private TextView mSwitchSize;
+
+    private OnPlayStatusListener onPlayStatusListener;
+
+    private int currentCourseId;
+
+    public int getCurrentCourseId() {
+        return currentCourseId;
+    }
+
+    public void setCurrentCourseId(int currentCourseId) {
+        this.currentCourseId = currentCourseId;
+    }
+
+    public OnPlayStatusListener getOnPlayStatusListenter() {
+        return onPlayStatusListener;
+    }
+
+    public void setOnPlayStatusListener(OnPlayStatusListener onPlayStatusListener) {
+        this.onPlayStatusListener = onPlayStatusListener;
+    }
 
     public SmartPickPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
@@ -135,12 +156,14 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
         sampleVideo.mType = mType;
         sampleVideo.mUrlList = mUrlList;
         sampleVideo.mTypeText = mTypeText;
+        sampleVideo.onPlayStatusListener = onPlayStatusListener;
         sampleVideo.mSwitchSize.setText(mTypeText);
+        sampleVideo.currentCourseId = currentCourseId;
         return sampleVideo;
     }
 
     /**
-     * 推出全屏时将对应处理参数逻辑返回给非播放器
+     * 推出全屏时将对应处理参数逻辑返回给非全屏播放器
      *
      * @param oldF
      * @param vp
@@ -162,12 +185,18 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onAutoCompletion() {
         super.onAutoCompletion();
+        if(onPlayStatusListener != null){
+            onPlayStatusListener.onAutoPlayComplete(getCurrentCourseId());
+        }
         releaseTmpManager();
     }
 
     @Override
     public void onCompletion() {
         super.onCompletion();
+        if(onPlayStatusListener != null){
+            onPlayStatusListener.onPlayComplete(getCurrentCourseId());
+        }
         releaseTmpManager();
     }
 
@@ -289,7 +318,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
     };
 
     private void resolveStartChange(int position) {
-        final String name = mUrlList.get(position).getDefinitionDesc();
+        final String name = CommonUtil.getNotNullValue(mUrlList.get(position).getDefinition());
         if (mSourcePosition != position) {
             if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
                     || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
@@ -320,7 +349,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
     private void resolveChangedResult() {
         isChanging = false;
         mTmpManager = null;
-        final String name = mUrlList.get(mSourcePosition).getDefinitionDesc();
+        final String name =CommonUtil.getNotNullValue( mUrlList.get(mSourcePosition).getDefinition());
         final String url = mUrlList.get(mSourcePosition).getURL();
         mTypeText = name;
         mSwitchSize.setText(name);
@@ -357,4 +386,6 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
         //releaseSurface(surface);
         return true;
     }
+
+
 }

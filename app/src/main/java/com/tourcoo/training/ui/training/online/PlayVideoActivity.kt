@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.model.GSYVideoModel
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
@@ -30,13 +31,11 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
-import com.tourcoo.training.entity.training.VideoStream
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.widget.oldplayer.OnTransitionListener
+import com.tourcoo.training.widget.player.OnPlayStatusListener
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video.*
-import kotlinx.android.synthetic.main.item_training_plan_detail_content.*
-import kotlin.collections.ArrayList
 
 /**
  *@description :
@@ -45,7 +44,7 @@ import kotlin.collections.ArrayList
  * @date 2020年04月19日23:27
  * @Email: 971613168@qq.com
  */
-class PlayVideoActivity : BaseTitleActivity() {
+class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
     private val mTag = "PlayVideoActivity"
     private var orientationUtils: OrientationUtils? = null
 
@@ -75,16 +74,19 @@ class PlayVideoActivity : BaseTitleActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         isTransition = intent.getBooleanExtra(PlayVideoActivityOld.TRANSITION, false)
-        init()
         mCourseList = ArrayList()
         mCourseHashMap = HashMap()
+        //增加封面
+        val imageView = ImageView(this)
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.setImageResource(R.drawable.img_training_free_video)
+        smartVideoPlayer!!.thumbImageView = imageView
         requestPlanDetail()
     }
 
-    private fun init() {
-        //借用了jjdxm_ijkplayer的URL
-        //借用了jjdxm_ijkplayer的URL
-        val source1 = "http://cdn.course.ggjtaq.com/360/renmenjiaotongchubansheshuzikejian/weixianhuowudaoluyunshujiashiyuananquanjiaoyupeixunshuzikechengbanben/diyizhangjiashiyuandeshehuizerenyuzhiyedaode/diyijiedaoluyunshujiashiyuandezhiyetedian/jiaotongshigudeweihai/jiaotongshigudeweihai.mp4"
+    private fun loadPlayer() {
+        PlayerFactory.setPlayManager(IjkPlayerManager::class.java)
+   /*     val source1 = "http://cdn.course.ggjtaq.com/360/renmenjiaotongchubansheshuzikejian/weixianhuowudaoluyunshujiashiyuananquanjiaoyupeixunshuzikechengbanben/diyizhangjiashiyuandeshehuizerenyuzhiyedaode/diyijiedaoluyunshujiashiyuandezhiyetedian/jiaotongshigudeweihai/jiaotongshigudeweihai.mp4"
         val switchVideoModel = VideoStream()
         switchVideoModel.definitionDesc = "普通"
         switchVideoModel.url = source1
@@ -93,16 +95,11 @@ class PlayVideoActivity : BaseTitleActivity() {
         val name2 = "清晰"
         val switchVideoModel2 = VideoStream()
         switchVideoModel2.url = source2
-        switchVideoModel2.definitionDesc = name2
-        val list: MutableList<VideoStream> = ArrayList()
+        switchVideoModel2.definitionDesc = name2*/
+      /*  val list: MutableList<VideoStream> = ArrayList()
         list.add(switchVideoModel)
-        list.add(switchVideoModel2)
-        smartVideoPlayer!!.setUp(list, false, "测试视频")
-        //增加封面
-        val imageView = ImageView(this)
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        imageView.setImageResource(R.drawable.img_training_free_video)
-        smartVideoPlayer!!.thumbImageView = imageView
+        list.add(switchVideoModel2)*/
+
         //增加title
         smartVideoPlayer!!.titleTextView.visibility = View.VISIBLE
         //设置返回键
@@ -114,9 +111,12 @@ class PlayVideoActivity : BaseTitleActivity() {
         //是否可以滑动调整
         smartVideoPlayer!!.setIsTouchWiget(true)
         //设置ijk内核
-        PlayerFactory.setPlayManager(IjkPlayerManager::class.java)
         //设置返回按键功能
-        smartVideoPlayer!!.backButton.setOnClickListener { onBackPressed() }
+        smartVideoPlayer!!.backButton.setOnClickListener {
+            ToastUtil.show("点击了返回")
+            onBackPressed()
+        }
+        smartVideoPlayer!!.setOnPlayStatusListener(this)
         //过渡动画
         initTransition()
     }
@@ -226,13 +226,6 @@ class PlayVideoActivity : BaseTitleActivity() {
             loadCatalogs(subject.catalogs)
         }
         parseTrainingStatus(mCourseList)
-        var count = 0
-        for (index in 0 until mCourseList!!.size) {
-            mCourseList!![index]
-            /* if (mCourseList!![index].currentPlayStatus == COURSE_STATUS_PLAYING) {
-                 count++
-             }*/
-        }
         for (entry in mCourseHashMap!!.entries) {
             showCourseStatus(entry.value, entry.key)
         }
@@ -265,8 +258,9 @@ class PlayVideoActivity : BaseTitleActivity() {
             tvPlanTitle.text = getNotNullValue(catalog.name)
             llPlanContentView.addView(contentView)
             val layoutParams = contentView.layoutParams as LinearLayout.LayoutParams
-            layoutParams.setMargins(SizeUtil.dp2px(catalog.level * 10f), 0, 0, 0)
-            contentView.layoutParams = layoutParams
+//            layoutParams.setMargins(SizeUtil.dp2px(catalog.level * 10f), 0, 0, 0)
+//            contentView.layoutParams = layoutParams
+            contentView.setPadding(SizeUtil.dp2px(catalog.level * 10f), 0, 0, 0)
             if (catalog.catalogs != null) {
                 newCatalogs.remove(catalog)
                 catalogs.remove(catalog)
@@ -294,9 +288,7 @@ class PlayVideoActivity : BaseTitleActivity() {
             val tvPlanTitle = contentView.findViewById<TextView>(R.id.tvPlanTitle)
             tvPlanTitle.text = getNotNullValue(course.name)
             llPlanContentView.addView(contentView)
-            val layoutParams = contentView.layoutParams as LinearLayout.LayoutParams
-            layoutParams.setMargins(SizeUtil.dp2px(course.level * 10f), 0, 0, 0)
-            contentView.layoutParams = layoutParams
+            contentView.setPadding(SizeUtil.dp2px(course.level * 10f), 0, 0, 0)
             if (course.streams != null) {
                 val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
                 //播放状态
@@ -343,6 +335,7 @@ class PlayVideoActivity : BaseTitleActivity() {
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
+                loadStreamUrl(course)
             }
             else -> {
             }
@@ -367,8 +360,71 @@ class PlayVideoActivity : BaseTitleActivity() {
                 course.currentPlayStatus = COURSE_STATUS_COMPLETE
             }
         }
-//
+    }
 
 
+    private fun loadStreamUrl( course : Course?){
+        if(course == null || course.streams == null ){
+            return
+        }
+        smartVideoPlayer.currentCourseId = course.id
+        smartVideoPlayer!!.setUp(course.streams, false, getNotNullValue(course.name))
+        loadPlayer()
+
+    }
+
+    override fun onPlayComplete(courseId: Int) {
+        ToastUtil.showSuccess("onPlayComplete:"+courseId)
+    }
+
+    override fun onAutoPlayComplete(courseId: Int) {
+        handlePlayComplete(courseId)
+        ToastUtil.showSuccess("自动播放完成了:"+courseId)
+    }
+
+
+
+    private fun handlePlayComplete(courseId: Int){
+        playNext(courseId)
+    }
+
+
+    /**
+     * 播放下一集
+     *
+     * @return true表示还有下一集
+     */
+    private   fun playNext(courseId: Int) {
+      val course =   getNextCourse(courseId)
+        if(course != null){
+            //todo 还有下一集
+            requestPlanDetail()
+        }else{
+            ToastUtil.show("沒有下一集了")
+        }
+
+    }
+
+
+
+    private fun getNextCourse(courseId: Int) : Course?{
+        for (entry in mCourseHashMap!!.entries) {
+            if(entry.key.id ==courseId ){
+               var index =  mCourseList!!.indexOf(entry.key)
+                if(index <0 ){
+                    //说明没有找到
+                    return null
+                }
+                if(index==mCourseList!!.size-1 ){
+                    //todo 说明已经是最后一个视频了
+                    return null
+                }
+                if(index+1 <mCourseList!!.size){
+                    return mCourseList!![index+1]
+                }
+                return null
+            }
+        }
+        return null
     }
 }

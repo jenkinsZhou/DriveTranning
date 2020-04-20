@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.tourcoo.training.R;
 import com.tourcoo.training.entity.training.VideoStream;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SwitchVideoTypeDialog extends Dialog {
@@ -23,11 +24,10 @@ public class SwitchVideoTypeDialog extends Dialog {
 
     private ListView listView = null;
 
-    private ArrayAdapter<VideoStream> adapter = null;
+    private ArrayAdapter<String> adapter = null;
 
     private OnListItemClickListener onItemClickListener;
 
-    private List<VideoStream> data;
 
     public interface OnListItemClickListener {
         void onItemClick(int position);
@@ -45,13 +45,16 @@ public class SwitchVideoTypeDialog extends Dialog {
 
     public void initList(List<VideoStream> data, OnListItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
-        this.data = data;
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.switch_video_dialog, null);
-        listView = (ListView) view.findViewById(R.id.switch_dialog_list);
+        listView =  view.findViewById(R.id.switch_dialog_list);
         setContentView(view);
-        adapter = new ArrayAdapter<>(mContext, R.layout.switch_video_dialog_item, data);
+        List<String> stringList = new ArrayList<>();
+        for (VideoStream datum : data) {
+            stringList.add(datum.getDefinition());
+        }
+        adapter = new ArrayAdapter<>(mContext, R.layout.switch_video_dialog_item, stringList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener());
 
