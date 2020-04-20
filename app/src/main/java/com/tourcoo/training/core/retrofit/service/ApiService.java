@@ -17,6 +17,7 @@ import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
+import com.tourcoo.training.entity.training.TrainingPlanDetail;
 
 import java.util.List;
 import java.util.Map;
@@ -201,4 +202,10 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/user/logout")
     Observable<BaseResult> requestLogout();
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/get-training-plan-detail2")
+    Observable<BaseResult<TrainingPlanDetail>> requestPlanDetail(@Body Map<String, Object> map );
+
 }

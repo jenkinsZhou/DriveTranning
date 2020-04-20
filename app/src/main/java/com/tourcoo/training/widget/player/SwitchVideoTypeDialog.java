@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.tourcoo.training.R;
-import com.tourcoo.training.widget.oldplayer.SwitchVideoModel;
+import com.tourcoo.training.entity.training.VideoStream;
 
 import java.util.List;
 
@@ -23,11 +23,11 @@ public class SwitchVideoTypeDialog extends Dialog {
 
     private ListView listView = null;
 
-    private ArrayAdapter<VideoInfo> adapter = null;
+    private ArrayAdapter<VideoStream> adapter = null;
 
     private OnListItemClickListener onItemClickListener;
 
-    private List<VideoInfo> data;
+    private List<VideoStream> data;
 
     public interface OnListItemClickListener {
         void onItemClick(int position);
@@ -43,7 +43,7 @@ public class SwitchVideoTypeDialog extends Dialog {
         super.onCreate(savedInstanceState);
     }
 
-    public void initList(List<VideoInfo> data, OnListItemClickListener onItemClickListener) {
+    public void initList(List<VideoStream> data, OnListItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
         this.data = data;
 

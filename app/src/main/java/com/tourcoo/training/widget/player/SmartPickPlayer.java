@@ -17,6 +17,7 @@ import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.widget.dialog.loading.IosLoadingDialog;
+import com.tourcoo.training.entity.training.VideoStream;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
 
     private boolean isChanging;
 
-    private List<VideoInfo> mUrlList = new ArrayList<>();
+    private List<VideoStream> mUrlList = new ArrayList<>();
 
     private TextView mSwitchSize;
 
@@ -92,7 +93,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
      * @param title         title
      * @return
      */
-    public boolean setUp(List<VideoInfo> url, boolean cacheWithPlay, String title) {
+    public boolean setUp(List<VideoStream> url, boolean cacheWithPlay, String title) {
         mUrlList = url;
         return setUp(url.get(mSourcePosition).getURL(), cacheWithPlay, title);
     }
@@ -106,7 +107,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
      * @param title         title
      * @return
      */
-    public boolean setUp(List<VideoInfo> url, boolean cacheWithPlay, File cachePath, String title) {
+    public boolean setUp(List<VideoStream> url, boolean cacheWithPlay, File cachePath, String title) {
         mUrlList = url;
         return setUp(url.get(mSourcePosition).getURL(), cacheWithPlay, cachePath, title);
     }

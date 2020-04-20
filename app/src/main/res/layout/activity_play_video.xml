@@ -93,11 +93,13 @@
                 android:layout_marginTop="@dimen/dp_8">
 
                 <LinearLayout
+                    android:background="@color/white"
+                    android:id="@+id/llPlanContentView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                   <!-- <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
@@ -123,7 +125,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="@dimen/dp_8"
-                                android:text="题目解析"
+                                android:text="课程简介"
                                 android:textColor="@color/blue4287FF"
                                 android:textSize="@dimen/sp_14"
                                 android:textStyle="bold" />
@@ -131,6 +133,7 @@
 
 
                         <TextView
+                            android:id="@+id/tvPlantDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_8"
@@ -216,7 +219,7 @@
                                 android:layout_marginTop="@dimen/dp_10"
                                 android:text="00:12:12  学习中" />
                         </LinearLayout>
-                    </LinearLayout>
+                    </LinearLayout>-->
 
 
                 </LinearLayout>

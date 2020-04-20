@@ -21,6 +21,7 @@ import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
+import com.tourcoo.training.entity.training.TrainingPlanDetail;
 import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
@@ -216,6 +217,12 @@ public class ApiRepository extends BaseRepository {
 
     public Observable<BaseResult> requestLogout() {
         return CommonTransformer.switchSchedulers(getApiService().requestLogout().retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<TrainingPlanDetail>> trainingPlanID(String trainingPlanID) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("trainingPlanID", trainingPlanID);
+        return CommonTransformer.switchSchedulers(getApiService().requestPlanDetail(params).retryWhen(new RetryWhen()));
     }
 
 }

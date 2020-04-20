@@ -1,17 +1,15 @@
-package com.tourcoo.training.widget.player;
+package com.tourcoo.training.entity.training;
 
 import android.text.TextUtils;
 
 /**
  * @author :JenkinsZhou
  * @description :
- * @company :翼迈科技股份有限公司
- * @date 2020年04月19日23:00
+ * @company :途酷科技
+ * @date 2020年04月20日9:44
  * @Email: 971613168@qq.com
  */
-public class VideoInfo {
-
-
+public class VideoStream {
     /**
      * CourseID : 612008
      * Bitrate : 0
