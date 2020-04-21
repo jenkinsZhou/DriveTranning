@@ -12,6 +12,7 @@ import com.tourcoo.training.core.retrofit.CommonTransformer;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
 import com.tourcoo.training.core.retrofit.RetryWhen;
 import com.tourcoo.training.core.retrofit.service.ApiService;
+import com.tourcoo.training.entity.account.PayInfo;
 import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
@@ -205,7 +206,7 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestCoinPackage().retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult> requestRecharge(String coinPackageID, int payType, String amount, String coinPackageCount) {
+    public Observable<BaseResult<PayInfo>> requestRecharge(String coinPackageID, int payType, String amount, String coinPackageCount) {
         Map<String, Object> params = new HashMap<>(4);
         params.put("coinPackageID", coinPackageID);
         params.put("amount", amount);

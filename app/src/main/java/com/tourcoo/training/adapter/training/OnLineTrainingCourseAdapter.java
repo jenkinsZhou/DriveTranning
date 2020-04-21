@@ -1,6 +1,8 @@
 package com.tourcoo.training.adapter.training;
 
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
@@ -39,6 +41,7 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
         GlideManager.loadImg(CommonUtil.getUrl(item.getCoverUrl()), ivVideoThumbnail, R.mipmap.icon_car_networking);
         helper.setText(R.id.tvCourseTimeRange, CommonUtil.getNotNullValue(item.getTimeRange()));
         helper.setText(R.id.tvCourseTitle, CommonUtil.getNotNullValue(item.getTitle()));
+        ProgressBar progressBarOnLine = helper.getView(R.id.progressBarOnLine);
 
         switch (item.getTag()) {
             case 0:
@@ -61,15 +64,20 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
         ImageView ivCourseStatus = helper.getView(R.id.ivCourseStatus);
         switch (item.getStatus()) {
             case COURSE_STATUS_FINISHED:
+                progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_finish);
                 break;
             case COURSE_STATUS_CONTINUE:
+                progressBarOnLine.setVisibility(View.VISIBLE);
+                progressBarOnLine.setProgress((int) item.getProgress());
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_continue);
                 break;
             case COURSE_STATUS_NEED_PAY:
+                progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_need_pay);
                 break;
             case COURSE_STATUS_WAIT_EXAM:
+                progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_wait_exam);
                 break;
         }

@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_video_play" />
+                android:src="@mipmap/icon_video" />
 
             <ImageView
                 android:id="@+id/ivTag"
@@ -48,15 +48,19 @@
                 android:layout_height="@dimen/dp_0_5"
                 android:layout_below="@id/ivVideoThumbnail" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ProgressBar
+                android:id="@+id/progressBarOnLine"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_5"
+                android:layout_gravity="center_vertical"
                 android:layout_above="@id/viewLineHorizon"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/dp_7"
-                android:layout_marginBottom="@dimen/dp_5"
-                android:text="03:06"
-                android:textColor="@color/white" />
+                android:max="100"
+                android:minWidth="@dimen/dp_100"
+                android:progress="0"
+                android:progressDrawable="@drawable/online_bg_progress_line" />
+
         </RelativeLayout>
 
         <LinearLayout

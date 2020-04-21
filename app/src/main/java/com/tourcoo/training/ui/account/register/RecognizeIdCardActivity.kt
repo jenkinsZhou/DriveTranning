@@ -59,7 +59,7 @@ import java.lang.ref.WeakReference
 class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, PermissionCallbacks {
     private var photoPath = ""
     private var type: Int = -1
-    private var trainId = ""
+    private var trainId:String? = null
     private val mTag = "RecognizeIdCardActivity"
     private var hud: KProgressHUD? = null
     private val mHandler: MyHandler = MyHandler(this)
@@ -86,7 +86,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
 
     override fun initView(savedInstanceState: Bundle?) {
         type = intent.getIntExtra(EXTRA_KEY_REGISTER_TYPE, -1)
-        trainId = intent.getStringExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID) as String
+        trainId = intent.getStringExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID)
         TourCooLogUtil.i(mTag, "跳转类型=" + type)
         tvNextStep.setOnClickListener(this)
         llTakePhoto.setOnClickListener(this)

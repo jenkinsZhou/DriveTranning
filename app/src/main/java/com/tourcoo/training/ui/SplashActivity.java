@@ -23,6 +23,8 @@ import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.widget.navigation.NavigationBarUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
+import com.tourcoo.training.entity.account.AccountHelper;
+import com.tourcoo.training.ui.account.LoginActivity;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 
@@ -125,7 +127,11 @@ public class SplashActivity extends BaseTitleActivity {
                         if (isFinishing() || isDestroyed()) {
                             return;
                         }
-                        CommonUtil.startActivity(mContext, MainTabActivity.class);
+                        if (AccountHelper.getInstance().isLogin()) {
+                            CommonUtil.startActivity(mContext, MainTabActivity.class);
+                        }else {
+                            CommonUtil.startActivity(mContext, LoginActivity.class);
+                        }
                         finish();
                     }
                 });

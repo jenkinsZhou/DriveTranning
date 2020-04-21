@@ -57,6 +57,7 @@ public class MainTabActivity extends BaseMainActivity {
     @Override
     public void initView(Bundle savedInstanceState) {
         mTabLayout = findViewById(R.id.commonTabLayout);
+        mTabLayout.setCurrentTab(1);
     }
 
 

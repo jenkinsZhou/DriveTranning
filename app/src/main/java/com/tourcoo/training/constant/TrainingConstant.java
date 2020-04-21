@@ -9,4 +9,6 @@ package com.tourcoo.training.constant;
  */
 public class TrainingConstant {
     public static final String EXTRA_TRAINING_PLAN_ID = "EXTRA_TRAINING_PLAN_ID";
+
+    public static final String APP_ID = "wx3210e68d7d514a48";
 }

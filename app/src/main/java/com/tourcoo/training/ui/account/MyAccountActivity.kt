@@ -1,8 +1,12 @@
 package com.tourcoo.training.ui.account
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.text.InputType
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver
@@ -12,12 +16,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.alipay.sdk.app.PayTask
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.account.RechargeAmountAdapter
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
@@ -25,6 +31,8 @@ import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.PayInfo
+import com.tourcoo.training.entity.account.PayResult
 import com.tourcoo.training.entity.account.RechargeEntity
 import com.tourcoo.training.entity.recharge.CoinInfo
 import com.tourcoo.training.entity.recharge.CoinPackageEntity
@@ -245,16 +253,70 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
 
-        ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, "1", "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>>() {
-            override fun onSuccessNext(entity: BaseResult<Any>?) {
+        ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, "1", "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<PayInfo>>() {
+            override fun onSuccessNext(entity: BaseResult<PayInfo>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess("'充值成功")
+                    if (payDialog!!.payType == 1){
+                        payByAlipay(entity.data.thirdPayInfo)
+                    }else{
+                        ToastUtil.showFailed("todo://暂不支持")
+                    }
+
                     payDialog?.dismiss()
                 } else {
                     ToastUtil.show(entity?.msg)
                 }
             }
         })
+    }
+
+    private val SDK_PAY_FLAG = 1
+    @SuppressLint("HandlerLeak")
+    private val mHandler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                SDK_PAY_FLAG -> {
+                    val payResult = PayResult(msg.obj as Map<String, String>)
+                    /**
+                     * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    val resultInfo = payResult.getResult()// 同步返回需要验证的信息
+                    val resultStatus = payResult.getResultStatus()
+
+                    TourCooLogUtil.d(resultInfo)
+
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                        ToastUtil.showSuccess("支付成功")
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        ToastUtil.showFailed(payResult.memo)
+                    }
+                }
+                else -> {
+                }
+            }
+        }
+    }
+
+
+    private fun payByAlipay(orderInfo: String) {
+
+        val payRunnable = Runnable {
+            val alipay = PayTask(this)
+            val result = alipay.payV2(orderInfo, true)
+
+            val msg = Message()
+            msg.what = SDK_PAY_FLAG
+            msg.obj = result
+            mHandler.sendMessage(msg)
+        }
+
+
+        // 必须异步调用
+        val payThread = Thread(payRunnable)
+        payThread.start()
     }
 
     /*private fun getCurrentSelectCoin(): CoinInfo {

@@ -6,6 +6,7 @@ import com.tourcoo.training.core.base.entity.BasePageResult;
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.retrofit.TokenInterceptor;
 import com.tourcoo.training.entity.account.IdCardInfo;
+import com.tourcoo.training.entity.account.PayInfo;
 import com.tourcoo.training.entity.account.TradeType;
 import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
@@ -194,7 +195,7 @@ public interface ApiService {
      */
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/trainee/recharge")
-    Observable<BaseResult> requestRecharge(@Body Map<String, Object> map);
+    Observable<BaseResult<PayInfo>> requestRecharge(@Body Map<String, Object> map);
 
 
     /**
