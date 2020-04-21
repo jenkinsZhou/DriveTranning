@@ -17,6 +17,7 @@ import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.dialog.loading.IosLoadingDialog;
 import com.tourcoo.training.entity.training.VideoStream;
 
@@ -304,11 +305,18 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
 
         @Override
         public void onVideoPause() {
-
+            ToastUtil.showSuccess("onVideoPause");
+            if(onPlayStatusListener != null){
+                onPlayStatusListener.onPlayPause(getCurrentCourseId());
+            }
         }
 
         @Override
         public void onVideoResume() {
+            ToastUtil.showSuccess("onVideoResume");
+            if(onPlayStatusListener != null){
+                onPlayStatusListener.onPlayResume(getCurrentCourseId());
+            }
 
         }
 
