@@ -12,23 +12,23 @@
 
 
     <!--用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!--用于访问GPS定位-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--用于访问网络，网络定位需要上网-->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <!--用于读取手机当前的状态-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--用于写入缓存数据到扩展存储卡-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--用于申请调用A-GPS模块-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <!--8.0开启安装应用权限-->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
@@ -42,8 +42,10 @@
         android:roundIcon="@mipmap/icon_car_networking"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="key">
-        </meta-data>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="key"></meta-data>
+
         <activity
             android:name="com.tourcoo.training.ui.MainTabActivity"
             android:launchMode="singleTask">
@@ -70,9 +72,9 @@
         <activity android:name=".ui.training.StudyMedalRecordActivity" />
         <activity android:name=".ui.exam.OnlineExamActivity" />
         <activity android:name=".ui.training.ProfessionalTrainingFragment" />
-        <activity android:name=".ui.training.online.PlayVideoActivityOld"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            />
+        <activity
+            android:name=".ui.training.online.PlayVideoActivityOld"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
         <activity android:name=".ui.account.register.RecognizeIdCardActivity" />
         <activity
             android:name=".widget.idcardcamera.camera.CameraActivity"
@@ -82,21 +84,24 @@
         <activity android:name=".ui.account.FindPassActivity" />
         <activity android:name=".ui.pay.BuyNowActivity" />
         <activity android:name=".ui.account.register.SelectCompanyActivity" />
-        <activity android:name=".widget.idcardcamera.camera.LicenseCameraActivity" />
+        <activity
+            android:name=".widget.idcardcamera.camera.LicenseCameraActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.account.register.RecognizeLicenseActivity" />
         <activity android:name=".ui.account.PersonalInfoActivity" />
         <activity android:name=".ui.certificate.MyCertificationActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.training.online.PlayVideoActivityNewOld1" />
-        <activity android:name=".ui.training.online.PlayVideoActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            />
+        <activity
+            android:name=".ui.training.online.PlayVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
 
         <!--wx pay-->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
+        <activity android:name=".core.base.activity.WebViewActivity" />
 
         <service android:name="com.amap.api.location.APSService">
 

@@ -94,7 +94,7 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        skipCamera()
+//        skipCamera()
     }
 
     private fun showSetting() {

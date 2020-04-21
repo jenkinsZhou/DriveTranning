@@ -14,4 +14,9 @@
     <string name="tip">提示</string>
 
     <string name="video_finished">视频播放结束</string>
+
+    <string name="web_alert_title">温馨提示</string>
+    <string name="web_alert_msg">您确定要关闭该页面吗?</string>
+    <string name="web_alert_left">再看看</string>
+    <string name="web_alert_right">关闭</string>
 </resources>

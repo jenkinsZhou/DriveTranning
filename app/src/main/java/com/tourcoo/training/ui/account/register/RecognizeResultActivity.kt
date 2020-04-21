@@ -50,7 +50,6 @@ class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
         } else {
             titleBar?.setTitleMainText("营业执照上传")
         }
-
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -100,18 +99,17 @@ class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
           startActivity(intent)*/
         when (AccountTempHelper.getInstance().recognizeType) {
             EXTRA_REGISTER_TYPE_DRIVER -> {
-                Intent(this, DriverRegisterActivity::class.java)
+                val intent = Intent(this, DriverRegisterActivity::class.java)
                 startActivity(intent)
             }
             EXTRA_REGISTER_TYPE_INDUSTRY -> {
-                Intent(this, IndustryRegisterActivity::class.java)
+                val intent = Intent(this, IndustryRegisterActivity::class.java)
                 startActivity(intent)
             }
             else -> {
             }
         }
     }
-
 
 
 }

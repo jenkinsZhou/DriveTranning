@@ -185,7 +185,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onAutoCompletion() {
         super.onAutoCompletion();
-//        releaseTmpManager();
+        releaseTmpManager();
         if(onPlayStatusListener != null){
             onPlayStatusListener.onAutoPlayComplete(getCurrentCourseId());
         }
@@ -194,10 +194,11 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onCompletion() {
         super.onCompletion();
+        releaseTmpManager();
         if(onPlayStatusListener != null){
             onPlayStatusListener.onPlayComplete(getCurrentCourseId());
         }
-//        releaseTmpManager();
+
     }
 
     /**

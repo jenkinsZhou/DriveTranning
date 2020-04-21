@@ -27,6 +27,7 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.SizeUtil
+import com.tourcoo.training.core.util.TimeUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.Catalog
@@ -278,7 +279,8 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
                 val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
                 //播放状态
                 val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
-                tvPlanDesc.text = getNotNullValue("00:00学习到01:12")
+                val endTime = TimeUtil.secondToDate(course.progress.toLong(), "mm:ss")
+                tvPlanDesc.text = getNotNullValue("00:00学习到$endTime")
                 tvPlanDesc.textSize = 12f
                 setViewGone(tvPlanDesc, true)
                 setViewGone(ivCourseStatus, true)
@@ -359,10 +361,10 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             0 -> {
                 //从上次播放进度开始播放
                 //todo
-                    smartVideoPlayer.seekOnStart = course.progress * 1000L
-                    smartVideoPlayer.currentCourseId = course.id
-                    smartVideoPlayer!!.setUp(course.streams, false, getNotNullValue(course.name))
-                    loadPlayer()
+                smartVideoPlayer.seekOnStart = course.progress * 1000L
+                smartVideoPlayer.currentCourseId = course.id
+                smartVideoPlayer!!.setUp(course.streams, false, getNotNullValue(course.name))
+                loadPlayer()
 
 
             }
@@ -495,6 +497,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
                     requestSaveProgress(courseId, progress.toString())
                 })
                 .setNegativeButton("取消", View.OnClickListener {
+                    finish()
                 }).show()
     }
 
@@ -507,11 +510,11 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
     }
 
 
-    private fun isFullScreen(): Boolean{
-        if(orientationUtils == null){
+    private fun isFullScreen(): Boolean {
+        if (orientationUtils == null) {
             return false
         }
-        if(orientationUtils!!.screenType == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+        if (orientationUtils!!.screenType == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             return true
         }
         return false
