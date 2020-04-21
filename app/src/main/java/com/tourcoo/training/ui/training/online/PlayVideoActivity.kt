@@ -1,6 +1,6 @@
 package com.tourcoo.training.ui.training.online
 
-import android.content.pm.ActivityInfo
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -14,12 +14,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import com.shuyu.gsyvideoplayer.GSYVideoManager
-import com.shuyu.gsyvideoplayer.model.GSYVideoModel
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -32,6 +32,9 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.TrainingPlanDetail
+import com.tourcoo.training.ui.exam.OnlineExamActivity
+import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
+import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.oldplayer.OnTransitionListener
 import com.tourcoo.training.widget.player.OnPlayStatusListener
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -44,7 +47,7 @@ import kotlinx.android.synthetic.main.activity_play_video.*
  * @date 2020年04月19日23:27
  * @Email: 971613168@qq.com
  */
-class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
+class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClickListener {
     private val mTag = "PlayVideoActivity"
     private var orientationUtils: OrientationUtils? = null
 
@@ -55,6 +58,9 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
     private var mCourseList: MutableList<Course>? = null
 
     private var mCourseHashMap: HashMap<Course, View>? = null
+
+    private var trainingPlanID = ""
+    private var trainingPlanDetail: TrainingPlanDetail? = null
 
     companion object {
         const val IMG_TRANSITION = "IMG_TRANSITION"
@@ -74,6 +80,14 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
 
     override fun initView(savedInstanceState: Bundle?) {
         isTransition = intent.getBooleanExtra(PlayVideoActivityOld.TRANSITION, false)
+        trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
+        if (TextUtils.isEmpty(trainingPlanID)) {
+            ToastUtil.show("未获取到计划信息")
+            finish()
+            return
+        }
+
+        tvExam.setOnClickListener(this)
         mCourseList = ArrayList()
         mCourseHashMap = HashMap()
         //增加封面
@@ -86,19 +100,19 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
 
     private fun loadPlayer() {
         PlayerFactory.setPlayManager(IjkPlayerManager::class.java)
-   /*     val source1 = "http://cdn.course.ggjtaq.com/360/renmenjiaotongchubansheshuzikejian/weixianhuowudaoluyunshujiashiyuananquanjiaoyupeixunshuzikechengbanben/diyizhangjiashiyuandeshehuizerenyuzhiyedaode/diyijiedaoluyunshujiashiyuandezhiyetedian/jiaotongshigudeweihai/jiaotongshigudeweihai.mp4"
-        val switchVideoModel = VideoStream()
-        switchVideoModel.definitionDesc = "普通"
-        switchVideoModel.url = source1
-        //        String source2 = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f30.mp4";
-        val source2 = "http://cdn.course.ggjtaq.com/1080/renmenjiaotongchubansheshuzikejian/weixianhuowudaoluyunshujiashiyuananquanjiaoyupeixunshuzikechengbanben/diyizhangjiashiyuandeshehuizerenyuzhiyedaode/diyijiedaoluyunshujiashiyuandezhiyetedian/jiaotongshigudeweihai/jiaotongshigudeweihai.mp4"
-        val name2 = "清晰"
-        val switchVideoModel2 = VideoStream()
-        switchVideoModel2.url = source2
-        switchVideoModel2.definitionDesc = name2*/
-      /*  val list: MutableList<VideoStream> = ArrayList()
-        list.add(switchVideoModel)
-        list.add(switchVideoModel2)*/
+        /*     val source1 = "http://cdn.course.ggjtaq.com/360/renmenjiaotongchubansheshuzikejian/weixianhuowudaoluyunshujiashiyuananquanjiaoyupeixunshuzikechengbanben/diyizhangjiashiyuandeshehuizerenyuzhiyedaode/diyijiedaoluyunshujiashiyuandezhiyetedian/jiaotongshigudeweihai/jiaotongshigudeweihai.mp4"
+             val switchVideoModel = VideoStream()
+             switchVideoModel.definitionDesc = "普通"
+             switchVideoModel.url = source1
+             //        String source2 = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f30.mp4";
+             val source2 = "http://cdn.course.ggjtaq.com/1080/renmenjiaotongchubansheshuzikejian/weixianhuowudaoluyunshujiashiyuananquanjiaoyupeixunshuzikechengbanben/diyizhangjiashiyuandeshehuizerenyuzhiyedaode/diyijiedaoluyunshujiashiyuandezhiyetedian/jiaotongshigudeweihai/jiaotongshigudeweihai.mp4"
+             val name2 = "清晰"
+             val switchVideoModel2 = VideoStream()
+             switchVideoModel2.url = source2
+             switchVideoModel2.definitionDesc = name2*/
+        /*  val list: MutableList<VideoStream> = ArrayList()
+          list.add(switchVideoModel)
+          list.add(switchVideoModel2)*/
 
         //增加title
         smartVideoPlayer!!.titleTextView.visibility = View.VISIBLE
@@ -113,7 +127,7 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
         //设置ijk内核
         //设置返回按键功能
         smartVideoPlayer!!.backButton.setOnClickListener {
-            ToastUtil.show("点击了返回")
+            //todo
             onBackPressed()
         }
         smartVideoPlayer!!.setOnPlayStatusListener(this)
@@ -155,23 +169,10 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
         if (orientationUtils != null) orientationUtils!!.releaseListener()
     }
 
-    override fun onBackPressed() { //先返回正常状态
-        if (orientationUtils!!.screenType == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            smartVideoPlayer!!.fullscreenButton.performClick()
-            return
-        }
-        //释放所有
-        smartVideoPlayer!!.setVideoAllCallBack(null)
-        GSYVideoManager.releaseAllVideos()
-        if (isTransition && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            super.onBackPressed()
-        } else {
-            Handler().postDelayed({
-                finish()
-                overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
-            }, 500)
-        }
-    }
+    /* override fun onBackPressed() {
+         //先返回正常状态
+
+     }*/
 
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -202,9 +203,10 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
     }
 
     private fun requestPlanDetail() {
-        ApiRepository.getInstance().trainingPlanID("9044").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<TrainingPlanDetail>>() {
+        ApiRepository.getInstance().trainingPlanID(trainingPlanID).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<TrainingPlanDetail>>() {
             override fun onSuccessNext(entity: BaseResult<TrainingPlanDetail>?) {
                 if (entity!!.code == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
+                    trainingPlanDetail = entity.data
                     parseTrainingPlanDetail(entity.data)
                 }
             }
@@ -216,6 +218,9 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
         if (detail == null || detail.subjects == null) {
             return
         }
+        mCourseHashMap!!.clear()
+        mCourseList!!.clear()
+        llPlanContentView.removeAllViews()
         val subjects = detail.subjects
         for (subject in subjects) {
             val subjectView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_header, null)
@@ -363,8 +368,8 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
     }
 
 
-    private fun loadStreamUrl( course : Course?){
-        if(course == null || course.streams == null ){
+    private fun loadStreamUrl(course: Course?) {
+        if (course == null || course.streams == null) {
             return
         }
         smartVideoPlayer.currentCourseId = course.id
@@ -374,19 +379,19 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
     }
 
     override fun onPlayComplete(courseId: Int) {
-        ToastUtil.showSuccess("onPlayComplete:"+courseId)
     }
 
     override fun onAutoPlayComplete(courseId: Int) {
-        handlePlayComplete(courseId)
-        ToastUtil.showSuccess("自动播放完成了:"+courseId)
+//        handlePlayComplete(courseId)
+        ToastUtil.showSuccess("自动播放完成了:" + courseId)
+        //通知后台当前课程播放结束
+        requestCompleteCurrentCourse(courseId.toString())
     }
 
 
-
-    private fun handlePlayComplete(courseId: Int){
-        playNext(courseId)
-    }
+    /* private fun handlePlayComplete(courseId: Int) {
+         playNext(courseId)
+     }*/
 
 
     /**
@@ -394,37 +399,112 @@ class PlayVideoActivity : BaseTitleActivity(),OnPlayStatusListener{
      *
      * @return true表示还有下一集
      */
-    private   fun playNext(courseId: Int) {
-      val course =   getNextCourse(courseId)
-        if(course != null){
-            //todo 还有下一集
-            requestPlanDetail()
-        }else{
-            ToastUtil.show("沒有下一集了")
-        }
+    /*  private fun playNext(courseId: Int) {
+          val course = getNextCourse(courseId)
+          if (course != null) {
+              requestPlanDetail()
+          } else {
+              ToastUtil.show("沒有下一集了")
+          }
 
-    }
-
+      }*/
 
 
-    private fun getNextCourse(courseId: Int) : Course?{
+    private fun getNextCourse(courseId: Int): Course? {
         for (entry in mCourseHashMap!!.entries) {
-            if(entry.key.id ==courseId ){
-               var index =  mCourseList!!.indexOf(entry.key)
-                if(index <0 ){
+            if (entry.key.id == courseId) {
+                var index = mCourseList!!.indexOf(entry.key)
+                if (index < 0) {
                     //说明没有找到
                     return null
                 }
-                if(index==mCourseList!!.size-1 ){
-                    //todo 说明已经是最后一个视频了
+                if (index == mCourseList!!.size - 1) {
+                    //说明已经是最后一个视频了
                     return null
                 }
-                if(index+1 <mCourseList!!.size){
-                    return mCourseList!![index+1]
+                if (index + 1 < mCourseList!!.size) {
+                    return mCourseList!![index + 1]
                 }
                 return null
             }
         }
         return null
     }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.tvExam -> {
+                skipExamActivity(trainingPlanDetail)
+            }
+            else -> {
+            }
+        }
+    }
+
+
+    private fun skipExamActivity(trainingPlanDetail: TrainingPlanDetail?) {
+        if (trainingPlanDetail == null) {
+            ToastUtil.show("未获取到考试信息")
+            return
+        }
+        val intent = Intent(mContext, OnlineExamActivity::class.java)
+        //培训计划id
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
+        //考试题id
+        intent.putExtra(EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
+        startActivity(intent)
+    }
+
+    /**
+     * 当前课程播放完毕
+     */
+    private fun requestCompleteCurrentCourse(courseId: String) {
+        ApiRepository.getInstance().requestSaveProgress(trainingPlanID, courseId, "-1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>() {
+            override fun onSuccessNext(entity: BaseResult<Any>?) {
+                if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    requestPlanDetail()
+                }
+            }
+        })
+    }
+
+    /**
+     * 保存当前观看进度
+     */
+    private fun requestSaveProgress(courseId: String, second: String) {
+        ApiRepository.getInstance().requestSaveProgress(trainingPlanID, courseId, second).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>() {
+            override fun onSuccessNext(entity: BaseResult<Any>?) {
+                if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    //todo
+                    finish()
+                    ToastUtil.showSuccess("进度保存成功")
+                }
+            }
+        })
+    }
+
+    private fun showExit(courseId: String) {
+        IosAlertDialog(mContext)
+                .init()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(false)
+                .setTitle("确认退出学习")
+                .setMsg("退出前会保存当前学习进度")
+                .setPositiveButton("确认退出", View.OnClickListener {
+                    //todo 保存观看进度
+                    val progress = smartVideoPlayer!!.currentPositionWhenPlaying / 1000
+                    requestSaveProgress(courseId, progress.toString())
+                })
+                .setNegativeButton("取消", View.OnClickListener {
+                }).show()
+    }
+
+
+    override fun onBackPressed() {
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return
+        }
+        showExit(smartVideoPlayer.currentCourseId.toString())
+    }
+
 }

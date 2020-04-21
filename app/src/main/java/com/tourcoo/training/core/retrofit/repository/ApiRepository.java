@@ -192,7 +192,7 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestFaceVerify(params).retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult<FaceRecognizeResult>> requestIdCardVerify(String trainingPlanID, String idPhotoBase64,String facePhotoBase64 ) {
+    public Observable<BaseResult<FaceRecognizeResult>> requestIdCardVerify(String trainingPlanID, String idPhotoBase64, String facePhotoBase64) {
         Map<String, Object> params = new HashMap<>(2);
         params.put("idCardPhoto", idPhotoBase64);
         params.put("facePhoto", facePhotoBase64);
@@ -200,11 +200,12 @@ public class ApiRepository extends BaseRepository {
         params.put("scene", 2);*/
         return CommonTransformer.switchSchedulers(getApiService().requestIdCardVerify(params).retryWhen(new RetryWhen()));
     }
-    public Observable<BaseResult<CoinPackageEntity>> requestCoinPackage( ) {
+
+    public Observable<BaseResult<CoinPackageEntity>> requestCoinPackage() {
         return CommonTransformer.switchSchedulers(getApiService().requestCoinPackage().retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult> requestRecharge(String coinPackageID, int  payType,String amount,String coinPackageCount) {
+    public Observable<BaseResult> requestRecharge(String coinPackageID, int payType, String amount, String coinPackageCount) {
         Map<String, Object> params = new HashMap<>(4);
         params.put("coinPackageID", coinPackageID);
         params.put("amount", amount);
@@ -223,7 +224,7 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult> requestSaveAnswer(String examId, List<CommitAnswer> commitAnswerList) {
         Map<String, Object> params = new HashMap<>(4);
         params.put("examId", examId);
-        params.put("questions",JSON.toJSONString(commitAnswerList) );
+        params.put("questions", JSON.toJSONString(commitAnswerList));
         return CommonTransformer.switchSchedulers(getApiService().requestSaveAnswer(params).retryWhen(new RetryWhen()));
     }
 
@@ -235,6 +236,17 @@ public class ApiRepository extends BaseRepository {
         Map<String, Object> params = new HashMap<>(1);
         params.put("trainingPlanID", trainingPlanID);
         return CommonTransformer.switchSchedulers(getApiService().requestPlanDetail(params).retryWhen(new RetryWhen()));
+    }
+
+
+    /* https://api.ggjtaq.com/v1.0/training/save-progress
+    request: {trainingPlanID, courseID, progress}*/
+    public Observable<BaseResult> requestSaveProgress(String trainingPlanID, String courseID, String progress) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("trainingPlanID", trainingPlanID);
+        params.put("courseID", courseID);
+        params.put("progress", progress);
+        return CommonTransformer.switchSchedulers(getApiService().requestSaveProgress(params).retryWhen(new RetryWhen()));
     }
 
 }

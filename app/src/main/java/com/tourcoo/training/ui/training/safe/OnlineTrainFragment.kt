@@ -34,6 +34,7 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
+import com.tourcoo.training.ui.training.online.PlayVideoActivity
 import com.tourcoo.training.ui.training.online.PlayVideoActivityNewOld1
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonListDialog
@@ -188,16 +189,17 @@ class OnlineTrainFragment : BaseFragment() {
         }
         when (courseInfo.status) {
             COURSE_STATUS_NEED_PAY -> {
-                skipPlayVideo("")
+                skipPlayVideo(courseInfo.trainingPlanID)
             }
             else -> {
-                val intent = Intent(mContext, OnlineExamActivity::class.java)
+                skipPlayVideo(courseInfo.trainingPlanID)
+               /* val intent = Intent(mContext, OnlineExamActivity::class.java)
                 //培训计划id
                 intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
                 //考试题id
                 //todo 考试id 暂时写死
                 intent.putExtra(EXTRA_EXAM_ID, "0")
-                startActivity(intent)
+                startActivity(intent)*/
             }
         }
     }
@@ -273,7 +275,7 @@ class OnlineTrainFragment : BaseFragment() {
 
 
     private fun skipPlayVideo(trainingId: String?) {
-        val intent = Intent(mContext, PlayVideoActivityNewOld1::class.java)
+        val intent = Intent(mContext, PlayVideoActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
         startActivity(intent)
     }

@@ -178,6 +178,7 @@ public interface ApiService {
 
     /**
      * 学币套餐列表
+     *
      * @return
      */
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
@@ -187,6 +188,7 @@ public interface ApiService {
 
     /**
      * 充值
+     *
      * @param map
      * @return
      */
@@ -217,6 +219,11 @@ public interface ApiService {
 
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/get-training-plan-detail2")
-    Observable<BaseResult<TrainingPlanDetail>> requestPlanDetail(@Body Map<String, Object> map );
+    Observable<BaseResult<TrainingPlanDetail>> requestPlanDetail(@Body Map<String, Object> map);
 
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/save-progress")
+    Observable<BaseResult> requestSaveProgress(@Body Map<String, Object> map);
 }

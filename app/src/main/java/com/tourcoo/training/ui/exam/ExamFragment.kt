@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_exam_content_online.*
  * @date 2020年03月09日17:31
  * @Email: 971613168@qq.com
  */
-class OnlineExamFragment : BaseFragment(), View.OnClickListener {
+class ExamFragment : BaseFragment(), View.OnClickListener {
 
     private var adapter: QuestionAdapter? = null
     private var questionRecyclerView: RecyclerView? = null
@@ -53,10 +53,10 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
 
 
     companion object {
-        fun newInstance(question: Question): OnlineExamFragment {
+        fun newInstance(question: Question): ExamFragment {
             val args = Bundle()
             args.putParcelable("question", question)
-            val fragment = OnlineExamFragment()
+            val fragment = ExamFragment()
             fragment.arguments = args
             return fragment
         }
@@ -176,32 +176,6 @@ class OnlineExamFragment : BaseFragment(), View.OnClickListener {
     }
 
 
-    private fun assemblyExamEntity(): ExaminationEntityOld {
-        val entity = ExaminationEntityOld()
-        entity.questionId = "1001"
-//        entity.questionType = QUESTION_TYPE_SINGLE
-        entity.questionType = QUESTION_TYPE_MULTIPLE
-        entity.isHasAnswered = false
-        entity.answerOldList = getAllAnswerList(entity.isHasAnswered)
-        entity.correctAnswerOldList = getCorrectAnswerList(entity.isHasAnswered)
-        entity.questionContent = "安排开发骄傲阿松发哦苏东坡快结束了可根据"
-        for (answer in entity.answerOldList) {
-            for (correctAnswer in entity.correctAnswerOldList) {
-                if (answer.answerId == correctAnswer.answerId) {
-                    answer.isCorrectAnswer = true
-                }
-            }
-        }
-        return entity
-    }
-
-    /* private fun transformQuestion(question :Question ){
-         //todo
-         if(question.){
-
-         }
-     }
- */
     private fun showQuestion(question: Question?) {
         when (question?.type) {
             QUESTION_TYPE_SINGLE -> {

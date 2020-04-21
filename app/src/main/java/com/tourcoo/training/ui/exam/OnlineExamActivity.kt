@@ -61,8 +61,9 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun initView(savedInstanceState: Bundle?) {
         if (intent != null) {
-            trainPlanId = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID) as String
-            examId = intent!!.getStringExtra(EXTRA_EXAM_ID) as String
+            val bundle = intent!!.extras
+            trainPlanId = bundle!!.getString(EXTRA_TRAINING_PLAN_ID)!!
+            examId =  bundle!!.getString(EXTRA_EXAM_ID)!!
         }
         if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
             ToastUtil.show("未获取到考试题数据")
@@ -92,7 +93,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         list?.clear()
         val questions = examEntity.questions
         for (i in 0 until questions.size ) {
-            list?.add(OnlineExamFragment.newInstance(questions[i]))
+            list?.add(ExamFragment.newInstance(questions[i]))
         }
         vpExamOnline.adapter = fragmentCommonAdapter
     }
@@ -143,7 +144,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         if (currentPosition < list!!.size - 1) {
             setViewGone(tvCommitExam, false)
             setViewGone(tvNextQuestion, true)
-            val fragment = list!![currentPosition] as OnlineExamFragment
+            val fragment = list!![currentPosition] as ExamFragment
             val selectCount = fragment.getSelectCount()
             if (fragment.isMultipleAnswer() && selectCount == 1) {
                 ToastUtil.show("这道题是多选哦")
@@ -274,7 +275,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     private fun getAllQuestions(): MutableList<Question> {
         val results = ArrayList<Question>()
         for (fragment in list!!) {
-            val onlineExamFragment = fragment as OnlineExamFragment?
+            val onlineExamFragment = fragment as ExamFragment?
             if (onlineExamFragment != null) {
                 results.add(onlineExamFragment.getQuestion())
             }
@@ -300,7 +301,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         if(commitList.isEmpty()){
             return
         }
-        ApiRepository.getInstance().requestSaveAnswer("131483", commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
+        ApiRepository.getInstance().requestSaveAnswer(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity == null) {
                     return
