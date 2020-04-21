@@ -1,10 +1,10 @@
 package com.tourcoo.training.ui.training.online
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.text.TextUtils
 import android.transition.Transition
 import android.view.LayoutInflater
@@ -86,7 +86,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             finish()
             return
         }
-
+        TourCooLogUtil.i(mTag, "trainingPlanID=$trainingPlanID")
         tvExam.setOnClickListener(this)
         mCourseList = ArrayList()
         mCourseHashMap = HashMap()
@@ -100,20 +100,6 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
 
     private fun loadPlayer() {
         PlayerFactory.setPlayManager(IjkPlayerManager::class.java)
-        /*     val source1 = "http://cdn.course.ggjtaq.com/360/renmenjiaotongchubansheshuzikejian/weixianhuowudaoluyunshujiashiyuananquanjiaoyupeixunshuzikechengbanben/diyizhangjiashiyuandeshehuizerenyuzhiyedaode/diyijiedaoluyunshujiashiyuandezhiyetedian/jiaotongshigudeweihai/jiaotongshigudeweihai.mp4"
-             val switchVideoModel = VideoStream()
-             switchVideoModel.definitionDesc = "普通"
-             switchVideoModel.url = source1
-             //        String source2 = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f30.mp4";
-             val source2 = "http://cdn.course.ggjtaq.com/1080/renmenjiaotongchubansheshuzikejian/weixianhuowudaoluyunshujiashiyuananquanjiaoyupeixunshuzikechengbanben/diyizhangjiashiyuandeshehuizerenyuzhiyedaode/diyijiedaoluyunshujiashiyuandezhiyetedian/jiaotongshigudeweihai/jiaotongshigudeweihai.mp4"
-             val name2 = "清晰"
-             val switchVideoModel2 = VideoStream()
-             switchVideoModel2.url = source2
-             switchVideoModel2.definitionDesc = name2*/
-        /*  val list: MutableList<VideoStream> = ArrayList()
-          list.add(switchVideoModel)
-          list.add(switchVideoModel2)*/
-
         //增加title
         smartVideoPlayer!!.titleTextView.visibility = View.VISIBLE
         //设置返回键
@@ -124,18 +110,18 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         smartVideoPlayer!!.fullscreenButton.setOnClickListener { orientationUtils!!.resolveByClick() }
         //是否可以滑动调整
         smartVideoPlayer!!.setIsTouchWiget(true)
+
         //设置ijk内核
         //设置返回按键功能
         smartVideoPlayer!!.backButton.setOnClickListener {
-            //todo
             onBackPressed()
         }
-        smartVideoPlayer!!.setOnPlayStatusListener(this)
+        smartVideoPlayer!!.onPlayStatusListener = this
         //过渡动画
-        initTransition()
+        loadTransition()
     }
 
-    private fun initTransition() {
+    private fun loadTransition() {
         if (isTransition && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             postponeEnterTransition()
             ViewCompat.setTransitionName(smartVideoPlayer!!, PlayVideoActivityOld.IMG_TRANSITION)
@@ -168,11 +154,6 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         }
         if (orientationUtils != null) orientationUtils!!.releaseListener()
     }
-
-    /* override fun onBackPressed() {
-         //先返回正常状态
-
-     }*/
 
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -207,32 +188,36 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             override fun onSuccessNext(entity: BaseResult<TrainingPlanDetail>?) {
                 if (entity!!.code == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     trainingPlanDetail = entity.data
-                    parseTrainingPlanDetail(entity.data)
+                    handleTrainingPlanDetail(entity.data)
                 }
             }
         })
     }
 
 
-    private fun parseTrainingPlanDetail(detail: TrainingPlanDetail?) {
+    private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
         if (detail == null || detail.subjects == null) {
             return
         }
         mCourseHashMap!!.clear()
         mCourseList!!.clear()
         llPlanContentView.removeAllViews()
+        tvTitle.text = getNotNullValue(detail.description)
         val subjects = detail.subjects
         for (subject in subjects) {
-            val subjectView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_header, null)
-            val tvSubjectTitle = subjectView.findViewById<TextView>(R.id.tvSubjectTitle)
-            tvSubjectTitle.text = getNotNullValue(subject.name)
-            //一级标题
-            llPlanContentView.addView(subjectView)
+            //如果标题名称不为空则添加标题
+            if (!TextUtils.isEmpty(subject.name)) {
+                val subjectView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_header, null)
+                val tvSubjectTitle = subjectView.findViewById<TextView>(R.id.tvSubjectTitle)
+                tvSubjectTitle.text = getNotNullValue(subject.name)
+                //一级标题
+                llPlanContentView.addView(subjectView)
+            }
             loadCatalogs(subject.catalogs)
         }
         parseTrainingStatus(mCourseList)
         for (entry in mCourseHashMap!!.entries) {
-            showCourseStatus(entry.value, entry.key)
+            loadCourseStatus(entry.value, entry.key)
         }
 
 
@@ -256,16 +241,15 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             return
         }
         for (index in newCatalogs.size - 1 downTo 0) {
-            TourCooLogUtil.i(mTag, "catalog = " + newCatalogs[index])
             val catalog = newCatalogs[index]
-            val contentView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_content, null)
-            val tvPlanTitle = contentView.findViewById<TextView>(R.id.tvPlanTitle)
-            tvPlanTitle.text = getNotNullValue(catalog.name)
-            llPlanContentView.addView(contentView)
-            val layoutParams = contentView.layoutParams as LinearLayout.LayoutParams
-//            layoutParams.setMargins(SizeUtil.dp2px(catalog.level * 10f), 0, 0, 0)
-//            contentView.layoutParams = layoutParams
-            contentView.setPadding(SizeUtil.dp2px(catalog.level * 10f), 0, 0, 0)
+            if (!TextUtils.isEmpty(catalog.name)) {
+                //标题不为空时添加TextView
+                val contentView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_content, null)
+                val tvPlanTitle = contentView.findViewById<TextView>(R.id.tvPlanTitle)
+                tvPlanTitle.text = getNotNullValue(catalog.name)
+                llPlanContentView.addView(contentView)
+                contentView.setPadding(SizeUtil.dp2px(catalog.level * 10f), 0, 0, 0)
+            }
             if (catalog.catalogs != null) {
                 newCatalogs.remove(catalog)
                 catalogs.remove(catalog)
@@ -273,11 +257,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             } else {
                 addCourse(catalog.courses)
             }
-            /*  if (catalog.courses != null) {
-                  loadCourse(catalog.courses)
-              } else {
-                  loadCatalogs(catalogs)
-              }*/
+
 
         }
 
@@ -321,8 +301,10 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         return result
     }
 
-
-    private fun showCourseStatus(view: View, course: Course) {
+    /**
+     * 定位上次播放位置
+     */
+    private fun loadCourseStatus(view: View, course: Course) {
         val tvPlanDesc = view.findViewById<TextView>(R.id.tvPlanDesc)
         val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
@@ -340,7 +322,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
-                loadStreamUrl(course)
+                playStreamUrl(course)
             }
             else -> {
             }
@@ -368,22 +350,37 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
     }
 
 
-    private fun loadStreamUrl(course: Course?) {
+    private fun playStreamUrl(course: Course?) {
         if (course == null || course.streams == null) {
             return
         }
-        smartVideoPlayer.currentCourseId = course.id
-        smartVideoPlayer!!.setUp(course.streams, false, getNotNullValue(course.name))
-        loadPlayer()
+        when (course.mediaType) {
+            //视频
+            0 -> {
+                //从上次播放进度开始播放
+                //todo
+                    smartVideoPlayer.seekOnStart = course.progress * 1000L
+                    smartVideoPlayer.currentCourseId = course.id
+                    smartVideoPlayer!!.setUp(course.streams, false, getNotNullValue(course.name))
+                    loadPlayer()
+
+
+            }
+            else -> {
+                //外链URL
+                ToastUtil.show("跳转外链逻辑")
+            }
+        }
+
 
     }
 
     override fun onPlayComplete(courseId: Int) {
+        //todo
     }
 
     override fun onAutoPlayComplete(courseId: Int) {
-//        handlePlayComplete(courseId)
-        ToastUtil.showSuccess("自动播放完成了:" + courseId)
+        //todo
         //通知后台当前课程播放结束
         requestCompleteCurrentCourse(courseId.toString())
     }
@@ -476,9 +473,11 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     //todo
-                    finish()
                     ToastUtil.showSuccess("进度保存成功")
+                } else {
+                    ToastUtil.show(entity?.msg)
                 }
+                finish()
             }
         })
     }
@@ -507,4 +506,14 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         showExit(smartVideoPlayer.currentCourseId.toString())
     }
 
+
+    private fun isFullScreen(): Boolean{
+        if(orientationUtils == null){
+            return false
+        }
+        if(orientationUtils!!.screenType == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+            return true
+        }
+        return false
+    }
 }

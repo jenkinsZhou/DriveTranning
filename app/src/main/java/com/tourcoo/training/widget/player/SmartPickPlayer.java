@@ -65,7 +65,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
         this.currentCourseId = currentCourseId;
     }
 
-    public OnPlayStatusListener getOnPlayStatusListenter() {
+    public OnPlayStatusListener getOnPlayStatusListener() {
         return onPlayStatusListener;
     }
 
@@ -163,7 +163,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
     }
 
     /**
-     * 推出全屏时将对应处理参数逻辑返回给非全屏播放器
+     * 退出全屏时将对应处理参数逻辑返回给非全屏播放器
      *
      * @param oldF
      * @param vp
@@ -185,10 +185,10 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onAutoCompletion() {
         super.onAutoCompletion();
+//        releaseTmpManager();
         if(onPlayStatusListener != null){
             onPlayStatusListener.onAutoPlayComplete(getCurrentCourseId());
         }
-        releaseTmpManager();
     }
 
     @Override
@@ -197,7 +197,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
         if(onPlayStatusListener != null){
             onPlayStatusListener.onPlayComplete(getCurrentCourseId());
         }
-        releaseTmpManager();
+//        releaseTmpManager();
     }
 
     /**
