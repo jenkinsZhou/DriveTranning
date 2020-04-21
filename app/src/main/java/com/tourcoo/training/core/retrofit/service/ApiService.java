@@ -17,6 +17,7 @@ import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
+import com.tourcoo.training.entity.study.BannerBean;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 
 import java.util.List;
@@ -108,6 +109,12 @@ public interface ApiService {
     Call<BaseResult<BusinessLicenseInfo>> requestBusinessRecognition(@Body RequestBody files);
 
     /**
+     * 获取首页banner
+     */
+    @POST("v1.0/open/training/list-banner")
+    Observable<BaseResult<List<BannerBean>>> requestListBanner();
+
+    /**
      * 公司模糊匹配
      *
      * @param map
@@ -143,6 +150,10 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
     @POST("v1.0/training/list-online-training-present-month-plan")
     Observable<BaseResult<List<CourseInfo>>> requestOnLineTrainingList();
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/training/list-offline-training-present-month-plan")
+    Observable<BaseResult<List<CourseInfo>>> requestOffLineTrainingList();
 
 
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})

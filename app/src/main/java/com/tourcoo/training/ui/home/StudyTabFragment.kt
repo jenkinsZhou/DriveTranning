@@ -1,17 +1,27 @@
 package com.tourcoo.training.ui.home
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
+import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseBlueBgTitleFragment
+import com.tourcoo.training.core.log.TourCooLogUtil
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver
+import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ResourceUtil
+import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.study.BannerBean
 import com.tourcoo.training.ui.training.ProfessionalTrainingFragment
 import com.tourcoo.training.ui.training.WorkProTrainingFragment
 import com.tourcoo.training.ui.training.safe.SafeTrainingFragment
@@ -19,8 +29,11 @@ import com.tourcoo.training.widget.banner.BannerEntity
 import com.tourcoo.training.widget.banner.ImageBannerAdapter
 import com.tourcoo.training.widget.viewpager.AutoHeightViewPager
 import com.tourcoo.training.widget.viewpager.SwitchScrollViewPager
+import com.trello.rxlifecycle3.android.ActivityEvent
+import com.trello.rxlifecycle3.android.FragmentEvent
 import com.youth.banner.indicator.CircleIndicator
-import kotlinx.android.synthetic.main.fragment_tab_study.*
+import com.youth.banner.listener.OnBannerListener
+import kotlinx.android.synthetic.main.fragment_tab_training.*
 import java.util.*
 
 /**
@@ -30,13 +43,26 @@ import java.util.*
  * @date 2020年03月10日9:34
  * @Email: 971613168@qq.com
  */
-class StudyTabFragment : BaseBlueBgTitleFragment(),View.OnClickListener {
+class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
+
     private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
-    private var trainingViewPager: SwitchScrollViewPager?= null
+    private var trainingViewPager: SwitchScrollViewPager? = null
     override fun getContentLayout(): Int {
         return R.layout.fragment_tab_training
+    }
+
+
+    private var tv_safe: TextView? = null
+    private var tv_job: TextView? = null
+    private var tv_special: TextView? = null
+
+    override fun onStart() {
+        super.onStart()
+        tv_safe = view!!.findViewById(R.id.tv_safe)
+        tv_job = view!!.findViewById(R.id.tv_job)
+        tv_special = view!!.findViewById(R.id.tv_special)
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
@@ -44,13 +70,47 @@ class StudyTabFragment : BaseBlueBgTitleFragment(),View.OnClickListener {
         titleBar?.setTitleMainText("交通安培在线课堂")
         val leftView = titleBar?.getTextView(Gravity.START)
         setViewGone(leftView, false)
+
+
         showPageChange(0)
-        learnBanner?.adapter =ImageBannerAdapter(getTestData3())
-        learnBanner?.indicator = CircleIndicator(mContext)
-        llTrainingSafe.setOnClickListener(this)
-        llTrainingWorkBefore.setOnClickListener(this)
-        llTrainingProfession.setOnClickListener(this)
+
+        llTrainingSafe.setOnClickListener(this@StudyTabFragment)
+        llTrainingWorkBefore.setOnClickListener(this@StudyTabFragment)
+        llTrainingProfession.setOnClickListener(this@StudyTabFragment)
+
+
+        val list: MutableList<BannerEntity> = ArrayList()
+
+        ApiRepository.getInstance().requesListBanner().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<List<BannerBean>>>() {
+            override fun onSuccessNext(entity: BaseResult<List<BannerBean>>?) {
+                if (entity != null) {
+                    if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                        TourCooLogUtil.d(entity)
+                        entity.data.forEach {
+                            list.add(BannerEntity(it.imageUrl, null, 1))
+                        }
+                        learnBanner?.adapter = ImageBannerAdapter(list)
+                        learnBanner?.indicator = CircleIndicator(mContext)
+                        learnBanner?.setOnBannerListener(object : OnBannerListener<Any> {
+                            override fun onBannerChanged(position: Int) {
+                            }
+
+                            override fun OnBannerClick(data: Any?, position: Int) {
+                                ToastUtil.show("" + position)
+                            }
+
+                        })
+
+                    } else {
+                        ToastUtil.show(entity.msg)
+                    }
+                }
+            }
+        })
+
+
     }
+
 
     override fun initView(savedInstanceState: Bundle?) {
         trainingViewPager = mContentView.findViewById(R.id.trainingViewPager)
@@ -58,7 +118,7 @@ class StudyTabFragment : BaseBlueBgTitleFragment(),View.OnClickListener {
         list = ArrayList()
         fragmentCommonAdapter = CommonFragmentPagerAdapter(this.childFragmentManager, list)
         testLoadData()
-        trainingViewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+        trainingViewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
             }
@@ -78,6 +138,7 @@ class StudyTabFragment : BaseBlueBgTitleFragment(),View.OnClickListener {
         super.loadData()
         setStatusBarModeWhite(this)
     }
+
     companion object {
         fun newInstance(): StudyTabFragment {
             val args = Bundle()
@@ -85,18 +146,6 @@ class StudyTabFragment : BaseBlueBgTitleFragment(),View.OnClickListener {
             fragment.arguments = args
             return fragment
         }
-    }
-
-  private  fun getTestData3(): List<BannerEntity>? {
-        val list: MutableList<BannerEntity> = ArrayList()
-        list.add(BannerEntity("https://img.zcool.cn/community/011ad05e27a173a801216518a5c505.jpg", null, 1))
-        list.add(BannerEntity("https://img.zcool.cn/community/0148fc5e27a173a8012165184aad81.jpg", null, 1))
-        list.add(BannerEntity("https://img.zcool.cn/community/013c7d5e27a174a80121651816e521.jpg", null, 1))
-        list.add(BannerEntity("https://img.zcool.cn/community/01b8ac5e27a173a80120a895be4d85.jpg", null, 1))
-        list.add(BannerEntity("https://img.zcool.cn/community/01a85d5e27a174a80120a895111b2c.jpg", null, 1))
-        list.add(BannerEntity("https://img.zcool.cn/community/01085d5e27a174a80120a8958791c4.jpg", null, 1))
-        list.add(BannerEntity("https://img.zcool.cn/community/01f8735e27a174a8012165188aa959.jpg", null, 1))
-        return list
     }
 
 
@@ -110,34 +159,47 @@ class StudyTabFragment : BaseBlueBgTitleFragment(),View.OnClickListener {
     }
 
 
-
-    private fun showSelect(llContainer : LinearLayout?,rlBg: RelativeLayout?){
+    private fun showSelect(llContainer: LinearLayout?, rlBg: RelativeLayout?) {
         llContainer?.background = ResourceUtil.getDrawable(R.color.blue5087FF)
         rlBg?.background = ResourceUtil.getDrawable(R.drawable.shape_circle_white)
     }
 
-    private fun showUnSelect(llContainer : LinearLayout?,rlBg: RelativeLayout?){
+    private fun showUnSelect(llContainer: LinearLayout?, rlBg: RelativeLayout?) {
         llContainer?.background = ResourceUtil.getDrawable(R.color.white)
         rlBg?.background = ResourceUtil.getDrawable(R.drawable.shape_circle_grayf7f4f8)
     }
 
 
-    private fun showPageChange(position : Int){
+    private fun showPageChange(position: Int) {
         when (position) {
             0 -> {
-                showSelect(llTrainingSafe,rlCircleTrainingSafe)
-                showUnSelect(llTrainingWorkBefore,rlCircleTrainingBeforeWork)
-                showUnSelect(llTrainingProfession,rlCircleTrainingProfession)
+
+                tv_safe?.setTextColor(Color.WHITE)
+                tv_job?.setTextColor(resources.getColor(R.color.black333333))
+                tv_special?.setTextColor(resources.getColor(R.color.black333333))
+
+                showSelect(llTrainingSafe, rlCircleTrainingSafe)
+                showUnSelect(llTrainingWorkBefore, rlCircleTrainingBeforeWork)
+                showUnSelect(llTrainingProfession, rlCircleTrainingProfession)
             }
             1 -> {
-                showUnSelect(llTrainingSafe,rlCircleTrainingSafe)
-                showSelect(llTrainingWorkBefore,rlCircleTrainingBeforeWork)
-                showUnSelect(llTrainingProfession,rlCircleTrainingProfession)
+                tv_safe?.setTextColor(resources.getColor(R.color.black333333))
+                tv_job?.setTextColor(Color.WHITE)
+                tv_special?.setTextColor(resources.getColor(R.color.black333333))
+
+                showUnSelect(llTrainingSafe, rlCircleTrainingSafe)
+                showSelect(llTrainingWorkBefore, rlCircleTrainingBeforeWork)
+                showUnSelect(llTrainingProfession, rlCircleTrainingProfession)
             }
+
             2 -> {
-                showUnSelect(llTrainingSafe,rlCircleTrainingSafe)
-                showUnSelect(llTrainingWorkBefore,rlCircleTrainingBeforeWork)
-                showSelect(llTrainingProfession,rlCircleTrainingProfession)
+                tv_safe?.setTextColor(resources.getColor(R.color.black333333))
+                tv_job?.setTextColor(resources.getColor(R.color.black333333))
+                tv_special?.setTextColor(Color.WHITE)
+
+                showUnSelect(llTrainingSafe, rlCircleTrainingSafe)
+                showUnSelect(llTrainingWorkBefore, rlCircleTrainingBeforeWork)
+                showSelect(llTrainingProfession, rlCircleTrainingProfession)
             }
             else -> {
             }
@@ -145,17 +207,16 @@ class StudyTabFragment : BaseBlueBgTitleFragment(),View.OnClickListener {
     }
 
 
-
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.llTrainingSafe -> {
-                trainingViewPager?.setCurrentItem(0,true)
+                trainingViewPager?.setCurrentItem(0, true)
             }
             R.id.llTrainingWorkBefore -> {
-                trainingViewPager?.setCurrentItem(1,true)
+                trainingViewPager?.setCurrentItem(1, true)
             }
             R.id.llTrainingProfession -> {
-                trainingViewPager?.setCurrentItem(2,true)
+                trainingViewPager?.setCurrentItem(2, true)
             }
             else -> {
             }
@@ -166,7 +227,8 @@ class StudyTabFragment : BaseBlueBgTitleFragment(),View.OnClickListener {
     override fun onVisibleChanged(isVisibleToUser: Boolean) {
         super.onVisibleChanged(isVisibleToUser)
 //        if(isVisibleToUser){
-            setStatusBarModeWhite(this)
+        setStatusBarModeWhite(this)
 //        }
     }
 }
+

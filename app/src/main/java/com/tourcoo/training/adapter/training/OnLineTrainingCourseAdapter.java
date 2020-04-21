@@ -4,6 +4,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;
@@ -23,10 +24,11 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
     public static final int COURSE_STATUS_CONTINUE = 1;
     public static final int COURSE_STATUS_NEED_PAY = 2;
     public static final int COURSE_STATUS_WAIT_EXAM = 3;
-  /*  case finished = 0
-            case continues = 1
-            case immdiate = 2
-            case preText = 3*/
+
+    /*  case finished = 0
+              case continues = 1
+              case immdiate = 2
+              case preText = 3*/
     public OnLineTrainingCourseAdapter() {
         super(R.layout.item_tab_training_work_before);
     }
@@ -34,9 +36,27 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
     @Override
     protected void convert(@NonNull BaseViewHolder helper, CourseInfo item) {
         ImageView ivVideoThumbnail = helper.getView(R.id.ivVideoThumbnail);
-        GlideManager.loadImg(CommonUtil.getUrl(item.getCoverUrl()), ivVideoThumbnail, R.drawable.img_training_free_video);
+        GlideManager.loadImg(CommonUtil.getUrl(item.getCoverUrl()), ivVideoThumbnail, R.mipmap.icon_car_networking);
         helper.setText(R.id.tvCourseTimeRange, CommonUtil.getNotNullValue(item.getTimeRange()));
         helper.setText(R.id.tvCourseTitle, CommonUtil.getNotNullValue(item.getTitle()));
+
+        switch (item.getTag()) {
+            case 0:
+                helper.setVisible(R.id.ivTag,false);
+                break;
+            case 1:
+                helper.setVisible(R.id.ivTag,true);
+                helper.setImageResource(R.id.ivTag,R.drawable.icon_video_free);
+                break;
+            case 2:
+                helper.setVisible(R.id.ivTag,true);
+                helper.setImageResource(R.id.ivTag,R.mipmap.icon_video_new);
+                break;
+            default:
+                helper.setVisible(R.id.ivTag,false);
+                break;
+        }
+
 
         ImageView ivCourseStatus = helper.getView(R.id.ivCourseStatus);
         switch (item.getStatus()) {
@@ -54,9 +74,6 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
                 break;
         }
     }
-
-
-
 
 
 }

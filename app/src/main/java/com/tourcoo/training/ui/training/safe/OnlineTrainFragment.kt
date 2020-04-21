@@ -2,11 +2,14 @@ package com.tourcoo.training.ui.training.safe
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ConvertUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
@@ -32,6 +35,7 @@ import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.training.online.PlayVideoActivityNewOld1
+import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
@@ -57,8 +61,14 @@ class OnlineTrainFragment : BaseFragment() {
     override fun initView(savedInstanceState: Bundle?) {
         refreshLayout = mContentView.findViewById(R.id.smartRefreshLayoutCommon)
         refreshLayout?.setRefreshHeader(ClassicsHeader(mContext))
+        refreshLayout?.setOnRefreshListener {
+            requestCourseOnLine()
+        }
+
+
         recyclerView = mContentView.findViewById(R.id.rvCommon)
         recyclerView?.layoutManager = LinearLayoutManager(mContext)
+        recyclerView?.addItemDecoration(RecycleViewDivider(context, LinearLayout.VERTICAL, ConvertUtils.dp2px(10f), resources.getColor(R.color.grayFBF8FB), true))
         adapter = OnLineTrainingCourseAdapter()
         adapter?.bindToRecyclerView(recyclerView)
         initTrainingPlanClick()
@@ -121,6 +131,7 @@ class OnlineTrainFragment : BaseFragment() {
     private fun requestCourseOnLine() {
         ApiRepository.getInstance().requestOnLineTrainingList().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MutableList<CourseInfo>?>?>() {
             override fun onSuccessNext(entity: BaseResult<MutableList<CourseInfo>?>?) {
+                refreshLayout?.finishRefresh()
                 if (entity == null) {
                     return
                 }
@@ -133,6 +144,7 @@ class OnlineTrainFragment : BaseFragment() {
             }
 
             override fun onError(e: Throwable) {
+                refreshLayout?.finishRefresh(false)
                 if (AppConfig.DEBUG_MODE) {
                     ToastUtil.showFailed(e.toString())
                 }

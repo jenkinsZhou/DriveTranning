@@ -28,10 +28,6 @@ public class MainTabActivity extends BaseMainActivity {
 
     private CommonTabLayout mTabLayout;
     private ArrayList<FrameTabEntity> mTabEntities;
-    @Override
-    public void initView(Bundle savedInstanceState) {
-        mTabLayout = findViewById(R.id.commonTabLayout);
-    }
 
     @Nullable
     @Override
@@ -58,7 +54,10 @@ public class MainTabActivity extends BaseMainActivity {
         mTabLayout = tabLayout;
     }
 
-
+    @Override
+    public void initView(Bundle savedInstanceState) {
+        mTabLayout = findViewById(R.id.commonTabLayout);
+    }
 
 
 

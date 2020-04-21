@@ -11,6 +11,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCommon"
+            android:background="@color/grayFBF8FB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
