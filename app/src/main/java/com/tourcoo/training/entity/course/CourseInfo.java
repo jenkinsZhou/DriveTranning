@@ -21,12 +21,15 @@ public class CourseInfo {
      */
 
     private String CoverUrl;
-    private String Tag;
+    private int Tag;
     private int Status;
     private String Title;
     private double Progress;
     private String TimeRange;
     private String TrainingPlanID;
+    private String TotalDuration;
+    private String address;
+    private int Role;
 
     public String getCoverUrl() {
         return CoverUrl;
@@ -36,11 +39,11 @@ public class CourseInfo {
         CoverUrl = coverUrl;
     }
 
-    public String getTag() {
+    public int getTag() {
         return Tag;
     }
 
-    public void setTag(String Tag) {
+    public void setTag(int Tag) {
         this.Tag = Tag;
     }
 
@@ -82,5 +85,29 @@ public class CourseInfo {
 
     public void setTrainingPlanID(String TrainingPlanID) {
         this.TrainingPlanID = TrainingPlanID;
+    }
+
+    public String getTotalDuration() {
+        return TotalDuration;
+    }
+
+    public void setTotalDuration(String totalDuration) {
+        TotalDuration = totalDuration;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getRole() {
+        return Role;
+    }
+
+    public void setRole(int role) {
+        Role = role;
     }
 }

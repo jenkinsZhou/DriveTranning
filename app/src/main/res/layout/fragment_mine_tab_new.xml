@@ -471,6 +471,8 @@
 
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:scrollbars="none"
+                        android:overScrollMode="never"
                         android:id="@+id/rvMyAccount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -513,6 +515,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvStudyAchievement"
                         android:layout_width="match_parent"
+                        android:scrollbars="none"
+                        android:overScrollMode="never"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical" />
 
