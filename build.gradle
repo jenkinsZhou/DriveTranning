@@ -25,6 +25,12 @@ allprojects {
         maven { url "https://jitpack.io" }
         //蒲公英
         maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
+
+        flatDir {
+            dirs 'libs'
+        }
+
+
     }
 }
 
