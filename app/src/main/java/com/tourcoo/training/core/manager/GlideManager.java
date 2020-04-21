@@ -128,11 +128,10 @@ public class GlideManager {
      */
     public static void loadImg(Object obj, ImageView iv, Drawable placeholder) {
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptions()
+                .error(placeholder)
                 .placeholder(placeholder)
                 .fallback(placeholder)
-                .dontAnimate()
-                .error(placeholder)
-        ).into(iv);
+                .dontAnimate()).into(iv);
     }
 
 

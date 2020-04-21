@@ -34,7 +34,7 @@ class ProfessionalTrainingFragment : BaseFragment() {
         recyclerView?.layoutManager = LinearLayoutManager(mContext)
         adapter = ProfessionalTrainingAdapter()
         adapter?.bindToRecyclerView(recyclerView)
-
+        testData()
     }
 
 
@@ -47,5 +47,11 @@ class ProfessionalTrainingFragment : BaseFragment() {
         }
     }
 
+    private fun testData(){
+        adapter?.addData(ProfessionTrainingEntity())
+        adapter?.addData(ProfessionTrainingEntity())
+        adapter?.addData(ProfessionTrainingEntity())
+        adapter?.addData(ProfessionTrainingEntity())
+    }
 
 }

@@ -157,19 +157,10 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         achievementAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {
-
+                    CommonUtil.startActivity(mContext, MyCertificationActivity::class.java)
                 }
-
                 1 -> {
                     CommonUtil.startActivity(mContext, PlayVideoActivity::class.java)
-                }
-
-                2->{
-
-                }
-
-                3->{
-                    CommonUtil.startActivity(mContext, MyCertificationActivity::class.java)
                 }
 
                 else -> {

@@ -44,10 +44,11 @@ class SafeTrainingFragment : BaseFragment() {
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
     private val titleList = ArrayList<String>()
-    private var safeTrainingViewPager: AutoHeightViewPager? = null
+    private var safeTrainingViewPager: AutoHeightViewPager?= null
     override fun getContentLayout(): Int {
         return R.layout.fragment_training_safe
     }
+
 
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -60,7 +61,7 @@ class SafeTrainingFragment : BaseFragment() {
         super.loadData()
         safeTrainingViewPager?.offscreenPageLimit = 2
         fragmentCommonAdapter = CommonFragmentPagerAdapter(this.childFragmentManager, list)
-        safeTrainingViewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        safeTrainingViewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {
 
             }
@@ -78,7 +79,6 @@ class SafeTrainingFragment : BaseFragment() {
         loadFragment()
         initMagicIndicator()
     }
-
     companion object {
         fun newInstance(): SafeTrainingFragment {
             val args = Bundle()
@@ -88,19 +88,19 @@ class SafeTrainingFragment : BaseFragment() {
         }
     }
 
-    private fun loadFragment() {
+    private fun loadFragment(){
         list?.clear()
         list?.add(OnlineTrainFragment.newInstance())
         list?.add(OfflineTrainFragment.newInstance())
         titleList.add("线上培训")
         titleList.add("现场培训")
-        fragmentCommonAdapter = CommonFragmentPagerAdapter(this.childFragmentManager, list)
+        fragmentCommonAdapter = CommonFragmentPagerAdapter( this.childFragmentManager, list)
         safeTrainingViewPager?.adapter = fragmentCommonAdapter
     }
 
 
     private fun initMagicIndicator() {
-//        magicIndicator.setBackgroundResource(R.drawable.bg_radius_10_white)
+        magicIndicator.setBackgroundResource(R.drawable.bg_radius_10_white)
         val commonNavigator = CommonNavigator(mContext)
         commonNavigator.isAdjustMode = true
         commonNavigator.scrollPivotX = 0.11f
@@ -112,19 +112,16 @@ class SafeTrainingFragment : BaseFragment() {
             override fun getTitleView(context: Context, index: Int): IPagerTitleView {
                 val simplePagerTitleView = ColorTransitionPagerTitleView(context)
                 simplePagerTitleView.setText(titleList[index])
-                simplePagerTitleView.normalColor = ResourceUtil.getColor(R.color.gray999999)
+                simplePagerTitleView.normalColor = ResourceUtil.getColor(R.color.redE54E3F)
                 simplePagerTitleView.selectedColor = ResourceUtil.getColor(R.color.black000000)
                 simplePagerTitleView.setOnClickListener { safeTrainingViewPager!!.currentItem = index }
                 return simplePagerTitleView
             }
 
             override fun getIndicator(context: Context): IPagerIndicator {
-                val indicator = LinePagerIndicator(context)
-                val navigatorHeight = context.resources.getDimension(R.dimen.dp_30)
-                indicator.lineHeight = navigatorHeight
-                indicator.roundRadius = context.resources.getDimension(R.dimen.dp_5)
-                indicator.setColors(Color.WHITE)
-
+                val indicator = WrapPagerIndicator(context)
+                indicator.roundRadius = SizeUtil.dp2px(5f).toFloat()
+                        indicator.fillColor = ResourceUtil.getColor(R.color.grayF5F5F5)
                 return indicator
             }
         }

@@ -23,7 +23,6 @@ import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
-import com.tourcoo.training.entity.study.BannerBean;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 import com.tourcoo.training.utils.MapUtil;
 
@@ -148,21 +147,12 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestLoginByIdCard(params).retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult<List<BannerBean>>> requesListBanner() {
-        return CommonTransformer.switchSchedulers(getApiService().requestListBanner().retryWhen(new RetryWhen()));
-    }
-
-
     public Observable<BaseResult<UserInfo>> requestUserInfo() {
         return CommonTransformer.switchSchedulers(getApiService().requestUserInfo().retryWhen(new RetryWhen()));
     }
 
     public Observable<BaseResult<List<CourseInfo>>> requestOnLineTrainingList() {
         return CommonTransformer.switchSchedulers(getApiService().requestOnLineTrainingList().retryWhen(new RetryWhen()));
-    }
-
-    public Observable<BaseResult<List<CourseInfo>>> requestOffLineTrainingList() {
-        return CommonTransformer.switchSchedulers(getApiService().requestOffLineTrainingList().retryWhen(new RetryWhen()));
     }
 
     public Observable<BaseResult<ExamEntity>> requestExam(String trainingPlanID, String examId) {

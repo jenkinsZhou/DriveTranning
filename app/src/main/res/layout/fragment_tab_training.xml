@@ -71,12 +71,10 @@
                     </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/tv_safe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/dp_2"
-                        android:textColor="@color/white"
                         android:text="安全培训" />
                 </LinearLayout>
 
@@ -108,7 +106,6 @@
 
 
                     <TextView
-                        android:id="@+id/tv_job"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -144,7 +141,6 @@
 
 
                     <TextView
-                        android:id="@+id/tv_special"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
