@@ -28,6 +28,8 @@ public interface IndustryRegisterContract {
 
         void initIndustry(List<IndustryCategory> list);
 
+        void loginSuccess(UserInfo userInfo);
+
     }
 
     interface RegisterModel extends IBaseModel {
@@ -35,12 +37,15 @@ public interface IndustryRegisterContract {
         void requestCategory(BaseObserver<BaseResult<List<IndustryCategory>>> observer);
 
         void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<Object>> observer);
+
+        void requestLogin(String idCard, String password,BaseObserver<BaseResult<UserInfo>> observer);
     }
 
     interface RegisterPresenter {
-        //        IdCardInfo getIdCardInfo();
         void doRegister(Map<String, Object> values);
 
         void doGetIndustryCategory();
+
+        void doLogin(String idCard, String password);
     }
 }

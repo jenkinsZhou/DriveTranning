@@ -1,16 +1,16 @@
-package com.tourcoo.training.ui.training.safe.online.detail
+package com.tourcoo.training.ui.training.safe.online.detail.student
 
 import android.os.Bundle
+import android.text.TextUtils
 import com.tourcoo.training.R
-import com.tourcoo.training.constant.UserConstant
+import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.constant.UserConstant.*
-import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
+import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.TrainingPlanDetail
-import kotlinx.android.synthetic.main.activity_training_detail.*
-import kotlinx.android.synthetic.main.activity_training_detail.view.*
+import kotlinx.android.synthetic.main.activity_student_training_detail.*
 
 /**
  *@description :
@@ -19,18 +19,20 @@ import kotlinx.android.synthetic.main.activity_training_detail.view.*
  * @date 2020年04月22日12:39
  * @Email: 971613168@qq.com
  */
-class TrainPlanDetailActivity : BaseMvpTitleActivity<TrainPlanDetailPresenter>(), TrainDetailContract.View {
+class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>(), StudentDetailContract.View {
+    private var trainingPlanId = ""
     override fun loadPresenter() {
         presenter.start()
+        presenter.getTrainDetail(trainingPlanId)
     }
 
 
     override fun getContentLayout(): Int {
-        return R.layout.activity_training_detail
+        return R.layout.activity_student_training_detail
     }
 
-    override fun createPresenter(): TrainPlanDetailPresenter {
-        return TrainPlanDetailPresenter()
+    override fun createPresenter(): StudentDetailPresenter {
+        return StudentDetailPresenter()
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
@@ -38,7 +40,18 @@ class TrainPlanDetailActivity : BaseMvpTitleActivity<TrainPlanDetailPresenter>()
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        trainingPlanId = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
+        if (TextUtils.isEmpty(trainingPlanId)) {
+            ToastUtil.show("未获取培训计划")
+            finish()
+            return
+        }
+
+
+
+
     }
+
 
     override fun doShowTrainPlan(planDetail: TrainingPlanDetail?) {
         showTrainPlan(planDetail)
@@ -48,7 +61,7 @@ class TrainPlanDetailActivity : BaseMvpTitleActivity<TrainPlanDetailPresenter>()
         if (planDetail == null) {
             return
         }
-        tvCourseName.text =CommonUtil.getNotNullValue(planDetail.title)
+        tvCourseName.text = CommonUtil.getNotNullValue(planDetail.title)
         tvCoursePlanTime.text = CommonUtil.getNotNullValue(planDetail.cTime)
         tvLocate.text = CommonUtil.getNotNullValue(planDetail.classroomName)
         when (planDetail.role) {

@@ -87,7 +87,7 @@
             android:launchMode="singleTop" />
         <activity android:name=".core.base.activity.WebViewActivity" />
         <activity android:name=".ui.face.OnLineFaceRecognitionActivity" />
-        <activity android:name=".ui.training.safe.online.detail.TrainPlanDetailActivity" />
+        <activity android:name=".ui.training.safe.online.detail.student.StudentPlanDetailActivity" />
 
         <service android:name="com.amap.api.location.APSService"></service>
     </application>

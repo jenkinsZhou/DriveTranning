@@ -87,4 +87,26 @@ public class IndustryRegisterPresenter extends BasePresenter<IndustryRegisterCon
             }
         });
     }
+
+    @Override
+    public void doLogin(String idCard, String password) {
+        if (!isViewAttached()) {
+            return;
+        }
+        getModule().requestLogin(idCard, password,new BaseLoadingObserver<BaseResult<UserInfo>>() {
+            @Override
+            public void onSuccessNext(BaseResult<UserInfo> entity) {
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    getView().loginSuccess(entity.getData());
+                } else {
+                    ToastUtil.show(entity.msg);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.show(e.toString());
+            }
+        });
+    }
 }

@@ -1,22 +1,26 @@
 package com.tourcoo.training.ui.training.safe.online.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.training.ProfessionalTrainingAdapter
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.course.CourseInfo
+import com.tourcoo.training.ui.training.safe.online.detail.student.StudentPlanDetailActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.trello.rxlifecycle3.android.FragmentEvent
 
@@ -51,6 +55,13 @@ class OfflineTrainFragment : BaseFragment() {
         adapter = ProfessionalTrainingAdapter()
         adapter?.bindToRecyclerView(recyclerView)
         adapter?.setEmptyView(R.layout.empty_driver_layout)
+        adapter?.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+            val intent = Intent(mContext, StudentPlanDetailActivity::class.java)
+            intent.putExtra(EXTRA_TRAINING_PLAN_ID, (adapter as ProfessionalTrainingAdapter).data[position].trainingPlanID)
+            startActivity(intent)
+        }
+
+
     }
 
 

@@ -27,15 +27,20 @@ public interface DriverRegisterContract {
         String showCompanyByKeyword(String keyWord);
 
         void registerSuccess(UserInfo userInfo);
+
+        void loginSuccess(UserInfo userInfo);
     }
 
     interface RegisterModel extends IBaseModel {
         void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<UserInfo>> observer);
+        void requestLogin(String idCard, String password,BaseObserver<BaseResult<UserInfo>> observer);
+
+
     }
 
     interface RegisterPresenter {
         //        IdCardInfo getIdCardInfo();
         void doRegister(Map<String, Object> values);
-
+        void doLogin(String idCard, String password);
     }
 }

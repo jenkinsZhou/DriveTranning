@@ -169,20 +169,58 @@
                 android:text="2020-02-21 15:30" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_0_5"
-            android:layout_marginStart="@dimen/dp_12"
-            android:layout_marginTop="@dimen/dp_20"
-            android:layout_marginEnd="@dimen/dp_20"
-            android:background="@color/grayE5E5E5" />
+        <!--转线上模块-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_12"
-            android:layout_marginTop="@dimen/dp_12"
-            android:src="@mipmap/ic_training_local_detail_sign" />
+         <LinearLayout
+                 android:orientation="vertical"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+             <View
+                 android:layout_width="match_parent"
+                 android:layout_height="@dimen/dp_0_5"
+                 android:layout_marginStart="@dimen/dp_12"
+                 android:layout_marginTop="@dimen/dp_20"
+                 android:layout_marginEnd="@dimen/dp_20"
+                 android:background="@color/grayE5E5E5" />
+             <LinearLayout
+                 android:layout_gravity="center_horizontal"
+                 android:orientation="vertical"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content">
+
+
+                 <ImageView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginStart="@dimen/dp_12"
+                     android:layout_marginTop="@dimen/dp_12"
+                     android:src="@mipmap/ic_training_local_detail_sign" />
+             </LinearLayout>
+             </LinearLayout>
+
+
+
+        <!--签到模块-->
+         <LinearLayout
+                 android:orientation="vertical"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+             <View
+                 android:layout_width="match_parent"
+                 android:layout_height="@dimen/dp_0_5"
+                 android:layout_marginStart="@dimen/dp_12"
+                 android:layout_marginTop="@dimen/dp_20"
+                 android:layout_marginEnd="@dimen/dp_20"
+                 android:background="@color/grayE5E5E5" />
+
+             <ImageView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_marginStart="@dimen/dp_12"
+                 android:layout_marginTop="@dimen/dp_12"
+                 android:src="@mipmap/ic_training_local_detail_sign" />
+             </LinearLayout>
+
 
         <LinearLayout
             android:layout_marginTop="@dimen/dp_15"

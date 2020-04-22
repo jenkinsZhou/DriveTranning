@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.training.safe.online.detail;
+package com.tourcoo.training.ui.training.safe.online.detail.student;
 
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.base.mvp.IBaseModel;
@@ -19,7 +19,7 @@ import io.reactivex.Observable;
  * @date 2020年04月22日12:42
  * @Email: 971613168@qq.com
  */
-public interface TrainDetailContract {
+public interface StudentDetailContract {
     interface TrainDetailModel extends IBaseModel {
         void requestTrainDetail(String trainingPlanID,  BaseObserver<BaseResult<TrainingPlanDetail>> observer);
     }

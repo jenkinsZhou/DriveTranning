@@ -22,4 +22,9 @@ public class DriverRegisterModel implements DriverRegisterContract.RegisterModel
     public void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<UserInfo>> observer) {
         ApiRepository.getInstance().requestRegisterDriver(values).subscribe(observer);
     }
+
+    @Override
+    public void requestLogin(String idCard, String password, BaseObserver<BaseResult<UserInfo>> observer) {
+        ApiRepository.getInstance().requestLoginByIdCard(idCard,password).subscribe(observer);
+    }
 }

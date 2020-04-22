@@ -30,4 +30,9 @@ public class IndustryRegisterModel implements IndustryRegisterContract.RegisterM
     public void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<Object>> observer) {
         ApiRepository.getInstance().requestRegisterIndustry(values).subscribe(observer);
     }
+
+    @Override
+    public void requestLogin(String idCard, String password, BaseObserver<BaseResult<UserInfo>> observer) {
+        ApiRepository.getInstance().requestLoginByIdCard(idCard,password).subscribe(observer);
+    }
 }

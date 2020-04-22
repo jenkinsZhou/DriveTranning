@@ -4,19 +4,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import com.alibaba.fastjson.JSON
 import com.tourcoo.training.R
 import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfo
+import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.account.register.CompanyInfo
+import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.account.register.SelectCompanyActivity.Companion.EXTRA_KEY_COMPANY
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import kotlinx.android.synthetic.main.activity_register_driver.*
+import org.greenrobot.eventbus.EventBus
+
 
 /**
  *@description :
@@ -82,8 +86,9 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
         return DriverRegisterPresenter()
     }
 
-
-
+    override fun loginSuccess(userInfo: UserInfo?) {
+        handleLoginCallback(userInfo)
+    }
 
 
     override fun showCompanyByKeyword(keyWord: String?): String {
@@ -91,9 +96,23 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
     }
 
     override fun registerSuccess(userInfo: UserInfo?) {
-        ToastUtil.showSuccess(JSON.toJSONString(userInfo))
-    }
+        if (userInfo == null) {
+            return
+        } else {
+            /*  val s = "12345"
+              val result = s.substring(s.length - 3, s.length)
+              println(result) //输出结果为345*/
 
+            if (!TextUtils.isEmpty(userInfo.idCard) && userInfo.idCard.length >= 18) {
+                val pass = userInfo.idCard.substring(userInfo.idCard.length - 6, userInfo.idCard.length)
+                presenter.doLogin(userInfo.idCard, pass)
+            } else {
+                finish()
+                ToastUtil.show("注册成功")
+            }
+
+        }
+    }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -142,5 +161,18 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
         map["phone"] = getTextValue(etPhone)
         map["companyId"] = mCompanyInfo!!.id
         presenter.doRegister(map)
+    }
+
+
+    private fun handleLoginCallback(userInfo: UserInfo?) {
+        if (userInfo == null) {
+            ToastUtil.show("登录失败")
+            return
+        }
+        AccountHelper.getInstance().userInfo = userInfo
+        EventBus.getDefault().post(UserInfoEvent(userInfo))
+        val intent = Intent(this, MainTabActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

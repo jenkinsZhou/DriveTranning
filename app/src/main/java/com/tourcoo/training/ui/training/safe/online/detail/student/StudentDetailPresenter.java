@@ -1,11 +1,10 @@
-package com.tourcoo.training.ui.training.safe.online.detail;
+package com.tourcoo.training.ui.training.safe.online.detail.student;
 
 import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.base.mvp.BasePresenter;
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
 import com.tourcoo.training.core.util.ToastUtil;
-import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 
 /**
@@ -15,7 +14,7 @@ import com.tourcoo.training.entity.training.TrainingPlanDetail;
  * @date 2020年04月22日12:41
  * @Email: 971613168@qq.com
  */
-public class TrainPlanDetailPresenter extends BasePresenter<TrainDetailContract.TrainDetailModel,TrainDetailContract.View> implements TrainDetailContract.TrainDetailPresenter {
+public class StudentDetailPresenter extends BasePresenter<StudentDetailContract.TrainDetailModel, StudentDetailContract.View> implements StudentDetailContract.TrainDetailPresenter {
     @Override
     public void getTrainDetail(String trainingPlanID) {
         if (!isViewAttached()) {
@@ -31,13 +30,18 @@ public class TrainPlanDetailPresenter extends BasePresenter<TrainDetailContract.
                     ToastUtil.show(entity.msg);
                 }
             }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.show(e.toString());
+            }
         });
 
     }
 
     @Override
-    protected TrainDetailContract.TrainDetailModel createModule() {
-        return new TrainDetailModule();
+    protected StudentDetailContract.TrainDetailModel createModule() {
+        return new StudentDetailModule();
     }
 
     @Override

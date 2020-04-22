@@ -22,11 +22,11 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.StackUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.AccountTempHelper
-import com.tourcoo.training.entity.account.TradeType
+import com.tourcoo.training.entity.account.*
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo
 import com.tourcoo.training.entity.account.register.IndustryCategory
 import com.tourcoo.training.entity.account.register.Supervisors
+import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.widget.citypicker.OnCityItemClickListener
 import com.tourcoo.training.widget.citypicker.bean.CityBean
 import com.tourcoo.training.widget.citypicker.bean.DistrictBean
@@ -38,6 +38,7 @@ import com.tourcoo.training.widget.keyboard.KingKeyboard
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_register_industrial.*
 import org.apache.commons.lang.StringUtils
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@description :
@@ -249,6 +250,10 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
         return IndustryRegisterPresenter()
     }
 
+    override fun loginSuccess(userInfo: UserInfo?) {
+        handleLoginCallback(userInfo)
+    }
+
     override fun registerSuccess(userInfo: Any?) {
         if (userInfo != null) {
             //保存用户信息
@@ -394,5 +399,18 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
                 .build()
         pvCustomOptions!!.setPicker(options1Items)
         //添加数据
+    }
+
+
+    private fun handleLoginCallback(userInfo: UserInfo?) {
+        if (userInfo == null) {
+            ToastUtil.show("登录失败")
+            return
+        }
+        AccountHelper.getInstance().userInfo = userInfo
+        EventBus.getDefault().post(UserInfoEvent(userInfo))
+        val intent = Intent(this, MainTabActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
