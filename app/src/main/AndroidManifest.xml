@@ -102,6 +102,7 @@
             android:exported="true"
             android:launchMode="singleTop" />
         <activity android:name=".core.base.activity.WebViewActivity" />
+        <activity android:name=".ui.face.OnLineFaceRecognitionActivity" />
 
         <service android:name="com.amap.api.location.APSService">
 

@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
@@ -23,6 +24,7 @@ import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
+import com.tourcoo.training.core.manager.RxJavaManager
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ResourceUtil
@@ -33,12 +35,18 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.TrainingPlanDetail
+import com.tourcoo.training.ui.account.FindPassActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
+import com.tourcoo.training.ui.face.FaceRecognitionActivity
+import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.oldplayer.OnTransitionListener
 import com.tourcoo.training.widget.player.OnPlayStatusListener
 import com.trello.rxlifecycle3.android.ActivityEvent
+import io.reactivex.Observer
+import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_find_password.*
 import kotlinx.android.synthetic.main.activity_play_video.*
 
 /**
@@ -51,7 +59,7 @@ import kotlinx.android.synthetic.main.activity_play_video.*
 class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClickListener {
     private val mTag = "PlayVideoActivity"
     private var orientationUtils: OrientationUtils? = null
-
+    private val disposableList = ArrayList<Disposable>()
     private var isTransition = false
 
     private var transition: Transition? = null
@@ -70,6 +78,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         const val COURSE_STATUS_COMPLETE = 2
         const val COURSE_STATUS_PLAYING = 1
     }
+
 
     override fun getContentLayout(): Int {
         return R.layout.activity_play_video
@@ -99,7 +108,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         requestPlanDetail()
     }
 
-    private fun loadPlayer() {
+    private fun loadPlayerSetting() {
         PlayerFactory.setPlayManager(IjkPlayerManager::class.java)
         //增加title
         smartVideoPlayer!!.titleTextView.visibility = View.VISIBLE
@@ -118,6 +127,94 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             onBackPressed()
         }
         smartVideoPlayer!!.onPlayStatusListener = this
+        smartVideoPlayer!!.setVideoAllCallBack(object : VideoAllCallBack {
+            override fun onClickResumeFullscreen(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickResumeFullscreen")
+            }
+
+            override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onEnterFullscreen")
+            }
+
+            override fun onClickResume(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickResume")
+            }
+
+            override fun onClickSeekbarFullscreen(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickSeekbarFullscreen")
+            }
+
+            override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onStartPrepared")
+            }
+
+            override fun onClickStartIcon(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickStartIcon")
+            }
+
+            override fun onTouchScreenSeekLight(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onTouchScreenSeekLight")
+            }
+
+            override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onTouchScreenSeekLight")
+            }
+
+            override fun onClickStartThumb(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickStartThumb")
+            }
+
+            override fun onEnterSmallWidget(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onEnterSmallWidget")
+            }
+
+            override fun onClickStartError(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickStartError")
+            }
+
+            override fun onClickBlankFullscreen(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickBlankFullscreen")
+            }
+
+            override fun onPrepared(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onPrepared")
+            }
+
+            override fun onAutoComplete(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onAutoComplete")
+            }
+
+            override fun onQuitSmallWidget(url: String?, vararg objects: Any?) {
+            }
+
+            override fun onTouchScreenSeekVolume(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickBlank")
+            }
+
+            override fun onClickBlank(url: String?, vararg objects: Any?) {
+            }
+
+            override fun onClickStop(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickStop")
+            }
+
+            override fun onClickSeekbar(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickSeekbar")
+            }
+
+            override fun onPlayError(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onPlayError")
+            }
+
+            override fun onClickStopFullscreen(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onClickStopFullscreen")
+            }
+
+            override fun onTouchScreenSeekPosition(url: String?, vararg objects: Any?) {
+                ToastUtil.show("onTouchScreenSeekPosition")
+            }
+
+        })
         //过渡动画
         loadTransition()
     }
@@ -149,6 +246,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
 
 
     override fun onDestroy() {
+        cancelTime()
         super.onDestroy()
         if (smartVideoPlayer != null) {
             smartVideoPlayer!!.release()
@@ -170,7 +268,6 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             transition!!.addListener(object : OnTransitionListener() {
                 override fun onTransitionEnd(transition: Transition?) {
                     super.onTransitionEnd(transition)
-                    super.onTransitionEnd(transition);
                     smartVideoPlayer!!.startPlayLogic();
                     transition!!.removeListener(this);
                 }
@@ -200,6 +297,8 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         if (detail == null || detail.subjects == null) {
             return
         }
+        //开始计时
+        countDownTime(5)
         mCourseHashMap!!.clear()
         mCourseList!!.clear()
         llPlanContentView.removeAllViews()
@@ -364,7 +463,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
                 smartVideoPlayer.seekOnStart = course.progress * 1000L
                 smartVideoPlayer.currentCourseId = course.id
                 smartVideoPlayer!!.setUp(course.streams, false, getNotNullValue(course.name))
-                loadPlayer()
+                loadPlayerSetting()
 
 
             }
@@ -385,6 +484,14 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         //todo
         //通知后台当前课程播放结束
         requestCompleteCurrentCourse(courseId.toString())
+    }
+
+    override fun onPlayResume(courseId: Int) {
+        ToastUtil.show("播放恢复")
+    }
+
+    override fun onPlayPause(courseId: Int) {
+        ToastUtil.show("播放暂停")
     }
 
 
@@ -519,4 +626,61 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         }
         return false
     }
+
+
+    private fun cancelTime() {
+        if (disposableList.isNotEmpty()) {
+            var disposable: Disposable
+            for (i in disposableList.indices) {
+                disposable = disposableList.get(i)
+                if (!disposable.isDisposed) {
+                    disposable.dispose()
+                    disposableList.remove(disposable)
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 倒计时
+     */
+    private fun countDownTime(count: Long) {
+        RxJavaManager.getInstance().doEventByInterval(FindPassActivity.ONE_SECOND, object : Observer<Long> {
+            override fun onSubscribe(d: Disposable) {
+                disposableList.add(d)
+            }
+
+            override fun onNext(aLong: Long) {
+                if (aLong >= count) {
+                    onComplete()
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                cancelTime()
+            }
+
+            override fun onComplete() {
+                handleRecognize()
+                cancelTime()
+            }
+        })
+    }
+
+
+    private fun handleRecognize() {
+        smartVideoPlayer.onVideoPause()
+        ToastUtil.show("跳转到识别")
+        skipFace()
+    }
+
+    //跳转实现
+    private fun skipFace() {
+        val intent = Intent(this, OnLineFaceRecognitionActivity::class.java)
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, "trainingPlanID")
+        startActivityForResult(intent, 1003)
+    }
+
+
 }

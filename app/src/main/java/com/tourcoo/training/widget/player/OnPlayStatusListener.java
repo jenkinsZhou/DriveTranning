@@ -7,7 +7,12 @@ package com.tourcoo.training.widget.player;
  * @date 2020年04月20日23:19
  * @Email: 971613168@qq.com
  */
-    public interface OnPlayStatusListener{
-        void onPlayComplete(int courseId);
-        void onAutoPlayComplete(int courseId);
-    }
+public interface OnPlayStatusListener {
+    void onPlayComplete(int courseId);
+
+    void onAutoPlayComplete(int courseId);
+
+    void onPlayPause(int courseId);
+
+    void onPlayResume(int courseId);
+}
