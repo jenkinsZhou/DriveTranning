@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
@@ -37,6 +38,8 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -576,4 +579,30 @@ public class CommonUtil {
         }
         return tm;
     }
+
+
+
+    /**
+     * 方法3
+     * 利用HashMap key唯一，value可以重复的特点，把list中各种元素放到hashMap中
+     */
+    public static boolean checkDifferent(List<String> list, List<String> list1) {
+        Map<String, Integer> map = new HashMap<>(list.size() + list1.size());
+        if (list.size() != list1.size()) {
+            return false;
+        }
+        for (String str : list) {
+            map.put(str, 1);
+        }
+        for (String str : list1) {
+            Integer cc = map.get(str);
+            if (null != cc) {
+                continue;
+            }
+            return false;
+        }
+        return true;
+    }
+
+
 }

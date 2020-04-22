@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.exam.QuestionAdapter
+import com.tourcoo.training.constant.ExamConstant.*
 import com.tourcoo.training.core.base.fragment.BaseFragment
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.exam.*
 import com.tourcoo.training.entity.exam.Question.*
@@ -41,6 +43,8 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
             ToastUtil.show("未获取到题目信息")
             return
         }
+        //先加载用户的答题状态
+        question!!.answerStatus = getQuestionStatus()
         adapter = QuestionAdapter()
         adapter?.bindToRecyclerView(questionRecyclerView)
         showQuestion(question!!)
@@ -244,7 +248,7 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
                 question!!.answer.add(answer.answerId)
             }
         }
-        //
+        question!!.answerStatus =   getQuestionStatus()
         adapter?.notifyDataSetChanged()
         return true
     }
@@ -297,13 +301,13 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
         return question!!
     }
 
-    private fun loadQuestionHistory(question: Question){
-       if( question.answer == null || question.answer.isEmpty() || question.answerItems == null  ){
-           return
-       }
+    private fun loadQuestionHistory(question: Question) {
+        if (question.answer == null || question.answer.isEmpty() || question.answerItems == null) {
+            return
+        }
         for (answerId in question.answer) {
             for (answerItem in question.answerItems) {
-                if(answerId == answerItem.answerId){
+                if (answerId == answerItem.answerId) {
                     //说明该题目已经被回答过
                     setHasAnswer(question.answerItems)
                     answerItem.isSelect = true
@@ -314,17 +318,32 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun setHasAnswer(allAnswer: MutableList<Answer>){
+    private fun setHasAnswer(allAnswer: MutableList<Answer>) {
         for (answer in allAnswer) {
             answer.isHasAnswered = true
         }
     }
 
 
-    private fun testData(question: Question){
-        if(question.type == QUESTION_TYPE_SINGLE ){
+    private fun testData(question: Question) {
+        if (question.type == QUESTION_TYPE_SINGLE) {
             question.answer = ArrayList<String>()
             question.answer.add("C")
         }
     }
+
+
+    private fun getQuestionStatus(): Int {
+        if (question == null || question!!.answer == null || question!!.answer.isEmpty() || question!!.answerItems == null || question!!.correctAnswer == null) {
+            //未回答
+            return STATUS_NO_ANSWER
+        }
+        //然后判断这个回答是否正确
+        val same = CommonUtil.checkDifferent(question!!.correctAnswer, question!!.answer)
+        if (same) {
+            return STATUS_ANSWER_RIGHT
+        }
+        return STATUS_ANSWER_WRONG
+    }
+
 }

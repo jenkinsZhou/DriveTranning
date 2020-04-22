@@ -49,6 +49,31 @@ public class Question implements Parcelable {
     private List<String> Answer;
     private String questionNumber;
     private boolean hasAnswered;
+    /**
+     * 是否当前显示
+     */
+    private boolean currentShow;
+
+    public boolean isCurrentShow() {
+        return currentShow;
+    }
+
+    public void setCurrentShow(boolean currentShow) {
+        this.currentShow = currentShow;
+    }
+
+    /**
+     * 答题状态
+     */
+    private int answerStatus ;
+
+    public int getAnswerStatus() {
+        return answerStatus;
+    }
+
+    public void setAnswerStatus(int answerStatus) {
+        this.answerStatus = answerStatus;
+    }
 
     public boolean isHasAnswered() {
         return hasAnswered;

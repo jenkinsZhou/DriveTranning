@@ -41,7 +41,7 @@ class TrainPlanDetailActivity : BaseMvpTitleActivity<TrainPlanDetailPresenter>()
     }
 
     override fun doShowTrainPlan(planDetail: TrainingPlanDetail?) {
-
+        showTrainPlan(planDetail)
     }
 
     private fun showTrainPlan(planDetail: TrainingPlanDetail?) {

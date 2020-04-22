@@ -15,6 +15,7 @@ import com.tourcoo.training.adapter.exam.QuestionNumberAdapter
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.ExamConstant.*
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -63,7 +64,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         if (intent != null) {
             val bundle = intent!!.extras
             trainPlanId = bundle!!.getString(EXTRA_TRAINING_PLAN_ID)!!
-            examId =  bundle!!.getString(EXTRA_EXAM_ID)!!
+            examId = bundle!!.getString(EXTRA_EXAM_ID)!!
         }
         if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
             ToastUtil.show("未获取到考试题数据")
@@ -92,7 +93,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
         list?.clear()
         val questions = examEntity.questions
-        for (i in 0 until questions.size ) {
+        for (i in 0 until questions.size) {
             list?.add(ExamFragment.newInstance(questions[i]))
         }
         vpExamOnline.adapter = fragmentCommonAdapter
@@ -102,12 +103,15 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.tvNextQuestion -> {
                 doAnswerQuestion()
+                showBottomBar()
             }
             R.id.tvLastQuestion -> {
                 skipLastQuestion()
+                showBottomBar()
             }
             R.id.llQuestionBar -> {
                 handleBottomBarClick()
+
             }
             R.id.tvCommitExam -> {
                 //交卷
@@ -135,8 +139,10 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         if (currentPosition < list!!.size - 1) {
             answerHandler.postDelayed({
                 vpExamOnline.setCurrentItem(currentPosition + 1, true)
+                showBottomBar()
             }, delay)
         }
+
     }
 
 
@@ -175,6 +181,9 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
         questionNumAdapter?.setNewData(setQuestionNumber(questions))
+        baseHandler.postDelayed(Runnable {
+            showBottomBar()
+        }, 500)
     }
 
     private fun handleBottomBarClick() {
@@ -218,11 +227,12 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         questionNumAdapter?.bindToRecyclerView(questionNumRv)
         //处理底部题目弹窗
         questionNumAdapter?.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            vpExamOnline.setCurrentItem(position,false)
+            vpExamOnline.setCurrentItem(position, false)
             handleBottomBarClick()
+            //响应底部题目列表点击事件
+            showBottomBar()
         })
         loadQuestion(examEntity)
-        loadBottomSheetBar(examEntity.questions)
         vpExamOnline.offscreenPageLimit = list!!.size
         vpExamOnline.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
@@ -236,6 +246,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                 currentPosition = position
             }
         })
+        loadBottomSheetBar(examEntity.questions)
     }
 
     /**
@@ -291,14 +302,14 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         val commitList = ArrayList<CommitAnswer>()
         for (question in questions) {
             //如果回答过答案 才保存
-            if(question.isHasAnswered){
+            if (question.isHasAnswered) {
                 val commit = CommitAnswer()
                 commit.id = question.id.toString()
                 commit.answer = StringUtils.join(question.answer, "")
                 commitList.add(commit)
             }
         }
-        if(commitList.isEmpty()){
+        if (commitList.isEmpty()) {
             return
         }
         ApiRepository.getInstance().requestSaveAnswer(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
@@ -319,5 +330,58 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onBackPressed() {
         super.onBackPressed()
         saveExam(getAllQuestions())
+    }
+
+
+    private fun showBottomBar() {
+        if (list == null) {
+            return
+        }
+        showButtonByCondition()
+        var correctCount = 0
+        var wrongCount = 0
+        var hasAnswerCount = 0
+
+        for (index in 0 until list!!.size) {
+            val fragment = list!![index] as ExamFragment
+            if(index ==vpExamOnline.currentItem ){
+                fragment.getQuestion().isCurrentShow = true
+            }else{
+                fragment.getQuestion().isCurrentShow = false
+            }
+        }
+        for (index in 0 until list!!.size) {
+            val fragment = list!![index] as ExamFragment
+            when (fragment.getQuestion().answerStatus) {
+                STATUS_ANSWER_WRONG -> {
+                    //答错的
+                    wrongCount++
+                    hasAnswerCount++
+                }
+                STATUS_ANSWER_RIGHT -> {
+                    //答对的
+                    correctCount++
+                    hasAnswerCount++
+                }
+            }
+
+        }
+        tvAnswerCorrectCount.text = correctCount.toString()
+        tvAnswerErrorCount.text = wrongCount.toString()
+        val current = vpExamOnline.currentItem + 1
+        val info = "" + current + "/" + list!!.size
+        tvCurrentAnswerResult.text = info
+        questionNumAdapter!!.notifyDataSetChanged()
+    }
+
+
+    private fun showButtonByCondition(){
+        if (vpExamOnline.currentItem == list!!.size-1) {
+            setViewGone(tvCommitExam, true)
+            setViewGone(tvNextQuestion, false)
+        }else{
+            setViewGone(tvCommitExam, false)
+            setViewGone(tvNextQuestion, true)
+        }
     }
 }

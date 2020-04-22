@@ -215,7 +215,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                     mCoinList = entity.data.coinPackages
                     loadPackageData(entity.data.coinPackages)
                     tvCurrentCoin.text = entity.data.coinsTotal.toString()
-                    loadCustomRechargeView()
+//                    loadCustomRechargeView()
                 } else {
                     ToastUtil.show(entity.msg)
                 }

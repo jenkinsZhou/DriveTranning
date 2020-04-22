@@ -7,7 +7,7 @@ android {
     signingConfigs {
         debug {
             storePassword 'android'
-            storeFile file('F:\\android\\android project\\DriveTranning\\key\\android_key_release.jks')
+            storeFile file('../key/android_key_release.jks')
             keyAlias = 'emi'
             keyPassword 'android'
         }
