@@ -128,7 +128,7 @@ public class BottomPayDialog {
     }
 
     private void showWeChatPay() {
-        payType = 2;
+        payType = 0;
         ivWeChatPay.setImageResource(R.mipmap.ic_pay_type_checked);
         ivAliPay.setImageResource(R.mipmap.ic_pay_type_un_checked);
     }

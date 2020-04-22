@@ -17,7 +17,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class WXPayEntryActivity extends AppCompatActivity implements IWXAPIEventHandler {
 
     private static final String TAG = "WXPayEntryActivity";
 
@@ -28,7 +30,8 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.pay_result);
 
-        api = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID);
+        api = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID,true);
+        api.registerApp(TrainingConstant.APP_ID);
         api.handleIntent(getIntent(), this);
     }
 
@@ -41,18 +44,25 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onReq(BaseReq resp) {
-        TourCooLogUtil.d(resp);
 
-        if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("提示");
-            builder.setMessage("sfd");
-            builder.show();
-        }
     }
 
     @Override
     public void onResp(BaseResp baseResp) {
+        int errCode = baseResp.errCode;
+
+        if (errCode == 0) {
+            // 成功
+
+        } else if (errCode == -1) {
+            // 失败
+
+        } else if (errCode == -2) {
+            // 取消
+
+        }
+
+        finish();
 
     }
 

@@ -8,7 +8,11 @@ import android.os.Message
 import android.text.TextUtils
 import android.view.View
 import com.alipay.sdk.app.PayTask
+import com.google.gson.Gson
+import com.tencent.mm.opensdk.modelpay.PayReq
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.R
+import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
 import com.tourcoo.training.core.base.mvp.NullPresenter
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -16,6 +20,7 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.PayInfo
 import com.tourcoo.training.entity.account.PayResult
+import com.tourcoo.training.entity.account.WxPayModel
 import com.tourcoo.training.entity.pay.CoursePayInfo
 import kotlinx.android.synthetic.main.activity_pay_buy_now.*
 
@@ -119,8 +124,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
             finish()
         } else if (payType == 3) {
             payByAlipay(payInfo!!.thirdPayInfo)
-        } else {
-
+        } else if (payType == 4) {
+            payByWx(payInfo!!.thirdPayInfo)
         }
 
     }
@@ -177,5 +182,34 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         payThread.start()
     }
 
+
+    private fun payByWx(orderInfo: String) {
+        val wxPayModel = Gson().fromJson<WxPayModel>(orderInfo, WxPayModel::class.java)
+
+        if (wxPayModel == null) {
+            ToastUtil.show("微信支付数据异常")
+            return
+        }
+
+        // 将该app注册到微信
+        val wxapi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID);
+
+        if (!wxapi.isWXAppInstalled) {
+            ToastUtil.show("您尚未安装微信客户端")
+            return
+        }
+
+        val request = PayReq()
+        request.appId = wxPayModel.appid
+        request.partnerId = wxPayModel.mch_id
+        request.prepayId = wxPayModel.prepay_id
+        request.packageValue = "Sign=WXPay"
+        request.nonceStr = wxPayModel.nonce_str
+        request.sign = wxPayModel.sign
+        request.timeStamp = "" + System.currentTimeMillis() / 1000
+
+        wxapi.sendReq(request)
+
+    }
 
 }

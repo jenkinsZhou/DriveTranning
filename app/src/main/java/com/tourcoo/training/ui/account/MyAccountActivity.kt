@@ -18,9 +18,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alipay.sdk.app.PayTask
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.google.gson.Gson
+import com.tencent.mm.opensdk.modelpay.PayReq
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.account.RechargeAmountAdapter
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -34,6 +38,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.PayInfo
 import com.tourcoo.training.entity.account.PayResult
 import com.tourcoo.training.entity.account.RechargeEntity
+import com.tourcoo.training.entity.account.WxPayModel
 import com.tourcoo.training.entity.recharge.CoinInfo
 import com.tourcoo.training.entity.recharge.CoinPackageEntity
 import com.tourcoo.training.widget.dialog.pay.BottomPayDialog
@@ -74,12 +79,6 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun loadPackageData(list: MutableList<CoinInfo>) {
-        /*  mRechargeEntityList.add(RechargeEntity(20.00, true))
-          mRechargeEntityList.add(RechargeEntity(30.00))
-          mRechargeEntityList.add(RechargeEntity(50.00))
-          mRechargeEntityList.add(RechargeEntity(70.00))
-          mRechargeEntityList.add(RechargeEntity(90.00))
-          mRechargeEntityList.add(RechargeEntity(120.00))*/
         mRechargeEntityList.clear()
         mRechargeEntityList.addAll(transform(list))
         mRechargeAmountAdapter = RechargeAmountAdapter(mRechargeEntityList)
@@ -256,10 +255,10 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, "1", "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<PayInfo>>() {
             override fun onSuccessNext(entity: BaseResult<PayInfo>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    if (payDialog!!.payType == 1){
+                    if (payDialog!!.payType == 1) {
                         payByAlipay(entity.data.thirdPayInfo)
-                    }else{
-                        ToastUtil.showFailed("todo://暂不支持")
+                    } else {
+                        payByWx(entity.data.thirdPayInfo)
                     }
 
                     payDialog?.dismiss()
@@ -319,14 +318,34 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         payThread.start()
     }
 
-    /*private fun getCurrentSelectCoin(): CoinInfo {
-        //todo
-        val dataList = mRechargeAmountAdapter?.data
-        for (coin in dataList!!) {
-            *//*  if(coin){
 
-              }*//*
+    private fun payByWx(orderInfo: String) {
+        val wxPayModel = Gson().fromJson<WxPayModel>(orderInfo, WxPayModel::class.java)
+
+        if (wxPayModel == null) {
+            ToastUtil.show("微信支付数据异常")
+            return
         }
-        return null
-    }*/
+
+        // 将该app注册到微信
+        val wxapi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID);
+
+        if (!wxapi.isWXAppInstalled) {
+            ToastUtil.show("您尚未安装微信客户端")
+            return
+        }
+
+        val request = PayReq()
+        request.appId = wxPayModel.appid
+        request.partnerId = wxPayModel.mch_id
+        request.prepayId = wxPayModel.prepay_id
+        request.packageValue = "Sign=WXPay"
+        request.nonceStr = wxPayModel.nonce_str
+        request.sign = wxPayModel.sign
+        request.timeStamp = "" + System.currentTimeMillis() / 1000
+
+        wxapi.sendReq(request)
+
+    }
+
 }
