@@ -14,6 +14,7 @@ import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.SizeUtil
+import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.widget.view.CustomPagerTitleView
 import com.tourcoo.training.widget.viewpager.AutoHeightViewPager
 import kotlinx.android.synthetic.main.fragment_training_safe.*
@@ -44,7 +45,8 @@ class SafeTrainingFragment : BaseFragment() {
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
     private val titleList = ArrayList<String>()
-    private var safeTrainingViewPager: AutoHeightViewPager? = null
+    private var safeTrainingViewPager: ViewPager? = null
+//    private var safeTrainingViewPager: AutoHeightViewPager? = null
     override fun getContentLayout(): Int {
         return R.layout.fragment_training_safe
     }
@@ -90,10 +92,22 @@ class SafeTrainingFragment : BaseFragment() {
 
     private fun loadFragment() {
         list?.clear()
-        list?.add(OnlineTrainFragment.newInstance())
-        list?.add(OfflineTrainFragment.newInstance())
+
+        if (!AccountHelper.getInstance().isLogin) {
+            return
+        }
+
         titleList.add("线上培训")
-        titleList.add("现场培训")
+        list?.add(OnlineTrainFragment.newInstance())
+
+        //userType 1(个体工商户)   2（驾驶员）
+        if (AccountHelper.getInstance().userInfo.userType == 2) {
+            titleList.add("现场培训")
+            list?.add(OfflineTrainFragment.newInstance())
+        }else{
+            magicIndicator.visibility = View.GONE
+        }
+
         fragmentCommonAdapter = CommonFragmentPagerAdapter(this.childFragmentManager, list)
         safeTrainingViewPager?.adapter = fragmentCommonAdapter
     }

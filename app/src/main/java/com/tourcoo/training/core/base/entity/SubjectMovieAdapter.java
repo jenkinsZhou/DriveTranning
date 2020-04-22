@@ -24,7 +24,7 @@ public class SubjectMovieAdapter extends BaseItemTouchQuickAdapter<SubjectsEntit
 
     @Override
     protected void convert(BaseItemTouchViewHolder helper, SubjectsEntity item) {
-       /* helper.setText(R.id.tv_titleMovie, item.title)
+       /* helper.setText(R.id.tv_titleMovie, item.url)
                 .setText(R.id.tv_typeMovie, "题材:" + item.getGenres())
                 .setText(R.id.tv_yearMovie, "年份:" + item.year)
                 .setText(R.id.tv_directorMovie, "导演:" + item.getDirectors())

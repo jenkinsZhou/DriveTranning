@@ -9,6 +9,7 @@ import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
@@ -16,6 +17,7 @@ import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.account.register.CompanyInfo
+import com.tourcoo.training.ui.account.FindPassActivity
 import com.tourcoo.training.widget.dialog.BottomSheetDialog
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog
 import com.trello.rxlifecycle3.RxLifecycle.bindUntilEvent
@@ -41,6 +43,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun initView(savedInstanceState: Bundle?) {
         tvLogout.setOnClickListener(this)
+        llForgetPassword.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -48,6 +51,13 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
             R.id.tvLogout -> {
                 doLogout()
             }
+
+            R.id.llForgetPassword -> {
+                val bundle = Bundle()
+                bundle.putBoolean("isLogin", AccountHelper.getInstance().isLogin)
+                CommonUtil.startActivity(mContext, FindPassActivity::class.java, bundle)
+            }
+
             else -> {
             }
         }

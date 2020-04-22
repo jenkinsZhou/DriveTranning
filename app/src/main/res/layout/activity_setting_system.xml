@@ -8,6 +8,7 @@
     <include layout="@layout/frame_layout_title_bar" />
 
     <LinearLayout
+        android:id="@+id/llForgetPassword"
         android:layout_marginTop="@dimen/dp_10"
         android:background="@color/white"
         android:orientation="vertical"
@@ -31,7 +32,7 @@
 
             <TextView
                 style="@style/Text15spGrayA2A2A2"
-                android:text="填写密码"
+                android:text=""
                 android:layout_gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_marginEnd="@dimen/dp_15"

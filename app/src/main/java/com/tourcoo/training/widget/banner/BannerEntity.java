@@ -9,18 +9,18 @@ import java.util.Random;
 public class BannerEntity {
     public Integer imageRes;
     public String imageUrl;
-    public String title;
+    public String url;
     public int viewType;
 
     public BannerEntity(Integer imageRes, String title, int viewType) {
         this.imageRes = imageRes;
-        this.title = title;
+        this.url = title;
         this.viewType = viewType;
     }
 
     public BannerEntity(String imageUrl, String title, int viewType) {
         this.imageUrl = imageUrl;
-        this.title = title;
+        this.url = title;
         this.viewType = viewType;
     }
 

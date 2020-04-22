@@ -111,7 +111,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
      *
      * @param url           播放url
      * @param cacheWithPlay 是否边播边缓存
-     * @param title         title
+     * @param title         url
      * @return
      */
     public boolean setUp(List<VideoStream> url, boolean cacheWithPlay, String title) {
@@ -125,7 +125,7 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
      * @param url           播放url
      * @param cacheWithPlay 是否边播边缓存
      * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
-     * @param title         title
+     * @param title         url
      * @return
      */
     public boolean setUp(List<VideoStream> url, boolean cacheWithPlay, File cachePath, String title) {

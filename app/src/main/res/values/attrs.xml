@@ -163,7 +163,7 @@
         <attr name="tl_tab_space_equal"/>
         <attr name="tl_tab_width"/>
 
-        <!-- title -->
+        <!-- url -->
         <attr name="tl_textSize"/>
         <attr name="tl_textSelectSize"/>
         <attr name="tl_textSelectColor"/>
@@ -237,7 +237,7 @@
         <!-- 设置tab固定大小 -->
         <attr name="tl_tab_width"/>
 
-        <!-- title -->
+        <!-- url -->
         <!-- 设置字体大小 -->
         <attr name="tl_textSize"/>
         <!-- 设置字体选中大小 -->

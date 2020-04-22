@@ -16,6 +16,7 @@ import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
+import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.study.BannerBean;
@@ -83,11 +84,13 @@ public interface ApiService {
      */
    /* @POST("api/v1.0/open/user/register-individual-business")
     Observable<BaseResult<UserInfoOld>> requestIndustryRegister(@Body Map<String, Object> map);*/
-    @GET("api/v1.0/open/common/smscode")
+
+
+    @POST("v1.0/open/utils/smscode")
     Observable<BaseResult> requestVCode(@QueryMap Map<String, Object> map);
 
-
-    @POST("api/v1.0/open/user/reset-password")
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/open/user/reset-password")
     Observable<BaseResult> requestResetPass(@Body Map<String, Object> map);
 
 
@@ -132,6 +135,12 @@ public interface ApiService {
      */
     @POST("v1.0/open/User/register-driver")
     Observable<BaseResult<UserInfo>> requestRegisterDriver(@Body Map<String, Object> map);
+
+    @POST("v1.0/training/get-payinfo")
+    Observable<BaseResult<CoursePayInfo>> requestGetCoursePayInfo(@Body Map<String, Object> map);
+
+    @POST("/v1.0/training/pay")
+    Observable<BaseResult<PayInfo>> requestPayCourse(@Body Map<String, Object> map);
 
     @POST("v1.0/open/utils/get-industry-category")
     Observable<BaseResult<List<IndustryCategory>>> requestCategory();

@@ -28,7 +28,7 @@ import com.trello.rxlifecycle3.android.FragmentEvent
  * @date 2020年03月11日10:57
  * @Email: 971613168@qq.com
  */
-class OfflineTrainFragment  : BaseFragment(){
+class OfflineTrainFragment : BaseFragment() {
 
     private var adapter: ProfessionalTrainingAdapter? = null
     private var refreshLayout: SmartRefreshLayout? = null
@@ -51,6 +51,7 @@ class OfflineTrainFragment  : BaseFragment(){
         recyclerView?.addItemDecoration(RecycleViewDivider(context, LinearLayout.VERTICAL, ConvertUtils.dp2px(10f), resources.getColor(R.color.grayFBF8FB), true))
         adapter = ProfessionalTrainingAdapter()
         adapter?.bindToRecyclerView(recyclerView)
+        adapter?.setEmptyView(R.layout.empty_driver_layout)
     }
 
 

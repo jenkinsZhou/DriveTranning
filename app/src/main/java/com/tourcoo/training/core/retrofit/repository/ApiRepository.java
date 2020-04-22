@@ -22,6 +22,7 @@ import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.CommitAnswer;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
+import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.study.BannerBean;
@@ -94,14 +95,25 @@ public class ApiRepository extends BaseRepository {
 
     public Observable<BaseResult> requestVCode(int type, String phone) {
         Map<String, Object> params = new HashMap<>(3);
+        String typeStr = "";
+        switch (type) {
+            case 0:
+                typeStr = "changePhoneNumber";
+                break;
+            case 1:
+            default:
+                typeStr = "resetPassword";
+                break;
+        }
+
         params.put("phone", phone);
-        params.put("type", type);
+        params.put("type", typeStr);
         return CommonTransformer.switchSchedulers(getApiService().requestVCode(params).retryWhen(new RetryWhen()));
     }
 
     public Observable<BaseResult> requestResetPass(String phone, String pass, String smsCode) {
         Map<String, Object> params = new HashMap<>(3);
-        params.put("phoneNumber", phone);
+        params.put("phone", phone);
         params.put("password", pass);
         params.put("smsCode", smsCode);
         return CommonTransformer.switchSchedulers(getApiService().requestResetPass(params).retryWhen(new RetryWhen()));
@@ -112,6 +124,21 @@ public class ApiRepository extends BaseRepository {
         params.put("needle", keyword);
         return CommonTransformer.switchSchedulers(getApiService().requestCompanyByKeyword(params).retryWhen(new RetryWhen()));
     }
+
+
+    public Observable<BaseResult<CoursePayInfo>> requestGetCoursePayInfo(String trainingPlanID) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("trainingPlanID", trainingPlanID);
+        return CommonTransformer.switchSchedulers(getApiService().requestGetCoursePayInfo(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<PayInfo>> requestPayCourse(String trainingPlanID,int payType) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("trainingPlanID", trainingPlanID);
+        params.put("payType", payType);
+        return CommonTransformer.switchSchedulers(getApiService().requestPayCourse(params).retryWhen(new RetryWhen()));
+    }
+
 
     @SuppressWarnings("unchecked")
     public Observable<BaseResult<UserInfo>> requestRegisterDriver(Map<String, Object> map) {

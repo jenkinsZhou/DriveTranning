@@ -193,7 +193,7 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
                 CommonUtil.startActivity(mContext, OnlineExamActivity.class);
                 break;
             case R.id.llGoldLevel:
-                CommonUtil.startActivity(mContext, FindPassActivity.class);
+
                 break;
             default:
                 break;

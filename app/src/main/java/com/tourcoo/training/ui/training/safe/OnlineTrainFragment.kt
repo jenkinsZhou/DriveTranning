@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
@@ -16,7 +17,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.dialog.CourseSelectAdapter
 import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
-import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter.COURSE_STATUS_NEED_PAY
+import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter.*
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
@@ -24,7 +25,9 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
+import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.course.CourseEntity
 import com.tourcoo.training.entity.course.CourseInfo
@@ -34,11 +37,13 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
+import com.tourcoo.training.ui.pay.BuyNowActivity
 import com.tourcoo.training.ui.training.online.PlayVideoActivity
 import com.tourcoo.training.ui.training.online.PlayVideoActivityNewOld1
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
+import com.tourcoo.training.widget.dialog.training.LocalTrainingDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
 
 /**
@@ -72,11 +77,23 @@ class OnlineTrainFragment : BaseFragment() {
         recyclerView?.addItemDecoration(RecycleViewDivider(context, LinearLayout.VERTICAL, ConvertUtils.dp2px(10f), resources.getColor(R.color.grayFBF8FB), true))
         adapter = OnLineTrainingCourseAdapter()
         adapter?.bindToRecyclerView(recyclerView)
+
+        //个体工商户
+        if (AccountHelper.getInstance().isLogin && AccountHelper.getInstance().userInfo.userType == 1) {
+            val view = View.inflate(context, R.layout.empty_individual_business_layout, null)
+            val tvBuy = view.findViewById<TextView>(R.id.tvBuy)
+            tvBuy.setOnClickListener {
+                //todo:添加购买学时功能
+            }
+
+            adapter?.emptyView = view
+        } else {
+            adapter?.setEmptyView(R.layout.empty_driver_layout)
+        }
+
+
         initTrainingPlanClick()
-        /* testData()
-         baseHandler.postDelayed(Runnable {
-             showCourseDialog()
-         }, 500)*/
+
     }
 
 
@@ -93,14 +110,10 @@ class OnlineTrainFragment : BaseFragment() {
         const val REQUEST_CODE_FACE_COMPARE = 202
     }
 
-    /* private fun testData() {
-         adapter?.addData(ProfessionTrainingEntity())
-         adapter?.addData(ProfessionTrainingEntity())
-         adapter?.addData(ProfessionTrainingEntity())
-         adapter?.addData(ProfessionTrainingEntity())
-     }*/
 
-
+    /**
+     * 选择课程时长
+     */
     private fun showCourseDialog() {
         val adapter = CourseSelectAdapter()
         adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
@@ -172,16 +185,48 @@ class OnlineTrainFragment : BaseFragment() {
             return
         }
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            //todo
-            if (position == 2) {
-                currentPlanId = (adapter!!.data[position] as CourseInfo).trainingPlanID
-                showRecognize(currentPlanId)
-            } else {
-                doSkipByStatus(adapter!!.data[position] as CourseInfo)
+            val courseInfo = adapter!!.data[position] as CourseInfo
+
+            if (!AccountHelper.getInstance().isLogin) {
+                ToastUtil.show("请先登录")
+                return@OnItemClickListener
             }
-//            doSkipByStatus(adapter!!.data[position] as CourseInfo)
+
+            when (AccountHelper.getInstance().userInfo.isAuthenticated) {
+                0 -> {  //未认证
+                    currentPlanId = courseInfo.trainingPlanID
+                    showRecognize(currentPlanId)
+                }
+
+                1 -> {  //已认证
+                    verifyByStatus(courseInfo)
+                }
+
+                2 -> {  //认证失败
+                    val dialog = LocalTrainingDialog(mContext)
+                    dialog.setContent("请确认是否为本人学习？")
+                            .setPositiveButtonClick("确认") {
+                                verifyByStatus(courseInfo)
+                                dialog.dismiss()
+                            }
+                            .setNegativeButtonClick("取消") {
+                                dialog.dismiss()
+                            }
+                            .create()
+                            .show()
+                }
+            }
+
         }
     }
+
+    /**
+     * 已通过身份验证的后续判断流程
+     */
+    private fun verifyByStatus(courseInfo: CourseInfo) {
+        doSkipByStatus(courseInfo)
+    }
+
 
     private fun doSkipByStatus(courseInfo: CourseInfo?) {
         if (courseInfo == null) {
@@ -189,17 +234,32 @@ class OnlineTrainFragment : BaseFragment() {
         }
         when (courseInfo.status) {
             COURSE_STATUS_NEED_PAY -> {
+                val intent = Intent(context, BuyNowActivity::class.java)
+                intent.putExtra("trainingPlanID", courseInfo.trainingPlanID)
+                startActivityForResult(intent, 0)
+            }
+
+            COURSE_STATUS_CONTINUE -> {
                 skipPlayVideo(courseInfo.trainingPlanID)
             }
+
+            COURSE_STATUS_WAIT_EXAM -> {
+                skipPlayVideo(courseInfo.trainingPlanID)
+            }
+
+            COURSE_STATUS_FINISHED -> {
+
+            }
+
             else -> {
                 skipPlayVideo(courseInfo.trainingPlanID)
-               /* val intent = Intent(mContext, OnlineExamActivity::class.java)
-                //培训计划id
-                intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
-                //考试题id
-                //todo 考试id 暂时写死
-                intent.putExtra(EXTRA_EXAM_ID, "0")
-                startActivity(intent)*/
+                /* val intent = Intent(mContext, OnlineExamActivity::class.java)
+                 //培训计划id
+                 intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
+                 //考试题id
+                 //todo 考试id 暂时写死
+                 intent.putExtra(EXTRA_EXAM_ID, "0")
+                 startActivity(intent)*/
             }
         }
     }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/dp_165"
+        android:layout_height="@dimen/dp_130"
+        android:layout_marginTop="@dimen/dp_40"
+        android:src="@mipmap/icon_list_empty_view" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:gravity="center"
+        android:text="暂无培训学习计划，当前需要进行学时购买。"
+        android:textColor="@color/gray999999"
+        android:textSize="@dimen/sp_15" />
+
+
+    <TextView
+        android:id="@+id/tvBuy"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_37"
+        android:layout_marginLeft="@dimen/dp_110"
+        android:layout_marginTop="@dimen/dp_25"
+        android:layout_marginRight="@dimen/dp_110"
+        android:layout_marginBottom="@dimen/dp_40"
+        android:background="@drawable/selector_gradient_radius_25_blue"
+        android:gravity="center"
+        android:text="购买学时"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15" />
+
+</LinearLayout>

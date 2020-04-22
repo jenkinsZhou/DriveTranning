@@ -48,7 +48,7 @@ public class TabLayoutDelegate<T extends TabLayoutDelegate> {
     protected float mDividerPadding;
 
     /**
-     * title
+     * url
      */
     protected int mTextSizeUnit = TypedValue.COMPLEX_UNIT_PX;
     protected float mTextSize;

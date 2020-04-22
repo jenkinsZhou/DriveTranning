@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import com.blankj.utilcode.util.ToastUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
@@ -56,6 +57,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         tvRegisterDriver.setOnClickListener(this)
         tvRegisterIndustrial.setOnClickListener(this)
         tvLogin.setOnClickListener(this)
+        btnForgetPassword.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -71,6 +73,11 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             R.id.tvLogin -> {
                 doLogin()
             }
+
+            R.id.btnForgetPassword ->{
+                CommonUtil.startActivity(this,FindPassActivity::class.java)
+            }
+
         }
     }
 
@@ -105,6 +112,14 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("请输入密码")
             return
         }
+
+        val isRead = cbRead.isChecked
+        if (!isRead) {
+            ToastUtil.show("请勾选已同意《交通安培》用户服务协议")
+            return
+        }
+
+
         ApiRepository.getInstance().requestLoginByIdCard(getTextValue(etIdCard), getTextValue(etPass)).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<UserInfo>>("正在登录...") {
             override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
                 if (entity != null) {

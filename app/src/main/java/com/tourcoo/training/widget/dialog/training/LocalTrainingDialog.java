@@ -3,6 +3,7 @@ package com.tourcoo.training.widget.dialog.training;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Point;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
@@ -10,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.tourcoo.training.R;
 
 
@@ -25,6 +28,10 @@ public class LocalTrainingDialog {
     private Context mContext;
     private Dialog dialog;
     private int width = 0;
+    private String content;
+    private TextView tvDialogConfirm;
+    private TextView tvDialogCancel;
+
 
     public LocalTrainingDialog(Context context) {
         this.mContext = context;
@@ -37,10 +44,21 @@ public class LocalTrainingDialog {
         width = metrics.widthPixels;
     }
 
+    public LocalTrainingDialog setContent(String content){
+        this.content = content;
+        return this;
+    }
+
 
     public LocalTrainingDialog create() {
         // 获取Dialog布局
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_training_local_common, null);
+        TextView tvContent = view.findViewById(R.id.tvAlertContent);
+        tvDialogConfirm = view.findViewById(R.id.tvDialogConfirm);
+        tvDialogCancel = view.findViewById(R.id.tvDialogCancel);
+        if(!StringUtils.isEmpty(content)){
+            tvContent.setText(content);
+        }
         // 设置Dialog最小宽度为屏幕宽度
         view.setMinimumWidth(width);
         // 定义Dialog布局和参数
@@ -69,6 +87,29 @@ public class LocalTrainingDialog {
             // 宽度设置为屏幕的0.8
             p.width = (int) (width * 0.85);
             window.setAttributes(p);
+        }
+        return this;
+    }
+
+    public LocalTrainingDialog setPositiveButtonClick(CharSequence text, View.OnClickListener onClickListener) {
+        if (TextUtils.isEmpty(text)) {
+            text = "";
+        }
+        if (tvDialogConfirm != null) {
+            tvDialogConfirm.setText(text);
+            tvDialogConfirm.setOnClickListener(onClickListener);
+        }
+        return this;
+    }
+
+
+    public LocalTrainingDialog setNegativeButtonClick(CharSequence text, View.OnClickListener onClickListener) {
+        if (TextUtils.isEmpty(text)) {
+            text = "";
+        }
+        if (tvDialogCancel != null) {
+            tvDialogCancel.setText(text);
+            tvDialogCancel.setOnClickListener(onClickListener);
         }
         return this;
     }

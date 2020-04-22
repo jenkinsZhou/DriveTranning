@@ -21,6 +21,7 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.InputStatus
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.ui.account.register.IndustryRegisterActivity
@@ -29,7 +30,6 @@ import com.trello.rxlifecycle3.android.ActivityEvent
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_find_password.*
-import kotlinx.android.synthetic.main.activity_recognize_result.*
 
 /**
  *@description :
@@ -60,13 +60,25 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        val bundle = intent.extras
+        val isLogin = bundle?.getBoolean("isLogin")
+
+        if(isLogin == null || isLogin == false){
+            etPhone.isEnabled = true
+        }else{
+            etPhone.isEnabled = false
+            etPhone.setText(AccountHelper.getInstance().userInfo.phone)
+            etPhone.setTextColor(resources.getColor(R.color.colorAccent))
+        }
+
+
         checkInputList = ArrayList()
-        listenInputFocus(etPass, linePass)
+        listenInputFocus(etPhone, linePass)
         listenInputFocus(etVCode, lineVCode)
         listenInputFocus(etNewPass, lineNewPass)
         listenInput(etNewPass, ivNewPassClose)
         listenInput(etVCode, ivVCodeClose)
-        listenInput(etPass, null)
+        listenInput(etPhone, null)
         tvConfirmPass.setOnClickListener(this)
         tvGetVCode.setOnClickListener(this)
         showButtonByInput(false)
@@ -79,22 +91,25 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.tvConfirmPass -> {
-                doResetPass("18256070563")
+                val phone = etPhone.text.toString().trim()
+                if(!phone.startsWith("1") || phone.length != 11){
+                    ToastUtil.show("手机号格式有误")
+                    return
+                }
+                doResetPass(phone)
             }
             R.id.tvGetVCode -> {
-                sendVCodeAndCountDownTime("18256070563")
+                val phone = etPhone.text.toString().trim()
+                if(!phone.startsWith("1") || phone.length != 11){
+                    ToastUtil.show("手机号格式有误")
+                    return
+                }
+                sendVCodeAndCountDownTime(phone)
             }
 
             else -> {
             }
         }
-    }
-
-    private fun showIdInfo() {
-        tvName.text = AccountTempHelper.getInstance().registerName
-        tvIdCard.text = AccountTempHelper.getInstance().registerIdCard
-        AccountTempHelper.getInstance().businessLicensePath = "awdad"
-//        tvName.text = AccountTempHelper.getInstance().registerPhone
     }
 
     private fun listenInputFocus(editText: EditText, lineView: View) {
@@ -196,7 +211,7 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private fun countDownTime() {
         reset()
-        setClickEnable( false)
+        setClickEnable(false)
         mHandler.postDelayed(Runnable {
             tvGetVCode.setTextColor(ResourceUtil.getColor(R.color.grayA2A2A2))
         }, ONE_SECOND)
@@ -253,10 +268,10 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-
     private fun setClickEnable(clickEnable: Boolean) {
         tvGetVCode.isEnabled = clickEnable
     }
+
     private fun setText(text: String) {
         tvGetVCode.text = text
         tvGetVCode.background = ResourceUtil.getDrawable(R.drawable.bg_radius_25_gray_d2d2d2)
@@ -264,7 +279,7 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun doResetPass(phone: String){
+    private fun doResetPass(phone: String) {
         if (TextUtils.isEmpty(phone)) {
             ToastUtil.show("未获取到手机号")
             return
@@ -273,7 +288,7 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("未获取到正确的手机号")
             return
         }
-        ApiRepository.getInstance().requestResetPass(phone, getTextValue(etNewPass),getTextValue(etVCode)).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<*>>() {
+        ApiRepository.getInstance().requestResetPass(phone, getTextValue(etNewPass), getTextValue(etVCode)).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<*>>() {
             override fun onSuccessNext(entity: BaseResult<*>?) {
                 if (entity == null) {
                     return

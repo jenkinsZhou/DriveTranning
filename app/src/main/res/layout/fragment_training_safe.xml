@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/whiteFFFEFF"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_12"
-        android:paddingTop="@dimen/dp_3"
-        android:paddingBottom="@dimen/dp_3"
-        android:paddingStart="@dimen/dp_10"
-        android:paddingEnd="@dimen/dp_10"
+
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/magicIndicator"
         android:background="@drawable/bg_radius_5_gray_f5f5f5"
-        android:orientation="vertical">
+        android:layout_margin="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_3"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_36" />
 
-        <net.lucode.hackware.magicindicator.MagicIndicator
-            android:id="@+id/magicIndicator"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_30" />
 
-    </LinearLayout>
-
-
-    <com.tourcoo.training.widget.viewpager.AutoHeightViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/safeTrainingViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
+
+
+<!--    <com.tourcoo.training.widget.viewpager.AutoHeightViewPager-->
+<!--        android:id="@+id/safeTrainingViewPager"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
+
+
 </LinearLayout>

@@ -6,8 +6,10 @@ import androidx.annotation.Nullable;
 
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.SSLUtil;
+import com.tourcoo.training.entity.account.AccountHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +55,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitHelper {
 
-     public static final String TAG = "RetrofitHelper";
+    public static final String TAG = "RetrofitHelper";
     private static volatile RetrofitHelper sManager;
     private static volatile Retrofit sRetrofit;
     private static volatile Retrofit.Builder sRetrofitBuilder;
@@ -111,13 +113,16 @@ public class RetrofitHelper {
 
     private RetrofitHelper() {
         sClientBuilder = new OkHttpClient.Builder();
-        sClientBuilder.addInterceptor(mHeaderInterceptor).addInterceptor(new TokenInterceptor());
+        sClientBuilder.addInterceptor(mHeaderInterceptor)
+                .addInterceptor(new RqInterceptor());
+//                .addInterceptor(new TokenInterceptor());
         sRetrofitBuilder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
         setTimeout(mDelayTime);
         MultiUrl.getInstance().with(sClientBuilder);
     }
+
 
     public static RetrofitHelper getInstance() {
         if (sManager == null) {
@@ -129,6 +134,24 @@ public class RetrofitHelper {
         }
         return sManager;
     }
+
+
+    /**
+     * 请求拦截器
+     */
+    private class RqInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Interceptor.Chain chain) throws IOException {
+            String token = AccountHelper.getInstance().isLogin() ? AccountHelper.getInstance().getUserInfo().getAccessToken() : "";
+            Request request = chain.request()
+                    .newBuilder()
+                    .addHeader("X-APP-TYPE", "android")
+                    .addHeader("accesstoken", token)
+                    .build();
+            return chain.proceed(request);
+        }
+    }
+
 
     /**
      * 对外暴露 OkHttpClient,方便自定义
@@ -186,7 +209,7 @@ public class RetrofitHelper {
     public <T> T createService(Class<T> apiService, boolean useCacheEnable) {
         if (useCacheEnable && apiService != null) {
             if (mServiceMap.containsKey(apiService.getName())) {
-               TourCooLogUtil.i("className:" + apiService.getName() + ";service取自缓存");
+                TourCooLogUtil.i("className:" + apiService.getName() + ";service取自缓存");
                 return (T) mServiceMap.get(apiService.getName());
             }
             T tClass = getRetrofit().create(apiService);
@@ -453,7 +476,7 @@ public class RetrofitHelper {
                         LogUtils.json(message);
                         return;
                     }
-                   TourCooLogUtil.d( message);
+                    TourCooLogUtil.d(message);
                 });
             }
             mLoggingInterceptor.setLevel(level);

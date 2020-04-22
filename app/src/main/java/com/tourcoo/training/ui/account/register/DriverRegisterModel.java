@@ -18,8 +18,6 @@ import java.util.Map;
 public class DriverRegisterModel implements DriverRegisterContract.RegisterModel {
 
 
-
-
     @Override
     public void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<UserInfo>> observer) {
         ApiRepository.getInstance().requestRegisterDriver(values).subscribe(observer);

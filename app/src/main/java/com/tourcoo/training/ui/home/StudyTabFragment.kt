@@ -1,6 +1,5 @@
 package com.tourcoo.training.ui.home
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -13,6 +12,7 @@ import androidx.viewpager.widget.ViewPager
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.core.base.activity.WebViewActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseBlueBgTitleFragment
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -27,9 +27,7 @@ import com.tourcoo.training.ui.training.WorkProTrainingFragment
 import com.tourcoo.training.ui.training.safe.SafeTrainingFragment
 import com.tourcoo.training.widget.banner.BannerEntity
 import com.tourcoo.training.widget.banner.ImageBannerAdapter
-import com.tourcoo.training.widget.viewpager.AutoHeightViewPager
 import com.tourcoo.training.widget.viewpager.SwitchScrollViewPager
-import com.trello.rxlifecycle3.android.ActivityEvent
 import com.trello.rxlifecycle3.android.FragmentEvent
 import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.listener.OnBannerListener
@@ -87,7 +85,7 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                         TourCooLogUtil.d(entity)
                         entity.data.forEach {
-                            list.add(BannerEntity(it.imageUrl, null, 1))
+                            list.add(BannerEntity(it.imageUrl, it.url, 1))
                         }
                         learnBanner?.adapter = ImageBannerAdapter(list)
                         learnBanner?.indicator = CircleIndicator(mContext)
@@ -96,7 +94,10 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
                             }
 
                             override fun OnBannerClick(data: Any?, position: Int) {
-                                ToastUtil.show("" + position)
+                                if (list[position].url.isEmpty()) {
+                                    return
+                                }
+                                WebViewActivity.start(context, list[position].url, true)
                             }
 
                         })
