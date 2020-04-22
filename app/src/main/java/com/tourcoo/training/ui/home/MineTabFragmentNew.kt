@@ -36,8 +36,7 @@ import com.tourcoo.training.ui.account.PersonalInfoActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.setting.SettingActivity
-import com.tourcoo.training.ui.training.online.PlayVideoActivity
-import com.tourcoo.training.ui.training.online.PlayVideoActivityOld
+import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert

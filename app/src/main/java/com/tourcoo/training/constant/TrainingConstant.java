@@ -11,4 +11,14 @@ public class TrainingConstant {
     public static final String EXTRA_TRAINING_PLAN_ID = "EXTRA_TRAINING_PLAN_ID";
 
     public static final String APP_ID = "wx3210e68d7d514a48";
+    //未开始
+    public static final int  TRAIN_STATUS_NO_START = 0;
+    //已签到
+    public static final int  TRAIN_STATUS_SIGNED = 1;
+    //已签退
+    public static final int  TRAIN_STATUS_SIGN_BACK = 2;
+    //转线上
+    public static final int  TRAIN_STATUS_TO_ONLINE = 3;
+
+
 }

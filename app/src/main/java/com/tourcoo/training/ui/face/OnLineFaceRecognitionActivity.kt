@@ -35,6 +35,7 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener
 import com.tourcoo.training.widget.dialog.IosAlertDialog
+import com.tourcoo.training.widget.dialog.common.CommonWaringAlert
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_face_recognition.*
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -346,9 +347,22 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                 } else {
                     ToastUtil.show(entity.msg)
                     //todo 暂时模拟成功
-                    handleRecognizeSuccessCallback()
+//                    handleRecognizeSuccessCallback()
+                    handleRecognizeFailedCallback()
                 }
             }
         })
+    }
+
+
+    private fun handleRecognizeFailedCallback() {
+        val alert = CommonWaringAlert(mContext)
+        alert.create().setTitle("验证失败").setContent("本次验证未通过～").setPositiveButtonClick("我知道了",object : View.OnClickListener{
+            override fun onClick(v: View?) {
+                //验证失败直接关闭页面
+                finish()
+            }
+        })
+        alert.show()
     }
 }

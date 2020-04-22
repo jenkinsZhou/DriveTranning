@@ -73,7 +73,7 @@
         <activity android:name=".ui.exam.OnlineExamActivity" />
         <activity android:name=".ui.training.ProfessionalTrainingFragment" />
         <activity
-            android:name=".ui.training.online.PlayVideoActivityOld"
+            android:name="com.tourcoo.training.ui.training.safe.online.PlayVideoActivityOld"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
         <activity android:name=".ui.account.register.RecognizeIdCardActivity" />
         <activity
@@ -91,9 +91,9 @@
         <activity android:name=".ui.account.PersonalInfoActivity" />
         <activity android:name=".ui.certificate.MyCertificationActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
-        <activity android:name=".ui.training.online.PlayVideoActivityNewOld1" />
+        <activity android:name="com.tourcoo.training.ui.training.safe.online.PlayVideoActivityNewOld1" />
         <activity
-            android:name=".ui.training.online.PlayVideoActivity"
+            android:name="com.tourcoo.training.ui.training.safe.online.PlayVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
 
         <!--wx pay-->
@@ -103,6 +103,7 @@
             android:launchMode="singleTop" />
         <activity android:name=".core.base.activity.WebViewActivity" />
         <activity android:name=".ui.face.OnLineFaceRecognitionActivity" />
+        <activity android:name=".ui.training.safe.online.detail.TrainPlanDetailActivity" />
 
         <service android:name="com.amap.api.location.APSService">
 

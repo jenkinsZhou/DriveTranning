@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.training.online
+package com.tourcoo.training.ui.training.safe.online
 
 import android.app.AlertDialog
 import android.content.DialogInterface

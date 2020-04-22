@@ -1,8 +1,7 @@
-package com.tourcoo.training.ui.training.safe
+package com.tourcoo.training.ui.training.safe.online.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -25,7 +24,6 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
-import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
@@ -34,12 +32,9 @@ import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_TYPE_RECOGNIZE_COMPARE
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
-import com.tourcoo.training.ui.exam.OnlineExamActivity
-import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
-import com.tourcoo.training.ui.training.online.PlayVideoActivity
-import com.tourcoo.training.ui.training.online.PlayVideoActivityNewOld1
+import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
@@ -150,7 +145,7 @@ class OnlineTrainFragment : BaseFragment() {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    handleOnLineCourseList(entity?.data)
+                    handleOnLineCourseList(entity.data)
                 } else {
                     ToastUtil.show(entity.msg)
                 }

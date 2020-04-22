@@ -306,18 +306,12 @@ public class SmartPickPlayer extends StandardGSYVideoPlayer {
         @Override
         public void onVideoPause() {
             ToastUtil.showSuccess("onVideoPause");
-            if(onPlayStatusListener != null){
-                onPlayStatusListener.onPlayPause(getCurrentCourseId());
-            }
+
         }
 
         @Override
         public void onVideoResume() {
             ToastUtil.showSuccess("onVideoResume");
-            if(onPlayStatusListener != null){
-                onPlayStatusListener.onPlayResume(getCurrentCourseId());
-            }
-
         }
 
         @Override

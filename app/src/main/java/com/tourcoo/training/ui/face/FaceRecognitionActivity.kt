@@ -39,6 +39,7 @@ import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener
 import com.tourcoo.training.widget.dialog.IosAlertDialog
+import com.tourcoo.training.widget.dialog.common.CommonWaringAlert
 import com.tourcoo.training.widget.idcardcamera.camera.IDCardCamera
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_face_recognition.*
@@ -62,7 +63,7 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
         const val EXTRA_FACE_IMAGE_PATH = "EXTRA_FACE_IMAGE_PATH"
     }
 
-    private val photoName = "test.jpg"
+    private val photoName = "face.jpeg"
     private var trainId = ""
     private var cameraHelper: CameraHelper? = null
     private val cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT
@@ -357,5 +358,7 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
             }
         })
     }
+
+
 
 }

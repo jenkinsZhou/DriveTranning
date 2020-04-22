@@ -12,7 +12,5 @@ public interface OnPlayStatusListener {
 
     void onAutoPlayComplete(int courseId);
 
-    void onPlayPause(int courseId);
 
-    void onPlayResume(int courseId);
 }

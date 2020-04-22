@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.training.safe
+package com.tourcoo.training.ui.training.safe.online.fragment
 
 import android.os.Bundle
 import android.widget.LinearLayout
@@ -17,7 +17,6 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.course.CourseInfo
-import com.tourcoo.training.entity.training.ProfessionTrainingEntity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.trello.rxlifecycle3.android.FragmentEvent
 

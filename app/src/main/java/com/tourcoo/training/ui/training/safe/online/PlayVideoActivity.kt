@@ -1,5 +1,6 @@
-package com.tourcoo.training.ui.training.online
+package com.tourcoo.training.ui.training.safe.online
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -10,9 +11,10 @@ import android.transition.Transition
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.ViewCompat
+import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
+import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
@@ -24,29 +26,20 @@ import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
-import com.tourcoo.training.core.manager.RxJavaManager
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
-import com.tourcoo.training.core.util.ResourceUtil
-import com.tourcoo.training.core.util.SizeUtil
-import com.tourcoo.training.core.util.TimeUtil
-import com.tourcoo.training.core.util.ToastUtil
+import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.TrainingPlanDetail
-import com.tourcoo.training.ui.account.FindPassActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
-import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.oldplayer.OnTransitionListener
 import com.tourcoo.training.widget.player.OnPlayStatusListener
 import com.trello.rxlifecycle3.android.ActivityEvent
-import io.reactivex.Observer
-import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_find_password.*
 import kotlinx.android.synthetic.main.activity_play_video.*
 
 /**
@@ -59,7 +52,6 @@ import kotlinx.android.synthetic.main.activity_play_video.*
 class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClickListener {
     private val mTag = "PlayVideoActivity"
     private var orientationUtils: OrientationUtils? = null
-    private val disposableList = ArrayList<Disposable>()
     private var isTransition = false
 
     private var transition: Transition? = null
@@ -71,9 +63,17 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
     private var trainingPlanID = ""
     private var trainingPlanDetail: TrainingPlanDetail? = null
 
+    //人脸验证间隔时间
+    private var faceVerifyInterval = Int.MAX_VALUE
+
+
+    private var mTimerTask: CountDownTimerSupport? = null
+
     companion object {
         const val IMG_TRANSITION = "IMG_TRANSITION"
         const val TRANSITION = "TRANSITION"
+
+        const val REQUEST_CODE_FACE = 1006
         const val COURSE_STATUS_NO_COMPLETE = 0
         const val COURSE_STATUS_COMPLETE = 2
         const val COURSE_STATUS_PLAYING = 1
@@ -96,6 +96,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             finish()
             return
         }
+        tvExam.isEnabled = false
         TourCooLogUtil.i(mTag, "trainingPlanID=$trainingPlanID")
         tvExam.setOnClickListener(this)
         mCourseList = ArrayList()
@@ -130,42 +131,38 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         smartVideoPlayer!!.setVideoAllCallBack(object : VideoAllCallBack {
             override fun onClickResumeFullscreen(url: String?, vararg objects: Any?) {
                 ToastUtil.show("onClickResumeFullscreen")
+                //全屏模式下的恢复播放
+                timerResume()
             }
 
             override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onEnterFullscreen")
             }
 
             override fun onClickResume(url: String?, vararg objects: Any?) {
                 ToastUtil.show("onClickResume")
+                //正常模式下的恢复播放
+                timerResume()
             }
 
             override fun onClickSeekbarFullscreen(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onClickSeekbarFullscreen")
             }
 
             override fun onStartPrepared(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onStartPrepared")
             }
 
             override fun onClickStartIcon(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onClickStartIcon")
             }
 
             override fun onTouchScreenSeekLight(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onTouchScreenSeekLight")
             }
 
             override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onTouchScreenSeekLight")
             }
 
             override fun onClickStartThumb(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onClickStartThumb")
             }
 
             override fun onEnterSmallWidget(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onEnterSmallWidget")
             }
 
             override fun onClickStartError(url: String?, vararg objects: Any?) {
@@ -173,11 +170,9 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             }
 
             override fun onClickBlankFullscreen(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onClickBlankFullscreen")
             }
 
             override fun onPrepared(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onPrepared")
             }
 
             override fun onAutoComplete(url: String?, vararg objects: Any?) {
@@ -195,6 +190,8 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
             }
 
             override fun onClickStop(url: String?, vararg objects: Any?) {
+                //正常模式下的暂停播放
+                timerPause()
                 ToastUtil.show("onClickStop")
             }
 
@@ -204,14 +201,15 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
 
             override fun onPlayError(url: String?, vararg objects: Any?) {
                 ToastUtil.show("onPlayError")
+                timerPause()
             }
 
             override fun onClickStopFullscreen(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onClickStopFullscreen")
+                //全屏模式下的暂停播放
+                timerPause()
             }
 
             override fun onTouchScreenSeekPosition(url: String?, vararg objects: Any?) {
-                ToastUtil.show("onTouchScreenSeekPosition")
             }
 
         })
@@ -235,6 +233,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         if (smartVideoPlayer != null) {
             smartVideoPlayer!!.onVideoPause()
         }
+        timerPause()
     }
 
     override fun onResume() {
@@ -242,11 +241,12 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         if (smartVideoPlayer != null) {
             smartVideoPlayer!!.onVideoResume()
         }
+        timerResume()
     }
 
 
     override fun onDestroy() {
-        cancelTime()
+        cancelTimer()
         super.onDestroy()
         if (smartVideoPlayer != null) {
             smartVideoPlayer!!.release()
@@ -297,12 +297,21 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         if (detail == null || detail.subjects == null) {
             return
         }
-        //开始计时
-        countDownTime(5)
+        //拿到后台配置的间隔时间
+        faceVerifyInterval = detail.faceVerifyInterval
+        //初始化计时器
+        initTimerAndStart()
+        if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
+            tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
+            tvExam.isEnabled = true
+        } else {
+            tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
+            tvExam.isEnabled = false
+        }
         mCourseHashMap!!.clear()
         mCourseList!!.clear()
         llPlanContentView.removeAllViews()
-        tvTitle.text = getNotNullValue(detail.description)
+        tvTitle.text = getNotNullValue(detail.title)
         val subjects = detail.subjects
         for (subject in subjects) {
             //如果标题名称不为空则添加标题
@@ -486,14 +495,6 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         requestCompleteCurrentCourse(courseId.toString())
     }
 
-    override fun onPlayResume(courseId: Int) {
-        ToastUtil.show("播放恢复")
-    }
-
-    override fun onPlayPause(courseId: Int) {
-        ToastUtil.show("播放暂停")
-    }
-
 
     /* private fun handlePlayComplete(courseId: Int) {
          playNext(courseId)
@@ -591,7 +592,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         })
     }
 
-    private fun showExit(courseId: String) {
+    private fun showExit() {
         IosAlertDialog(mContext)
                 .init()
                 .setCancelable(false)
@@ -600,8 +601,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
                 .setMsg("退出前会保存当前学习进度")
                 .setPositiveButton("确认退出", View.OnClickListener {
                     //todo 保存观看进度
-                    val progress = smartVideoPlayer!!.currentPositionWhenPlaying / 1000
-                    requestSaveProgress(courseId, progress.toString())
+                    doSaveProgressAndFinish()
                 })
                 .setNegativeButton("取消", View.OnClickListener {
                     finish()
@@ -613,7 +613,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
         if (GSYVideoManager.backFromWindowFull(this)) {
             return
         }
-        showExit(smartVideoPlayer.currentCourseId.toString())
+        showExit()
     }
 
 
@@ -628,59 +628,120 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
     }
 
 
-    private fun cancelTime() {
-        if (disposableList.isNotEmpty()) {
-            var disposable: Disposable
-            for (i in disposableList.indices) {
-                disposable = disposableList.get(i)
-                if (!disposable.isDisposed) {
-                    disposable.dispose()
-                    disposableList.remove(disposable)
+    private fun skipRecognize() {
+        //暂停视频
+        smartVideoPlayer.onVideoPause()
+        //暂停计时器
+        timerPause()
+        //跳转到人脸认证
+        skipFace()
+    }
+
+
+    private fun skipFace() {
+        //人脸认证
+        val intent = Intent(this, OnLineFaceRecognitionActivity::class.java)
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
+        startActivityForResult(intent, REQUEST_CODE_FACE)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQUEST_CODE_FACE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    //人脸认证成功 不做任何处理
+                } else {
+                    //人脸识别失败 处理人脸识别逻辑
+                    handleRecognizeFailedCallback()
                 }
+            }
+            else -> {
             }
         }
     }
 
+    /**
+     * 初始化计时器 并开始计时
+     */
+    private fun initTimerAndStart() {
+        //总时长 间隔时间
+        if (faceVerifyInterval <= 0) {
+            //取消计时器
+            cancelTimer()
+            return
+        }
+        //初始化计时器
+//        faceVerifyInterval = 12
+        mTimerTask = CountDownTimerSupport(faceVerifyInterval.toLong() * 1000, 1000L)
+        mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
+            override fun onFinish() {
+                ToastUtil.show("时间到")
+                //时间到 开始下一个计时
+                startTimer()
+                //todo 处理认证逻辑
+                skipRecognize()
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+
+            }
+
+        })
+        startTimer()
+    }
+
+
+    private fun cancelTimer() {
+        if (mTimerTask != null) {
+            mTimerTask!!.stop()
+        }
+    }
+
+
+    private fun startTimer() {
+        if (mTimerTask != null) {
+            //先重置 在启动
+            mTimerTask!!.reset()
+            mTimerTask!!.start()
+        }
+    }
+
+    private fun timerPause() {
+        if (mTimerTask != null) {
+            //暂停
+            mTimerTask!!.pause()
+        }
+    }
+
+    private fun timerResume() {
+        if (mTimerTask != null) {
+            //恢复
+            mTimerTask!!.resume()
+        }
+    }
 
     /**
-     * 倒计时
+     * 保存进度并关闭当前页面
      */
-    private fun countDownTime(count: Long) {
-        RxJavaManager.getInstance().doEventByInterval(FindPassActivity.ONE_SECOND, object : Observer<Long> {
-            override fun onSubscribe(d: Disposable) {
-                disposableList.add(d)
-            }
-
-            override fun onNext(aLong: Long) {
-                if (aLong >= count) {
-                    onComplete()
-                }
-            }
-
-            override fun onError(e: Throwable) {
-                cancelTime()
-            }
-
-            override fun onComplete() {
-                handleRecognize()
-                cancelTime()
-            }
-        })
+    private fun doSaveProgressAndFinish() {
+        val progress = smartVideoPlayer!!.currentPositionWhenPlaying / 1000
+        requestSaveProgress(smartVideoPlayer!!.currentCourseId.toString(), progress.toString())
     }
 
 
-    private fun handleRecognize() {
-        smartVideoPlayer.onVideoPause()
-        ToastUtil.show("跳转到识别")
-        skipFace()
+    private fun handleRecognizeFailedCallback() {
+        //将视频置为不可点击
+        smartVideoPlayer.startButton.isEnabled = false
+        //暂停视频
+        baseHandler.postDelayed(Runnable {
+            smartVideoPlayer?.onVideoPause()
+        }, 1000)
+
+        ToastUtil.show("人脸识别失败")
+        baseHandler.postDelayed(Runnable {
+            doSaveProgressAndFinish()
+        }, 1500)
     }
-
-    //跳转实现
-    private fun skipFace() {
-        val intent = Intent(this, OnLineFaceRecognitionActivity::class.java)
-        intent.putExtra(EXTRA_TRAINING_PLAN_ID, "trainingPlanID")
-        startActivityForResult(intent, 1003)
-    }
-
-
 }

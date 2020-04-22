@@ -48,22 +48,6 @@ public class DriverRegisterPresenter extends BasePresenter<DriverRegisterContrac
                     ToastUtil.show(entity.msg);
                 }
             }
-
-            @Override
-            public void onFailedNext(Throwable e) {
-                super.onFailedNext(e);
-                if (AppConfig.DEBUG_MODE) {
-                    ToastUtil.showFailed(e.toString());
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                if (AppConfig.DEBUG_MODE) {
-                    ToastUtil.showFailed(e.toString());
-                }
-            }
         });
     }
 

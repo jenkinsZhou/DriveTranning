@@ -24,7 +24,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.study.BannerBean
 import com.tourcoo.training.ui.training.ProfessionalTrainingFragment
 import com.tourcoo.training.ui.training.WorkProTrainingFragment
-import com.tourcoo.training.ui.training.safe.SafeTrainingFragment
+import com.tourcoo.training.ui.training.safe.online.fragment.SafeTrainingFragment
 import com.tourcoo.training.widget.banner.BannerEntity
 import com.tourcoo.training.widget.banner.ImageBannerAdapter
 import com.tourcoo.training.widget.viewpager.SwitchScrollViewPager

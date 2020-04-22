@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.training.online
+package com.tourcoo.training.ui.training.safe.online
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
