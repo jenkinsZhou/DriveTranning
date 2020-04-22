@@ -154,6 +154,12 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestCategory().retryWhen(new RetryWhen()));
     }
 
+    public Observable<BaseResult> setIndustryCategory(String id) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("id", id);
+        return CommonTransformer.switchSchedulers(getApiService().setIndustryCategory(params).retryWhen(new RetryWhen()));
+    }
+
     @SuppressWarnings("unchecked")
     public Observable<BaseResult<Object>> requestRegisterIndustry(Map<String, Object> map) {
         Map<String, Object> params = new HashMap<>(1);

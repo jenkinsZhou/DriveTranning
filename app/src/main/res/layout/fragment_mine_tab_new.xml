@@ -113,6 +113,7 @@
                                 android:src="@mipmap/ic_mine_bg_gold" />
 
                             <TextView
+                                android:id="@+id/tvMonthRanking"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
@@ -250,6 +251,7 @@
 
 
                         <TextView
+                            android:id="@+id/tvOnlineProgress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_5"
@@ -297,6 +299,7 @@
 
 
                         <TextView
+                            android:id="@+id/tvOfflineProgress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

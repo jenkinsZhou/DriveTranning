@@ -101,7 +101,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     override fun loadData() {
         super.loadData()
         ivSetting.setOnClickListener(this)
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
         setStatusBarModeWhite(this)
@@ -141,15 +141,13 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     private fun initItemClick() {
         accountAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
-                0 -> {
-//                    CommonUtil.startActivity(mContext, BuyNowActivity::class.java)
+                0, 1 -> {
                     CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
                 }
-                1 -> showDialog()
-                2 ->  //                        showDialog1();
-//                        showDialog2();
+                2 ->
                     showDialog3()
                 else -> {
+
                 }
             }
         }
@@ -160,14 +158,14 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 }
 
                 1 -> {
-                    CommonUtil.startActivity(mContext, PlayVideoActivity::class.java)
-                }
-
-                2->{
 
                 }
 
-                3->{
+                2 -> {
+
+                }
+
+                3 -> {
                     CommonUtil.startActivity(mContext, MyCertificationActivity::class.java)
                 }
 
@@ -177,6 +175,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         }
     }
 
+    //本次现场培训已结束
     private fun showDialog() {
         val alert = LocalTrainingAlert(mContext)
         alert.create().show()
@@ -245,11 +244,16 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         }
         setViewVisible(llGoldLevel, true)
         setViewVisible(monthRate, true)
+
+        tvMonthRanking.text = userInfo.monthRanking
+
         tvUserNickName.text = userInfo.name
         progressBarOnLine.progress = userInfo.onlineLearnProgress.toInt()
+        tvOnlineProgress.text = "" + progressBarOnLine.progress + "%"
         progressBarLocal.progress = userInfo.onsiteLearnProgress.toInt()
+        tvOfflineProgress.text = "" + progressBarLocal.progress + "%"
         GlideManager.loadImg(userInfo.avatar, civAvatar, R.mipmap.ic_avatar_default)
-        tvCoinsRemain.text = CommonUtil.doubleTransStringZhen(userInfo.coinsRemain)
+        tvCoinsRemain.text = "剩余学币： " + CommonUtil.doubleTransStringZhen(userInfo.coinsRemain)
     }
 
 

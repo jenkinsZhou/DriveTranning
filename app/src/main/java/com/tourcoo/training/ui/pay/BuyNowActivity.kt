@@ -176,7 +176,6 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
             mHandler.sendMessage(msg)
         }
 
-
         // 必须异步调用
         val payThread = Thread(payRunnable)
         payThread.start()
@@ -192,7 +191,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         }
 
         // 将该app注册到微信
-        val wxapi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID);
+        val wxapi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
 
         if (!wxapi.isWXAppInstalled) {
             ToastUtil.show("您尚未安装微信客户端")

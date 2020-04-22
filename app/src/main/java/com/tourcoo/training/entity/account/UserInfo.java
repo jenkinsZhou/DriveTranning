@@ -35,7 +35,7 @@ public class UserInfo implements Parcelable {
      * UserType : 1
      * IsAuthenticated : 0
      * Status : 2
-     * IndustryCateID :
+     * IndustryCategoryIDs :
      * Name : 测试驾驶员03
      * CoinsTotal : 0
      * CoinsRemain : 0
@@ -57,7 +57,8 @@ public class UserInfo implements Parcelable {
     private int UserType;
     private int IsAuthenticated;
     private int Status;
-    private String IndustryCateID;
+    private String IndustryCategoryIDs;
+    private String IndustryCategoryNames;
     private String Name;
     private double CoinsTotal;
     private double CoinsRemain;
@@ -73,6 +74,39 @@ public class UserInfo implements Parcelable {
 
     @Convert(converter = VehicleInfo.VehicleInfoListConverter.class, columnType = String.class)
     private List<VehicleInfo> Vehicles;
+
+    @Generated(hash = 667169007)
+    public UserInfo(String AccessToken, int Enabled, int FVEnable, int UserType, int IsAuthenticated, int Status,
+            String IndustryCategoryIDs, String IndustryCategoryNames, String Name, double CoinsTotal,
+            double CoinsRemain, String Avatar, String Phone, String IDCard, String IDCardUrl, String CompanyName,
+            double IsMandatoryUpdate, double OnlineLearnProgress, double OnsiteLearnProgress, String MonthRanking,
+            List<VehicleInfo> Vehicles) {
+        this.AccessToken = AccessToken;
+        this.Enabled = Enabled;
+        this.FVEnable = FVEnable;
+        this.UserType = UserType;
+        this.IsAuthenticated = IsAuthenticated;
+        this.Status = Status;
+        this.IndustryCategoryIDs = IndustryCategoryIDs;
+        this.IndustryCategoryNames = IndustryCategoryNames;
+        this.Name = Name;
+        this.CoinsTotal = CoinsTotal;
+        this.CoinsRemain = CoinsRemain;
+        this.Avatar = Avatar;
+        this.Phone = Phone;
+        this.IDCard = IDCard;
+        this.IDCardUrl = IDCardUrl;
+        this.CompanyName = CompanyName;
+        this.IsMandatoryUpdate = IsMandatoryUpdate;
+        this.OnlineLearnProgress = OnlineLearnProgress;
+        this.OnsiteLearnProgress = OnsiteLearnProgress;
+        this.MonthRanking = MonthRanking;
+        this.Vehicles = Vehicles;
+    }
+
+    @Generated(hash = 1279772520)
+    public UserInfo() {
+    }
 
     public List<VehicleInfo> getVehicles() {
         return Vehicles;
@@ -133,12 +167,20 @@ public class UserInfo implements Parcelable {
         this.Status = Status;
     }
 
-    public String getIndustryCateID() {
-        return IndustryCateID;
+    public String getIndustryCategoryIDs() {
+        return IndustryCategoryIDs;
     }
 
-    public void setIndustryCateID(String IndustryCateID) {
-        this.IndustryCateID = IndustryCateID;
+    public void setIndustryCategoryIDs(String IndustryCateID) {
+        this.IndustryCategoryIDs = IndustryCateID;
+    }
+
+    public String getIndustryCategoryNames() {
+        return IndustryCategoryNames;
+    }
+
+    public void setIndustryCategoryNames(String industryCategoryNames) {
+        IndustryCategoryNames = industryCategoryNames;
     }
 
     public String getName() {
@@ -243,7 +285,8 @@ public class UserInfo implements Parcelable {
         dest.writeInt(this.UserType);
         dest.writeInt(this.IsAuthenticated);
         dest.writeInt(this.Status);
-        dest.writeString(this.IndustryCateID);
+        dest.writeString(this.IndustryCategoryIDs);
+        dest.writeString(this.IndustryCategoryNames);
         dest.writeString(this.Name);
         dest.writeDouble(this.CoinsTotal);
         dest.writeDouble(this.CoinsRemain);
@@ -259,9 +302,6 @@ public class UserInfo implements Parcelable {
         dest.writeTypedList(this.Vehicles);
     }
 
-    public UserInfo() {
-    }
-
     protected UserInfo(Parcel in) {
         this.AccessToken = in.readString();
         this.Enabled = in.readInt();
@@ -269,7 +309,8 @@ public class UserInfo implements Parcelable {
         this.UserType = in.readInt();
         this.IsAuthenticated = in.readInt();
         this.Status = in.readInt();
-        this.IndustryCateID = in.readString();
+        this.IndustryCategoryIDs = in.readString();
+        this.IndustryCategoryNames = in.readString();
         this.Name = in.readString();
         this.CoinsTotal = in.readDouble();
         this.CoinsRemain = in.readDouble();
@@ -283,34 +324,6 @@ public class UserInfo implements Parcelable {
         this.OnsiteLearnProgress = in.readDouble();
         this.MonthRanking = in.readString();
         this.Vehicles = in.createTypedArrayList(VehicleInfo.CREATOR);
-    }
-
-    @Generated(hash = 1498218983)
-    public UserInfo(String AccessToken, int Enabled, int FVEnable, int UserType, int IsAuthenticated, int Status,
-                    String IndustryCateID, String Name, double CoinsTotal, double CoinsRemain, String Avatar,
-                    String Phone, String IDCard, String IDCardUrl, String CompanyName, double IsMandatoryUpdate,
-                    double OnlineLearnProgress, double OnsiteLearnProgress, String MonthRanking,
-                    List<VehicleInfo> Vehicles) {
-        this.AccessToken = AccessToken;
-        this.Enabled = Enabled;
-        this.FVEnable = FVEnable;
-        this.UserType = UserType;
-        this.IsAuthenticated = IsAuthenticated;
-        this.Status = Status;
-        this.IndustryCateID = IndustryCateID;
-        this.Name = Name;
-        this.CoinsTotal = CoinsTotal;
-        this.CoinsRemain = CoinsRemain;
-        this.Avatar = Avatar;
-        this.Phone = Phone;
-        this.IDCard = IDCard;
-        this.IDCardUrl = IDCardUrl;
-        this.CompanyName = CompanyName;
-        this.IsMandatoryUpdate = IsMandatoryUpdate;
-        this.OnlineLearnProgress = OnlineLearnProgress;
-        this.OnsiteLearnProgress = OnsiteLearnProgress;
-        this.MonthRanking = MonthRanking;
-        this.Vehicles = Vehicles;
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {

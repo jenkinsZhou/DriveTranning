@@ -41,6 +41,7 @@
                     android:textSize="@dimen/sp_15" />
 
                 <EditText
+                    android:id="@+id/etPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -77,13 +78,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:hint="请输入新手机号码"
+                    android:hint="请输入验证码"
                     android:paddingTop="@dimen/dp_5"
                     android:paddingBottom="@dimen/dp_5"
                     android:paddingEnd="@dimen/dp_5"
                     android:textSize="@dimen/sp_15" />
 
                 <TextView
+                    android:id="@+id/tvGetVCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -94,7 +96,7 @@
                     android:paddingTop="@dimen/dp_6"
                     android:paddingEnd="@dimen/dp_22"
                     android:paddingBottom="@dimen/dp_6"
-                    android:text="确认修改"
+                    android:text="发送验证码"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_12" />
             </LinearLayout>
@@ -106,6 +108,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_gradient_blue_53c2ff_4e52ff"

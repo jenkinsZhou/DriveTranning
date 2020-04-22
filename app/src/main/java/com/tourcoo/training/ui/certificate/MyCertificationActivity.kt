@@ -18,6 +18,7 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.certificate.CertificateInfo
 import com.trello.rxlifecycle3.android.ActivityEvent
+import kotlinx.android.synthetic.main.activity_study_record_certificate.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -56,6 +57,8 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
     private fun requestCertificate(page: Int) {
         ApiRepository.getInstance().requestCertificate(page).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BasePageResult<CertificateInfo>>() {
             override fun onSuccessNext(entity: BasePageResult<CertificateInfo>?) {
+                val total = entity?.data?.total ?: 0
+                tvTotalCertificate.text = "已获得" + total + "张"
                 UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity!!.data == null) ArrayList<CertificateInfo>() else transformData(entity.data.rows), null)
             }
         })
@@ -89,15 +92,15 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
                 }
             }
         } catch (e: Exception) {
-            TourCooLogUtil.e("MyCertificationActivity", "e:"+e.toString())
+            TourCooLogUtil.e("MyCertificationActivity", "e:" + e.toString())
         }
-       val maps =  CommonUtil.sort(list)
+        val maps = CommonUtil.sort(list)
         for (map in maps) {
             val values = map.value
             val certificateInfo = CertificateInfo()
             certificateInfo.itemType = ITEM_TYPE_HEADER;
             certificateInfo.headerContent = map.key
-            values.add(0,certificateInfo)
+            values.add(0, certificateInfo)
             result.addAll(values)
         }
         TourCooLogUtil.e("MyCertificationActivity", maps)

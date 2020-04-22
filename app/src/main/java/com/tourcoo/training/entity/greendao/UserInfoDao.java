@@ -33,20 +33,21 @@ public class UserInfoDao extends AbstractDao<UserInfo, Void> {
         public final static Property UserType = new Property(3, int.class, "UserType", false, "USER_TYPE");
         public final static Property IsAuthenticated = new Property(4, int.class, "IsAuthenticated", false, "IS_AUTHENTICATED");
         public final static Property Status = new Property(5, int.class, "Status", false, "STATUS");
-        public final static Property IndustryCateID = new Property(6, String.class, "IndustryCateID", false, "INDUSTRY_CATE_ID");
-        public final static Property Name = new Property(7, String.class, "Name", false, "NAME");
-        public final static Property CoinsTotal = new Property(8, double.class, "CoinsTotal", false, "COINS_TOTAL");
-        public final static Property CoinsRemain = new Property(9, double.class, "CoinsRemain", false, "COINS_REMAIN");
-        public final static Property Avatar = new Property(10, String.class, "Avatar", false, "AVATAR");
-        public final static Property Phone = new Property(11, String.class, "Phone", false, "PHONE");
-        public final static Property IDCard = new Property(12, String.class, "IDCard", false, "IDCARD");
-        public final static Property IDCardUrl = new Property(13, String.class, "IDCardUrl", false, "IDCARD_URL");
-        public final static Property CompanyName = new Property(14, String.class, "CompanyName", false, "COMPANY_NAME");
-        public final static Property IsMandatoryUpdate = new Property(15, double.class, "IsMandatoryUpdate", false, "IS_MANDATORY_UPDATE");
-        public final static Property OnlineLearnProgress = new Property(16, double.class, "OnlineLearnProgress", false, "ONLINE_LEARN_PROGRESS");
-        public final static Property OnsiteLearnProgress = new Property(17, double.class, "OnsiteLearnProgress", false, "ONSITE_LEARN_PROGRESS");
-        public final static Property MonthRanking = new Property(18, String.class, "MonthRanking", false, "MONTH_RANKING");
-        public final static Property Vehicles = new Property(19, String.class, "Vehicles", false, "VEHICLES");
+        public final static Property IndustryCategoryIDs = new Property(6, String.class, "IndustryCategoryIDs", false, "INDUSTRY_CATEGORY_IDS");
+        public final static Property IndustryCategoryNames = new Property(7, String.class, "IndustryCategoryNames", false, "INDUSTRY_CATEGORY_NAMES");
+        public final static Property Name = new Property(8, String.class, "Name", false, "NAME");
+        public final static Property CoinsTotal = new Property(9, double.class, "CoinsTotal", false, "COINS_TOTAL");
+        public final static Property CoinsRemain = new Property(10, double.class, "CoinsRemain", false, "COINS_REMAIN");
+        public final static Property Avatar = new Property(11, String.class, "Avatar", false, "AVATAR");
+        public final static Property Phone = new Property(12, String.class, "Phone", false, "PHONE");
+        public final static Property IDCard = new Property(13, String.class, "IDCard", false, "IDCARD");
+        public final static Property IDCardUrl = new Property(14, String.class, "IDCardUrl", false, "IDCARD_URL");
+        public final static Property CompanyName = new Property(15, String.class, "CompanyName", false, "COMPANY_NAME");
+        public final static Property IsMandatoryUpdate = new Property(16, double.class, "IsMandatoryUpdate", false, "IS_MANDATORY_UPDATE");
+        public final static Property OnlineLearnProgress = new Property(17, double.class, "OnlineLearnProgress", false, "ONLINE_LEARN_PROGRESS");
+        public final static Property OnsiteLearnProgress = new Property(18, double.class, "OnsiteLearnProgress", false, "ONSITE_LEARN_PROGRESS");
+        public final static Property MonthRanking = new Property(19, String.class, "MonthRanking", false, "MONTH_RANKING");
+        public final static Property Vehicles = new Property(20, String.class, "Vehicles", false, "VEHICLES");
     }
 
     private final VehicleInfoListConverter VehiclesConverter = new VehicleInfoListConverter();
@@ -69,20 +70,21 @@ public class UserInfoDao extends AbstractDao<UserInfo, Void> {
                 "\"USER_TYPE\" INTEGER NOT NULL ," + // 3: UserType
                 "\"IS_AUTHENTICATED\" INTEGER NOT NULL ," + // 4: IsAuthenticated
                 "\"STATUS\" INTEGER NOT NULL ," + // 5: Status
-                "\"INDUSTRY_CATE_ID\" TEXT," + // 6: IndustryCateID
-                "\"NAME\" TEXT," + // 7: Name
-                "\"COINS_TOTAL\" REAL NOT NULL ," + // 8: CoinsTotal
-                "\"COINS_REMAIN\" REAL NOT NULL ," + // 9: CoinsRemain
-                "\"AVATAR\" TEXT," + // 10: Avatar
-                "\"PHONE\" TEXT," + // 11: Phone
-                "\"IDCARD\" TEXT," + // 12: IDCard
-                "\"IDCARD_URL\" TEXT," + // 13: IDCardUrl
-                "\"COMPANY_NAME\" TEXT," + // 14: CompanyName
-                "\"IS_MANDATORY_UPDATE\" REAL NOT NULL ," + // 15: IsMandatoryUpdate
-                "\"ONLINE_LEARN_PROGRESS\" REAL NOT NULL ," + // 16: OnlineLearnProgress
-                "\"ONSITE_LEARN_PROGRESS\" REAL NOT NULL ," + // 17: OnsiteLearnProgress
-                "\"MONTH_RANKING\" TEXT," + // 18: MonthRanking
-                "\"VEHICLES\" TEXT);"); // 19: Vehicles
+                "\"INDUSTRY_CATEGORY_IDS\" TEXT," + // 6: IndustryCategoryIDs
+                "\"INDUSTRY_CATEGORY_NAMES\" TEXT," + // 7: IndustryCategoryNames
+                "\"NAME\" TEXT," + // 8: Name
+                "\"COINS_TOTAL\" REAL NOT NULL ," + // 9: CoinsTotal
+                "\"COINS_REMAIN\" REAL NOT NULL ," + // 10: CoinsRemain
+                "\"AVATAR\" TEXT," + // 11: Avatar
+                "\"PHONE\" TEXT," + // 12: Phone
+                "\"IDCARD\" TEXT," + // 13: IDCard
+                "\"IDCARD_URL\" TEXT," + // 14: IDCardUrl
+                "\"COMPANY_NAME\" TEXT," + // 15: CompanyName
+                "\"IS_MANDATORY_UPDATE\" REAL NOT NULL ," + // 16: IsMandatoryUpdate
+                "\"ONLINE_LEARN_PROGRESS\" REAL NOT NULL ," + // 17: OnlineLearnProgress
+                "\"ONSITE_LEARN_PROGRESS\" REAL NOT NULL ," + // 18: OnsiteLearnProgress
+                "\"MONTH_RANKING\" TEXT," + // 19: MonthRanking
+                "\"VEHICLES\" TEXT);"); // 20: Vehicles
     }
 
     /** Drops the underlying database table. */
@@ -105,54 +107,59 @@ public class UserInfoDao extends AbstractDao<UserInfo, Void> {
         stmt.bindLong(5, entity.getIsAuthenticated());
         stmt.bindLong(6, entity.getStatus());
  
-        String IndustryCateID = entity.getIndustryCateID();
-        if (IndustryCateID != null) {
-            stmt.bindString(7, IndustryCateID);
+        String IndustryCategoryIDs = entity.getIndustryCategoryIDs();
+        if (IndustryCategoryIDs != null) {
+            stmt.bindString(7, IndustryCategoryIDs);
+        }
+ 
+        String IndustryCategoryNames = entity.getIndustryCategoryNames();
+        if (IndustryCategoryNames != null) {
+            stmt.bindString(8, IndustryCategoryNames);
         }
  
         String Name = entity.getName();
         if (Name != null) {
-            stmt.bindString(8, Name);
+            stmt.bindString(9, Name);
         }
-        stmt.bindDouble(9, entity.getCoinsTotal());
-        stmt.bindDouble(10, entity.getCoinsRemain());
+        stmt.bindDouble(10, entity.getCoinsTotal());
+        stmt.bindDouble(11, entity.getCoinsRemain());
  
         String Avatar = entity.getAvatar();
         if (Avatar != null) {
-            stmt.bindString(11, Avatar);
+            stmt.bindString(12, Avatar);
         }
  
         String Phone = entity.getPhone();
         if (Phone != null) {
-            stmt.bindString(12, Phone);
+            stmt.bindString(13, Phone);
         }
  
         String IDCard = entity.getIDCard();
         if (IDCard != null) {
-            stmt.bindString(13, IDCard);
+            stmt.bindString(14, IDCard);
         }
  
         String IDCardUrl = entity.getIDCardUrl();
         if (IDCardUrl != null) {
-            stmt.bindString(14, IDCardUrl);
+            stmt.bindString(15, IDCardUrl);
         }
  
         String CompanyName = entity.getCompanyName();
         if (CompanyName != null) {
-            stmt.bindString(15, CompanyName);
+            stmt.bindString(16, CompanyName);
         }
-        stmt.bindDouble(16, entity.getIsMandatoryUpdate());
-        stmt.bindDouble(17, entity.getOnlineLearnProgress());
-        stmt.bindDouble(18, entity.getOnsiteLearnProgress());
+        stmt.bindDouble(17, entity.getIsMandatoryUpdate());
+        stmt.bindDouble(18, entity.getOnlineLearnProgress());
+        stmt.bindDouble(19, entity.getOnsiteLearnProgress());
  
         String MonthRanking = entity.getMonthRanking();
         if (MonthRanking != null) {
-            stmt.bindString(19, MonthRanking);
+            stmt.bindString(20, MonthRanking);
         }
  
         List Vehicles = entity.getVehicles();
         if (Vehicles != null) {
-            stmt.bindString(20, VehiclesConverter.convertToDatabaseValue(Vehicles));
+            stmt.bindString(21, VehiclesConverter.convertToDatabaseValue(Vehicles));
         }
     }
 
@@ -170,54 +177,59 @@ public class UserInfoDao extends AbstractDao<UserInfo, Void> {
         stmt.bindLong(5, entity.getIsAuthenticated());
         stmt.bindLong(6, entity.getStatus());
  
-        String IndustryCateID = entity.getIndustryCateID();
-        if (IndustryCateID != null) {
-            stmt.bindString(7, IndustryCateID);
+        String IndustryCategoryIDs = entity.getIndustryCategoryIDs();
+        if (IndustryCategoryIDs != null) {
+            stmt.bindString(7, IndustryCategoryIDs);
+        }
+ 
+        String IndustryCategoryNames = entity.getIndustryCategoryNames();
+        if (IndustryCategoryNames != null) {
+            stmt.bindString(8, IndustryCategoryNames);
         }
  
         String Name = entity.getName();
         if (Name != null) {
-            stmt.bindString(8, Name);
+            stmt.bindString(9, Name);
         }
-        stmt.bindDouble(9, entity.getCoinsTotal());
-        stmt.bindDouble(10, entity.getCoinsRemain());
+        stmt.bindDouble(10, entity.getCoinsTotal());
+        stmt.bindDouble(11, entity.getCoinsRemain());
  
         String Avatar = entity.getAvatar();
         if (Avatar != null) {
-            stmt.bindString(11, Avatar);
+            stmt.bindString(12, Avatar);
         }
  
         String Phone = entity.getPhone();
         if (Phone != null) {
-            stmt.bindString(12, Phone);
+            stmt.bindString(13, Phone);
         }
  
         String IDCard = entity.getIDCard();
         if (IDCard != null) {
-            stmt.bindString(13, IDCard);
+            stmt.bindString(14, IDCard);
         }
  
         String IDCardUrl = entity.getIDCardUrl();
         if (IDCardUrl != null) {
-            stmt.bindString(14, IDCardUrl);
+            stmt.bindString(15, IDCardUrl);
         }
  
         String CompanyName = entity.getCompanyName();
         if (CompanyName != null) {
-            stmt.bindString(15, CompanyName);
+            stmt.bindString(16, CompanyName);
         }
-        stmt.bindDouble(16, entity.getIsMandatoryUpdate());
-        stmt.bindDouble(17, entity.getOnlineLearnProgress());
-        stmt.bindDouble(18, entity.getOnsiteLearnProgress());
+        stmt.bindDouble(17, entity.getIsMandatoryUpdate());
+        stmt.bindDouble(18, entity.getOnlineLearnProgress());
+        stmt.bindDouble(19, entity.getOnsiteLearnProgress());
  
         String MonthRanking = entity.getMonthRanking();
         if (MonthRanking != null) {
-            stmt.bindString(19, MonthRanking);
+            stmt.bindString(20, MonthRanking);
         }
  
         List Vehicles = entity.getVehicles();
         if (Vehicles != null) {
-            stmt.bindString(20, VehiclesConverter.convertToDatabaseValue(Vehicles));
+            stmt.bindString(21, VehiclesConverter.convertToDatabaseValue(Vehicles));
         }
     }
 
@@ -235,20 +247,21 @@ public class UserInfoDao extends AbstractDao<UserInfo, Void> {
             cursor.getInt(offset + 3), // UserType
             cursor.getInt(offset + 4), // IsAuthenticated
             cursor.getInt(offset + 5), // Status
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // IndustryCateID
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // Name
-            cursor.getDouble(offset + 8), // CoinsTotal
-            cursor.getDouble(offset + 9), // CoinsRemain
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // Avatar
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // Phone
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // IDCard
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // IDCardUrl
-            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // CompanyName
-            cursor.getDouble(offset + 15), // IsMandatoryUpdate
-            cursor.getDouble(offset + 16), // OnlineLearnProgress
-            cursor.getDouble(offset + 17), // OnsiteLearnProgress
-            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // MonthRanking
-            cursor.isNull(offset + 19) ? null : VehiclesConverter.convertToEntityProperty(cursor.getString(offset + 19)) // Vehicles
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // IndustryCategoryIDs
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // IndustryCategoryNames
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // Name
+            cursor.getDouble(offset + 9), // CoinsTotal
+            cursor.getDouble(offset + 10), // CoinsRemain
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // Avatar
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // Phone
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // IDCard
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // IDCardUrl
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // CompanyName
+            cursor.getDouble(offset + 16), // IsMandatoryUpdate
+            cursor.getDouble(offset + 17), // OnlineLearnProgress
+            cursor.getDouble(offset + 18), // OnsiteLearnProgress
+            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // MonthRanking
+            cursor.isNull(offset + 20) ? null : VehiclesConverter.convertToEntityProperty(cursor.getString(offset + 20)) // Vehicles
         );
         return entity;
     }
@@ -261,20 +274,21 @@ public class UserInfoDao extends AbstractDao<UserInfo, Void> {
         entity.setUserType(cursor.getInt(offset + 3));
         entity.setIsAuthenticated(cursor.getInt(offset + 4));
         entity.setStatus(cursor.getInt(offset + 5));
-        entity.setIndustryCateID(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setCoinsTotal(cursor.getDouble(offset + 8));
-        entity.setCoinsRemain(cursor.getDouble(offset + 9));
-        entity.setAvatar(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setPhone(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setIDCard(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setIDCardUrl(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setCompanyName(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
-        entity.setIsMandatoryUpdate(cursor.getDouble(offset + 15));
-        entity.setOnlineLearnProgress(cursor.getDouble(offset + 16));
-        entity.setOnsiteLearnProgress(cursor.getDouble(offset + 17));
-        entity.setMonthRanking(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
-        entity.setVehicles(cursor.isNull(offset + 19) ? null : VehiclesConverter.convertToEntityProperty(cursor.getString(offset + 19)));
+        entity.setIndustryCategoryIDs(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setIndustryCategoryNames(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setCoinsTotal(cursor.getDouble(offset + 9));
+        entity.setCoinsRemain(cursor.getDouble(offset + 10));
+        entity.setAvatar(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setPhone(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setIDCard(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setIDCardUrl(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setCompanyName(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setIsMandatoryUpdate(cursor.getDouble(offset + 16));
+        entity.setOnlineLearnProgress(cursor.getDouble(offset + 17));
+        entity.setOnsiteLearnProgress(cursor.getDouble(offset + 18));
+        entity.setMonthRanking(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
+        entity.setVehicles(cursor.isNull(offset + 20) ? null : VehiclesConverter.convertToEntityProperty(cursor.getString(offset + 20)));
      }
     
     @Override
