@@ -194,7 +194,7 @@
                      android:layout_height="wrap_content"
                      android:layout_marginStart="@dimen/dp_12"
                      android:layout_marginTop="@dimen/dp_12"
-                     android:src="@mipmap/ic_training_local_detail_sign" />
+                     android:src="@mipmap/ic_train_local_sign_teacher" />
              </LinearLayout>
              </LinearLayout>
 
@@ -218,7 +218,7 @@
                  android:layout_height="wrap_content"
                  android:layout_marginStart="@dimen/dp_12"
                  android:layout_marginTop="@dimen/dp_12"
-                 android:src="@mipmap/ic_training_local_detail_sign" />
+                 android:src="@mipmap/ic_train_local_sign_teacher" />
              </LinearLayout>
 
 

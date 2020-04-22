@@ -16,9 +16,15 @@ public class TrainingConstant {
     //已签到
     public static final int  TRAIN_STATUS_SIGNED = 1;
     //已签退
-    public static final int  TRAIN_STATUS_SIGN_BACK = 2;
-    //转线上
+    public static final int  TRAIN_STATUS_SIGN_OUT = 2;
+    //已经转线上
     public static final int  TRAIN_STATUS_TO_ONLINE = 3;
+    //已结束
+    public static final int  TRAIN_STATUS_END = 4;
+    //不合格
+    public static final int  TRAIN_STATUS_NO_PASS = 5;
+    //待考试
+    public static final int  TRAIN_STATUS_WAIT_EXAM = 6;
 
 
 }
