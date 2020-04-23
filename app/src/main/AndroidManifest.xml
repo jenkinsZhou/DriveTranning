@@ -5,7 +5,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 摄像头相关权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
@@ -29,15 +30,15 @@
         android:roundIcon="@mipmap/icon_car_networking"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.account.ChangePhoneActivity"></activity>
-
+        <!-- 设置key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="key" />
+            android:value="5466d4e008e6990e81f9dc1b536c708c" />
 
+        <activity android:name=".ui.account.ChangePhoneActivity"/>
         <activity
             android:name=".ui.MainTabActivity"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask"/>
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".core.base.activity.QQTitleActivity" />
         <activity android:name=".ui.training.FreeStudyActivity" />
@@ -78,6 +79,8 @@
         <activity android:name=".ui.certificate.MyCertificationActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.training.safe.online.PlayVideoActivityNewOld1" />
+
+        <activity android:name=".ui.training.safe.online.detail.student.StudentPlanDetailActivity" />
         <activity
             android:name=".ui.training.safe.online.PlayVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" /> <!-- wx pay -->
@@ -87,9 +90,11 @@
             android:launchMode="singleTop" />
         <activity android:name=".core.base.activity.WebViewActivity" />
         <activity android:name=".ui.face.OnLineFaceRecognitionActivity" />
-        <activity android:name=".ui.training.safe.online.detail.student.StudentPlanDetailActivity" />
+        <activity android:name=".ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity" />
+        <activity android:name=".ui.training.safe.online.TrainFaceCertifyActivity" />
+        <activity android:name=".ui.training.safe.online.detail.common.CommonPlanDetailActivity" />
 
-        <service android:name="com.amap.api.location.APSService"></service>
+
     </application>
 
 </manifest>

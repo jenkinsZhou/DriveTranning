@@ -22,13 +22,27 @@ import io.reactivex.Observable;
 public interface StudentDetailContract {
     interface TrainDetailModel extends IBaseModel {
         void requestTrainDetail(String trainingPlanID,  BaseObserver<BaseResult<TrainingPlanDetail>> observer);
+
+        void requestTurnOnline(String trainingPlanID,  BaseObserver<BaseResult> observer);
+
     }
 
     interface View extends IBaseView {
         void doShowTrainPlan(TrainingPlanDetail planDetail);
+
+        /**
+         * 转线上
+         */
+        void  doTurnOnline();
+
+        void showTurnOnlineSuccess();
+
+        void showTurnOnlineFailed();
     }
 
     interface TrainDetailPresenter {
         void getTrainDetail(String trainingPlanID);
+
+        void getTurnOnline(String trainingPlanID);
     }
 }

@@ -226,13 +226,22 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestFaceVerify(params).retryWhen(new RetryWhen()));
     }
 
+
+
     public Observable<BaseResult<FaceRecognizeResult>> requestIdCardVerify(String trainingPlanID, String idPhotoBase64, String facePhotoBase64) {
         Map<String, Object> params = new HashMap<>(2);
         params.put("idCardPhoto", idPhotoBase64);
         params.put("facePhoto", facePhotoBase64);
-       /* params.put("trainingPlanID", trainingPlanID);
-        params.put("scene", 2);*/
         return CommonTransformer.switchSchedulers(getApiService().requestIdCardVerify(params).retryWhen(new RetryWhen()));
+    }
+
+    /**
+     * 培训相关的人脸验证
+     * @param params
+     * @return
+     */
+    public Observable<BaseResult<FaceRecognizeResult>> requestTrainFaceVerify( Map<String, Object> params) {
+        return CommonTransformer.switchSchedulers(getApiService().requestFaceVerify(params).retryWhen(new RetryWhen()));
     }
 
     public Observable<BaseResult<CoinPackageEntity>> requestCoinPackage() {
@@ -281,6 +290,17 @@ public class ApiRepository extends BaseRepository {
         params.put("courseID", courseID);
         params.put("progress", progress);
         return CommonTransformer.switchSchedulers(getApiService().requestSaveProgress(params).retryWhen(new RetryWhen()));
+    }
+
+    /**
+     * 转线上
+     * @param trainingPlanID
+     * @return
+     */
+    public Observable<BaseResult> requestTurnOnline(String trainingPlanID) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("trainingPlanID", trainingPlanID);
+        return CommonTransformer.switchSchedulers(getApiService().requestTurnOnline(params).retryWhen(new RetryWhen()));
     }
 
 }

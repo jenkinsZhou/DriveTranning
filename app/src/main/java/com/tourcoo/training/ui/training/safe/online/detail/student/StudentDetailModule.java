@@ -18,4 +18,9 @@ public class StudentDetailModule implements StudentDetailContract.TrainDetailMod
     public void requestTrainDetail(String trainingPlanID, BaseObserver<BaseResult<TrainingPlanDetail>> observer) {
         ApiRepository.getInstance().trainingPlanID(trainingPlanID).subscribe(observer);
     }
+
+    @Override
+    public void requestTurnOnline(String trainingPlanID, BaseObserver<BaseResult> observer) {
+        ApiRepository.getInstance().requestTurnOnline(trainingPlanID).subscribe(observer);
+    }
 }

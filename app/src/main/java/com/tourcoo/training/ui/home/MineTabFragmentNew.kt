@@ -36,11 +36,10 @@ import com.tourcoo.training.ui.account.PersonalInfoActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.setting.SettingActivity
-import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert
-import com.tourcoo.training.widget.dialog.training.LocalTrainingDialog
+import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
 import kotlinx.android.synthetic.main.fragment_mine_tab_new.*
 import org.greenrobot.eventbus.EventBus
@@ -182,7 +181,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     }
 
     private fun showDialog1() {
-        val dialog = LocalTrainingDialog(mContext)
+        val dialog = LocalTrainingConfirmDialog(mContext)
         dialog.create().show()
     }
 

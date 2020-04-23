@@ -38,7 +38,7 @@ import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
-import com.tourcoo.training.widget.dialog.training.LocalTrainingDialog
+import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
 
 /**
@@ -198,7 +198,7 @@ class OnlineTrainFragment : BaseFragment() {
                 }
 
                 2 -> {  //认证失败
-                    val dialog = LocalTrainingDialog(mContext)
+                    val dialog = LocalTrainingConfirmDialog(mContext)
                     dialog.setContent("请确认是否为本人学习？")
                             .setPositiveButtonClick("确认") {
                                 verifyByStatus(courseInfo)

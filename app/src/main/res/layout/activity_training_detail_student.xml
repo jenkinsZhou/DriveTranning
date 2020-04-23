@@ -18,13 +18,13 @@
         android:paddingBottom="@dimen/dp_10">
 
         <TextView
-            android:id="@+id/tvRole"
+            android:layout_marginStart="@dimen/dp_12"
+            android:id="@+id/tvTrainTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="安全员"
-            android:textColor="#FF6600"
+            android:text="-"
+            android:textColor="@color/black333333"
             android:textSize="@dimen/sp_18"
             android:textStyle="bold" />
 

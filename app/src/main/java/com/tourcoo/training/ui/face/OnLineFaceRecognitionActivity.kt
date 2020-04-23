@@ -169,10 +169,7 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                         notifyMedia(photoPath)
                         AccountTempHelper.getInstance().facePhotoPath = photoPath
                         uploadFaceImage(trainId, faceBitmap)
-                        /*  saveImage(photoPath, toTurn(resource)!!)
-                          notifyMedia(photoPath)
-                          setResult(photoPath)
-                          finish()*/
+
                     }
                 }, 200)
 

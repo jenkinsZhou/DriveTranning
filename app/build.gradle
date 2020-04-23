@@ -11,6 +11,13 @@ android {
             keyAlias = 'emi'
             keyPassword 'android'
         }
+
+        release {
+            keyAlias 'emi'
+            keyPassword 'android'
+            storeFile file('../key/android_key.jks')
+            storePassword 'android'
+        }
     }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -29,7 +36,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -140,7 +147,7 @@ dependencies {
     implementation 'com.kaopiz:kprogresshud:1.2.0'
 
     //定位功能
-    implementation 'com.amap.api:location:4.9.0'
+    implementation 'com.amap.api:location:4.5.0'
 
     implementation  'com.netease.nimlib:neliveplayer:2.4.0'
 
@@ -151,6 +158,10 @@ dependencies {
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.4.3'
 
     implementation 'com.dyhdyh.support:count-down-timer:1.0.2'
+
+    implementation 'org.java-websocket:Java-WebSocket:1.4.0'
+
+
 
 }
 repositories {

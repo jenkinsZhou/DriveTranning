@@ -31,7 +31,6 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.account.AccountHelper;
 import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.mine.MineItem;
-import com.tourcoo.training.ui.account.FindPassActivity;
 import com.tourcoo.training.ui.account.LoginActivity;
 import com.tourcoo.training.ui.certificate.MyCertificationActivity;
 import com.tourcoo.training.ui.exam.OnlineExamActivity;
@@ -41,7 +40,7 @@ import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog;
 import com.tourcoo.training.widget.dialog.medal.MedalDialog;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert;
-import com.tourcoo.training.widget.dialog.training.LocalTrainingDialog;
+import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 
 import java.util.ArrayList;
@@ -265,7 +264,7 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
     }
 
     private void showDialog1() {
-        LocalTrainingDialog dialog = new LocalTrainingDialog(mContext);
+        LocalTrainingConfirmDialog dialog = new LocalTrainingConfirmDialog(mContext);
         dialog.create().show();
     }
 

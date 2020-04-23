@@ -24,16 +24,16 @@ import com.tourcoo.training.R;
  * @date 2020年04月03日16:50
  * @Email: 971613168@qq.com
  */
-public class LocalTrainingDialog {
+public class LocalTrainingConfirmDialog {
     private Context mContext;
     private Dialog dialog;
     private int width = 0;
-    private String content;
     private TextView tvDialogConfirm;
     private TextView tvDialogCancel;
+    private TextView tvContent;
 
 
-    public LocalTrainingDialog(Context context) {
+    public LocalTrainingConfirmDialog(Context context) {
         this.mContext = context;
         WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         if (windowManager == null) {
@@ -44,21 +44,21 @@ public class LocalTrainingDialog {
         width = metrics.widthPixels;
     }
 
-    public LocalTrainingDialog setContent(String content){
-        this.content = content;
-        return this;
-    }
 
 
-    public LocalTrainingDialog create() {
+
+    public LocalTrainingConfirmDialog create() {
         // 获取Dialog布局
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_training_local_common, null);
-        TextView tvContent = view.findViewById(R.id.tvAlertContent);
+        tvContent = view.findViewById(R.id.tvAlertContent);
         tvDialogConfirm = view.findViewById(R.id.tvDialogConfirm);
         tvDialogCancel = view.findViewById(R.id.tvDialogCancel);
-        if(!StringUtils.isEmpty(content)){
-            tvContent.setText(content);
-        }
+        tvDialogCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         // 设置Dialog最小宽度为屏幕宽度
         view.setMinimumWidth(width);
         // 定义Dialog布局和参数
@@ -91,7 +91,7 @@ public class LocalTrainingDialog {
         return this;
     }
 
-    public LocalTrainingDialog setPositiveButtonClick(CharSequence text, View.OnClickListener onClickListener) {
+    public LocalTrainingConfirmDialog setPositiveButtonClick(CharSequence text, View.OnClickListener onClickListener) {
         if (TextUtils.isEmpty(text)) {
             text = "";
         }
@@ -103,7 +103,7 @@ public class LocalTrainingDialog {
     }
 
 
-    public LocalTrainingDialog setNegativeButtonClick(CharSequence text, View.OnClickListener onClickListener) {
+    public LocalTrainingConfirmDialog setNegativeButtonClick(CharSequence text, View.OnClickListener onClickListener) {
         if (TextUtils.isEmpty(text)) {
             text = "";
         }
@@ -127,5 +127,29 @@ public class LocalTrainingDialog {
         }
     }
 
+    public LocalTrainingConfirmDialog setContent(CharSequence charSequence) {
+        if (charSequence != null && tvContent != null) {
+            tvContent.setText(charSequence);
+        }
+        return this;
+    }
+
+
+    public LocalTrainingConfirmDialog setPositiveButton(CharSequence charSequence, View.OnClickListener onClickListener) {
+        if (charSequence != null && tvDialogConfirm != null) {
+            tvDialogConfirm.setText(charSequence);
+        }
+        if (tvDialogConfirm != null && onClickListener != null) {
+            tvDialogConfirm.setOnClickListener(onClickListener);
+        }
+        return this;
+    }
+
+    public LocalTrainingConfirmDialog setPositiveButton(View.OnClickListener onClickListener) {
+        if (tvDialogConfirm != null && onClickListener != null) {
+            tvDialogConfirm.setOnClickListener(onClickListener);
+        }
+        return this;
+    }
 
 }

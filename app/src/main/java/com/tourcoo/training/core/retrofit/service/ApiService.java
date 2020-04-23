@@ -239,4 +239,13 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/save-progress")
     Observable<BaseResult> requestSaveProgress(@Body Map<String, Object> map);
+
+    /**
+     * 转线上
+     * @param map
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/start-online-stage")
+    Observable<BaseResult> requestTurnOnline(@Body Map<String, Object> map);
 }

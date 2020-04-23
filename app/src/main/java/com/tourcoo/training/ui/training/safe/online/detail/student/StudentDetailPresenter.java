@@ -40,6 +40,25 @@ public class StudentDetailPresenter extends BasePresenter<StudentDetailContract.
     }
 
     @Override
+    public void getTurnOnline(String trainingPlanID) {
+        if (!isViewAttached()) {
+            return;
+        }
+        getModule().requestTurnOnline(trainingPlanID, new BaseLoadingObserver<BaseResult>() {
+            @Override
+            public void onSuccessNext(BaseResult entity) {
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    getView().showTurnOnlineSuccess();
+                } else {
+                    getView().showTurnOnlineFailed();
+                    ToastUtil.show(entity.msg);
+                }
+            }
+        });
+
+    }
+
+    @Override
     protected StudentDetailContract.TrainDetailModel createModule() {
         return new StudentDetailModule();
     }
@@ -48,6 +67,7 @@ public class StudentDetailPresenter extends BasePresenter<StudentDetailContract.
     public void start() {
 
     }
+
 
 
 }
