@@ -21,6 +21,7 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.course.CourseInfo
+import com.tourcoo.training.ui.training.safe.online.detail.common.CommonPlanDetailActivity
 import com.tourcoo.training.ui.training.safe.online.detail.student.StudentPlanDetailActivity
 import com.tourcoo.training.ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity
 import com.tourcoo.training.utils.RecycleViewDivider
@@ -129,11 +130,7 @@ class OfflineTrainFragment : BaseFragment() {
             TRAIN_ROLE_TEACHER_AND_STUDENT->{
                 ToastUtil.show("安全员+学员")
                 //安全员+学员
-              /*  //todo
-                val intent = Intent(mContext, CaptureActivity::class.java)
-                intent.putExtra(EXTRA_TRAINING_PLAN_ID,courseInfo.trainingPlanID)
-                startActivityForResult(intent,1002)*/
-                val intent = Intent(mContext, StudentPlanDetailActivity::class.java)
+                val intent = Intent(mContext, CommonPlanDetailActivity::class.java)
                 intent.putExtra(EXTRA_TRAINING_PLAN_ID,courseInfo.trainingPlanID)
                 startActivity(intent)
             }
