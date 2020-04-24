@@ -20,4 +20,6 @@
     <item name="lLayout_rightTitleBarView" type="id"/>
     <item name="v_statusTitleBarView" type="id"/>
     <item name="v_dividerTitleBarView" type="id"/>
+
+    <item name="custom_id_min" type="id"/>
 </resources>

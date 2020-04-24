@@ -5,7 +5,9 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+        maven(){
+            url 'https://maven.aliyun.com/repository/releases'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
@@ -25,7 +27,9 @@ allprojects {
         maven { url "https://jitpack.io" }
         //蒲公英
         maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
-
+        maven(){
+            url 'https://maven.aliyun.com/repository/releases'
+        }
         flatDir {
             dirs 'libs'
             dirs project(':app').file('libs')

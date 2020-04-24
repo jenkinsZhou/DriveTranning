@@ -88,7 +88,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        isTransition = intent.getBooleanExtra(PlayVideoActivityOld.TRANSITION, false)
+        isTransition = intent.getBooleanExtra(TRANSITION, false)
 //        trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
 //        trainingPlanID = "9094"
         trainingPlanID = "9044"

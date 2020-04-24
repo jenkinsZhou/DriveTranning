@@ -23,13 +23,13 @@
 
     <application
         android:name=".core.app.MyApplication"
-        android:allowBackup="true"
         android:icon="@mipmap/icon_car_networking"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/icon_car_networking"
         android:supportsRtl="true"
+        android:allowBackup="true"
         android:theme="@style/AppTheme">
         <!-- 设置key -->
         <meta-data
@@ -50,12 +50,12 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
-            <intent-filter>
+         <!--   <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
 
         <activity android:name=".ui.SplashActivity">
@@ -75,9 +75,7 @@
         <activity android:name=".ui.training.StudyMedalRecordActivity" />
         <activity android:name=".ui.exam.OnlineExamActivity" />
         <activity android:name=".ui.training.ProfessionalTrainingFragment" />
-        <activity
-            android:name=".ui.training.safe.online.PlayVideoActivityOld"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
+
         <activity android:name=".ui.account.register.RecognizeIdCardActivity" />
         <activity
             android:name=".widget.idcardcamera.camera.CameraActivity"
@@ -94,7 +92,6 @@
         <activity android:name=".ui.account.PersonalInfoActivity" />
         <activity android:name=".ui.certificate.MyCertificationActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
-        <activity android:name=".ui.training.safe.online.PlayVideoActivityNewOld1" />
 
         <activity android:name=".ui.training.safe.online.detail.student.StudentPlanDetailActivity" />
         <activity
@@ -109,6 +106,16 @@
         <activity android:name=".ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity" />
         <activity android:name=".ui.training.safe.online.TrainFaceCertifyActivity" />
         <activity android:name=".ui.training.safe.online.detail.common.CommonPlanDetailActivity" />
+        <activity android:name=".widget.aliplayer.activity.AliBaseActivity" />
+        <activity android:name=".widget.aliplayer.activity.AliyunPlayerSkinActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+        <activity android:name=".widget.aliplayer.activity.AliyunPlayerSettingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            />
 
 
     </application>

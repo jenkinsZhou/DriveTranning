@@ -89,7 +89,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        isTransition = intent.getBooleanExtra(PlayVideoActivityOld.TRANSITION, false)
+        isTransition = intent.getBooleanExtra(TRANSITION, false)
         trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
         if (TextUtils.isEmpty(trainingPlanID)) {
             ToastUtil.show("未获取到计划信息")
@@ -220,7 +220,7 @@ class PlayVideoActivity : BaseTitleActivity(), OnPlayStatusListener, View.OnClic
     private fun loadTransition() {
         if (isTransition && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             postponeEnterTransition()
-            ViewCompat.setTransitionName(smartVideoPlayer!!, PlayVideoActivityOld.IMG_TRANSITION)
+            ViewCompat.setTransitionName(smartVideoPlayer!!, IMG_TRANSITION)
             addTransitionListener()
             startPostponedEnterTransition()
         } else {
