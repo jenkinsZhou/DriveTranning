@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="C:\Users\admin\Desktop\SuperPlayer_Android-3.0.0\SuperPlayer_Android-3.0.0\lib_tcsuperplayer\src\main\assets"/><source path="C:\Users\admin\Desktop\SuperPlayer_Android-3.0.0\SuperPlayer_Android-3.0.0\lib_tcsuperplayer\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="C:\Users\admin\Desktop\SuperPlayer_Android-3.0.0\SuperPlayer_Android-3.0.0\lib_tcsuperplayer\src\debug\assets"/></dataSet></merger>

@@ -14,6 +14,7 @@
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
+
     <style name="DialogWindowStyle">
         <item name="android:windowEnterAnimation">@anim/modal_in</item>
         <item name="android:windowExitAnimation">@anim/modal_out</item>

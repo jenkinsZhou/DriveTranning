@@ -28,6 +28,7 @@ allprojects {
 
         flatDir {
             dirs 'libs'
+            dirs project(':app').file('libs')
         }
 
 

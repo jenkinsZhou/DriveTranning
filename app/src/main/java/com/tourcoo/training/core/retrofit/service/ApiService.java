@@ -20,6 +20,7 @@ import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.study.BannerBean;
+import com.tourcoo.training.entity.training.DRMParams;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 
 import java.util.List;
@@ -239,6 +240,10 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/save-progress")
     Observable<BaseResult> requestSaveProgress(@Body Map<String, Object> map);
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/vod/get-drivedu-token")
+    Observable<BaseResult<DRMParams>> requestVideoEncryptParamsCurrentCourse(@Body Map<String, Object> map);
 
     /**
      * 转线上
