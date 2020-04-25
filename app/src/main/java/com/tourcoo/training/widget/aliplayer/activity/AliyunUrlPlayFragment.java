@@ -78,9 +78,11 @@ public class AliyunUrlPlayFragment extends Fragment implements OnClickListener{
         if (!TextUtils.isEmpty(etPlayUrl.getText().toString())){
             Intent intent = new Intent();
             intent.setClass(this.getActivity(), AliyunPlayerSkinActivity.class);
-
+            String testUrl = "https://course.vod.ggjtaq.com/20d650dd19664ab9947b93cbe4f1e397/481ae69632e2f8e66eea8ee4846e5cc7-fd-encrypt-stream.m3u8";
+//            testUrl+="?MtsHlsUriToken="+"lLR1wqWwlfx63beDUHzHr474BmzYKSis8IacgggLKZUYmNOAL9O1s7RVa%2F%2FBWCo9PDOFB9FNNnXDlHOsr1uZhm52GjzZoBt6%2F%2FUuTf9Ov%2BrS01r%2BfJdB1swWZWLhs5Sq%2BFMocedI4oXYJJo8ih8OioHLg9vvAsiupvOcRKpbZz9YoNKnJ3pXX0d2nuxJkrVy0gpkqJKwKZzdgElPYe3HAs%2FM9dex9BCrVmDk8rI4%2FN45fxTfMBz4jd6%2Fd9hDOSylLri2QDZKrxtOgR8Q9yz5o%2Bz2NG3AJ5Pt2YM%2BYKM7sVZqNqYmDUNIzNNSYn7rDtn1o%2BUEOCoAz4zSwgr5lorvi%2F3sTFEPst%2FkY66lEYvg8Nzj0mWuvgliKjPK2ho%2FLx6tClA7ybNv9fLVFiZLRALgoA%3D%3D";
             PlayParameter.PLAY_PARAM_TYPE = "localSource";
-            PlayParameter.PLAY_PARAM_URL = etPlayUrl.getText().toString();
+//            PlayParameter.PLAY_PARAM_URL = etPlayUrl.getText().toString();
+            PlayParameter.PLAY_PARAM_URL = testUrl;
 
             //getActivity().setResult(CODE_RESULT_URL);
             //getActivity().finish();

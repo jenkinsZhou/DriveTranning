@@ -35,6 +35,7 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
 import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
+import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
@@ -330,7 +331,7 @@ class OnlineTrainFragment : BaseFragment() {
 
 
     private fun skipPlayVideo(trainingId: String?) {
-        val intent = Intent(mContext, PlayVideoActivity::class.java)
+        val intent = Intent(mContext, TencentPlayVideoActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
         startActivity(intent)
     }

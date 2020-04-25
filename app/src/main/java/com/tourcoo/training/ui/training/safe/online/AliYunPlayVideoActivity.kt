@@ -4,24 +4,19 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Environment
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-import com.blankj.utilcode.util.LogUtils
+
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
-import com.tencent.liteav.demo.play.SuperPlayerConst
-import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig
-import com.tencent.liteav.demo.play.SuperPlayerModel
-import com.tencent.liteav.demo.play.SuperPlayerView
-import com.tencent.liteav.demo.play.v3.SuperPlayerVideoId
-import com.tencent.rtmp.TXLiveConstants
+
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
-import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
+import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -34,20 +29,49 @@ import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.DRMParams
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.exam.OnlineExamActivity
-import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
+import com.tourcoo.training.widget.AliYunVodPlayerView
+import com.tourcoo.training.widget.AliYunVodPlayerView.OnPlayerViewClickListener
+import com.tourcoo.training.widget.AliYunVodPlayerView.PlayViewType
+import com.tourcoo.training.widget.aliplayer.activity.AliyunPlayerSkinActivity
+import com.tourcoo.training.widget.aliplayer.activity.AliyunPlayerSkinActivity.*
+import com.tourcoo.training.widget.aliplayer.constants.PlayParameter
+import com.tourcoo.training.widget.aliplayer.listener.OnChangeQualityListener
+import com.tourcoo.training.widget.aliplayer.listener.OnStoppedListener
+import com.tourcoo.training.widget.aliplayer.listener.RefreshStsCallback
+import com.tourcoo.training.widget.aliplayer.mode.AliyunScreenMode
+import com.tourcoo.training.widget.aliplayer.playlist.AlivcVideoInfo.DataBean.VideoListBean
+import com.tourcoo.training.widget.aliplayer.utils.Common
+import com.tourcoo.training.widget.aliplayer.utils.Common.FileOperateCallback
+import com.tourcoo.training.widget.aliplayer.utils.FixedToastUtils
+import com.tourcoo.training.widget.aliplayer.utils.VidStsUtil
+import com.tourcoo.training.widget.aliplayer.utils.download.AliyunDownloadInfoListener
+import com.tourcoo.training.widget.aliplayer.utils.download.AliyunDownloadManager
+import com.tourcoo.training.widget.aliplayer.utils.download.AliyunDownloadMediaInfo
+import com.tourcoo.training.widget.aliplayer.view.download.DownloadDataProvider
+import com.tourcoo.training.widget.aliplayer.view.gesturedialog.BrightnessDialog
+import com.tourcoo.training.widget.aliplayer.view.tipsview.ErrorInfo
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
+import kotlinx.android.synthetic.main.activity_play_video_ali.*
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
+import kotlinx.android.synthetic.main.activity_play_video_tencent.llPlanContentView
+import kotlinx.android.synthetic.main.activity_play_video_tencent.tvExam
+import kotlinx.android.synthetic.main.activity_play_video_tencent.tvTest
+import kotlinx.android.synthetic.main.activity_play_video_tencent.tvTitle
+
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
- *@description :
- *@company :翼迈科技股份有限公司
+ *@description :阿里云播放器播放页面
+ *@company :途酷科技
  * @author :JenkinsZhou
- * @date 2020年04月19日23:27
+ * @date 2020年04月25日14:30
  * @Email: 971613168@qq.com
  */
-class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
+class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
+
     private val mTag = "PlayVideoActivity"
     private var isTransition = false
 
@@ -75,18 +99,17 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         const val COURSE_STATUS_COMPLETE = 2
         const val COURSE_STATUS_PLAYING = 1
     }
-
-
     override fun getContentLayout(): Int {
-        return R.layout.activity_play_video_tencent
+        return R.layout.activity_play_video_ali
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
-        titleBar?.setTitleMainText("线上学习")
     }
 
+
+
     override fun initView(savedInstanceState: Bundle?) {
-        isTransition = intent.getBooleanExtra(TRANSITION, false)
+        isTransition = intent.getBooleanExtra(TencentPlayVideoActivity.TRANSITION, false)
 //        trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
 //        trainingPlanID = "9094"
         trainingPlanID = "9044"
@@ -117,182 +140,24 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private fun loadPlayerSetting(currentProgress: Int) {
-        smartVideoPlayer.setOnPlayStatusListener(object : SuperPlayerView.OnPlayStatusListener {
-
-            override fun enableSeek() {
-                smartVideoPlayer.seekTo(currentProgress)
-            }
-
-            override fun onAutoPlayComplete() {
-                //通知后台当前课程播放结束
-                requestCompleteCurrentCourse(currentCourseId)
-            }
-
-        })
-
-        // 播放器配置
-        val prefs = SuperPlayerGlobalConfig.getInstance()
-        // 开启悬浮窗播放
-        prefs.enableFloatWindow = false
-        // 设置悬浮窗的初始位置和宽高
-        // 播放器默认缓存个数
-        prefs.maxCacheItem = 5
-        // 设置播放器渲染模式
-        prefs.enableHWAcceleration = true;
-        prefs.renderMode = TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION;
-
-        smartVideoPlayer.setPlayerViewCallback(object : SuperPlayerView.OnSuperPlayerViewCallback {
-            override fun onStartFullScreenPlay() {
-                window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-                ToastUtil.show("全屏")
-                if (mTitleBar.visibility != View.GONE) {
-                    mTitleBar.visibility = View.GONE
-                }
-            }
-
-            override fun onStopFullScreenPlay() {
-                window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
-                ToastUtil.show("非全屏")
-                if (mTitleBar.visibility != View.VISIBLE) {
-                    mTitleBar.visibility = View.VISIBLE
-                }
-            }
-
-            override fun onClickFloatCloseBtn() {
-            }
-
-            override fun onClickSmallReturnBtn() {
-                //设置返回按键功能
-                onBackPressed()
-            }
-
-            override fun onStartFloatWindowPlay() {
-            }
-
-        })
-
-//        smartVideoPlayer!!.setVideoAllCallBack(object : VideoAllCallBack {
-//            override fun onClickResumeFullscreen(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickResumeFullscreen")
-//                //全屏模式下的恢复播放
-//                timerResume()
-//            }
-//
-//            override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickResume(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickResume")
-//                //正常模式下的恢复播放
-//                timerResume()
-//            }
-//
-//            override fun onClickSeekbarFullscreen(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onStartPrepared(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickStartIcon(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onTouchScreenSeekLight(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickStartThumb(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onEnterSmallWidget(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickStartError(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickStartError")
-//            }
-//
-//            override fun onClickBlankFullscreen(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onPrepared(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onAutoComplete(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onAutoComplete")
-//            }
-//
-//            override fun onQuitSmallWidget(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onTouchScreenSeekVolume(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickBlank")
-//            }
-//
-//            override fun onClickBlank(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickStop(url: String?, vararg objects: Any?) {
-//                //正常模式下的暂停播放
-//                timerPause()
-//                ToastUtil.show("onClickStop")
-//            }
-//
-//            override fun onClickSeekbar(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickSeekbar")
-//            }
-//
-//            override fun onPlayError(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onPlayError")
-//                timerPause()
-//            }
-//
-//            override fun onClickStopFullscreen(url: String?, vararg objects: Any?) {
-//                //全屏模式下的暂停播放
-//                timerPause()
-//            }
-//
-//            override fun onTouchScreenSeekPosition(url: String?, vararg objects: Any?) {
-//            }
-//
-//        })
 
     }
 
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (smartVideoPlayer.playMode != SuperPlayerConst.PLAYMODE_FULLSCREEN) {
-            LogUtils.e("不是全屏")
-            setStatusBarDarkMode(mContext, isStatusBarDarkMode)
-        } else {
-            LogUtils.e("全屏")
-            mTitleBar.visibility = View.GONE
-        }
+        //todo
     }
 
     override fun onPause() {
         super.onPause()
-        if (smartVideoPlayer != null) {
-            // 停止播放
-            if (smartVideoPlayer.getPlayMode() != SuperPlayerConst.PLAYMODE_FLOAT) {
-                smartVideoPlayer.onPause()
-            }
-        }
+        //todo
         timerPause()
     }
 
     override fun onResume() {
         super.onResume()
-        if (smartVideoPlayer != null) {
-            // 重新开始播放
-            if (smartVideoPlayer.getPlayState() == SuperPlayerConst.PLAYSTATE_PLAY) {
-                smartVideoPlayer.onResume()
-                if (smartVideoPlayer.getPlayMode() == SuperPlayerConst.PLAYMODE_FLOAT) {
-                    smartVideoPlayer.requestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW)
-                }
-            }
-        }
+                //todo
         timerResume()
     }
 
@@ -300,13 +165,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onDestroy() {
         cancelTimer()
         super.onDestroy()
-        if (smartVideoPlayer != null) {
-            // 释放
-            smartVideoPlayer.release()
-            if (smartVideoPlayer.getPlayMode() != SuperPlayerConst.PLAYMODE_FLOAT) {
-                smartVideoPlayer.resetPlayer()
-            }
-        }
+        //todo
 
     }
 
@@ -453,15 +312,15 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
         when (course.currentPlayStatus) {
-            COURSE_STATUS_NO_COMPLETE -> {
+            TencentPlayVideoActivity.COURSE_STATUS_NO_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 setViewGone(tvPlanDesc, false)
             }
-            COURSE_STATUS_COMPLETE -> {
+            TencentPlayVideoActivity.COURSE_STATUS_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_finish)
                 setViewGone(tvPlanDesc, false)
             }
-            COURSE_STATUS_PLAYING -> {
+            TencentPlayVideoActivity.COURSE_STATUS_PLAYING -> {
                 imageView.setImageResource(R.mipmap.ic_playing)
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
@@ -483,12 +342,12 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             val course = list[i]
             if (course.completed <= 0 && index == -1) {
                 //该视频没有播放过,当前正在播放的视频
-                course.currentPlayStatus = COURSE_STATUS_PLAYING
+                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_PLAYING
                 index = i
             } else if (course.completed <= 0 && index != -1) {
-                course.currentPlayStatus = COURSE_STATUS_NO_COMPLETE
+                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_NO_COMPLETE
             } else {
-                course.currentPlayStatus = COURSE_STATUS_COMPLETE
+                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_COMPLETE
             }
         }
     }
@@ -505,20 +364,21 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 currentCourseId = "" + course.id
 
                 loadPlayerSetting(course.progress)
-
+/*
                 if (course.streams[0].encryptType != null && course.streams[0].encryptType == "DriveDu-DRM") {
-                    requestVideoEncryptParamsCurrentCourse(course)
-                } else {
-                    val superPlayerModel = SuperPlayerModel()
+//                    requestVideoEncryptParamsCurrentCourse(course)
+                }
+                else {
+              *//*      val superPlayerModel = SuperPlayerModel()
                     superPlayerModel.multiURLs = ArrayList()
-                    superPlayerModel.title = course.name
-                    course.streams.forEach {
+                    superPlayerModel.title = course.name*//*
+              *//*      course.streams.forEach {
                         superPlayerModel.multiURLs.add(SuperPlayerModel.SuperPlayerURL(it.url, it.definition))
                     }
                     superPlayerModel.playDefaultIndex = 0
 
-                    smartVideoPlayer.playWithModel(superPlayerModel)
-                }
+                    smartVideoPlayer.playWithModel(superPlayerModel)*//*
+                }*/
 
             }
             else -> {
@@ -549,9 +409,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         val intent = Intent(mContext, OnlineExamActivity::class.java)
         //培训计划id
-        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
+        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         //考试题id
-        intent.putExtra(EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
+        intent.putExtra(OnlineExamActivity.EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
         startActivity(intent)
     }
 
@@ -568,36 +428,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         })
     }
 
-    /**
-     * 获取腾讯drm解密参数
-     */
-    private fun requestVideoEncryptParamsCurrentCourse(course: Course) {
-        ApiRepository.getInstance().requestVideoEncryptParamsCurrentCourse(trainingPlanID, course.videoID).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<DRMParams>?>() {
-            override fun onSuccessNext(entity: BaseResult<DRMParams>?) {
-                if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
 
-                    val model = SuperPlayerModel()
-                    model.appId = entity.data.appid.toInt()
-                    model.videoId = SuperPlayerVideoId()
-                    model.videoId.fileId = course.videoID
-                    model.videoId.version = SuperPlayerVideoId.FILE_ID_V3
-                    model.title = course.name
-
-                    model.videoId.playDefinition = entity.data.playdefinition
-                    model.videoId.sign = entity.data.sign
-                    model.token = entity.data.token
-                    model.videoId.us = entity.data.us
-                    model.videoId.timeout = entity.data.t
-
-                    smartVideoPlayer.playWithModel(model)
-                } else {
-                    if (entity != null)
-                        ToastUtil.showFailed(entity.msg)
-                }
-            }
-
-        })
-    }
 
     /**
      * 保存当前观看进度
@@ -634,10 +465,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     override fun onBackPressed() {
-        if (smartVideoPlayer.playMode == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
+     /*   if (smartVideoPlayer.playMode == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
             smartVideoPlayer.requestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW)
             return
-        }
+        }*/
         showExit()
     }
 
@@ -655,20 +486,20 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun skipFace() {
         //人脸认证
         val intent = Intent(this, OnLineFaceRecognitionActivity::class.java)
-        intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
-        startActivityForResult(intent, REQUEST_CODE_FACE)
+        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
+        startActivityForResult(intent, TencentPlayVideoActivity.REQUEST_CODE_FACE)
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            REQUEST_CODE_FACE -> {
+            TencentPlayVideoActivity.REQUEST_CODE_FACE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     //人脸认证成功 不做任何处理
                 } else {
                     //人脸识别失败 处理人脸识别逻辑
-                    handleRecognizeFailedCallback()
+//                    handleRecognizeFailedCallback()
                 }
             }
             else -> {
@@ -745,17 +576,17 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun handleRecognizeFailedCallback() {
-        //将视频置为不可点击
-//        smartVideoPlayer.startButton.isEnabled = false
-        //暂停视频
-        baseHandler.postDelayed(Runnable {
-            smartVideoPlayer?.onPause()
-        }, 1000)
-
-        ToastUtil.show("人脸识别失败")
-        baseHandler.postDelayed(Runnable {
-            doSaveProgressAndFinish()
-        }, 1500)
-    }
+//    private fun handleRecognizeFailedCallback() {
+//        //将视频置为不可点击
+////        smartVideoPlayer.startButton.isEnabled = false
+//        //暂停视频
+//        baseHandler.postDelayed(Runnable {
+//            smartVideoPlayer?.onPause()
+//        }, 1000)
+//
+//        ToastUtil.show("人脸识别失败")
+//        baseHandler.postDelayed(Runnable {
+//            doSaveProgressAndFinish()
+//        }, 1500)
+//    }
 }

@@ -13,7 +13,7 @@ android {
         }
 
         release {
-            keyAlias 'emi'
+            keyAlias = 'emi'
             keyPassword 'android'
             storeFile file('../key/android_key.jks')
             storePassword 'android'
@@ -136,7 +136,7 @@ dependencies {
     implementation 'com.youth.banner:banner:2.0.0-alpha02'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
-    implementation 'com.shuyu:GSYVideoPlayer:7.1.3'
+//    implementation ('com.shuyu:GSYVideoPlayer:7.1.3')
 
 
     implementation 'pub.devrel:easypermissions:2.0.1'
