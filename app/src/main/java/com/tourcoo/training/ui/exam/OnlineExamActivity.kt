@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.exam
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
@@ -8,6 +9,9 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tourcoo.training.R
@@ -21,10 +25,13 @@ import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.Base64Util
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.exam.*
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
+import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
+import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_exam_online.*
 import org.apache.commons.lang.StringUtils
@@ -57,7 +64,6 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun setTitleBar(titleBar: TitleBarView?) {
         titleBar?.setTitleMainText("线上考试")
-
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -144,7 +150,6 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
 
     }
-
 
     private fun doAnswerQuestion() {
         if (currentPosition < list!!.size - 1) {
@@ -256,6 +261,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         val dialog = CommitAnswerDialog(mContext)
         dialog.create().show()
         dialog.setPositiveButtonListener(View.OnClickListener {
+            isSubmit = true
             commitExam(getAllQuestions())
             dialog.dismiss()
         })
@@ -275,13 +281,72 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess(entity.data.toString())
+                    if (entity.data.status == 0) { //合格
+
+                        tvCertificateId.text = "证书编号：NO." + entity.data.data.certificateId
+                        tvCreateTime.text = entity.data.data.createTime
+                        tvDetail.text = SpanUtils()
+                                .append("学员 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                                .append(entity.data.data.name).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                                .append(" 身份证号 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                                .append(entity.data.data.idCard).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                                .append(" 于 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                                .append(entity.data.data.startTime + " - " + entity.data.data.endTime).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                                .append(" 完整学习了交通安培课程 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                                .append(entity.data.data.trainingPlanName).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                                .append(" 成绩合格，特授此证书。 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                                .create()
+
+                        val bitmap = ImageUtils.view2Bitmap(flCertificate)
+                        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+
+                        uploadCertificate(entity.data.data.certificateId, base64Image, entity.data.tips)
+
+                    } else { //不合格
+                        val dialog = ExamNotPassDialog(mContext)
+                        dialog.create()
+                                .setTips(entity.data.tips)
+//                                .setPositiveButtonClick("确认") {
+//                                    verifyByStatus(courseInfo)
+//                                    dialog.dismiss()
+//                                }
+//                                .setNegativeButtonClick("取消") {
+//                                    dialog.dismiss()
+//                                }
+                                .show()
+                    }
+
                 } else {
                     ToastUtil.show(entity.msg)
                 }
             }
         })
     }
+
+    private fun uploadCertificate(id: String, base64Image: String, tips: String) {
+        ApiRepository.getInstance().uploadCertificate(id, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
+            override fun onSuccessNext(entity: BaseResult<Any>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    val dialog = ExamPassDialog(mContext)
+                    dialog.create()
+                            .setTips(tips)
+//                                .setPositiveButtonClick("确认") {
+//                                    dialog.dismiss()
+//                                }
+//                                .setNegativeButtonClick("查看证书") {
+//                                    dialog.dismiss()
+//                                }
+                            .show()
+                } else {
+                    ToastUtil.show(entity.msg)
+                }
+            }
+        })
+    }
+
 
     private fun getAllQuestions(): MutableList<Question> {
         val results = ArrayList<Question>()
@@ -327,9 +392,14 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
+    //是否已交卷
+    private var isSubmit = false
+
     override fun onBackPressed() {
         super.onBackPressed()
-        saveExam(getAllQuestions())
+        if (!isSubmit) {
+            saveExam(getAllQuestions())
+        }
     }
 
 
@@ -344,9 +414,9 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
 
         for (index in 0 until list!!.size) {
             val fragment = list!![index] as ExamFragment
-            if(index ==vpExamOnline.currentItem ){
+            if (index == vpExamOnline.currentItem) {
                 fragment.getQuestion().isCurrentShow = true
-            }else{
+            } else {
                 fragment.getQuestion().isCurrentShow = false
             }
         }
@@ -375,11 +445,11 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun showButtonByCondition(){
-        if (vpExamOnline.currentItem == list!!.size-1) {
+    private fun showButtonByCondition() {
+        if (vpExamOnline.currentItem == list!!.size - 1) {
             setViewGone(tvCommitExam, true)
             setViewGone(tvNextQuestion, false)
-        }else{
+        } else {
             setViewGone(tvCommitExam, false)
             setViewGone(tvNextQuestion, true)
         }

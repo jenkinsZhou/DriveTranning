@@ -38,6 +38,8 @@ import com.tourcoo.training.ui.exam.OnlineExamActivity
 import com.tourcoo.training.ui.setting.SettingActivity
 import com.tourcoo.training.widget.aliplayer.activity.AliyunPlayerSkinActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
+import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
+import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
@@ -160,11 +162,31 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 }
 
                 1 -> {
-
+                    val dialog = ExamNotPassDialog(mContext)
+                    dialog.setTips(" 总共40道题，答对20道题，总分60分。\n(80分合格）")
+//                                .setPositiveButtonClick("确认") {
+//                                    verifyByStatus(courseInfo)
+//                                    dialog.dismiss()
+//                                }
+//                                .setNegativeButtonClick("取消") {
+//                                    dialog.dismiss()
+//                                }
+                            .create()
+                            .show()
                 }
 
                 2 -> {
-
+                    val dialog = ExamPassDialog(mContext)
+                    dialog.setTips(" 总共40道题，答对20道题，总分60分。\n(80分合格）")
+//                                .setPositiveButtonClick("确认") {
+//                                    verifyByStatus(courseInfo)
+//                                    dialog.dismiss()
+//                                }
+//                                .setNegativeButtonClick("取消") {
+//                                    dialog.dismiss()
+//                                }
+                            .create()
+                            .show()
                 }
 
                 3 -> {

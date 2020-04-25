@@ -166,6 +166,10 @@ public interface ApiService {
     Observable<BaseResult<List<CourseInfo>>> requestOnLineTrainingList();
 
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/training/list-before-the-post-training-present-month-plan")
+    Observable<BaseResult<List<CourseInfo>>> requestBeforeThePostTrainingList();
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
     @POST("v1.0/training/list-offline-training-present-month-plan")
     Observable<BaseResult<List<CourseInfo>>> requestOffLineTrainingList();
 
@@ -224,6 +228,14 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/save-exam-answers")
     Observable<BaseResult> requestSaveAnswer(@Body Map<String, Object> map);
+
+
+    /**
+     * 上传证书图片
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/open/training/upload-certificate")
+    Observable<BaseResult> uploadCertificate(@Body Map<String, Object> map);
 
 
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})

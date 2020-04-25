@@ -196,6 +196,10 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestOnLineTrainingList().retryWhen(new RetryWhen()));
     }
 
+    public Observable<BaseResult<List<CourseInfo>>> requestBeforeThePostTrainingList() {
+        return CommonTransformer.switchSchedulers(getApiService().requestBeforeThePostTrainingList().retryWhen(new RetryWhen()));
+    }
+
     public Observable<BaseResult<List<CourseInfo>>> requestOffLineTrainingList() {
         return CommonTransformer.switchSchedulers(getApiService().requestOffLineTrainingList().retryWhen(new RetryWhen()));
     }
@@ -270,6 +274,13 @@ public class ApiRepository extends BaseRepository {
         params.put("examId", examId);
         params.put("questions", JSON.toJSONString(commitAnswerList));
         return CommonTransformer.switchSchedulers(getApiService().requestSaveAnswer(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult> uploadCertificate(String certificateId, String image) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("certificateId", certificateId);
+        params.put("image", image);
+        return CommonTransformer.switchSchedulers(getApiService().uploadCertificate(params).retryWhen(new RetryWhen()));
     }
 
     public Observable<BaseResult> requestLogout() {

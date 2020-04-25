@@ -81,15 +81,17 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         return R.layout.activity_play_video_tencent
     }
 
+    private var hasRequireExam = true
     override fun setTitleBar(titleBar: TitleBarView?) {
         titleBar?.setTitleMainText("线上学习")
+        titleBar?.setOnLeftTextClickListener {
+            onBackPressed()
+        }
     }
 
     override fun initView(savedInstanceState: Bundle?) {
         isTransition = intent.getBooleanExtra(TRANSITION, false)
-//        trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
-//        trainingPlanID = "9094"
-        trainingPlanID = "9044"
+        trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
         if (TextUtils.isEmpty(trainingPlanID)) {
             ToastUtil.show("未获取到计划信息")
             finish()
@@ -108,7 +110,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvTest.setOnClickListener {
             if (mTitleBar.visibility != View.GONE) {
                 mTitleBar.visibility = View.GONE
-            }else{
+            } else {
                 mTitleBar.visibility = View.VISIBLE
             }
         }
@@ -144,7 +146,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         smartVideoPlayer.setPlayerViewCallback(object : SuperPlayerView.OnSuperPlayerViewCallback {
             override fun onStartFullScreenPlay() {
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-                ToastUtil.show("全屏")
                 if (mTitleBar.visibility != View.GONE) {
                     mTitleBar.visibility = View.GONE
                 }
@@ -152,7 +153,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
             override fun onStopFullScreenPlay() {
                 window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
-                ToastUtil.show("非全屏")
                 if (mTitleBar.visibility != View.VISIBLE) {
                     mTitleBar.visibility = View.VISIBLE
                 }
@@ -162,6 +162,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
             override fun onClickSmallReturnBtn() {
+                window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                setStatusBarDarkMode(mContext, isStatusBarDarkMode)
                 //设置返回按键功能
                 onBackPressed()
             }
@@ -263,10 +265,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (smartVideoPlayer.playMode != SuperPlayerConst.PLAYMODE_FULLSCREEN) {
-            LogUtils.e("不是全屏")
             setStatusBarDarkMode(mContext, isStatusBarDarkMode)
         } else {
-            LogUtils.e("全屏")
             mTitleBar.visibility = View.GONE
         }
     }
@@ -320,6 +320,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onSuccessNext(entity: BaseResult<TrainingPlanDetail>?) {
                 if (entity!!.code == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     trainingPlanDetail = entity.data
+                    hasRequireExam = entity.data.finishedCourses == 1 && entity.data.finishedExam == 0
                     handleTrainingPlanDetail(entity.data)
                 }
             }
@@ -624,11 +625,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 .setTitle("确认退出学习")
                 .setMsg("退出前会保存当前学习进度")
                 .setPositiveButton("确认退出", View.OnClickListener {
-                    //todo 保存观看进度
                     doSaveProgressAndFinish()
                 })
                 .setNegativeButton("取消", View.OnClickListener {
-                    finish()
+                    window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+                    setStatusBarDarkMode(mContext, isStatusBarDarkMode)
                 }).show()
     }
 
@@ -638,7 +639,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             smartVideoPlayer.requestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW)
             return
         }
-        showExit()
+        if (hasRequireExam) {
+            finish()
+        } else {
+            showExit()
+        }
     }
 
 
