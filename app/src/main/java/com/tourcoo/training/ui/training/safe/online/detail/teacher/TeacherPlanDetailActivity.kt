@@ -1,8 +1,14 @@
 package com.tourcoo.training.ui.training.safe.online.detail.teacher
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.SpanUtils
+import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.app.MyApplication
@@ -12,7 +18,10 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
+import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
+import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
+import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.tourcoo.training.widget.websocket.SocketListener
 import com.tourcoo.training.widget.websocket.WebSocketHandler
@@ -21,6 +30,7 @@ import com.tourcoo.training.widget.websocket.response.ErrorResponse
 import kotlinx.android.synthetic.main.activity_training_detail_teacher.*
 import org.java_websocket.framing.Framedata
 import java.nio.ByteBuffer
+import java.text.SimpleDateFormat
 
 /**
  *@description :
@@ -29,13 +39,27 @@ import java.nio.ByteBuffer
  * @date 2020年04月23日14:54
  * @Email: 971613168@qq.com
  */
-class TeacherPlanDetailActivity: BaseMvpTitleActivity<TeacherDetailPresenter>() ,View.OnClickListener, TeacherDetailContract.View, SocketListener {
+class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>(), View.OnClickListener, TeacherDetailContract.View, SocketListener {
     private var trainingPlanId = ""
     private val mTag = "TeacherPlanDetailActivity"
     private var confirmDialog: LocalTrainingConfirmDialog? = null
+
+
+    companion object {
+        const val REQUEST_CODE_SCAN = 1007
+        const val REQUEST_CODE_SIGN_STUDENT = 1008
+        const val EXTRA_PHOTO_PATH = "EXTRA_PHOTO_PATH"
+        const val MSG_CODE_PROGRESS = 1
+        const val MSG_CODE_CLOSE_PROGRESS = 201
+    }
+
     override fun loadPresenter() {
         presenter.start()
         presenter.getTrainDetail(trainingPlanId)
+
+        val socketUrl = TrainingConstant.BASE_SOCKET_URL_ + AccountHelper.getInstance().userInfo.accessToken + "&trainingPlanId=" + trainingPlanId
+        //初始化WebSocket连接
+        initWebSocket(socketUrl)
     }
 
 
@@ -63,11 +87,13 @@ class TeacherPlanDetailActivity: BaseMvpTitleActivity<TeacherDetailPresenter>() 
             finish()
             return
         }
+
         ivSignTeacher.setOnClickListener(this)
+        ivToOnline.setOnClickListener(this)
+
     }
 
     override fun showTurnOnlineSuccess() {
-        //todo
         //转线上成功
         presenter.getTrainDetail(trainingPlanId)
     }
@@ -87,11 +113,8 @@ class TeacherPlanDetailActivity: BaseMvpTitleActivity<TeacherDetailPresenter>() 
             ToastUtil.show("未获取到计划详情")
             return
         }
+
         showTrainPlan(planDetail)
-        val socketUrl = TrainingConstant.BASE_SOCKET_URL_ + AccountHelper.getInstance().userInfo.accessToken + "&trainingPlanId=" + trainingPlanId
-        //初始化WebSocket连接
-        initWebSocket(socketUrl)
-        setViewGone(ivSignTeacher, true)
     }
 
 
@@ -100,11 +123,11 @@ class TeacherPlanDetailActivity: BaseMvpTitleActivity<TeacherDetailPresenter>() 
             return
         }
         tvCourseName.text = CommonUtil.getNotNullValue(planDetail.title)
-        tvCoursePlanTime.text = CommonUtil.getNotNullValue(planDetail.cTime)
+        tvCoursePlanTime.text = CommonUtil.getNotNullValue(planDetail.sTime)
         tvLocate.text = CommonUtil.getNotNullValue(planDetail.classroomName)
         tvRole.text = "安全员"
-        //todo
-//        planDetail.status = 5
+        tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
+
         when (planDetail.status)
             /**
              * 未开始
@@ -112,9 +135,10 @@ class TeacherPlanDetailActivity: BaseMvpTitleActivity<TeacherDetailPresenter>() 
         {
             TrainingConstant.TRAIN_STATUS_NO_START -> {
                 //未开始 安全员只有一个签到按钮
-                //todo
                 //只显示签到按钮
                 setViewGone(rlButtonTeacherLayout, true)
+                //显示转线上
+                setViewGone(ivToOnline, true)
                 setViewGone(ivSignTeacher, true)
                 //隐藏签到时间相关信息
                 setViewGone(llTrainStatusTeacherLayout, false)
@@ -126,14 +150,26 @@ class TeacherPlanDetailActivity: BaseMvpTitleActivity<TeacherDetailPresenter>() 
              */
             TrainingConstant.TRAIN_STATUS_SIGNED -> {
                 // 安全员已签到 隐藏签到模块布局按钮
-                setViewGone(rlButtonTeacherLayout, false)
+                setViewGone(rlButtonTeacherLayout, true)
+                setViewVisible(ivSignTeacher, false)
+                //显示转线上
+                setViewGone(ivToOnline, true)
+
                 setViewGone(llTrainStatusTeacherLayout, true)
+
                 //显示签到时间 和预计结束时间
+                setViewGone(llSignedTime, true)
                 setViewGone(llPreEndTime, true)
                 //隐藏结束时间
                 setViewGone(llEndTime, false)
+
+                //设置签到时间
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                //显示安全员预计结束时间
+                tvPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
                 //隐藏标签图片
                 setViewGone(ivStatusTagTeacher, false)
+
             }
 
 
@@ -145,11 +181,34 @@ class TeacherPlanDetailActivity: BaseMvpTitleActivity<TeacherDetailPresenter>() 
                 setViewGone(rlButtonTeacherLayout, false)
                 setViewGone(llTrainStatusTeacherLayout, true)
                 //显示签到时间 和结束时间
+                setViewGone(llSignedTime, true)
                 setViewGone(llPreEndTime, false)
-                //隐藏结束时间
-                setViewGone(llEndTime, true)
-                //隐藏标签图片
+                //隐藏预计结束时间
+                setViewGone(llEndTime, false)
+
+                //显示标签图片
                 setViewGone(ivStatusTagTeacher, true)
+                ivStatusTagTeacher.setImageResource(R.mipmap.ic_training_state_end)
+            }
+
+
+
+            /**
+             * 已转线上
+             */
+            TrainingConstant.TRAIN_STATUS_TO_ONLINE -> {
+                // 安全员已签到 隐藏签到模块布局按钮
+                setViewGone(rlButtonTeacherLayout, false)
+                setViewGone(llTrainStatusTeacherLayout, true)
+                //显示签到时间 和结束时间
+                setViewGone(llSignedTime, true)
+                setViewGone(llPreEndTime, false)
+                //隐藏预计结束时间
+                setViewGone(llEndTime, false)
+
+                //显示标签图片
+                setViewGone(ivStatusTagTeacher, true)
+                ivStatusTagTeacher.setImageResource(R.mipmap.ic_training_state_turn_online)
             }
 
 
@@ -165,25 +224,128 @@ class TeacherPlanDetailActivity: BaseMvpTitleActivity<TeacherDetailPresenter>() 
      */
     private fun turnOnline() {
         confirmDialog = LocalTrainingConfirmDialog(mContext)
-        confirmDialog!!.create().setContent("确定从现场学习转到线上学习吗？").setPositiveButton {
-            presenter.getTurnOnline(trainingPlanId)
-        }.show()
+
+        confirmDialog!!.create()
+                .setContent(SpanUtils()
+                        .append("您是当前计划的 ").setForegroundColor(Color.parseColor("#333333")).setFontSize(15, true)
+                        .append("『安全员』").setForegroundColor(Color.parseColor("#FF736C")).setFontSize(15, true)
+                        .append(",确定从现场学习转到线上学习吗？").setForegroundColor(Color.parseColor("#333333")).setFontSize(15, true)
+                        .create())
+                .setPositiveButton {
+                    presenter.getTurnOnline(trainingPlanId)
+                }.show()
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.ivStudentToOnline -> {
+            R.id.ivToOnline -> {
                 //执行转线上
                 doTurnOnline()
             }
-            R.id.ivSignStudent -> {
-                //学员签到逻辑
-                WebSocketHandler.getDefault().start()!!.send("测试数据")
+            R.id.ivSignTeacher -> {
+                //安全员签到逻辑
+                safeManagerSign()
             }
 
             else -> {
             }
         }
+    }
+
+    private var currentAction = ""
+    /**
+     * 安全员签到，后台默认学员身份已签到
+     */
+    private fun safeManagerSign() {
+        //学生签到扫码
+        currentAction = TrainingConstant.ACTION_SAFE_MANAGER_SIGN
+        scanCode()
+    }
+
+    private fun scanCode() {
+        val intent = Intent(mContext, CaptureActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_SCAN)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQUEST_CODE_SCAN -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val result = data.getStringExtra(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN)
+                    if (result != null) {
+                        when (currentAction) {
+
+                            TrainingConstant.ACTION_SAFE_MANAGER_SIGN -> {
+                                handleScanSignCallback(result, TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN)
+                            }
+
+                            else -> {
+                            }
+                        }
+                    }
+                }
+            }
+            /**
+             * 签到成功回调
+             */
+            REQUEST_CODE_SIGN_STUDENT -> {
+                showSafeManagerSignSuccess()
+            }
+            else -> {
+            }
+        }
+    }
+
+
+    private fun showSafeManagerSignSuccess() {
+        presenter.getTrainDetail(
+                trainingPlanId)
+        val dialog = CommonSuccessAlert(mContext)
+        dialog.create().setAlertTitle("安全员签到成功")
+        val currentTime = System.currentTimeMillis()
+        val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
+        dialog.setContent(timeNow).show()
+    }
+
+
+    private fun handleScanSignCallback(result: String, scene: Int) {
+        try {
+            val scanResult = JSON.parseObject(result, QrScanResult::class.java)
+            when (scene) {
+                TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN -> {
+                    if (scanResult.scene.toInt() != TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN) {
+                        ToastUtil.show("请扫描正确的场景二维码")
+                    } else {
+                        skipSignFaceCertify(scanResult)
+                    }
+                }
+
+
+                else -> {
+                    ToastUtil.show("请扫描正确的场景二维码")
+                }
+            }
+
+
+        } catch (e: Exception) {
+            ToastUtil.show("当前二维码无效")
+        }
+    }
+
+
+    private fun skipSignFaceCertify(qrScanResult: QrScanResult?) {
+        if (qrScanResult == null) {
+            ToastUtil.show("未获取到相应数据")
+            return
+        }
+        //跳转到培训相关的人脸识别
+        val intent = Intent(this, TrainFaceCertifyActivity::class.java)
+        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, qrScanResult.trainingPlanID)
+        intent.putExtra(TrainingConstant.EXTRA_KEY_QR_SCAN_RESULT, qrScanResult)
+
+        startActivityForResult(intent, REQUEST_CODE_SIGN_STUDENT)
     }
 
 

@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat
  */
 class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>(), View.OnClickListener, StudentDetailContract.View, SocketListener {
     private var trainingPlanId = ""
+    private var latestExamID = ""
     private val mTag = "StudentPlanDetailActivity"
     private var confirmDialog: LocalTrainingConfirmDialog? = null
     private var currentAction = ""
@@ -54,6 +55,10 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     override fun loadPresenter() {
         presenter.start()
         presenter.getTrainDetail(trainingPlanId)
+
+        //签到成功后 连接socket
+        val socketUrl = BASE_SOCKET_URL_ + AccountHelper.getInstance().userInfo.accessToken + "&trainingPlanId=" + trainingPlanId
+        initWebSocket(socketUrl)
     }
 
 
@@ -83,10 +88,11 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         }
         ivStudentToOnline.setOnClickListener(this)
         ivSignStudent.setOnClickListener(this)
+        ivSignOut.setOnClickListener(this)
+        ivWaitExam.setOnClickListener(this)
     }
 
     override fun showTurnOnlineSuccess() {
-        //todo
         //转线上成功
         presenter.getTrainDetail(trainingPlanId)
     }
@@ -116,10 +122,13 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
             return
         }
         tvTrainTitle.text = CommonUtil.getNotNullValue(planDetail.title)
-        tvCoursePlanTime.text = CommonUtil.getNotNullValue(planDetail.cTime)
+        tvCoursePlanTime.text = CommonUtil.getNotNullValue(planDetail.sTime)
         tvLocate.text = CommonUtil.getNotNullValue(planDetail.classroomName)
-        //todo
-//        planDetail.status = 5
+
+        tvPhone.text = CommonUtil.getNotNullValue(planDetail.saftyManagerTel)
+        tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
+        tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManager)
+
         when (planDetail.status)
             /**
              * 未开始
@@ -158,6 +167,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(ivSignOut, true)
                 //显示签到时间
                 setViewGone(llSignedTime, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 //隐藏签退时间
                 setViewGone(llSignedOutTime, false)
                 //隐藏标签
@@ -173,6 +183,8 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                 //隐藏标签
                 setViewGone(ivStatusTag, false)
                 setViewGone(llBottomButtonLayout, false)
@@ -185,6 +197,8 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                 //显示转线上标签
                 ivStatusTag.setImageResource(R.mipmap.ic_training_state_turn_online)
                 setViewGone(ivStatusTag, true)
@@ -199,6 +213,9 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
+
                 //显示已结束标签
                 ivStatusTag.setImageResource(R.mipmap.ic_training_state_end)
                 setViewGone(ivStatusTag, true)
@@ -213,6 +230,8 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                 //显示已结束标签
                 ivStatusTag.setImageResource(R.mipmap.ic_training_state_no_pass)
                 setViewGone(ivStatusTag, true)
@@ -227,6 +246,8 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                 //隐藏标签
                 setViewGone(ivStatusTag, false)
                 setViewGone(llBottomButtonLayout, true)
@@ -364,9 +385,6 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
              * 签到成功回调
              */
             REQUEST_CODE_SIGN_STUDENT -> {
-                //签到成功后 连接socket
-                val socketUrl = BASE_SOCKET_URL_ + AccountHelper.getInstance().userInfo.accessToken + "&trainingPlanId=" + trainingPlanId
-                initWebSocket(socketUrl)
                 showSignSuccess()
             }
             else -> {

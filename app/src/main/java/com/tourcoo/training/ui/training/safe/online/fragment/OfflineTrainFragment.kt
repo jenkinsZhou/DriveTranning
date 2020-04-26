@@ -128,7 +128,6 @@ class OfflineTrainFragment : BaseFragment() {
                 startActivity(intent)
             }
             TRAIN_ROLE_TEACHER_AND_STUDENT->{
-                ToastUtil.show("安全员+学员")
                 //安全员+学员
                 val intent = Intent(mContext, CommonPlanDetailActivity::class.java)
                 intent.putExtra(EXTRA_TRAINING_PLAN_ID,courseInfo.trainingPlanID)

@@ -72,9 +72,18 @@ public class TrainingPlanDetail {
     private int Role;
     private int PaymentMode;
     private String PriceRemark;
+    private String SaftyManagerTel;
     private List<Subject> Subjects;
 
     private int status;
+
+    public String getSaftyManagerTel() {
+        return SaftyManagerTel;
+    }
+
+    public void setSaftyManagerTel(String saftyManagerTel) {
+        SaftyManagerTel = saftyManagerTel;
+    }
 
     public int getStatus() {
         return status;

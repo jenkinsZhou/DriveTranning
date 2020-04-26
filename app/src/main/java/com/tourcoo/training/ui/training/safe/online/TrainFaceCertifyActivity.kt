@@ -69,7 +69,6 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
     private var trainId = ""
     private var cameraHelper: CameraHelper? = null
     private val cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT
-    private var currentAction: String? = null
     override fun getContentLayout(): Int {
         return R.layout.activity_face_recognition
     }
@@ -81,7 +80,6 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
     override fun initView(savedInstanceState: Bundle?) {
         trainId = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID) as String
         scanResult = intent.getParcelableExtra(EXTRA_KEY_QR_SCAN_RESULT)
-        currentAction = intent.getStringExtra(EXTRA_TRAIN_ACTION_KEY)
         if (scanResult == null) {
             ToastUtil.show("未获取对应信息")
             finish()
@@ -325,14 +323,15 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
             ToastUtil.show("未获取到有效数据")
             return
         }
-        val params: MutableMap<String, Any> = HashMap(4)
+
+        val params: MutableMap<String, Any> = HashMap(6)
         val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
         params["photo"] = base64Image
         params["trainingPlanID"] = scanResult!!.trainingPlanID
-        params["EventId"] = scanResult!!.eventId
+        params["eventId"] = scanResult!!.eventId
         params["scene"] = scanResult!!.scene
-        params["Lng"] = location.longitude
-        params["Lat"] = location.latitude
+        params["lng"] = location.longitude
+        params["lat"] = location.latitude
         TourCooLogUtil.i("上传的参数", params)
         ApiRepository.getInstance().requestTrainFaceVerify(params).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
             override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
