@@ -27,6 +27,7 @@ import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.study.BannerBean;
 import com.tourcoo.training.entity.training.DRMParams;
+import com.tourcoo.training.entity.training.HlsParams;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 import com.tourcoo.training.utils.MapUtil;
 
@@ -310,6 +311,13 @@ public class ApiRepository extends BaseRepository {
         params.put("TrainingPlanID", trainingPlanID);
         params.put("VideoID", videoID);
         return CommonTransformer.switchSchedulers(getApiService().requestVideoEncryptParamsCurrentCourse(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<HlsParams>> requestHlsEncryptParams(String trainingPlanID, String videoID) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("TrainingPlanID", trainingPlanID);
+        params.put("VideoID", videoID);
+        return CommonTransformer.switchSchedulers(getApiService().requestHlsEncryptParams(params).retryWhen(new RetryWhen()));
     }
 
     /**

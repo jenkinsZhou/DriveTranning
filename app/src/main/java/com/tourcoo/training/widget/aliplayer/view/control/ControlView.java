@@ -21,7 +21,12 @@ import androidx.core.content.ContextCompat;
 import com.aliyun.player.nativeclass.MediaInfo;
 import com.aliyun.player.nativeclass.TrackInfo;
 import com.aliyun.utils.VcPlayerLog;
+import com.blankj.utilcode.util.ToastUtils;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.log.TourCooLogUtil;
+import com.tourcoo.training.core.util.ToastUtil;
+import com.tourcoo.training.entity.training.Course;
+import com.tourcoo.training.entity.training.VideoStream;
 import com.tourcoo.training.widget.AliYunVodPlayerView;
 import com.tourcoo.training.widget.aliplayer.constants.PlayParameter;
 import com.tourcoo.training.widget.aliplayer.mode.AliyunScreenMode;
@@ -55,7 +60,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     private View mControlBar;
 
     //这些是大小屏都有的==========START========
-    //返回按钮
+    //返回按钮OnDefinitionButtonClickListener
     private ImageView mTitlebarBackBtn;
     //标题
     private TextView mTitlebarText;
@@ -83,6 +88,10 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     //大小屏公用的信息
     //视频信息，info显示用。
     private MediaInfo mAliyunMediaInfo;
+    /**
+     * 课程对象
+     */
+    private Course mCourseInfo;
     //播放的进度
     private int mVideoPosition = 0;
     //seekbar拖动状态
@@ -103,6 +112,8 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     private SeekBar mLargeSeekbar;
     //当前的清晰度
     private String mCurrentQuality;
+    //当前的清晰度
+    private String mCurrentDefinition;
     //是否固定清晰度
     private boolean mForceQuality = false;
     //改变清晰度的按钮
@@ -140,6 +151,8 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     private OnPlayStateClickListener mOnPlayStateClickListener;
     //清晰度按钮点击监听
     private OnQualityBtnClickListener mOnQualityBtnClickListener;
+    //清晰度按钮点击监听自定义
+    private OnDefinitionButtonClickListener mOnDefinitionButtonClickListener;
     //锁屏按钮点击监听
     private OnScreenLockClickListener mOnScreenLockClickListener;
     //大小屏按钮点击监听
@@ -323,9 +336,8 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         mLargeChangeQualityBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //点击切换分辨率 显示分辨率的对话框
-                if (mOnQualityBtnClickListener != null && mAliyunMediaInfo != null) {
+               /* if (mOnQualityBtnClickListener != null && mAliyunMediaInfo != null) {
                     List<TrackInfo> qualityTrackInfos = new ArrayList<>();
                     List<TrackInfo> trackInfos = mAliyunMediaInfo.getTrackInfos();
                     for (TrackInfo trackInfo : trackInfos) {
@@ -335,6 +347,11 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
                         }
                     }
                     mOnQualityBtnClickListener.onQualityBtnClick(v, qualityTrackInfos, mCurrentQuality);
+                    ToastUtil.show("mAliyunMediaInfo=" + qualityTrackInfos.size() + "---" + mCurrentQuality);
+                }*/
+                //todo
+                if (mOnDefinitionButtonClickListener != null && mCourseInfo != null && mCourseInfo.getStreams() != null) {
+                    mOnDefinitionButtonClickListener.onDefinitionButtonClick(v, mCourseInfo.getStreams(),mCurrentDefinition);
                 }
             }
         });
@@ -369,6 +386,8 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         updateLargeInfoBar();
         updateChangeQualityBtn();
     }
+
+
 
     /**
      * 设置是否强制清晰度。如果是强制，则不会显示切换清晰度按钮
@@ -508,7 +527,14 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         updateChangeQualityBtn();
         updateTitleView();
     }
-
+    public void setCourseInfo(Course courseInfo, String currentDefinition) {
+        mCourseInfo = courseInfo;
+        mCurrentDefinition = currentDefinition;
+        //todo
+        updateLargeInfoBar();
+        updateChangeQualityBtn();
+        updateTitleView();
+    }
 
     public void showMoreButton() {
         mTitleMore.setVisibility(VISIBLE);
@@ -616,6 +642,8 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         updateLargeInfoBar();//更新大屏的显示信息
         updateSmallInfoBar();//更新小屏的显示信息
         updateChangeQualityBtn();//更新分辨率按钮信息
+        //更新清晰度按钮信息
+        updateChangeDefinitionBtn();
         updateScreenModeBtn();//更新大小屏信息
         updateAllTitleBar(); //更新标题显示
         updateAllControlBar();//更新控制栏显示
@@ -631,12 +659,19 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
      */
     private void updateChangeQualityBtn() {
         if (mLargeChangeQualityBtn != null) {
-            VcPlayerLog.d(TAG, "mCurrentQuality = " + mCurrentQuality + " , isMts Source = " + isMtsSource + " , mForceQuality = " + mForceQuality);
+            TourCooLogUtil.d(TAG, "mCurrentQuality = " + mCurrentQuality + " , isMts Source = " + isMtsSource + " , mForceQuality = " + mForceQuality);
             mLargeChangeQualityBtn.setText(QualityItem.getItem(getContext(), mCurrentQuality, isMtsSource).getName());
             mLargeChangeQualityBtn.setVisibility(mForceQuality ? GONE : VISIBLE);
+//            ToastUtils.showShort("mForceQuality=" + mForceQuality);
         }
     }
 
+    private void updateChangeDefinitionBtn() {
+        if (mLargeChangeQualityBtn != null) {
+            mLargeChangeQualityBtn.setText(mCurrentDefinition);
+            mLargeChangeQualityBtn.setVisibility( VISIBLE);
+        }
+    }
     /**
      * 更新控制条的显示
      */
@@ -722,7 +757,8 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
                 mLargeSeekbar.setProgress(mVideoPosition);
                 mLargePositionText.setText(TimeFormater.formatMs(mVideoPosition));
             }
-            mLargeChangeQualityBtn.setText(QualityItem.getItem(getContext(), mCurrentQuality, isMtsSource).getName());
+            //显示当前清晰度
+            mLargeChangeQualityBtn.setText(mCurrentDefinition);
             //然后再显示出来。
             mLargeInfoBar.setVisibility(VISIBLE);
         }
@@ -845,6 +881,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
             //如果是由于错误引起的隐藏，那就不能再展现了
             setVisibility(GONE);
             hideQualityDialog();
+            hideDefinitionDialog();
         } else {
             updateAllViews();
             setVisibility(VISIBLE);
@@ -861,6 +898,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         }
         setVisibility(GONE);
         hideQualityDialog();
+        hideDefinitionDialog();
     }
 
     /**
@@ -872,6 +910,14 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         }
     }
 
+    /**
+     * 隐藏Definition对话框
+     */
+    private void hideDefinitionDialog() {
+        if (mOnDefinitionButtonClickListener != null) {
+            mOnDefinitionButtonClickListener.onHideQualityView();
+        }
+    }
     /**
      * 设置当前缓存的进度，给seekbar显示
      *
@@ -903,7 +949,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     }
 
     public void setOnDownloadClickListener(
-        OnDownloadClickListener onDownloadClickListener) {
+            OnDownloadClickListener onDownloadClickListener) {
         this.onDownloadClickListener = onDownloadClickListener;
     }
 
@@ -1015,7 +1061,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     }
 
     public void setOnShowMoreClickListener(
-        OnShowMoreClickListener listener) {
+            OnShowMoreClickListener listener) {
         this.mOnShowMoreClickListener = listener;
     }
 
@@ -1039,5 +1085,30 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
 
     public void setOnScreenRecoderClickListener(OnScreenRecoderClickListener listener) {
         this.mOnScreenRecoderClickListener = listener;
+    }
+
+
+    public interface OnDefinitionButtonClickListener {
+        /**
+         * 清晰度按钮被点击
+         *
+         * @param v              被点击的view
+         * @param qualities      支持的清晰度
+         * @param currentQuality 当前清晰度
+         */
+        void onDefinitionButtonClick(View v, List<VideoStream> qualities, String currentQuality);
+
+        /**
+         * 隐藏
+         */
+        void onHideQualityView();
+    }
+
+    public OnDefinitionButtonClickListener getOnDefinitionButtonClickListener() {
+        return mOnDefinitionButtonClickListener;
+    }
+
+    public void setOnDefinitionButtonClickListener(OnDefinitionButtonClickListener mOnDefinitionButtonClickListener) {
+        this.mOnDefinitionButtonClickListener = mOnDefinitionButtonClickListener;
     }
 }

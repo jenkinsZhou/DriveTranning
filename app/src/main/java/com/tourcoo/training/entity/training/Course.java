@@ -51,6 +51,7 @@ public class Course {
     private String ThirdOrderID;
     private List<VideoStream> Streams;
     private int currentPlayStatus;
+    private VideoStream currentVideoStream;
 
     public int getCurrentPlayStatus() {
         return currentPlayStatus;
@@ -204,5 +205,11 @@ public class Course {
         this.Streams = Streams;
     }
 
+    public VideoStream getCurrentVideoStream() {
+        return currentVideoStream;
+    }
 
+    public void setCurrentVideoStream(VideoStream currentVideoStream) {
+        this.currentVideoStream = currentVideoStream;
+    }
 }

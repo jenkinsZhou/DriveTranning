@@ -21,6 +21,7 @@ import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.study.BannerBean;
 import com.tourcoo.training.entity.training.DRMParams;
+import com.tourcoo.training.entity.training.HlsParams;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 
 import java.util.List;
@@ -256,6 +257,15 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/vod/get-drivedu-token")
     Observable<BaseResult<DRMParams>> requestVideoEncryptParamsCurrentCourse(@Body Map<String, Object> map);
+
+    /**
+     * HLS解密接口
+     * @param map
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/vod/get-video-token-and-playauth")
+    Observable<BaseResult<HlsParams>> requestHlsEncryptParams(@Body Map<String, Object> map);
 
     /**
      * 转线上

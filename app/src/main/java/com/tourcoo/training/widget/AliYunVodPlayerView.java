@@ -38,6 +38,11 @@ import com.aliyun.utils.VcPlayerLog;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.log.TourCooLogUtil;
+import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.ToastUtil;
+import com.tourcoo.training.entity.training.Course;
+import com.tourcoo.training.entity.training.VideoStream;
+import com.tourcoo.training.ui.training.safe.online.aliyun.DefinitionView;
 import com.tourcoo.training.widget.aliplayer.constants.PlayParameter;
 import com.tourcoo.training.widget.aliplayer.listener.LockPortraitListener;
 import com.tourcoo.training.widget.aliplayer.listener.OnAutoPlayListener;
@@ -98,6 +103,8 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     private ControlView mControlView;
     //清晰度view
     private QualityView mQualityView;
+    //自定义清晰度View
+    private DefinitionView mDefinitionView;
     //倍速选择view
     private SpeedView mSpeedView;
     //引导页view
@@ -131,12 +138,16 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     private boolean isCompleted = false;
     //媒体信息
     private MediaInfo mAliyunMediaInfo;
+    //课程信息
+    private Course mCourseInfo;
     //解决bug,进入播放界面快速切换到其他界面,播放器仍然播放视频问题
     private VodPlayerLoadEndHandler vodPlayerLoadEndHandler = new VodPlayerLoadEndHandler(this);
     //原视频的buffered
     private long mVideoBufferedPosition = 0;
     //原视频的currentPosition
     private long mCurrentPosition = 0;
+
+
     //当前播放器的状态 默认为idle状态
     private int mPlayerState = IPlayer.idle;
     //原视频时长
@@ -187,6 +198,19 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     private float currentSpeed;
     private float currentVolume;
     private int currentScreenBrigtness;
+    private OnChangeDefinitionListener onChangeDefinitionListener;
+    /**
+     * 当前播放的视频流
+     */
+    private VideoStream currentSteam;
+
+    public VideoStream getCurrentSteam() {
+        return currentSteam;
+    }
+
+    public void setCurrentSteam(VideoStream currentSteam) {
+        this.currentSteam = currentSteam;
+    }
 
     public AliYunVodPlayerView(Context context) {
         super(context);
@@ -226,6 +250,8 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
             initControlView();
             //初始化清晰度view
             initQualityView();
+            //初始化自定义清晰度view
+            initDefinitionView();
             //初始化缩略图
             initThumbnailView();
             //初始化倍速view
@@ -244,10 +270,9 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
             setTheme(Theme.Blue);
             //先隐藏手势和控制栏，防止在没有prepare的时候做操作。
             hideGestureAndControlViews();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            TourCooLogUtil.e(TAG,e.toString());
+            TourCooLogUtil.e(TAG, e.toString());
         }
 
     }
@@ -314,7 +339,7 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     /**
      * UI播放器支持的主题
      */
-    public  enum Theme {
+    public enum Theme {
         /**
          * 蓝色主题
          */
@@ -807,6 +832,21 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
                 mQualityView.hide();
             }
         });
+
+        mControlView.setOnDefinitionButtonClickListener(new ControlView.OnDefinitionButtonClickListener() {
+            @Override
+            public void onDefinitionButtonClick(View v, List<VideoStream> qualities, String currentQuality) {
+                //显示清晰度列表
+                mDefinitionView.setQuality(qualities, currentQuality);
+                mDefinitionView.showAtTop(v);
+
+            }
+
+            @Override
+            public void onHideQualityView() {
+                mDefinitionView.hide();
+            }
+        });
         //点击锁屏的按钮
         mControlView.setOnScreenLockClickListener(new ControlView.OnScreenLockClickListener() {
             @Override
@@ -1007,6 +1047,25 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     }
 
     /**
+     * 初始化自定义清晰度列表
+     */
+    private void initDefinitionView() {
+        mDefinitionView = new DefinitionView(getContext());
+        addSubView(mDefinitionView);
+        //清晰度点击事件
+        mDefinitionView.setOnDefinitionClickListener(new DefinitionView.OnDefinitionClickListener() {
+            @Override
+            public void onDefinitionClick(VideoStream videoStream) {
+                //重新设置数据源
+                if (onChangeDefinitionListener != null) {
+                    onChangeDefinitionListener.onChangeDefinition(videoStream, mCurrentPosition);
+                }
+            }
+        });
+    }
+
+
+    /**
      * 初始化倍速view
      */
     private void initSpeedView() {
@@ -1180,7 +1239,7 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     private void initSurfaceView() {
         mSurfaceView = new SurfaceView(getContext().getApplicationContext());
         addSubView(mSurfaceView);
-        TourCooLogUtil.i(TAG,"执行了initSurfaceView");
+        TourCooLogUtil.i(TAG, "执行了initSurfaceView");
         SurfaceHolder holder = mSurfaceView.getHolder();
         //增加surfaceView的监听
         holder.addCallback(new SurfaceHolder.Callback() {
@@ -1219,7 +1278,7 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
      * 初始化播放器
      */
     private void initAliVcPlayer() {
-        TourCooLogUtil.i(TAG,"执行了initAliVcPlayer");
+        TourCooLogUtil.i(TAG, "执行了initAliVcPlayer");
         mAliyunVodPlayer = AliPlayerFactory.createAliPlayer(MyApplication.getContext());
         mAliyunVodPlayer.enableLog(true);
         //设置准备回调
@@ -2481,7 +2540,6 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
             return;
         }
         mAliyunMediaInfo = mAliyunVodPlayer.getMediaInfo();
-
         if (mAliyunMediaInfo == null) {
             return;
         }
@@ -2524,12 +2582,14 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
         //防止服务器信息和实际不一致
         mSourceDuration = mAliyunVodPlayer.getDuration();
         mAliyunMediaInfo.setDuration((int) mSourceDuration);
-        TrackInfo currentTrack = mAliyunVodPlayer.currentTrack(TrackInfo.Type.TYPE_VOD);
+      /*  TrackInfo currentTrack = mAliyunVodPlayer.currentTrack(TrackInfo.Type.TYPE_VOD);
         String currentQuality = "FD";
         if (currentTrack != null) {
             currentQuality = currentTrack.getVodDefinition();
-        }
-        mControlView.setMediaInfo(mAliyunMediaInfo, currentQuality);
+        }*/
+        mControlView.setMediaInfo(mAliyunMediaInfo, "currentQuality");
+        //清晰度赋值
+        mControlView.setCourseInfo(mCourseInfo, currentSteam.getDefinition());
         mControlView.setHideType(ViewAction.HideType.Normal);
         mGestureView.setHideType(ViewAction.HideType.Normal);
         mGestureView.show();
@@ -2542,6 +2602,9 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
         //准备成功之后可以调用start方法开始播放
         if (mOutPreparedListener != null) {
             mOutPreparedListener.onPrepared();
+        }
+        if (mTipsView != null) {
+            mTipsView.hideNetLoadingTipView();
         }
     }
 
@@ -2967,4 +3030,77 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
+
+
+    public long getCurrentSecond() {
+        return (mCurrentPosition / 1000 % 60);
+    }
+
+
+    public Course getCourseInfo() {
+        return mCourseInfo;
+    }
+
+    public void setCourseInfo(Course mCourseInfo) {
+        this.mCourseInfo = mCourseInfo;
+    }
+
+    /**
+     * 开始操作
+     */
+    public void optionStart() {
+        if (mAliyunVodPlayer != null) {
+            mAliyunVodPlayer.start();
+        }
+    }
+
+    /**
+     * 暂停操作
+     */
+    public void optionPause() {
+        if (mAliyunVodPlayer != null) {
+            mAliyunVodPlayer.pause();
+        }
+    }
+
+    /**
+     * 停止操作
+     */
+    public void optionStop() {
+        if (mAliyunVodPlayer != null) {
+            mAliyunVodPlayer.stop();
+        }
+    }
+
+
+    /**
+     * 播放本地资源
+     */
+    private void changeDefinitionLocalSource(String url, String title) {
+        UrlSource urlSource = new UrlSource();
+        urlSource.setUri(url);
+        urlSource.setTitle(title);
+        setLocalSource(urlSource);
+    }
+
+
+    public interface OnChangeDefinitionListener {
+        /**
+         * @param finalSteam
+         * @param lastSeek:  上一次播放进度 毫秒
+         */
+        void onChangeDefinition(VideoStream finalSteam, long lastSeek);
+    }
+
+    public OnChangeDefinitionListener getOnChangeDefinitionListener() {
+        return onChangeDefinitionListener;
+    }
+
+    public void setOnChangeDefinitionListener(OnChangeDefinitionListener onChangeDefinitionListener) {
+        this.onChangeDefinitionListener = onChangeDefinitionListener;
+    }
+
+
+
+
 }

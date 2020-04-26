@@ -142,8 +142,8 @@ public class AliyunPlayerSkinActivity extends AliBaseActivity {
      */
     private static final int CODE_RESULT_TYPE_VID = 100;
     private static final int CODE_RESULT_TYPE_URL = 200;
-    private static final String DEFAULT_URL = "http://player.alicdn.com/video/aliyunmedia.mp4";
-    private static final String DEFAULT_VID = "8bb9b7d5c7c64cf49d51fa808b1f0957";
+    public static final String DEFAULT_URL = "http://player.alicdn.com/video/aliyunmedia.mp4";
+    public static final String DEFAULT_VID = "8bb9b7d5c7c64cf49d51fa808b1f0957";
     /**
      * get StsToken stats
      */

@@ -116,7 +116,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".ui.training.safe.online.AliYunPlayVideoActivity" />
+        <activity android:name=".ui.training.safe.online.aliyun.AliYunPlayVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
 
 
     </application>

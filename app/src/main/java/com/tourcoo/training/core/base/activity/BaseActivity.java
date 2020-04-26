@@ -3,6 +3,7 @@ package com.tourcoo.training.core.base.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.aliyun.utils.VcPlayerLog;
 import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.tourcoo.training.core.UiManager;
@@ -381,5 +383,19 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IBasic
         if (loadingDialog != null ) {
             loadingDialog.dismiss();
         }
+    }
+
+
+    protected boolean isStrangePhone() {
+        boolean strangePhone = "mx5".equalsIgnoreCase(Build.DEVICE)
+                || "Redmi Note2".equalsIgnoreCase(Build.DEVICE)
+                || "Z00A_1".equalsIgnoreCase(Build.DEVICE)
+                || "hwH60-L02".equalsIgnoreCase(Build.DEVICE)
+                || "hermes".equalsIgnoreCase(Build.DEVICE)
+                || ("V4".equalsIgnoreCase(Build.DEVICE) && "Meitu".equalsIgnoreCase(Build.MANUFACTURER))
+                || ("m1metal".equalsIgnoreCase(Build.DEVICE) && "Meizu".equalsIgnoreCase(Build.MANUFACTURER));
+
+        VcPlayerLog.e("lfj1115 ", " Build.Device = " + Build.DEVICE + " , isStrange = " + strangePhone);
+        return strangePhone;
     }
 }
