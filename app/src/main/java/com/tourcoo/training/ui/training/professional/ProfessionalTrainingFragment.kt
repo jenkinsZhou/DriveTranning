@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.training
+package com.tourcoo.training.ui.training.professional
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,7 +8,6 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.training.ProfessionalTrainingAdapter
 import com.tourcoo.training.core.base.fragment.BaseFragment
-import com.tourcoo.training.entity.training.ProfessionTrainingEntity
 
 /**
  *@description :

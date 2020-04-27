@@ -17,6 +17,7 @@ import com.tourcoo.training.core.impl.AppImpl;
 import com.tourcoo.training.core.impl.HttpRequestControlImpl;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
+import com.tourcoo.training.core.util.NotificationUtil;
 import com.tourcoo.training.entity.greendao.GreenDaoHelper;
 
 import static com.tourcoo.training.core.log.cores.LogLevel.TYPE_VERBOSE;
@@ -103,7 +104,7 @@ public class MyApplication extends MultiDexApplication {
                 //设置统一超时--也可单独调用read/write/connect超时(可以设置时间单位TimeUnit)
                 //默认10
                 .setTimeout(10);
-
+        NotificationUtil.getInstance().init(this);
         //注意设置baseUrl要以/ 结尾 service 里的方法不要以/打头不然拦截到的url会有问题
         //以下为配置多BaseUrl--默认方式一优先级高 可通过FastRetrofit.getInstance().setHeaderPriorityEnable(true);设置方式二优先级
         //方式一 通过Service 里的method-(如:) 设置 推荐 使用该方式不需设置如方式二的额外Header

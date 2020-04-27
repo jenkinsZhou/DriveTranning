@@ -22,6 +22,7 @@ public class ReaderViewPager extends ViewPager {
 
     // 是否禁止 viewpager 左右滑动
     private boolean noScroll = false;
+
     public ReaderViewPager(Context context) {
         this(context, null);
     }
@@ -55,7 +56,7 @@ public class ReaderViewPager extends ViewPager {
             public void transformPage(View view, float position) {
                 Log.i("AAA", position + "");
                 int pageWidth = view.getWidth();
-                int pageHeight =view.getHeight();
+                int pageHeight = view.getHeight();
                 if (position < -1) { // [-Infinity,-1)
                     // This page is way off-screen to the left.
                     view.setAlpha(0);
@@ -93,20 +94,24 @@ public class ReaderViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent arg0) {
-        if (noScroll){
+        if (noScroll) {
             return false;
-        }else{
+        } else {
             return super.onTouchEvent(arg0);
         }
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent arg0) {
-        if (noScroll){
+        if (noScroll) {
             return false;
-        }else{
+        } else {
             return super.onInterceptTouchEvent(arg0);
         }
     }
 
+
+    public void setScrollEnable(boolean scrollEnable) {
+        this.noScroll = !scrollEnable;
+    }
 }

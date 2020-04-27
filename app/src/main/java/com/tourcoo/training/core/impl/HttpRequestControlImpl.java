@@ -27,6 +27,8 @@ import java.util.concurrent.TimeoutException;
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 import retrofit2.HttpException;
 
+import static com.tourcoo.training.config.RequestConfig.START_PAGE;
+
 /**
  * @Author: JenkinsZhou on 2018/12/4 18:08
  * @E-Mail: 971613168@qq.com
@@ -58,7 +60,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
         adapter.loadMoreComplete();
         if (list == null || list.size() == 0) {
             //第一页没有
-            if (page == 0) {
+            if (page == START_PAGE) {
                 adapter.setNewData(new ArrayList());
                 statusLayoutManager.showEmptyLayout();
                 if (listener != null) {
@@ -73,7 +75,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
             return;
         }
         statusLayoutManager.showSuccessLayout();
-        if (smartRefreshLayout.getState() == RefreshState.Refreshing || page == 0) {
+        if (smartRefreshLayout.getState() == RefreshState.Refreshing || page == START_PAGE) {
             adapter.setNewData(new ArrayList());
         }
         adapter.addData(list);
@@ -141,7 +143,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
                 return;
             }
             //初始页
-            if (page == 0) {
+            if (page == START_PAGE) {
 //                if (!NetworkUtil.isConnected(App.getContext())) {
 //                    //可自定义网络错误页面展示
 //                    statusLayoutManager.showCustomLayout(R.layout.layout_status_layout_manager_error);

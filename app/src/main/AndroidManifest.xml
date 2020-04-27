@@ -74,7 +74,7 @@
         <activity android:name=".ui.account.MyAccountActivity" />
         <activity android:name=".ui.training.StudyMedalRecordActivity" />
         <activity android:name=".ui.exam.OnlineExamActivity" />
-        <activity android:name=".ui.training.ProfessionalTrainingFragment" />
+        <activity android:name=".ui.training.professional.ProfessionalTrainingFragment" />
 
         <activity android:name=".ui.account.register.RecognizeIdCardActivity" />
         <activity
@@ -121,6 +121,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
+        <activity android:name=".ui.training.professional.ProfessionalTrainTwoTypeActivity" />
+        <activity android:name=".ui.training.TrainingWebViewActivity" />
+        <activity android:name=".ui.training.safe.online.HtmlBrowserActivity" />
 
 
     </application>

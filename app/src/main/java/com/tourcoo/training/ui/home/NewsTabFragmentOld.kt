@@ -21,7 +21,7 @@ import com.tourcoo.training.entity.news.NewsEntity.NEWS_TYPE_IMAGE_VERTICAL
  * @date 2020年03月06日14:55
  * @Email: 971613168@qq.com
  */
-class NewsTabFragment : BaseBlueBgTitleFragment() {
+class NewsTabFragmentOld : BaseBlueBgTitleFragment() {
     private var adapter: NewsMultipleAdapter? = null
     private var rvCommon: RecyclerView? = null
     private var mSmartRefreshLayout: SmartRefreshLayout? = null
@@ -40,9 +40,9 @@ class NewsTabFragment : BaseBlueBgTitleFragment() {
     }
 
     companion object {
-        fun newInstance(): NewsTabFragment {
+        fun newInstance(): NewsTabFragmentOld {
             val args = Bundle()
-            val fragment = NewsTabFragment()
+            val fragment = NewsTabFragmentOld()
             fragment.arguments = args
             return fragment
         }

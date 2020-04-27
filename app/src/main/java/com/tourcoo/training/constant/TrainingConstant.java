@@ -97,4 +97,28 @@ public class TrainingConstant {
     public static final int SCENE_STUDENT_CHECK_STATUS = 131;
 
 
+    /**
+     * HLS加密
+     */
+    public static final int TYPE_TYPE_COURSE_HLS = 0;
+    /**
+     * 车学堂加密
+     */
+    public static final int TYPE_COURSE_TYPE_DRIVE = 1;
+
+    /**
+     * HLS+车学堂加密
+     */
+    public static final int TYPE_COURSE_HLS_AND_DRIVE = 2;
+
+    /**
+     * 全部为HTML
+     */
+    public static final int TYPE_COURSE_HTML = 3;
+
+
+    /**
+     * 非加密课程(可能有html)
+     */
+    public static final int TYPE_COURSE_OTHER = 4;
 }

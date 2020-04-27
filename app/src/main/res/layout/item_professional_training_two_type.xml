@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/ic_bg_training_item_blue"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dp_16"
+    >
+    <!--两类人员专项item-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="学习培训+考试套餐"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_17" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_11"
+        android:text="学习无忧，随时随地；考试严谨，题库全面"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_13" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0_5"
+        android:layout_marginTop="@dimen/dp_17"
+        android:background="@color/white" />
+
+    <LinearLayout
+        android:layout_marginStart="@dimen/dp_23"
+        android:layout_marginEnd="@dimen/dp_23"
+        android:layout_marginTop="@dimen/dp_18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_23"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="学币:100"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_radius_20_white"
+            android:text="立即购买"
+            android:paddingTop="@dimen/dp_6"
+            android:paddingBottom="@dimen/dp_6"
+            android:minWidth="@dimen/dp_88"
+            android:gravity="center"
+            android:textColor="@color/blue50AAFE"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+</LinearLayout>

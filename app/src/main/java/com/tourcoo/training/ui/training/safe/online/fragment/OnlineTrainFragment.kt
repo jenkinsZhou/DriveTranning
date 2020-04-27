@@ -19,7 +19,8 @@ import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
 import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter.*
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
-import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
+import com.tourcoo.training.constant.TrainingConstant.*
+import com.tourcoo.training.core.base.activity.WebViewActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
@@ -27,6 +28,7 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
+import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.course.CourseEntity
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.ui.account.LoginActivity
@@ -41,6 +43,9 @@ import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *@description :线上培训
@@ -61,6 +66,9 @@ class OnlineTrainFragment : BaseFragment() {
 
 
     override fun initView(savedInstanceState: Bundle?) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
         refreshLayout = mContentView.findViewById(R.id.smartRefreshLayoutCommon)
         refreshLayout?.setRefreshHeader(ClassicsHeader(mContext))
         refreshLayout?.setOnRefreshListener {
@@ -139,6 +147,11 @@ class OnlineTrainFragment : BaseFragment() {
     }
 
     private fun requestCourseOnLine() {
+        if (!AccountHelper.getInstance().isLogin) {
+            removeData()
+            refreshLayout?.finishRefresh()
+            return
+        }
         ApiRepository.getInstance().requestOnLineTrainingList().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MutableList<CourseInfo>?>?>() {
             override fun onSuccessNext(entity: BaseResult<MutableList<CourseInfo>?>?) {
                 refreshLayout?.finishRefresh()
@@ -236,11 +249,11 @@ class OnlineTrainFragment : BaseFragment() {
             }
 
             COURSE_STATUS_CONTINUE -> {
-                skipPlayVideo(courseInfo.trainingPlanID)
+                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
             }
 
             COURSE_STATUS_WAIT_EXAM -> {
-                skipPlayVideo(courseInfo.trainingPlanID)
+                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
             }
 
             COURSE_STATUS_FINISHED -> {
@@ -248,14 +261,7 @@ class OnlineTrainFragment : BaseFragment() {
             }
 
             else -> {
-                skipPlayVideo(courseInfo.trainingPlanID)
-                /* val intent = Intent(mContext, OnlineExamActivity::class.java)
-                 //培训计划id
-                 intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
-                 //考试题id
-                 //todo 考试id 暂时写死
-                 intent.putExtra(EXTRA_EXAM_ID, "0")
-                 startActivity(intent)*/
+                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
             }
         }
     }
@@ -330,10 +336,59 @@ class OnlineTrainFragment : BaseFragment() {
     }
 
 
-    private fun skipPlayVideo(trainingId: String?) {
-//        val intent = Intent(mContext, TencentPlayVideoActivity::class.java)
-        val intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
-        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
+    private fun skipPlayVideoByType(trainingId: String?, courseType: Int) {
+        var intent: Intent? = null
+        when (courseType) {
+            TYPE_COURSE_HTML -> {
+                //todo 全部为html
+                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+            }
+            TYPE_COURSE_TYPE_DRIVE -> {
+                //车学堂 使用腾讯播放器
+                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+            }
+            TYPE_TYPE_COURSE_HLS -> {
+                //hls 使用阿里播放器
+                intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
+            }
+            TYPE_COURSE_OTHER -> {
+                //混合非加密 使用腾讯播放器
+                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+            }
+
+        }
+        intent?.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
         startActivity(intent)
+//        WebViewActivity.start(mContext,"https://baidu.com")
+    }
+
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
+
+    /**
+     * 收到消息
+     *
+     * @param userInfoEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUserInfoRefreshEvent(userInfoEvent: UserInfoEvent?) {
+        if (userInfoEvent == null) {
+            return
+        }
+        if (userInfoEvent.userInfo == null) {
+            removeData()
+        } else{
+            requestCourseOnLine()
+        }
+
+    }
+
+    private fun removeData(){
+        adapter?.data?.clear()
+        adapter?.notifyDataSetChanged()
+        refreshLayout?.finishRefresh()
     }
 }

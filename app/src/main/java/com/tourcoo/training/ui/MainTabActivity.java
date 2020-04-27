@@ -1,38 +1,25 @@
 package com.tourcoo.training.ui;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.activity.BaseMainActivity;
 import com.tourcoo.training.core.base.entity.FrameTabEntity;
-import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity;
-import com.tourcoo.training.ui.home.MainTabFragment;
-import com.tourcoo.training.ui.home.MineTabFragment;
 import com.tourcoo.training.ui.home.MineTabFragmentNew;
-import com.tourcoo.training.ui.home.NewsTabFragment;
+import com.tourcoo.training.ui.home.NewsTabFragmentOld;
 import com.tourcoo.training.ui.home.StudyTabFragment;
 import com.tourcoo.training.widget.dialog.IosAlertDialog;
-import com.tourcoo.training.widget.websocket.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +43,8 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     @Override
     public List<FrameTabEntity> getTabList() {
         mTabEntities = new ArrayList<>();
-        mTabEntities.add(new FrameTabEntity("发现", R.drawable.ic_home_normal, R.drawable.ic_home_selected, NewsTabFragment.Companion.newInstance()));
-        mTabEntities.add(new FrameTabEntity("主页", R.drawable.ic_home_normal, R.drawable.ic_home_selected, StudyTabFragment.Companion.newInstance()));
+        mTabEntities.add(new FrameTabEntity("发现", R.drawable.ic_home_normal, R.drawable.ic_home_selected, NewsTabFragmentOld.Companion.newInstance()));
+        mTabEntities.add(new FrameTabEntity("学习", R.drawable.ic_home_normal, R.drawable.ic_home_selected, StudyTabFragment.Companion.newInstance()));
         mTabEntities.add(new FrameTabEntity("我的", R.drawable.ic_home_normal, R.drawable.ic_home_selected, MineTabFragmentNew.Companion.newInstance()));
         return mTabEntities;
     }

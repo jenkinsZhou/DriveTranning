@@ -31,6 +31,15 @@ public class CourseInfo {
     private String TotalDuration;
     private String address;
     private int Role;
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public String getCoverUrl() {
         return CoverUrl;

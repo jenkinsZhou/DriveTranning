@@ -266,7 +266,9 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult<ExamResultEntity>> requestFinishExam(String examId, List<CommitAnswer> commitAnswerList) {
         Map<String, Object> params = new HashMap<>(4);
         params.put("examId", examId);
-        params.put("questions", commitAnswerList);
+        //todo
+//        params.put("questions", commitAnswerList);
+        params.put("questions", JSON.toJSONString(commitAnswerList));
         return CommonTransformer.switchSchedulers(getApiService().requestFinishExam(params).retryWhen(new RetryWhen()));
     }
 

@@ -248,7 +248,7 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
                 question!!.answer.add(answer.answerId)
             }
         }
-        question!!.answerStatus =   getQuestionStatus()
+        question!!.answerStatus = getQuestionStatus()
         adapter?.notifyDataSetChanged()
         return true
     }
@@ -333,7 +333,7 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     }
 
 
-    private fun getQuestionStatus(): Int {
+     fun getQuestionStatus(): Int {
         if (question == null || question!!.answer == null || question!!.answer.isEmpty() || question!!.answerItems == null || question!!.correctAnswer == null) {
             //未回答
             return STATUS_NO_ANSWER

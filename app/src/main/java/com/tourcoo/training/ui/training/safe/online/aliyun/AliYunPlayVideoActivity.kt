@@ -135,6 +135,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private var inRequest = false
 
+    /**
+     * 判断考试是否完成
+     */
+    private var hasRequireExam = true
+
     private val PERMISSIONS_STORAGE = arrayOf(
             "android.permission.READ_EXTERNAL_STORAGE",
             "android.permission.WRITE_EXTERNAL_STORAGE"
@@ -210,21 +215,22 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun onPause() {
         super.onPause()
-        //todo
+        aliYunPlayer?.onStop()
         timerPause()
     }
 
     override fun onResume() {
         super.onResume()
-        //todo
+        aliYunPlayer?.onResume()
         timerResume()
     }
 
 
     override fun onDestroy() {
         cancelTimer()
+        aliYunPlayer?.onDestroy()
         super.onDestroy()
-        //todo
+
 
     }
 
@@ -238,7 +244,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onSuccessNext(entity: BaseResult<TrainingPlanDetail>?) {
                 if (entity!!.code == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     trainingPlanDetail = entity.data
-                    //todo
+                    //如果已经学习完成 则不保存进度
+                    hasRequireExam = entity.data.finishedCourses == 1
                     handleTrainingPlanDetail(entity.data)
                 }
             }
@@ -558,11 +565,16 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     override fun onBackPressed() {
-        /*   if (smartVideoPlayer.playMode == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
-            smartVideoPlayer.requestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW)
+        //先判断当前是否处于横屏状态 如果是则先恢复小屏
+        if (aliYunPlayer.screenMode == AliyunScreenMode.Full) {
+            aliYunPlayer.changeScreenMode(AliyunScreenMode.Small, false)
             return
-        }*/
-        showExit()
+        }
+        if (hasRequireExam) {
+            finish()
+        } else {
+            showExit()
+        }
     }
 
 
@@ -678,6 +690,12 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         //很关键
         aliYunPlayer.courseInfo = mCurrentCourse
+        //设置封面图
+        if (!TextUtils.isEmpty(CommonUtil.getUrl(mCurrentCourse!!.coverURL))) {
+            aliYunPlayer.setCoverUri(mCurrentCourse!!.coverURL)
+        } else {
+            aliYunPlayer.setCoverResource(R.drawable.img_training_free_video)
+        }
         //定位到上次播放进度
         TourCooLogUtil.i(mTag, "上次播放进度:" + mCurrentCourse!!.progress * 1000)
         aliYunPlayer.seekTo(aliYunPlayer.courseInfo!!.progress * 1000)

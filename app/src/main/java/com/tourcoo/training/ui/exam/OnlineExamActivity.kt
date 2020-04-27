@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ImageUtils
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -23,6 +22,7 @@ import com.tourcoo.training.constant.ExamConstant.*
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils
  * @Email: 971613168@qq.com
  */
 class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
+    private val mTag = "OnlineExamActivity"
     private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
     private var questionNumAdapter: QuestionNumberAdapter? = null
     private var list: ArrayList<Fragment>? = null
@@ -109,19 +110,23 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.tvNextQuestion -> {
                 doAnswerQuestion()
-                showBottomBar()
             }
             R.id.tvLastQuestion -> {
                 skipLastQuestion()
-                showBottomBar()
+                showBottomBarInfo()
             }
             R.id.llQuestionBar -> {
-                handleBottomBarClick()
+                handleBottomBarBehavior()
 
             }
             R.id.tvCommitExam -> {
-                //交卷
-                doCommitExam()
+                //交卷之前 先把最后一道题回答了
+                doAnswerQuestion()
+                showBottomBarInfo()
+                baseHandler.postDelayed(Runnable {
+                    //交卷
+                    doCommitExam()
+                },500)
             }
             else -> {
             }
@@ -145,31 +150,25 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         if (currentPosition < list!!.size - 1) {
             answerHandler.postDelayed({
                 vpExamOnline.setCurrentItem(currentPosition + 1, true)
-                showBottomBar()
+                showBottomBarInfo()
             }, delay)
         }
 
     }
 
     private fun doAnswerQuestion() {
-        if (currentPosition < list!!.size - 1) {
-            setViewGone(tvCommitExam, false)
-            setViewGone(tvNextQuestion, true)
-            val fragment = list!![currentPosition] as ExamFragment
-            val selectCount = fragment.getSelectCount()
-            if (fragment.isMultipleAnswer() && selectCount == 1) {
-                ToastUtil.show("这道题是多选哦")
-                return
-            }
-            val hasAnswer = fragment.answerQuestion()
-            if (hasAnswer) {
-                skipNextQuestionDelay(delayTime)
-            } else {
-                skipNextQuestionNow()
-            }
+        showButtonByCurrentPage()
+        val fragment = list!![currentPosition] as ExamFragment
+        val selectCount = fragment.getSelectCount()
+        if (fragment.isMultipleAnswer() && selectCount == 1) {
+            ToastUtil.show("这道题是多选哦")
+            return
+        }
+        val hasAnswer = fragment.answerQuestion()
+        if (hasAnswer) {
+            skipNextQuestionDelay(delayTime)
         } else {
-            setViewGone(tvCommitExam, true)
-            setViewGone(tvNextQuestion, false)
+            skipNextQuestionNow()
         }
     }
 
@@ -187,11 +186,11 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
         questionNumAdapter?.setNewData(setQuestionNumber(questions))
         baseHandler.postDelayed(Runnable {
-            showBottomBar()
+            showBottomBarInfo()
         }, 500)
     }
 
-    private fun handleBottomBarClick() {
+    private fun handleBottomBarBehavior() {
         if (behavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
             behavior!!.setState(BottomSheetBehavior.STATE_EXPANDED)
         } else if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
@@ -232,10 +231,17 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         questionNumAdapter?.bindToRecyclerView(questionNumRv)
         //处理底部题目弹窗
         questionNumAdapter?.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+            //如果这道题用户没有回答则 不让跳转
+            val fragment = list!![position] as ExamFragment
+            if (fragment.getQuestionStatus() == STATUS_NO_ANSWER) {
+                //拦截点击
+                return@OnItemClickListener
+            }
             vpExamOnline.setCurrentItem(position, false)
-            handleBottomBarClick()
             //响应底部题目列表点击事件
-            showBottomBar()
+            showBottomBarInfo()
+            handleBottomBarBehavior()
+
         })
         loadQuestion(examEntity)
         vpExamOnline.offscreenPageLimit = list!!.size
@@ -249,6 +255,8 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
 
             override fun onPageSelected(position: Int) {
                 currentPosition = position
+                showButtonByCurrentPage()
+                showBottomBarInfo()
             }
         })
         loadBottomSheetBar(examEntity.questions)
@@ -258,6 +266,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
      * 交卷
      */
     private fun doCommitExam() {
+
         val dialog = CommitAnswerDialog(mContext)
         dialog.create().show()
         dialog.setPositiveButtonListener(View.OnClickListener {
@@ -267,6 +276,9 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         })
     }
 
+    /**
+     *真正的卷逻辑
+     */
     private fun commitExam(questions: MutableList<Question>) {
         val commitList = ArrayList<CommitAnswer>()
         for (question in questions) {
@@ -356,6 +368,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                 results.add(onlineExamFragment.getQuestion())
             }
         }
+        TourCooLogUtil.i(mTag, results)
         return results
     }
 
@@ -403,11 +416,11 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun showBottomBar() {
+    private fun showBottomBarInfo() {
         if (list == null) {
             return
         }
-        showButtonByCondition()
+        showButtonByCurrentPage()
         var correctCount = 0
         var wrongCount = 0
         var hasAnswerCount = 0
@@ -445,7 +458,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun showButtonByCondition() {
+    private fun showButtonByCurrentPage() {
         if (vpExamOnline.currentItem == list!!.size - 1) {
             setViewGone(tvCommitExam, true)
             setViewGone(tvNextQuestion, false)
@@ -454,4 +467,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             setViewGone(tvNextQuestion, true)
         }
     }
+
+
+
 }

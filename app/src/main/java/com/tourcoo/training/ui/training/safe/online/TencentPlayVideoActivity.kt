@@ -63,7 +63,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     //人脸验证间隔时间
     private var faceVerifyInterval = Int.MAX_VALUE
 
-
+    /**
+     * 判断考试是否完成
+     */
+    private var hasRequireExam = true
     private var mTimerTask: CountDownTimerSupport? = null
 
     companion object {
@@ -81,7 +84,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         return R.layout.activity_play_video_tencent
     }
 
-    private var hasRequireExam = true
+
     override fun setTitleBar(titleBar: TitleBarView?) {
         titleBar?.setTitleMainText("线上学习")
         titleBar?.setOnLeftTextClickListener {
@@ -320,7 +323,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onSuccessNext(entity: BaseResult<TrainingPlanDetail>?) {
                 if (entity!!.code == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     trainingPlanDetail = entity.data
-                    hasRequireExam = entity.data.finishedCourses == 1 && entity.data.finishedExam == 0
+                    hasRequireExam = entity.data.finishedCourses == 1
                     handleTrainingPlanDetail(entity.data)
                 }
             }

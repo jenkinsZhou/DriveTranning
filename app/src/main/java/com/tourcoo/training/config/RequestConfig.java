@@ -12,6 +12,12 @@ public class RequestConfig {
 //    public static String BASE_URL_NO_LINE = "http://192.168.1.76:8099";
     public static String BASE_URL_NO_LINE = "https://api.ggjtaq.com";
     public static String BASE_URL = BASE_URL_NO_LINE+"/";
+
+    /**
+     * 分页接口的起始页 （有的服务器是0）
+     */
+    public static final int  START_PAGE = 1;
+
     /**
      * 接口URL + ""
      */

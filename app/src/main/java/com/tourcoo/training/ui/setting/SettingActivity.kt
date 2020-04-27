@@ -2,11 +2,13 @@ package com.tourcoo.training.ui.setting
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
@@ -14,16 +16,13 @@ import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
-import com.tourcoo.training.entity.account.UserInfo
-import com.tourcoo.training.entity.account.UserInfoEvent
-import com.tourcoo.training.entity.account.register.CompanyInfo
 import com.tourcoo.training.ui.account.FindPassActivity
+import com.tourcoo.training.utils.DataCleanUtil
+import com.tourcoo.training.utils.DataCleanUtil.EMPTY_CACHE
+import com.tourcoo.training.utils.DataCleanUtil.clearAllCache
 import com.tourcoo.training.widget.dialog.BottomSheetDialog
-import com.tourcoo.training.widget.dialog.share.BottomShareDialog
-import com.trello.rxlifecycle3.RxLifecycle.bindUntilEvent
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_setting_system.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  *@description :
@@ -44,6 +43,8 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
     override fun initView(savedInstanceState: Bundle?) {
         tvLogout.setOnClickListener(this)
         llForgetPassword.setOnClickListener(this)
+        llClearCache.setOnClickListener(this)
+        showCache()
     }
 
     override fun onClick(v: View?) {
@@ -57,7 +58,9 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
                 bundle.putBoolean("isLogin", AccountHelper.getInstance().isLogin)
                 CommonUtil.startActivity(mContext, FindPassActivity::class.java, bundle)
             }
-
+            R.id.llClearCache->{
+                doClearCache()
+            }
             else -> {
             }
         }
@@ -97,6 +100,51 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
 
         })
     }
+
+    /**
+     * 获取缓存大小
+     *
+     * @return
+     */
+    private fun getCacheSize(): String? {
+        var str = ""
+        str = try {
+            DataCleanUtil.getTotalCacheSize(mContext)
+        } catch (e: Exception) {
+            TourCooLogUtil.e("错误信息", e.toString())
+            e.printStackTrace()
+            return str
+        }
+        return str
+    }
+
+    private fun doClearCache(){
+        if (getCacheSize().equals(EMPTY_CACHE, ignoreCase = true)) {
+            ToastUtil.show("暂无缓存")
+            return
+        }
+        cleanCache()
+        showCache()
+        ToastUtil.showSuccess("清除成功")
+    }
+
+    /**
+     * 清空缓存
+     */
+    private fun cleanCache() {
+        clearAllCache(mContext)
+    }
+
+
+    private fun showCache() {
+        TourCooLogUtil.i("缓存大小：" + getCacheSize())
+        if (EMPTY_CACHE==getCacheSize()) {
+            tvCacheSize.setText("")
+        } else {
+            tvCacheSize.setText(getCacheSize())
+        }
+    }
+
 
 
 }

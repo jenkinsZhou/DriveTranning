@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.core.util.CommonUtil;
@@ -43,7 +44,7 @@ public class CertificateInfoAdapter extends BaseMultiItemQuickAdapter<Certificat
             case ITEM_TYPE_CONTENT:
                 helper.setText(R.id.tvCertificateName, item.getTrainingPlanName());
                 helper.setText(R.id.tvCertificateTime, CommonUtil.getNotNullValue(item.getCertificateTime()));
-                ImageView ivCertificateImage = helper.getView(R.id.ivCertificateImage);
+                RoundedImageView ivCertificateImage = helper.getView(R.id.rivCertificateImage);
                 GlideManager.loadImg(CommonUtil.getUrl(item.getUrl()), ivCertificateImage);
                 break;
         }

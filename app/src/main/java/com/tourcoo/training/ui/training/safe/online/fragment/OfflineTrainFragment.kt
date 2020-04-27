@@ -20,12 +20,17 @@ import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
+import com.tourcoo.training.entity.account.AccountHelper
+import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.ui.training.safe.online.detail.common.CommonPlanDetailActivity
 import com.tourcoo.training.ui.training.safe.online.detail.student.StudentPlanDetailActivity
 import com.tourcoo.training.ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.trello.rxlifecycle3.android.FragmentEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *@description :现场培训
@@ -46,6 +51,9 @@ class OfflineTrainFragment : BaseFragment() {
 
 
     override fun initView(savedInstanceState: Bundle?) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
         refreshLayout = mContentView.findViewById(R.id.smartRefreshLayoutCommon)
         refreshLayout?.setRefreshHeader(ClassicsHeader(mContext))
         refreshLayout?.setOnRefreshListener {
@@ -88,6 +96,11 @@ class OfflineTrainFragment : BaseFragment() {
     }
 
     private fun requestCourseOffLine() {
+        if (!AccountHelper.getInstance().isLogin) {
+            removeData()
+            refreshLayout?.finishRefresh()
+            return
+        }
         ApiRepository.getInstance().requestOffLineTrainingList().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MutableList<CourseInfo>?>?>() {
             override fun onSuccessNext(entity: BaseResult<MutableList<CourseInfo>?>?) {
                 refreshLayout?.finishRefresh()
@@ -143,4 +156,34 @@ class OfflineTrainFragment : BaseFragment() {
 
     }
 
+
+    private fun removeData(){
+        adapter?.data?.clear()
+        adapter?.notifyDataSetChanged()
+        refreshLayout?.finishRefresh()
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
+
+
+    /**
+     * 收到消息
+     *
+     * @param userInfoEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUserInfoRefreshEvent(userInfoEvent: UserInfoEvent?) {
+        if (userInfoEvent == null) {
+            return
+        }
+        if (userInfoEvent.userInfo == null) {
+            removeData()
+        } else{
+            requestCourseOffLine()
+        }
+
+    }
 }

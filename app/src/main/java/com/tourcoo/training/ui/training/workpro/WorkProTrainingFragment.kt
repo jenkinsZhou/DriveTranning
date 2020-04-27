@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.training
+package com.tourcoo.training.ui.training.workpro
 
 import android.app.Activity
 import android.content.Intent
@@ -17,7 +17,6 @@ import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
-import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver

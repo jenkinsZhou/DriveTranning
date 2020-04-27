@@ -6,7 +6,6 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;

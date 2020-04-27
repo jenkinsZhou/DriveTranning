@@ -22,8 +22,8 @@ import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.study.BannerBean
-import com.tourcoo.training.ui.training.ProfessionalTrainingFragment
-import com.tourcoo.training.ui.training.WorkProTrainingFragment
+import com.tourcoo.training.ui.training.professional.ProfessionalTrainingFragment
+import com.tourcoo.training.ui.training.workpro.WorkProTrainingFragment
 import com.tourcoo.training.ui.training.safe.online.fragment.SafeTrainingFragment
 import com.tourcoo.training.widget.banner.BannerEntity
 import com.tourcoo.training.widget.banner.ImageBannerAdapter
@@ -55,7 +55,6 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
     private var tv_safe: TextView? = null
     private var tv_job: TextView? = null
     private var tv_special: TextView? = null
-
     override fun onStart() {
         super.onStart()
         tv_safe = view!!.findViewById(R.id.tv_safe)
@@ -178,7 +177,9 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
                 tv_safe?.setTextColor(Color.WHITE)
                 tv_job?.setTextColor(resources.getColor(R.color.black333333))
                 tv_special?.setTextColor(resources.getColor(R.color.black333333))
-
+                icTrainingSafe.setImageResource(R.mipmap.ic_training_safe_select)
+                ivTrainingWorkPro.setImageResource(R.mipmap.ic_training_pre_work_unselect)
+                ivTrainingProfession.setImageResource(R.mipmap.ic_training_professional_unselect)
                 showSelect(llTrainingSafe, rlCircleTrainingSafe)
                 showUnSelect(llTrainingWorkBefore, rlCircleTrainingBeforeWork)
                 showUnSelect(llTrainingProfession, rlCircleTrainingProfession)
@@ -187,7 +188,9 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
                 tv_safe?.setTextColor(resources.getColor(R.color.black333333))
                 tv_job?.setTextColor(Color.WHITE)
                 tv_special?.setTextColor(resources.getColor(R.color.black333333))
-
+                icTrainingSafe.setImageResource(R.mipmap.ic_training_safe)
+                ivTrainingWorkPro.setImageResource(R.mipmap.ic_training_pre_work)
+                ivTrainingProfession.setImageResource(R.mipmap.ic_training_professional_unselect)
                 showUnSelect(llTrainingSafe, rlCircleTrainingSafe)
                 showSelect(llTrainingWorkBefore, rlCircleTrainingBeforeWork)
                 showUnSelect(llTrainingProfession, rlCircleTrainingProfession)
@@ -197,7 +200,9 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
                 tv_safe?.setTextColor(resources.getColor(R.color.black333333))
                 tv_job?.setTextColor(resources.getColor(R.color.black333333))
                 tv_special?.setTextColor(Color.WHITE)
-
+                icTrainingSafe.setImageResource(R.mipmap.ic_training_safe)
+                ivTrainingWorkPro.setImageResource(R.mipmap.ic_training_pre_work_unselect)
+                ivTrainingProfession.setImageResource(R.mipmap.ic_training_profession)
                 showUnSelect(llTrainingSafe, rlCircleTrainingSafe)
                 showUnSelect(llTrainingWorkBefore, rlCircleTrainingBeforeWork)
                 showSelect(llTrainingProfession, rlCircleTrainingProfession)

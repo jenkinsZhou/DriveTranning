@@ -6,9 +6,9 @@ import android.text.TextUtils;
 import androidx.core.content.ContextCompat;
 
 
-import com.didichuxing.doraemonkit.util.FormatUtil;
 import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.app.MyApplication;
+import com.tourcoo.training.core.util.FormatUtil;
 
 import java.text.DecimalFormat;
 
@@ -87,6 +87,16 @@ public class TourCooUtil {
         DecimalFormat df = new DecimalFormat("#0.00");
         return df.format(value);
     }*/
+
+    public static String doubleTransStringZhen(double d) {
+        if (Math.round(d) - d == 0) {
+            return String.valueOf((long) d);
+        }
+        //四舍五入 并保留两位小数
+        double value = Double.parseDouble(FormatUtil.formatDoubleSize(d, 2));
+        DecimalFormat df = new DecimalFormat("#0.00");
+        return df.format(value);
+    }
 
 
 }
