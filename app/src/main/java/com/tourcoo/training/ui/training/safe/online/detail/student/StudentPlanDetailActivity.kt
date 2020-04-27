@@ -8,6 +8,7 @@ import android.view.View
 import com.alibaba.fastjson.JSON
 import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
 import com.tourcoo.training.R
+import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.app.MyApplication
 import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
@@ -47,6 +48,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     companion object {
         const val REQUEST_CODE_SCAN = 1007
         const val REQUEST_CODE_SIGN_STUDENT = 1008
+        const val REQUEST_CODE_SIGN_OUT_STUDENT = 1009
         const val EXTRA_PHOTO_PATH = "EXTRA_PHOTO_PATH"
         const val MSG_CODE_PROGRESS = 1
         const val MSG_CODE_CLOSE_PROGRESS = 201
@@ -387,6 +389,12 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
             REQUEST_CODE_SIGN_STUDENT -> {
                 showSignSuccess()
             }
+
+
+            REQUEST_CODE_SIGN_OUT_STUDENT -> {
+                showSignOutSuccess()
+            }
+
             else -> {
             }
         }
@@ -413,7 +421,20 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         intent.putExtra(EXTRA_KEY_QR_SCAN_RESULT, qrScanResult)
         //学生签到的action
         intent.putExtra(EXTRA_TRAIN_ACTION_KEY, ACTION_STUDENT_SIGN)
-        startActivityForResult(intent, REQUEST_CODE_SIGN_STUDENT)
+        val result_code = when (currentAction) {
+            TrainingConstant.ACTION_STUDENT_SIGN -> {
+                REQUEST_CODE_SIGN_STUDENT
+            }
+
+            TrainingConstant.ACTION_STUDENT_SIGN_OUT -> {
+                REQUEST_CODE_SIGN_OUT_STUDENT
+            }
+
+            else -> {
+                REQUEST_CODE_SIGN_OUT_STUDENT
+            }
+        }
+        startActivityForResult(intent, result_code)
     }
 
     private fun handleScanSignCallback(result: String) {
@@ -434,6 +455,18 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         dialog.setContent(timeNow).show()
 
     }
+
+    private fun showSignOutSuccess() {
+        presenter.getTrainDetail(
+                trainingPlanId)
+        val dialog = CommonSuccessAlert(mContext)
+        dialog.create().setAlertTitle("学员签退成功")
+        val currentTime = System.currentTimeMillis()
+        val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
+        dialog.setContent(timeNow).show()
+    }
+
+
     /*  //初始化WebSocket连接
       initWebSocket(socketUrl)*/
 }

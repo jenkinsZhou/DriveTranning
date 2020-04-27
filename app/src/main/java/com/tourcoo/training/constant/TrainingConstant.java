@@ -43,6 +43,10 @@ public class TrainingConstant {
     public static final int TRAIN_STATUS_NO_PASS = 5;
     //待考试
     public static final int TRAIN_STATUS_WAIT_EXAM = 6;
+    //被抽验
+    public static final int TRAIN_STATUS_CHECK_STATUS = 7;
+    //未完成
+    public static final int TRAIN_STATUS_NO_COMPLETE = 8;
 
 
     /**

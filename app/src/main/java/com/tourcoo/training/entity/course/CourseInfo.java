@@ -18,6 +18,7 @@ public class CourseInfo {
      * Progress : 45
      * TimeRange : 2020-04-02至2020-04-30
      * TrainingPlanID : 9044
+     * type: 0:现场   3：现场+线上
      */
 
     private String CoverUrl;

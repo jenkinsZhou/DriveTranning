@@ -48,6 +48,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     companion object {
         const val REQUEST_CODE_SCAN = 1007
         const val REQUEST_CODE_SIGN_STUDENT = 1008
+        const val REQUEST_CODE_SIGN_OUT_STUDENT = 1009
         const val EXTRA_PHOTO_PATH = "EXTRA_PHOTO_PATH"
         const val MSG_CODE_PROGRESS = 1
         const val MSG_CODE_CLOSE_PROGRESS = 201
@@ -96,6 +97,8 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     override fun showTurnOnlineSuccess() {
         //转线上成功
         presenter.getTrainDetail(trainingPlanId)
+        //转线上成功回调
+        closeConfirmDialog()
     }
 
     override fun showTurnOnlineFailed() {
@@ -340,6 +343,42 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 tvTeacherEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
             }
 
+            /**
+             * 未完成
+             */
+            TrainingConstant.TRAIN_STATUS_NO_COMPLETE -> {
+                setViewGone(rlButtonLayout, true)
+                //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
+                //隐藏学员签到按钮
+                setViewGone(ivStudentSignOut, false)
+                //显示转线上
+                setViewGone(ivStudentToOnline, true)
+                //显示学员签到时间和签退时间
+                setViewGone(llStudentSignedLayout, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
+                setViewGone(llStudentSignOutLayout, true)
+                //显示安全员签到时间
+                setViewGone(llTeacherSignedTime, true)
+                //设置签到时间
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                //隐藏安全员预计结束时间
+                setViewGone(llPreTeacherEndTime, false)
+                tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
+                //隐藏安全员计划时间
+                setViewGone(llTeacherPlanTime, false)
+                //隐藏安全员签到按钮
+                setViewGone(rlTeacherSignLayout, false)
+                //隐藏标签
+                setViewGone(ivStatusTag, true)
+
+                //todo：待替换图标
+                ivStatusTag.setImageResource(R.mipmap.ic_training_state_end)
+
+                setViewGone(tvTeacherEndTime, true)
+                tvTeacherEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
+            }
+
 
             /**
              * 待考试
@@ -442,7 +481,6 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     private fun closeConfirmDialog() {
         if (confirmDialog != null) {
             confirmDialog!!.dismiss()
-
         }
     }
 
@@ -545,6 +583,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
             REQUEST_CODE_SIGN_STUDENT -> {
                 showSafeManagerSignSuccess()
             }
+
+
+            REQUEST_CODE_SIGN_OUT_STUDENT ->{
+                showSafeManagerSignOutSuccess()
+            }
+
             else -> {
             }
         }
@@ -589,7 +633,20 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, qrScanResult.trainingPlanID)
         intent.putExtra(TrainingConstant.EXTRA_KEY_QR_SCAN_RESULT, qrScanResult)
 
-        startActivityForResult(intent, REQUEST_CODE_SIGN_STUDENT)
+        val result_code = when (currentAction) {
+            TrainingConstant.ACTION_STUDENT_SIGN -> {
+                 REQUEST_CODE_SIGN_STUDENT
+            }
+
+            TrainingConstant.ACTION_STUDENT_SIGN_OUT -> {
+                 REQUEST_CODE_SIGN_OUT_STUDENT
+            }
+
+            else -> {
+                REQUEST_CODE_SIGN_OUT_STUDENT
+            }
+        }
+        startActivityForResult(intent, result_code)
     }
 
     private fun handleScanSignCallback(result: String, scene: Int) {
@@ -638,6 +695,16 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 trainingPlanId)
         val dialog = CommonSuccessAlert(mContext)
         dialog.create().setAlertTitle("安全员签到成功")
+        val currentTime = System.currentTimeMillis()
+        val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
+        dialog.setContent(timeNow).show()
+    }
+
+    private fun showSafeManagerSignOutSuccess() {
+        presenter.getTrainDetail(
+                trainingPlanId)
+        val dialog = CommonSuccessAlert(mContext)
+        dialog.create().setAlertTitle("学员签退成功")
         val currentTime = System.currentTimeMillis()
         val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
         dialog.setContent(timeNow).show()
