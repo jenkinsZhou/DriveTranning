@@ -124,6 +124,7 @@
         <activity android:name=".ui.training.professional.ProfessionalTrainTwoTypeActivity" />
         <activity android:name=".ui.training.TrainingWebViewActivity" />
         <activity android:name=".ui.training.safe.online.HtmlBrowserActivity" />
+        <activity android:name=".ui.home.news.NewsTabFragmentNew" />
 
 
     </application>

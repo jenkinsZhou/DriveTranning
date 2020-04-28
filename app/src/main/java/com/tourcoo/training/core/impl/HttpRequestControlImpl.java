@@ -75,7 +75,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
             return;
         }
         statusLayoutManager.showSuccessLayout();
-        if (smartRefreshLayout.getState() == RefreshState.Refreshing || page == START_PAGE) {
+        if (smartRefreshLayout.getState() == RefreshState.Refreshing || page == START_PAGE ||  page == 0) {
             adapter.setNewData(new ArrayList());
         }
         adapter.addData(list);
@@ -143,7 +143,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
                 return;
             }
             //初始页
-            if (page == START_PAGE) {
+            if (page == START_PAGE || page == 0) {
 //                if (!NetworkUtil.isConnected(App.getContext())) {
 //                    //可自定义网络错误页面展示
 //                    statusLayoutManager.showCustomLayout(R.layout.layout_status_layout_manager_error);

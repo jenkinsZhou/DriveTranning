@@ -87,6 +87,9 @@ public class ToastUtil {
     }
 
     public static void show(CharSequence content) {
+        if(TextUtils.isEmpty(content)){
+            return;
+        }
         show(content, sIsShowRunningForeground);
     }
 

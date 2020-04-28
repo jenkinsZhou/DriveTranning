@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.RxJavaManager;
 import com.tourcoo.training.core.retrofit.BaseObserver;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.widget.dialog.loading.IosLoadingDialog;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 import com.trello.rxlifecycle3.components.support.RxFragment;
 
@@ -51,7 +53,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
     protected boolean mIsVisibleChanged = false;
     private boolean mIsInViewPager;
     protected Bundle mSavedInstanceState;
-
+    protected IosLoadingDialog loadingDialog;
     /**
      * 检查Fragment或FragmentActivity承载的Fragment是否只有一个
      *
@@ -106,6 +108,7 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
         }
         beforeInitView(savedInstanceState);
         setStatusBarDarkMode(mContext, isStatusBarDarkMode());
+        loadingDialog = new IosLoadingDialog(mContext);
         initView(savedInstanceState);
 
         if (isSingleFragment() && !mIsVisibleChanged) {
@@ -316,6 +319,23 @@ public abstract class BaseFragment extends RxFragment implements IBasicView {
             return;
         }
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+
+    protected void showLoading(String msg) {
+        if (loadingDialog != null ) {
+            if (!TextUtils.isEmpty(msg)) {
+                loadingDialog.setLoadingText(msg);
+            }
+            loadingDialog.show();
+        }
+    }
+
+
+    protected void closeLoading() {
+        if (loadingDialog != null ) {
+            loadingDialog.dismiss();
+        }
     }
 
 }

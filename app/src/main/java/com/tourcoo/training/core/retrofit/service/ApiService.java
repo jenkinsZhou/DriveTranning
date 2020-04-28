@@ -16,6 +16,7 @@ import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
+import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
@@ -275,4 +276,9 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/start-online-stage")
     Observable<BaseResult> requestTurnOnline(@Body Map<String, Object> map);
+
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
+    @POST("v1.0/open/news/list-news")
+    Observable<BasePageResult<NewsEntity>> requestNewsList(@Body Map<String, Object> map);
+
 }

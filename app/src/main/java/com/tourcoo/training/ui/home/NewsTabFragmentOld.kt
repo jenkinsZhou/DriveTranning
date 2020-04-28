@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
-import com.tourcoo.training.adapter.news.NewsMultipleAdapter
+import com.tourcoo.training.adapter.news.NewsMultipleAdapterOld
 import com.tourcoo.training.core.base.fragment.BaseBlueBgTitleFragment
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.news.NewsEntity
-import com.tourcoo.training.entity.news.NewsEntity.NEWS_TYPE_IMAGE_HORIZONTAL
-import com.tourcoo.training.entity.news.NewsEntity.NEWS_TYPE_IMAGE_VERTICAL
+import com.tourcoo.training.entity.news.NewsEntityOld
+import com.tourcoo.training.entity.news.NewsEntityOld.NEWS_TYPE_IMAGE_HORIZONTAL
+import com.tourcoo.training.entity.news.NewsEntityOld.NEWS_TYPE_IMAGE_VERTICAL
 
 /**
  *@description :
@@ -22,7 +22,7 @@ import com.tourcoo.training.entity.news.NewsEntity.NEWS_TYPE_IMAGE_VERTICAL
  * @Email: 971613168@qq.com
  */
 class NewsTabFragmentOld : BaseBlueBgTitleFragment() {
-    private var adapter: NewsMultipleAdapter? = null
+    private var adapterOld: NewsMultipleAdapterOld? = null
     private var rvCommon: RecyclerView? = null
     private var mSmartRefreshLayout: SmartRefreshLayout? = null
     override fun getContentLayout(): Int {
@@ -34,9 +34,9 @@ class NewsTabFragmentOld : BaseBlueBgTitleFragment() {
         mSmartRefreshLayout = mContentView.findViewById(R.id.smartRefreshLayoutCommon)
         mSmartRefreshLayout?.setRefreshHeader(ClassicsHeader(mContext))
         rvCommon?.layoutManager = LinearLayoutManager(mContext)
-        adapter = NewsMultipleAdapter(ArrayList())
-        adapter?.bindToRecyclerView(rvCommon)
-        adapter?.setNewData(testData())
+        adapterOld = NewsMultipleAdapterOld(ArrayList())
+        adapterOld?.bindToRecyclerView(rvCommon)
+        adapterOld?.setNewData(testData())
     }
 
     companion object {
@@ -55,10 +55,10 @@ class NewsTabFragmentOld : BaseBlueBgTitleFragment() {
         setViewGone(leftView, false)
     }
 
-    private fun testData(): ArrayList<NewsEntity> {
-        val dataList = ArrayList<NewsEntity>()
+    private fun testData(): ArrayList<NewsEntityOld> {
+        val dataList = ArrayList<NewsEntityOld>()
         for (index in 0 until 11) {
-            val news = NewsEntity()
+            val news = NewsEntityOld()
             if (index % 3 == 0) {
                 news.newsType = NEWS_TYPE_IMAGE_VERTICAL
                 news.newsTitle =

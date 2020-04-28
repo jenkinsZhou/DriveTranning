@@ -19,6 +19,7 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity;
 import com.tourcoo.training.ui.home.MineTabFragmentNew;
 import com.tourcoo.training.ui.home.NewsTabFragmentOld;
 import com.tourcoo.training.ui.home.StudyTabFragment;
+import com.tourcoo.training.ui.home.news.NewsTabFragmentNew;
 import com.tourcoo.training.widget.dialog.IosAlertDialog;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     @Override
     public List<FrameTabEntity> getTabList() {
         mTabEntities = new ArrayList<>();
-        mTabEntities.add(new FrameTabEntity("发现", R.drawable.ic_home_normal, R.drawable.ic_home_selected, NewsTabFragmentOld.Companion.newInstance()));
+        mTabEntities.add(new FrameTabEntity("发现", R.drawable.ic_home_normal, R.drawable.ic_home_selected, NewsTabFragmentNew.Companion.newInstance()));
         mTabEntities.add(new FrameTabEntity("学习", R.drawable.ic_home_normal, R.drawable.ic_home_selected, StudyTabFragment.Companion.newInstance()));
         mTabEntities.add(new FrameTabEntity("我的", R.drawable.ic_home_normal, R.drawable.ic_home_selected, MineTabFragmentNew.Companion.newInstance()));
         return mTabEntities;
