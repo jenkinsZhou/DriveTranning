@@ -35,7 +35,9 @@ import com.tourcoo.training.ui.account.MyAccountActivity
 import com.tourcoo.training.ui.account.PersonalInfoActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.OnlineExamActivity
+import com.tourcoo.training.ui.guide.GuideActivity
 import com.tourcoo.training.ui.setting.SettingActivity
+import com.tourcoo.training.ui.training.professional.ProfessionalExamSelectActivity
 import com.tourcoo.training.widget.aliplayer.activity.AliyunPlayerSkinActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
@@ -147,7 +149,8 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                     CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
                 }
                 2 ->
-                    showDialog3()
+                    CommonUtil.startActivity(mContext, GuideActivity::class.java)
+//                    showDialog3()
                 else -> {
 
                 }
@@ -156,7 +159,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         achievementAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {
-                    val intent = Intent(mContext, AliyunPlayerSkinActivity::class.java)
+                    val intent = Intent(mContext, ProfessionalExamSelectActivity::class.java)
                     startActivity(intent)
 
                 }

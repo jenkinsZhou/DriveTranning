@@ -386,6 +386,9 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             options1Items.add(sup.name)
         }
         pvCustomOptions = OptionsPickerBuilder(context, OnOptionsSelectListener { options1, options2, options3, v ->
+            if( businessLicenseInfo!!.supervisors == null || businessLicenseInfo!!.supervisors.isEmpty()){
+                return@OnOptionsSelectListener
+            }
             supervisor = businessLicenseInfo!!.supervisors[options1]
             tvAreaSelect.text = supervisor?.name
         })

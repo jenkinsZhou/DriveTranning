@@ -291,4 +291,8 @@ public interface ApiService {
     @POST("v1.0/open/news/list-news")
     Observable<BasePageResult<NewsEntity>> requestNewsList(@Body Map<String, Object> map);
 
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
+    @POST("v1.0/open/Individual/individual-business-payinfo-pay")
+    Observable<BaseResult> requestBusinessPayInfo(@Body Map<String, Object> map);
+
 }

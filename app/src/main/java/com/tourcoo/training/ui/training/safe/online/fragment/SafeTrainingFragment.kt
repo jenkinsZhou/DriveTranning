@@ -11,6 +11,7 @@ import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.entity.account.AccountHelper
+import com.tourcoo.training.entity.account.UserInfoEvent
 import kotlinx.android.synthetic.main.fragment_training_safe.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -19,6 +20,9 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 /**
@@ -42,6 +46,9 @@ class SafeTrainingFragment : BaseFragment() {
 
 
     override fun initView(savedInstanceState: Bundle?) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
         setStatusBarModeWhite(this)
         safeTrainingViewPager = mContentView.findViewById(R.id.safeTrainingViewPager)
         list = ArrayList()
@@ -93,6 +100,7 @@ class SafeTrainingFragment : BaseFragment() {
         if (AccountHelper.getInstance().userInfo.userType == 2) {
             titleList.add("现场培训")
             list?.add(OfflineTrainFragment.newInstance())
+            magicIndicator.visibility = View.VISIBLE
         }else{
             magicIndicator.visibility = View.GONE
         }
@@ -135,4 +143,25 @@ class SafeTrainingFragment : BaseFragment() {
         ViewPagerHelper.bind(magicIndicator, safeTrainingViewPager)
     }
 
+    /**
+     * 收到消息
+     *
+     * @param userInfoEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUserInfoRefreshEvent(userInfoEvent: UserInfoEvent?) {
+        if (userInfoEvent == null) {
+            return
+        }
+       if(userInfoEvent.userInfo != null){
+           loadFragment()
+       }
+
+    }
+
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
 }

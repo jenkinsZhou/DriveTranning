@@ -69,7 +69,7 @@ public class NewsMultipleAdapter extends BaseMultiItemQuickAdapter<NewsEntity, B
             case NEWS_TYPE_VIDEO:
                 helper.setText(R.id.tvNewsTitle, CommonUtil.getNotNullValue(item.getTitle()));
                 ImageView ivVideoCover = helper.getView(R.id.ivVideoCover);
-                GlideManager.loadImageAuto(CommonUtil.getUrl(item.getCoverUrl()), ivVideoCover);
+                GlideManager.loadImg(CommonUtil.getUrl(item.getCoverUrl()), ivVideoCover);
                 break;
         }
     }

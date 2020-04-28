@@ -588,6 +588,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     }
 
     override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {
+        presenter.getTrainDetail(trainingPlanId)
     }
 
     override fun onDisconnect() {

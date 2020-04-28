@@ -378,11 +378,13 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     }
 
     override fun <T : Any?> onMessage(message: String?, data: T) {
-        ToastUtil.showFailed("webSocket:onMessage---" + data + "message =" + message)
+        ToastUtil.show("webSocket:onMessage---" + data + "message =" + message)
         TourCooLogUtil.i(mTag, "webSocket:onMessage---" + data + "message =" + message)
+        presenter.getTrainDetail(trainingPlanId)
     }
 
     override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {
+
     }
 
     override fun onDisconnect() {

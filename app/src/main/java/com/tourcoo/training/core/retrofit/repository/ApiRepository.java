@@ -370,4 +370,16 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestNewsList(params).retryWhen(new RetryWhen()));
     }
 
+
+    /**
+     * 个体工商户购买课时接口
+     * @param num
+     * @return
+     */
+    public Observable<BaseResult> requestBusinessPayInfo(int num) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("num", num);
+        return CommonTransformer.switchSchedulers(getApiService(). requestBusinessPayInfo(params).retryWhen(new RetryWhen()));
+    }
+
 }

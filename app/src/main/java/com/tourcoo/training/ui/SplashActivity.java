@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -13,20 +14,22 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 
+import com.blankj.utilcode.util.SPUtils;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
 import com.tourcoo.training.core.manager.RxJavaManager;
 import com.tourcoo.training.core.retrofit.BaseObserver;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.DrawableUtil;
+import com.tourcoo.training.core.util.SPUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.widget.navigation.NavigationBarUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.account.AccountHelper;
 import com.tourcoo.training.ui.account.LoginActivity;
+import com.tourcoo.training.ui.guide.GuideActivity;
 import com.trello.rxlifecycle3.android.ActivityEvent;
-
 
 
 public class SplashActivity extends BaseTitleActivity {
@@ -50,7 +53,6 @@ public class SplashActivity extends BaseTitleActivity {
         }
         super.beforeSetContentView();
     }
-
 
 
     @Override
@@ -99,7 +101,7 @@ public class SplashActivity extends BaseTitleActivity {
         ObjectAnimator scaleXLogo = ObjectAnimator.ofFloat(tvApp, "scaleX", 0.5f, 1f);
         ObjectAnimator scaleYLogo = ObjectAnimator.ofFloat(tvApp, "scaleY", 0.5f, 1f);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(mDelayTime*2/3);
+        animatorSet.setDuration(mDelayTime * 2 / 3);
         animatorSet.play(tranLogo)
                 .with(scaleXLogo)
                 .with(scaleYLogo)
@@ -119,7 +121,7 @@ public class SplashActivity extends BaseTitleActivity {
     }
 
     private void startGo() {
-        RxJavaManager.getInstance().setTimer(mDelayTime/3)
+        RxJavaManager.getInstance().setTimer(mDelayTime / 3)
                 .compose(bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new BaseObserver<Long>() {
                     @Override
@@ -127,9 +129,18 @@ public class SplashActivity extends BaseTitleActivity {
                         if (isFinishing() || isDestroyed()) {
                             return;
                         }
+                        // 判断是否是第一次开启应用
+                        boolean isFirstOpen = SPUtils.getInstance().getBoolean("FIRST_OPEN");
+                        // 如果是第一次启动，则先进入功能引导页
+                        if (!isFirstOpen) {
+                            Intent intent = new Intent(mContext, GuideActivity.class);
+                            startActivity(intent);
+                            finish();
+                            return;
+                        }
                         if (AccountHelper.getInstance().isLogin()) {
                             CommonUtil.startActivity(mContext, MainTabActivity.class);
-                        }else {
+                        } else {
                             CommonUtil.startActivity(mContext, LoginActivity.class);
                         }
                         finish();
@@ -140,8 +151,8 @@ public class SplashActivity extends BaseTitleActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        StatusBarUtil.hideStatusBar(this,true);
-        NavigationBarUtil.hideNavigationBar(this,true);
+        StatusBarUtil.hideStatusBar(this, true);
+        NavigationBarUtil.hideNavigationBar(this, true);
     }
 
     @Override

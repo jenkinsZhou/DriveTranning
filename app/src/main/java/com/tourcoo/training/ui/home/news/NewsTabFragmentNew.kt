@@ -4,17 +4,13 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter
-import com.tourcoo.training.adapter.news.NewsMultipleAdapterOld
-import com.tourcoo.training.core.UiManager
 import com.tourcoo.training.core.base.fragment.BaseTitleMvpRefreshLoadFragment
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.news.NewsEntity
-import com.tourcoo.training.ui.home.NewsTabFragmentOld
 import kotlinx.android.synthetic.main.frame_layout_recycler.*
 
 /**
@@ -47,7 +43,7 @@ class NewsTabFragmentNew : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, Ne
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        rvCommon?.layoutManager = LinearLayoutManager(mContext)
+
     }
 
     override fun getContentLayout(): Int {

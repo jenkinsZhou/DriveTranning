@@ -41,6 +41,7 @@ import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivi
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
+import com.tourcoo.training.widget.dialog.training.InputPayNumAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
 import org.greenrobot.eventbus.EventBus
@@ -60,6 +61,7 @@ class OnlineTrainFragment : BaseFragment() {
     private var recyclerView: RecyclerView? = null
     private var currentPlanId: String? = null
     private var dialog: RecognizeStepDialog? = null
+    private var inputAlert: InputPayNumAlert? = null
     override fun getContentLayout(): Int {
         return R.layout.fragment_training_profressional
     }
@@ -87,7 +89,7 @@ class OnlineTrainFragment : BaseFragment() {
             val view = View.inflate(context, R.layout.empty_individual_business_layout, null)
             val tvBuy = view.findViewById<TextView>(R.id.tvBuy)
             tvBuy.setOnClickListener {
-                //todo:添加购买学时功能
+                showInputDialog()
             }
 
             adapter?.emptyView = view
@@ -380,15 +382,50 @@ class OnlineTrainFragment : BaseFragment() {
         }
         if (userInfoEvent.userInfo == null) {
             removeData()
-        } else{
+        } else {
             requestCourseOnLine()
         }
 
     }
 
-    private fun removeData(){
+    private fun removeData() {
         adapter?.data?.clear()
         adapter?.notifyDataSetChanged()
         refreshLayout?.finishRefresh()
     }
+
+
+    private fun requestBusinessPayInfo(num: Int) {
+        ApiRepository.getInstance().requestBusinessPayInfo(num).compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any?>>() {
+            override fun onSuccessNext(entity: BaseResult<Any?>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    ToastUtil.showSuccess("支付完成")
+                    requestCourseOnLine()
+                    inputAlert?.dismiss()
+                } else {
+                    ToastUtil.show(entity.msg)
+                    inputAlert?.dismiss()
+                }
+            }
+        })
+    }
+
+
+    private fun showInputDialog() {
+         inputAlert = InputPayNumAlert(mContext)
+        inputAlert!!.create().setConfirmClick {
+            if (inputAlert!!.inputCount <= 0) {
+                ToastUtil.show("请选择课程时长")
+                return@setConfirmClick
+            }
+            requestBusinessPayInfo(inputAlert!!.inputCount)
+            inputAlert!!.dismiss()
+        }
+        inputAlert!!.show()
+    }
+
+
 }

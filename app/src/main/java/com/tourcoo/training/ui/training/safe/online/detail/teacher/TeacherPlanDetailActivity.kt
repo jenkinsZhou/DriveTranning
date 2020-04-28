@@ -400,6 +400,7 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
 
     override fun <T : Any?> onMessage(message: String?, data: T) {
         ToastUtil.showSuccess("onMessage---" + data + "message =" + message)
+        presenter.getTrainDetail(trainingPlanId)
     }
 
     override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {

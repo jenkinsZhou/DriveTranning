@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.widget.idcardcamera.cropper.CropImageView;
 import com.tourcoo.training.widget.idcardcamera.cropper.CropListener;
