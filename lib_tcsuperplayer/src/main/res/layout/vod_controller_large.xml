@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="小视频-特效剪辑"
+                android:text="暂无视频"
                 android:textColor="@android:color/white"
                 android:textSize="11dp" />
         </LinearLayout>

@@ -422,8 +422,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //隐藏标签
                 setViewGone(ivStatusTag, true)
 
-                //todo：待替换图标
-                ivStatusTag.setImageResource(R.mipmap.ic_training_state_end)
+                ivStatusTag.setImageResource(R.mipmap.ic_training_state_no_complete)
 
                 setViewGone(tvTeacherEndTime, true)
                 tvTeacherEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)

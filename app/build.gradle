@@ -173,7 +173,7 @@ repositories {
     mavenCentral()
     google()
 
-    maven(){
+    maven() {
         url 'https://maven.aliyun.com/repository/releases'
     }
 

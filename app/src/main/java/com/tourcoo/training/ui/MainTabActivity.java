@@ -44,9 +44,9 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     @Override
     public List<FrameTabEntity> getTabList() {
         mTabEntities = new ArrayList<>();
-        mTabEntities.add(new FrameTabEntity("发现", R.drawable.ic_home_normal, R.drawable.ic_home_selected, NewsTabFragmentNew.Companion.newInstance()));
-        mTabEntities.add(new FrameTabEntity("学习", R.drawable.ic_home_normal, R.drawable.ic_home_selected, StudyTabFragment.Companion.newInstance()));
-        mTabEntities.add(new FrameTabEntity("我的", R.drawable.ic_home_normal, R.drawable.ic_home_selected, MineTabFragmentNew.Companion.newInstance()));
+        mTabEntities.add(new FrameTabEntity("发现", R.drawable.tab_icon_fx_nol, R.drawable.tab_icon_fx_sel, NewsTabFragmentNew.Companion.newInstance()));
+        mTabEntities.add(new FrameTabEntity("学习", R.drawable.tab_icon_xx_nol, R.drawable.tab_icon_xx_sel, StudyTabFragment.Companion.newInstance()));
+        mTabEntities.add(new FrameTabEntity("我的", R.drawable.tab_icon_wd_nol, R.drawable.tab_icon_wd_sel, MineTabFragmentNew.Companion.newInstance()));
         return mTabEntities;
     }
 

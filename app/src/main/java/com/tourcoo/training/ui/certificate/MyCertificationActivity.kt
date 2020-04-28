@@ -1,7 +1,11 @@
 package com.tourcoo.training.ui.certificate
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
+import android.widget.AdapterView
+import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.tourcoo.training.R
@@ -15,6 +19,7 @@ import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
+import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.certificate.CertificateInfo
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -33,6 +38,7 @@ import kotlin.collections.ArrayList
  */
 class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() {
     private var adapter: CertificateInfoAdapter? = null
+
     override fun getContentLayout(): Int {
         return R.layout.activity_study_record_certificate
     }
@@ -48,6 +54,15 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+
+        adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+            //todo:添加证书详情页
+//            val info = adapter.data[position] as CertificateInfo
+//            val intent = Intent(this,CertificationDetailsActivity::class.java)
+//            intent.putExtra("id",info.id)
+//            startActivity(intent)
+        }
+
     }
 
     override fun loadData(page: Int) {
@@ -70,13 +85,13 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
         if (list == null || list.isEmpty()) {
             return result
         }
-        for (i in 0 until list.size - 1) {
-            if (i % 2 == 0 && i <= 12) {
-                list[i].certificateTime = "2019-" + "02-15"
-            } else {
-                list[i].certificateTime = "2020-" + "01-26"
-            }
-        }
+//        for (i in 0 until list.size - 1) {
+//            if (i % 2 == 0 && i <= 12) {
+//                list[i].certificateTime = "2019-" + "02-15"
+//            } else {
+//                list[i].certificateTime = "2020-" + "01-26"
+//            }
+//        }
         try {
             for (certificate in list) {
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -84,21 +99,19 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
                     val date = sdf.parse(certificate.certificateTime)
                     if (date != null) {
                         certificate.date = date
-                        val calendar = Calendar.getInstance()
-                        calendar.time = date
-                        val year = calendar[Calendar.YEAR]
-                        val month = calendar[Calendar.MONTH]
                     }
                 }
             }
         } catch (e: Exception) {
             TourCooLogUtil.e("MyCertificationActivity", "e:" + e.toString())
         }
+
+
         val maps = CommonUtil.sort(list)
         for (map in maps) {
             val values = map.value
             val certificateInfo = CertificateInfo()
-            certificateInfo.itemType = ITEM_TYPE_HEADER;
+            certificateInfo.itemType = ITEM_TYPE_HEADER
             certificateInfo.headerContent = map.key
             values.add(0, certificateInfo)
             result.addAll(values)

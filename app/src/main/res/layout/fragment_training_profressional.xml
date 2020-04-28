@@ -4,17 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/smartRefreshLayoutCommon"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include layout="@layout/frame_layout_refresh_recycler" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCommon"
-            android:background="@color/grayFBF8FB"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </androidx.recyclerview.widget.RecyclerView>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

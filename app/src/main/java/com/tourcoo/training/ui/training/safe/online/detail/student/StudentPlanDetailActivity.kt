@@ -253,9 +253,8 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
 
-                //显示已结束标签
-                //todo:替换未完成图标
-                ivStatusTag.setImageResource(R.mipmap.ic_training_state_no_pass)
+                //显示未完成标签
+                ivStatusTag.setImageResource(R.mipmap.ic_training_state_no_complete)
                 setViewGone(ivStatusTag, true)
                 setViewGone(llBottomButtonLayout, false)
             }

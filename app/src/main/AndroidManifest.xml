@@ -4,8 +4,7 @@
     <!-- 读写权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 摄像头相关权限 -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 用于申请调用A-GPS模块 -->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -23,14 +22,15 @@
 
     <application
         android:name=".core.app.MyApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/icon_car_networking"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/icon_car_networking"
         android:supportsRtl="true"
-        android:allowBackup="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.certificate.CertificationDetailsActivity"></activity>
         <!-- 设置key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
@@ -43,21 +43,22 @@
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".core.base.activity.QQTitleActivity" />
         <activity android:name=".ui.training.FreeStudyActivity" />
-
         <activity
             android:name=".ui.training.safe.online.TencentPlayVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
-         <!--   <intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
-
         <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -75,7 +76,6 @@
         <activity android:name=".ui.training.StudyMedalRecordActivity" />
         <activity android:name=".ui.exam.OnlineExamActivity" />
         <activity android:name=".ui.training.professional.ProfessionalTrainingFragment" />
-
         <activity android:name=".ui.account.register.RecognizeIdCardActivity" />
         <activity
             android:name=".widget.idcardcamera.camera.CameraActivity"
@@ -92,7 +92,6 @@
         <activity android:name=".ui.account.PersonalInfoActivity" />
         <activity android:name=".ui.certificate.MyCertificationActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
-
         <activity android:name=".ui.training.safe.online.detail.student.StudentPlanDetailActivity" />
         <activity
             android:name=".ui.training.safe.online.PlayVideoActivity"
@@ -107,26 +106,24 @@
         <activity android:name=".ui.training.safe.online.TrainFaceCertifyActivity" />
         <activity android:name=".ui.training.safe.online.detail.common.CommonPlanDetailActivity" />
         <activity android:name=".widget.aliplayer.activity.AliBaseActivity" />
-        <activity android:name=".widget.aliplayer.activity.AliyunPlayerSkinActivity"
+        <activity
+            android:name=".widget.aliplayer.activity.AliyunPlayerSkinActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-        <activity android:name=".widget.aliplayer.activity.AliyunPlayerSettingActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".widget.aliplayer.activity.AliyunPlayerSettingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.training.safe.online.aliyun.AliYunPlayVideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.training.safe.online.aliyun.AliYunPlayVideoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".ui.training.professional.ProfessionalTrainTwoTypeActivity" />
         <activity android:name=".ui.training.TrainingWebViewActivity" />
         <activity android:name=".ui.training.safe.online.HtmlBrowserActivity" />
         <activity android:name=".ui.home.news.NewsTabFragmentNew" />
-
-
     </application>
 
 </manifest>

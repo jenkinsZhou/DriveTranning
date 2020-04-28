@@ -23,6 +23,8 @@ import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.study.BannerBean;
 import com.tourcoo.training.entity.training.DRMParams;
 import com.tourcoo.training.entity.training.HlsParams;
+import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
+import com.tourcoo.training.entity.training.ProfessionalTwoTypeModel;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 
 import java.util.List;
@@ -181,9 +183,18 @@ public interface ApiService {
     Observable<BaseResult<ExamEntity>> requestExam(@Body Map<String, Object> map);
 
 
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/open/Special/list-special-training-by-module-id")
+    Observable<BaseResult<List<ProfessionalTwoTypeModel>>> requestTwoType(@Body Map<String, Object> map);
+
+
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/list-certificate")
     Observable<BasePageResult<CertificateInfo>> requestCertificate(@Body Map<String, Object> map);
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/open/Special/list-special-training-module")
+    Observable<BasePageResult<ProfessionTrainingEntity>> requestProfessionTraining(@Body Map<String, Object> map);
 
 
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
@@ -248,7 +259,6 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/get-training-plan-detail2")
     Observable<BaseResult<TrainingPlanDetail>> requestPlanDetail(@Body Map<String, Object> map);
-
 
 
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})

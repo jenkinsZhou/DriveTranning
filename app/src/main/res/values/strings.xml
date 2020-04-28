@@ -41,7 +41,6 @@
     <string name="alivc_common_creating_video_remind">正在进行视频合成，确定要放弃吗？</string>
 
 
-
     <string name="alivc_common_download">下载</string>
     <string name="alivc_common_cancel">取消</string>
     <string name="alivc_common_no_free_memory">剩余磁盘空间不足</string>

@@ -46,6 +46,8 @@ public class CertificateInfoAdapter extends BaseMultiItemQuickAdapter<Certificat
                 helper.setText(R.id.tvCertificateTime, CommonUtil.getNotNullValue(item.getCertificateTime()));
                 RoundedImageView ivCertificateImage = helper.getView(R.id.rivCertificateImage);
                 GlideManager.loadImg(CommonUtil.getUrl(item.getUrl()), ivCertificateImage);
+
+
                 break;
         }
 

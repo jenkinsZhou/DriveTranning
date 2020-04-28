@@ -29,6 +29,8 @@ import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.study.BannerBean;
 import com.tourcoo.training.entity.training.DRMParams;
 import com.tourcoo.training.entity.training.HlsParams;
+import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
+import com.tourcoo.training.entity.training.ProfessionalTwoTypeModel;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 import com.tourcoo.training.utils.MapUtil;
 
@@ -202,6 +204,7 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestBeforeThePostTrainingList().retryWhen(new RetryWhen()));
     }
 
+
     public Observable<BaseResult<List<CourseInfo>>> requestOffLineTrainingList() {
         return CommonTransformer.switchSchedulers(getApiService().requestOffLineTrainingList().retryWhen(new RetryWhen()));
     }
@@ -213,6 +216,13 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestExam(params).retryWhen(new RetryWhen()));
     }
 
+    public Observable<BaseResult<List<ProfessionalTwoTypeModel>>> requestTwoType(String id) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("ID", id);
+        return CommonTransformer.switchSchedulers(getApiService().requestTwoType(params).retryWhen(new RetryWhen()));
+    }
+
+
     public Observable<BasePageResult<CertificateInfo>> requestCertificate(int page) {
         Map<String, Object> params = new HashMap<>(2);
         if (page == 0) {
@@ -223,6 +233,19 @@ public class ApiRepository extends BaseRepository {
         params.put("rows", 10);
         return CommonTransformer.switchSchedulers(getApiService().requestCertificate(params).retryWhen(new RetryWhen()));
     }
+
+
+    public Observable<BasePageResult<ProfessionTrainingEntity>> requestCourseProfessionalTraining(int page) {
+        Map<String, Object> params = new HashMap<>(2);
+        if (page == 0) {
+            page = 1;
+        }
+        params.put("page", page);
+        //每次请求10条
+        params.put("rows", 10);
+        return CommonTransformer.switchSchedulers(getApiService().requestProfessionTraining(params).retryWhen(new RetryWhen()));
+    }
+
 
 
     public Observable<BaseResult<FaceRecognizeResult>> requestFaceVerify(String trainingPlanID, String photoBase64) {
