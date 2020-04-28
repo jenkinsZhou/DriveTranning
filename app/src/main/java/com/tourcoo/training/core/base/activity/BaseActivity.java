@@ -28,6 +28,7 @@ import com.tourcoo.training.core.interfaces.IBasicView;
 import com.tourcoo.training.core.interfaces.IRefreshLoadView;
 import com.tourcoo.training.core.interfaces.QuitAppControl;
 import com.tourcoo.training.core.interfaces.ISideControl;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.RxJavaManager;
 import com.tourcoo.training.core.retrofit.BaseObserver;
 import com.tourcoo.training.core.util.CommonUtil;

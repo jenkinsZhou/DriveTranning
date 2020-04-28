@@ -75,7 +75,17 @@ public class TrainingPlanDetail {
     private String SaftyManagerTel;
     private List<Subject> Subjects;
 
-    private int status;
+    private int TraineeStatus;
+    private int SafetyManagerStatus;
+
+
+    public int getSafetyManagerStatus() {
+        return SafetyManagerStatus;
+    }
+
+    public void setSafetyManagerStatus(int safetyManagerStatus) {
+        SafetyManagerStatus = safetyManagerStatus;
+    }
 
     public String getSaftyManagerTel() {
         return SaftyManagerTel;
@@ -85,12 +95,12 @@ public class TrainingPlanDetail {
         SaftyManagerTel = saftyManagerTel;
     }
 
-    public int getStatus() {
-        return status;
+    public int getTraineeStatus() {
+        return TraineeStatus;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setTraineeStatus(int traineeStatus) {
+        this.TraineeStatus = traineeStatus;
     }
 
     public String getDescription() {

@@ -405,7 +405,8 @@
             android:paddingStart="@dimen/dp_12"
             android:paddingTop="@dimen/dp_10"
             android:paddingEnd="@dimen/dp_12"
-            android:paddingBottom="@dimen/dp_10">
+            android:paddingBottom="@dimen/dp_10"
+            android:visibility="gone">
 
             <!--学员签到按钮-->
             <ImageView

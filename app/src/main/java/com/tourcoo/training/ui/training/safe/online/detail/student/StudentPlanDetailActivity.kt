@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.LogUtils
 import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
@@ -92,11 +93,15 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         ivSignStudent.setOnClickListener(this)
         ivSignOut.setOnClickListener(this)
         ivWaitExam.setOnClickListener(this)
+        ivScanCode.setOnClickListener(this)
+
     }
 
     override fun showTurnOnlineSuccess() {
         //转线上成功
         presenter.getTrainDetail(trainingPlanId)
+        //转线上成功回调
+        closeConfirmDialog()
     }
 
     override fun showTurnOnlineFailed() {
@@ -115,7 +120,6 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
             return
         }
         showTrainPlan(planDetail)
-        setViewGone(ivSignStudent, true)
     }
 
 
@@ -123,6 +127,9 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         if (planDetail == null) {
             return
         }
+
+        latestExamID = "" + planDetail.latestExamID
+
         tvTrainTitle.text = CommonUtil.getNotNullValue(planDetail.title)
         tvCoursePlanTime.text = CommonUtil.getNotNullValue(planDetail.sTime)
         tvLocate.text = CommonUtil.getNotNullValue(planDetail.classroomName)
@@ -131,19 +138,27 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
         tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManager)
 
-        when (planDetail.status)
+        LogUtils.e(planDetail.traineeStatus,planDetail.safetyManagerStatus)
+
+        when (planDetail.traineeStatus){
+
             /**
              * 未开始
              */
-        {
             TRAIN_STATUS_NO_START -> {
                 //未开始 只有转线上按钮
-                //todo
                 setViewGone(rlButtonLayout, true)
                 //转线上按钮
                 setViewGone(ivStudentToOnline, true)
-                //签到按钮
-                setViewGone(ivSignStudent, false)
+
+                if (planDetail.safetyManagerStatus == TRAIN_STATUS_SIGNED) {
+                    //签到按钮
+                    setViewGone(ivSignStudent, true)
+                } else {
+                    LogUtils.e("==========================================   ")
+                    setViewGone(ivSignStudent, false)
+                }
+
                 //扫码按钮
                 setViewGone(ivScanCode, false)
                 //签退按钮
@@ -177,6 +192,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 ivStatusTag.setImageResource(R.mipmap.ic_training_state_signed)
                 setViewGone(llBottomButtonLayout, false)
             }
+
             /**
              * 已签退
              */
@@ -191,6 +207,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(ivStatusTag, false)
                 setViewGone(llBottomButtonLayout, false)
             }
+
             /**
              * 已经转线上
              */
@@ -223,6 +240,26 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(ivStatusTag, true)
                 setViewGone(llBottomButtonLayout, false)
             }
+
+
+            /**
+             * 未完成
+             */
+            TRAIN_STATUS_NO_COMPLETE-> {
+                //隐藏所有按钮
+                setViewGone(rlButtonLayout, false)
+                //显示签到签退时间信息
+                setViewGone(llTrainStatusLayout, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
+
+                //显示已结束标签
+                //todo:替换未完成图标
+                ivStatusTag.setImageResource(R.mipmap.ic_training_state_no_pass)
+                setViewGone(ivStatusTag, true)
+                setViewGone(llBottomButtonLayout, false)
+            }
+
 
             /**
              * 不合格

@@ -345,6 +345,15 @@
                         android:layout_centerHorizontal="true"
                         android:src="@mipmap/ic_train_local_turn_online" />
 
+                    <!--扫码按钮-->
+                    <ImageView
+                        android:id="@+id/ivScanCode"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:src="@mipmap/ic_train_local_scan" />
+
 
                 </RelativeLayout>
 

@@ -48,6 +48,8 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
     companion object {
         const val REQUEST_CODE_SCAN = 1007
         const val REQUEST_CODE_SIGN_STUDENT = 1008
+        const val REQUEST_CODE_SIGN_OUT_STUDENT = 1009
+        const val REQUEST_CODE_CHECK_STATUS_STUDENT = 1010
         const val EXTRA_PHOTO_PATH = "EXTRA_PHOTO_PATH"
         const val MSG_CODE_PROGRESS = 1
         const val MSG_CODE_CLOSE_PROGRESS = 201
@@ -96,6 +98,8 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
     override fun showTurnOnlineSuccess() {
         //转线上成功
         presenter.getTrainDetail(trainingPlanId)
+        //转线上成功回调
+        closeConfirmDialog()
     }
 
     override fun showTurnOnlineFailed() {
@@ -128,7 +132,7 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
         tvRole.text = "安全员"
         tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
 
-        when (planDetail.status)
+        when (planDetail.safetyManagerStatus)
             /**
              * 未开始
              */
@@ -138,7 +142,7 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
                 //只显示签到按钮
                 setViewGone(rlButtonTeacherLayout, true)
                 //显示转线上
-                setViewGone(ivToOnline, true)
+                setViewGone(ivToOnline, false)
                 setViewGone(ivSignTeacher, true)
                 //隐藏签到时间相关信息
                 setViewGone(llTrainStatusTeacherLayout, false)
@@ -153,7 +157,7 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
                 setViewGone(rlButtonTeacherLayout, true)
                 setViewVisible(ivSignTeacher, false)
                 //显示转线上
-                setViewGone(ivToOnline, true)
+                setViewGone(ivToOnline, false)
 
                 setViewGone(llTrainStatusTeacherLayout, true)
 
@@ -169,7 +173,6 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
                 tvPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
                 //隐藏标签图片
                 setViewGone(ivStatusTagTeacher, false)
-
             }
 
 

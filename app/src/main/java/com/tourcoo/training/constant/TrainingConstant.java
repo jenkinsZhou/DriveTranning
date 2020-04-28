@@ -31,9 +31,9 @@ public class TrainingConstant {
 
     //未开始
     public static final int TRAIN_STATUS_NO_START = 0;
-    //已签到
+    //学员已签到
     public static final int TRAIN_STATUS_SIGNED = 1;
-    //已签退
+    //学员已签退
     public static final int TRAIN_STATUS_SIGN_OUT = 2;
     //已经转线上
     public static final int TRAIN_STATUS_TO_ONLINE = 3;
@@ -63,6 +63,11 @@ public class TrainingConstant {
      * 学生签到扫码
      */
     public static final String ACTION_STUDENT_SIGN_OUT = "ACTION_STUDENT_SIGN_OUT";
+
+    /**
+     * 学生抽验扫码
+     */
+    public static final String ACTION_STUDENT_CHECK_STATUS = "ACTION_STUDENT_CHECK_STATUS";
 
     /**
      * 安全员签到扫码

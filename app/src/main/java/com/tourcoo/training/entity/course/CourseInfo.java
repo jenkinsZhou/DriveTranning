@@ -13,7 +13,7 @@ public class CourseInfo {
     /**
      * CoverUrl : null
      * Tag : 1
-     * Status : 1
+     * TraineeStatus : 1
      * Title : 安全培训
      * Progress : 45
      * TimeRange : 2020-04-02至2020-04-30
@@ -24,6 +24,8 @@ public class CourseInfo {
     private String CoverUrl;
     private int Tag;
     private int Status;
+    private int TraineeStatus;
+    private int SafetyManagerStatus;
     private String Title;
     private double Progress;
     private String TimeRange;
@@ -39,6 +41,22 @@ public class CourseInfo {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getStatus() {
+        return Status;
+    }
+
+    public void setStatus(int status) {
+        Status = status;
+    }
+
+    public int getSafetyManagerStatus() {
+        return SafetyManagerStatus;
+    }
+
+    public void setSafetyManagerStatus(int safetyManagerStatus) {
+        SafetyManagerStatus = safetyManagerStatus;
     }
 
     public String getCoverUrl() {
@@ -57,12 +75,12 @@ public class CourseInfo {
         this.Tag = Tag;
     }
 
-    public int getStatus() {
-        return Status;
+    public int getTraineeStatus() {
+        return TraineeStatus;
     }
 
-    public void setStatus(int Status) {
-        this.Status = Status;
+    public void setTraineeStatus(int Status) {
+        this.TraineeStatus = Status;
     }
 
     public String getTitle() {

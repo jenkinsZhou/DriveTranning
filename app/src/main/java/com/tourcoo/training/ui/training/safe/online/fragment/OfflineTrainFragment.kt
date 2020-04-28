@@ -129,9 +129,6 @@ class OfflineTrainFragment : BaseFragment() {
     private fun skipTrainingDetail(position :Int){
         val courseInfo =  (adapter as ProfessionalTrainingAdapter).data[position]
 
-        //todo:delete
-        courseInfo.role = 3
-
         when (courseInfo.role) {
             TRAIN_ROLE_STUDENT  -> {
                 val intent = Intent(mContext, StudentPlanDetailActivity::class.java)

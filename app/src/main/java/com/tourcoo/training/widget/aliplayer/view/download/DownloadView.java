@@ -276,9 +276,9 @@ public class DownloadView extends FrameLayout implements OnClickListener, Compou
         //Collections.sort(alldownloadMediaInfos, new Comparator<AliyunDownloadMediaInfo>() {
         //    @Override
         //    public int compare(AliyunDownloadMediaInfo o1, AliyunDownloadMediaInfo o2) {
-        //        if (o1.getStatus() == Status.Complete) {
+        //        if (o1.getTraineeStatus() == Status.Complete) {
         //            return 1;
-        //        } else if (o2.getStatus() == Status.Complete){
+        //        } else if (o2.getTraineeStatus() == Status.Complete){
         //            return 1;
         //        } else {
         //            return 0;
@@ -369,13 +369,13 @@ public class DownloadView extends FrameLayout implements OnClickListener, Compou
                         AliyunDownloadMediaInfo aliyunDownloadMediaInfo = alivcDownloadingMediaInfos.get(positionInSection).getAliyunDownloadMediaInfo();
                         if (aliyunDownloadMediaInfo.getStatus() == AliyunDownloadMediaInfo.Status.Start) {
                             if (onDownloadViewListener != null) {
-                                //aliyunDownloadMediaInfo.setStatus(Status.Stop);
+                                //aliyunDownloadMediaInfo.setTraineeStatus(Status.Stop);
                                 onDownloadViewListener.onStop(aliyunDownloadMediaInfo);
                                 sectionAdapter.notifyItemChangedInSection(tag, positionInSection);
                             }
                         } else if (aliyunDownloadMediaInfo.getStatus() == AliyunDownloadMediaInfo.Status.Stop) {
                             if (aliyunDownloadMediaInfo.getStatus() != AliyunDownloadMediaInfo.Status.Complete) {
-                                //aliyunDownloadMediaInfo.setStatus(Status.Start);
+                                //aliyunDownloadMediaInfo.setTraineeStatus(Status.Start);
                                 onDownloadViewListener.onStart(aliyunDownloadMediaInfo);
                                 sectionAdapter.notifyItemChangedInSection(tag, positionInSection);
                             }

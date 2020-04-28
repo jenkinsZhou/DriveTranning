@@ -7,10 +7,8 @@ import androidx.annotation.NonNull;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;
-import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.entity.course.CourseInfo;
-import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
 
 /**
  * @author :JenkinsZhou
@@ -29,6 +27,7 @@ public class ProfessionalTrainingAdapter extends BaseQuickAdapter<CourseInfo, Ba
     public static final int COURSE_STATUS_FINISHED = 4;
     public static final int COURSE_STATUS_UNRIGHT = 5;
     public static final int COURSE_STATUS_ALREADY_TEST = 6;
+    public static final int COURSE_STATUS_NO_COMPLETE = 8;
 
     public ProfessionalTrainingAdapter() {
         super(R.layout.item_training_safe_locale);
@@ -42,7 +41,15 @@ public class ProfessionalTrainingAdapter extends BaseQuickAdapter<CourseInfo, Ba
         helper.setText(R.id.tvAddress, CommonUtil.getNotNullValue(item.getAddress()));
 
         ImageView ivCourseStatus = helper.getView(R.id.ivCourseStatus);
-        switch (item.getStatus()) {
+
+        int status;
+        if (item.getRole() == 1) {
+            status = item.getTraineeStatus();
+        } else {
+            status = item.getSafetyManagerStatus();
+        }
+
+        switch (status) {
             case COURSE_STATUS_NOT_START:
                 ivCourseStatus.setImageResource(R.mipmap.ic_training_state_no_start);
                 break;
@@ -58,6 +65,10 @@ public class ProfessionalTrainingAdapter extends BaseQuickAdapter<CourseInfo, Ba
             case COURSE_STATUS_FINISHED:
                 ivCourseStatus.setImageResource(R.mipmap.ic_training_state_end);
                 break;
+            case COURSE_STATUS_NO_COMPLETE:
+                //todo:替换未完成图标
+                ivCourseStatus.setImageResource(R.mipmap.ic_training_state_no_pass);
+                break;
             case COURSE_STATUS_UNRIGHT:
                 ivCourseStatus.setImageResource(R.mipmap.ic_training_state_no_pass);
                 break;
@@ -65,6 +76,7 @@ public class ProfessionalTrainingAdapter extends BaseQuickAdapter<CourseInfo, Ba
                 ivCourseStatus.setImageResource(R.mipmap.ic_training_state_already_test);
                 break;
         }
+
 
     }
 
