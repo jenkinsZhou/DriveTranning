@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.gyf.immersionbar.ImmersionBar;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.util.StatusBarUtil;
 import com.tourcoo.training.core.util.ToastUtil;
@@ -34,6 +35,8 @@ import com.tourcoo.training.widget.idcardcamera.utils.FileUtils;
 import com.tourcoo.training.widget.idcardcamera.utils.ImageUtils;
 import com.tourcoo.training.widget.idcardcamera.utils.PermissionUtils;
 import com.tourcoo.training.widget.idcardcamera.utils.ScreenUtils;
+
+import static android.view.WindowManager.*;
 
 
 /**
@@ -63,9 +66,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /*动态请求需要的权限*/
-        requestWindowFeature(Window.FEATURE_NO_TITLE);// 隐藏标题
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-         WindowManager.LayoutParams.FLAG_FULLSCREEN);// 设置全屏
         boolean checkPermissionFirst = PermissionUtils.checkPermissionFirst(this, IDCardCamera.PERMISSION_CODE_FIRST,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA});
         if (checkPermissionFirst) {
@@ -106,11 +106,19 @@ public class CameraActivity extends Activity implements View.OnClickListener {
     }
 
     private void init() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_camera);
         mType = getIntent().getIntExtra(IDCardCamera.TAKE_TYPE, 0);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         initView();
         initListener();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImmersionBar.hideStatusBar(getWindow());
+            }
+        },1000);
     }
 
     private void initView() {

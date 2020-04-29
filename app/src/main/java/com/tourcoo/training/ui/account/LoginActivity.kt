@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -18,6 +19,7 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
+import com.tourcoo.training.core.util.StackUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.*
@@ -27,7 +29,6 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.account.register.RecognizeLicenseActivity
 import com.tourcoo.training.ui.training.RichWebViewActivity
 import com.trello.rxlifecycle3.android.ActivityEvent
-import kotlinx.android.synthetic.main.activity_find_password.*
 import kotlinx.android.synthetic.main.activity_login.*
 import org.greenrobot.eventbus.EventBus
 
@@ -65,11 +66,12 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         tvLogin.setOnClickListener(this)
         btnForgetPassword.setOnClickListener(this)
         btnContent.setOnClickListener(this)
-        listenInput(etPass,ivPassCheck)
-        listenInputLegal(etIdCard,ivAccountCheck)
+        listenInput(etPass, ivPassCheck)
+        listenInputLegal(etIdCard, ivAccountCheck)
         showButtonByInput(hasInputAll())
-        listenInputFocus(etIdCard,viewLineAccount)
-        listenInputFocus(etPass,viewLinePass)
+        listenInputFocus(etIdCard, viewLineAccount)
+        listenInputFocus(etPass, viewLinePass)
+        initTestInput()
     }
 
     override fun onClick(v: View?) {
@@ -260,6 +262,23 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         if (view != null) {
             view.background = ResourceUtil.getDrawable(R.color.grayA0A0A0)
         }
+    }
+
+    override fun onBackPressed() {
+        if (StackUtil.getInstance().previous == null) {
+            quitApp()
+        }
+    }
+
+    private fun initTestInput() {
+        if (AppConfig.DEBUG_MODE) {
+            etIdCard.setText("340811199311135335")
+            etPass.setText("135335")
+        } else {
+            etIdCard.setText("")
+            etPass.setText("")
+        }
+
     }
 }
 

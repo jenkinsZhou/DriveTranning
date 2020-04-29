@@ -14,6 +14,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.mine.MineItemAdapter
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseTitleFragment
@@ -23,6 +24,7 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.StatusBarUtil
 import com.tourcoo.training.core.util.ToastUtil
+import com.tourcoo.training.core.util.ToastUtils
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.UserInfo
@@ -150,7 +152,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                     CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
                 }
                 2 ->
-                    CommonUtil.startActivity(mContext, GuideActivity::class.java)
+                   ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
 //                    showDialog3()
                 else -> {
 

@@ -61,6 +61,11 @@ import com.tourcoo.training.widget.aliplayer.view.tipsview.ErrorInfo
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_ali.*
+import kotlinx.android.synthetic.main.activity_play_video_ali.llPlanContentView
+import kotlinx.android.synthetic.main.activity_play_video_ali.tvExam
+import kotlinx.android.synthetic.main.activity_play_video_ali.tvSubjectDesc
+import kotlinx.android.synthetic.main.activity_play_video_ali.tvTitle
+import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -290,12 +295,13 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvCourseCountInfoAli.text = "共" + countCatalog + "章" + countNode + "小节"
         tvCourseTimeAli.text = "课时：" + detail.courseTime.toString()
         tvTitle.text = getNotNullValue(detail.title)
+        tvSubjectDesc.text = getNotNullValue(detail.description)
     }
 
 
     private fun getNotNullValue(value: String?): String {
         if (TextUtils.isEmpty(value)) {
-            return "未知"
+            return "暂无"
         }
         return value!!
     }

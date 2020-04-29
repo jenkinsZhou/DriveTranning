@@ -13,10 +13,12 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
+import com.tourcoo.training.core.util.StackUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.ui.account.FindPassActivity
+import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.utils.DataCleanUtil
 import com.tourcoo.training.utils.DataCleanUtil.EMPTY_CACHE
 import com.tourcoo.training.utils.DataCleanUtil.clearAllCache
@@ -58,7 +60,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
                 bundle.putBoolean("isLogin", AccountHelper.getInstance().isLogin)
                 CommonUtil.startActivity(mContext, FindPassActivity::class.java, bundle)
             }
-            R.id.llClearCache->{
+            R.id.llClearCache -> {
                 doClearCache()
             }
             else -> {
@@ -80,7 +82,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
             requestLogout()
         })
         dialog.addSheetItem(item)
-        dialog.create().setTitle("退出登录").show()
+        dialog.create().setTitle("退出登录后 会返回到登录页").show()
     }
 
 
@@ -92,8 +94,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     ToastUtil.show("账号已退出")
-                    AccountHelper.getInstance().logout()
-                    finish()
+                    logout()
                 }
 
             }
@@ -118,7 +119,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
         return str
     }
 
-    private fun doClearCache(){
+    private fun doClearCache() {
         if (getCacheSize().equals(EMPTY_CACHE, ignoreCase = true)) {
             ToastUtil.show("暂无缓存")
             return
@@ -138,7 +139,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun showCache() {
         TourCooLogUtil.i("缓存大小：" + getCacheSize())
-        if (EMPTY_CACHE==getCacheSize()) {
+        if (EMPTY_CACHE == getCacheSize()) {
             tvCacheSize.setText("")
         } else {
             tvCacheSize.setText(getCacheSize())
@@ -146,6 +147,11 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
+    private fun logout() {
+        AccountHelper.getInstance().logout()
+        StackUtil.getInstance().popAll()
+        CommonUtil.startActivity(mContext, LoginActivity::class.java)
+    }
 
 }
 

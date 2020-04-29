@@ -14,6 +14,8 @@ import com.tourcoo.training.core.util.StackUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.dialog.LoadingDialogWrapper;
 
+import static com.tourcoo.training.config.AppConfig.TEXT_REQUEST_ERROR;
+
 /**
  * @Author: JenkinsZhou on 2018/7/23 14:08
  * @E-Mail: 971613168@qq.com
@@ -104,10 +106,13 @@ public abstract class BaseLoadingObserver<T> extends BaseObserver<T> {
     @Override
     public void onError(Throwable e) {
         dismissProgressDialog();
-        super.onError(e);
         if (AppConfig.DEBUG_MODE) {
             ToastUtil.showFailed(e.toString());
+        }else {
+            ToastUtil.show(TEXT_REQUEST_ERROR);
         }
+        super.onError(e);
+
     }
 
     public void showProgressDialog() {

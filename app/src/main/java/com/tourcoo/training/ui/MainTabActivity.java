@@ -69,7 +69,6 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     public void initView(Bundle savedInstanceState) {
         mTabLayout = findViewById(R.id.commonTabLayout);
         mTabLayout.setCurrentTab(1);
-        checkPermission();
     }
 
 
@@ -171,7 +170,9 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     }
 
 
-
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkPermission();
+    }
 }

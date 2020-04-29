@@ -23,6 +23,8 @@ import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.account.RechargeAmountAdapter
+import com.tourcoo.training.config.AppConfig
+import com.tourcoo.training.config.AppConfig.TEXT_REQUEST_ERROR
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -30,7 +32,6 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
-import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.util.ToastUtil
@@ -44,8 +45,6 @@ import com.tourcoo.training.entity.recharge.CoinPackageEntity
 import com.tourcoo.training.widget.dialog.pay.BottomPayDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_my_account.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -56,6 +55,7 @@ import kotlin.collections.ArrayList
  * @Email: 971613168@qq.com
  */
 class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
+    private val mTag = "MyAccountActivity"
     private var mRechargeAmountAdapter: RechargeAmountAdapter? = null
     private var etCustomAmount: EditText? = null
     private var tvCustomAmount: TextView? = null
@@ -96,21 +96,21 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
      * @param position
      */
     private fun setSelect(position: Int) {
-        if (position >= mRechargeEntityList.size) {
+        if (mCoinList == null) {
             return
         }
-        if (position < 0) {
-            for (entity in mRechargeEntityList) {
-                entity.selected = false
-            }
+        if (position >= mRechargeEntityList.size || position >= mCoinList!!.size) {
+            return
+        }
+        val size = mRechargeEntityList.size
+        var rechargeEntity: RechargeEntity
+        var coin: CoinInfo
+        for (i in 0 until size) {
+            rechargeEntity = mRechargeEntityList[i]
+            coin = mCoinList!![i]
+            rechargeEntity.selected = i == position
+            coin.isSelected = i == position
 
-        } else {
-            var rechargeEntity: RechargeEntity
-            for (i in mRechargeEntityList.indices) {
-                rechargeEntity = mRechargeEntityList[i]
-                rechargeEntity.selected = i == position
-            }
-            clearEditFocus()
         }
         mRechargeAmountAdapter?.notifyDataSetChanged()
     }
@@ -120,7 +120,6 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         if (etCustomAmount == null) {
             return
         }
-        setSelect(-1)
         etCustomAmount?.requestFocus()
         etCustomAmount?.isFocusable = true
         etCustomAmount?.isFocusableInTouchMode = true
@@ -201,6 +200,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         //选中第一个
         if (recharges.isNotEmpty()) {
             recharges[0].selected = true
+            list[0].isSelected = true
         }
         return recharges
     }
@@ -215,7 +215,6 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                     mCoinList = entity.data.coinPackages
                     loadPackageData(entity.data.coinPackages)
                     tvCurrentCoin.text = entity.data.coinsTotal.toString()
-//                    loadCustomRechargeView()
                 } else {
                     ToastUtil.show(entity.msg)
                 }
@@ -224,28 +223,33 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun showPay() {
+    private fun showPay(coinInfo: CoinInfo?) {
         payDialog = BottomPayDialog(mContext).create()
         payDialog!!.show()
         payDialog!!.setPositiveButton(View.OnClickListener {
-            if (mCoinList != null || mCoinList!!.isEmpty()) {
-                //todo 后面再改
-                requestRecharge(mCoinList!![0])
-            }
+            requestRecharge(coinInfo)
         })
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvConfirmPay -> {
-                showPay()
+                TourCooLogUtil.d(mTag, mRechargeEntityList)
+                val coinInfo = getSelectPackage()
+                if (coinInfo == null) {
+                    ToastUtil.show("请先选择充值套餐")
+                    return
+                }
+                showPay(coinInfo)
             }
             else -> {
             }
         }
     }
 
-
+    /**
+     * 充值
+     */
     private fun requestRecharge(coinInfo: CoinInfo?) {
         if (payDialog == null || coinInfo == null) {
             ToastUtil.show("请先选择套餐类型")
@@ -260,11 +264,20 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                     } else {
                         payByWx(entity.data.thirdPayInfo)
                     }
-
-                    payDialog?.dismiss()
                 } else {
                     ToastUtil.show(entity?.msg)
                 }
+                payDialog?.dismiss()
+            }
+
+            override fun onError(e: Throwable) {
+                dismissProgressDialog()
+                if (AppConfig.DEBUG_MODE) {
+                    ToastUtil.showFailed(e.toString())
+                } else {
+                    ToastUtil.show(TEXT_REQUEST_ERROR)
+                }
+                payDialog?.dismiss()
             }
         })
     }
@@ -346,6 +359,18 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
 
         wxapi.sendReq(request)
 
+    }
+
+    private fun getSelectPackage(): CoinInfo? {
+        if (mCoinList == null) {
+            return null
+        }
+        for (coin in mCoinList!!) {
+            if (coin.isSelected) {
+                return coin
+            }
+        }
+        return null
     }
 
 }
