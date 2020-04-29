@@ -1,9 +1,13 @@
 package com.tourcoo.training.ui.home
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -18,13 +22,15 @@ import com.tourcoo.training.core.base.fragment.BaseBlueBgTitleFragment
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.setting.SettingEntity
 import com.tourcoo.training.entity.study.BannerBean
 import com.tourcoo.training.ui.training.professional.ProfessionalTrainingFragment
-import com.tourcoo.training.ui.training.workpro.WorkProTrainingFragment
 import com.tourcoo.training.ui.training.safe.online.fragment.SafeTrainingFragment
+import com.tourcoo.training.ui.training.workpro.WorkProTrainingFragment
 import com.tourcoo.training.widget.banner.BannerEntity
 import com.tourcoo.training.widget.banner.ImageBannerAdapter
 import com.tourcoo.training.widget.viewpager.SwitchScrollViewPager
@@ -66,15 +72,26 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
         super.setTitleBar(titleBar)
         titleBar?.setTitleMainText("交通安培在线课堂")
         val leftView = titleBar?.getTextView(Gravity.START)
+        val linearLayout = titleBar?.getLinearLayout(Gravity.START)
+        val rootView = LayoutInflater.from(mContext).inflate(R.layout.view_image, linearLayout, false)
+        val imageView = rootView.findViewById(R.id.ivContent) as ImageView
+        imageView.setImageResource(R.drawable.icon_kf_nol)
+        imageView.setOnClickListener(View.OnClickListener {
+            requestSystemConfigAndSkip()
+        })
+        val rootViewMsg = LayoutInflater.from(mContext).inflate(R.layout.view_image, linearLayout, false)
+        val imageViewMsg = rootViewMsg.findViewById(R.id.ivContent) as ImageView
+        imageViewMsg.setImageResource(R.drawable.icon_xx_nol)
+        imageViewMsg.setOnClickListener(View.OnClickListener {
+            //todo
+        })
         setViewGone(leftView, false)
-
-
         showPageChange(0)
-
         llTrainingSafe.setOnClickListener(this@StudyTabFragment)
         llTrainingWorkBefore.setOnClickListener(this@StudyTabFragment)
         llTrainingProfession.setOnClickListener(this@StudyTabFragment)
-
+        linearLayout!!.addView(rootView)
+        linearLayout.addView(rootViewMsg)
 
         val list: MutableList<BannerEntity> = ArrayList()
 
@@ -235,6 +252,29 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
 //        if(isVisibleToUser){
         setStatusBarModeWhite(this)
 //        }
+    }
+
+    private fun requestSystemConfigAndSkip() {
+        ApiRepository.getInstance().requestSystemConfig().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<SettingEntity>>() {
+            override fun onSuccessNext(entity: BaseResult<SettingEntity>?) {
+                if (entity != null) {
+                    if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                        if (entity.data != null) {
+                            telPhone(CommonUtil.getNotNullValue(entity.data.telephone))
+                        }
+                    } else {
+                        ToastUtil.show(entity.msg)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun telPhone(tel: String) {
+        val intent = Intent()
+        intent.action = Intent.ACTION_DIAL
+        intent.data = Uri.parse("tel:" + tel)
+        startActivity(intent)
     }
 }
 

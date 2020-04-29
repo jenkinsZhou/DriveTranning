@@ -127,6 +127,7 @@
         <activity android:name=".ui.training.professional.ProfessionalExamSelectActivity" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
+        <activity android:name=".ui.FeedbackActivity" />
 
 
     </application>

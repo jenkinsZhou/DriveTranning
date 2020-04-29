@@ -29,6 +29,7 @@ import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.account.VehicleInfo
 import com.tourcoo.training.entity.mine.MineItem
+import com.tourcoo.training.ui.FeedbackActivity
 import com.tourcoo.training.ui.account.FindPassActivity
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.MyAccountActivity
@@ -91,6 +92,9 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
             R.id.llUserInfo -> {
                 skipPersonalInfo()
             }
+            R.id.llFedBack->{
+                CommonUtil.startActivity(mContext, FeedbackActivity::class.java)
+            }
             else -> {
             }
         }
@@ -119,6 +123,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         rvStudyAchievement.layoutManager = GridLayoutManager(mContext, 4)
         llAvatar.setOnClickListener(this)
         llUserInfo.setOnClickListener(this)
+        llFedBack.setOnClickListener(this)
         initItemClick()
         loadMineAccount()
         loadAchievement()

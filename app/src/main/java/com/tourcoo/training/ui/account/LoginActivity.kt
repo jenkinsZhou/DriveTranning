@@ -2,8 +2,13 @@ package com.tourcoo.training.ui.account
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -12,18 +17,17 @@ import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
+import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.AccountHelper
-import com.tourcoo.training.entity.account.AccountTempHelper
-import com.tourcoo.training.entity.account.UserInfo
-import com.tourcoo.training.entity.account.UserInfoEvent
+import com.tourcoo.training.entity.account.*
 import com.tourcoo.training.entity.setting.SettingEntity
 import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.account.register.RecognizeLicenseActivity
 import com.tourcoo.training.ui.training.RichWebViewActivity
 import com.trello.rxlifecycle3.android.ActivityEvent
+import kotlinx.android.synthetic.main.activity_find_password.*
 import kotlinx.android.synthetic.main.activity_login.*
 import org.greenrobot.eventbus.EventBus
 
@@ -36,6 +40,7 @@ import org.greenrobot.eventbus.EventBus
  */
 class LoginActivity : BaseTitleActivity(), View.OnClickListener {
     private val mTag = "LoginActivity"
+    private var checkInputList: MutableList<InputStatus>? = null
 
     companion object {
         const val EXTRA_KEY_REGISTER_TYPE = "EXTRA_KEY_REGISTER_TYPE"
@@ -54,11 +59,17 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        checkInputList = ArrayList()
         tvRegisterDriver.setOnClickListener(this)
         tvRegisterIndustrial.setOnClickListener(this)
         tvLogin.setOnClickListener(this)
         btnForgetPassword.setOnClickListener(this)
         btnContent.setOnClickListener(this)
+        listenInput(etPass,ivPassCheck)
+        listenInputLegal(etIdCard,ivAccountCheck)
+        showButtonByInput(hasInputAll())
+        listenInputFocus(etIdCard,viewLineAccount)
+        listenInputFocus(etPass,viewLinePass)
     }
 
     override fun onClick(v: View?) {
@@ -74,7 +85,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             R.id.tvLogin -> {
                 doLogin()
             }
-            R.id.btnContent-> {
+            R.id.btnContent -> {
                 requestSystemConfigAndSkip()
             }
 
@@ -170,5 +181,85 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         })
     }
 
+
+    private fun showButtonByInput(canInput: Boolean) {
+        tvLogin.isClickable = canInput
+        if (canInput) {
+            tvLogin.background = ResourceUtil.getDrawable(R.drawable.selector_gradient_radius_25_blue)
+        } else {
+            tvLogin.background = ResourceUtil.getDrawable(R.drawable.bg_radius_25_gray_d2d2d2)
+        }
+    }
+
+    private fun listenInput(editText: EditText, imageView: ImageView?) {
+        var inputStatus = InputStatus()
+        checkInputList?.add(inputStatus)
+        imageView?.setOnClickListener { editText.setText("") }
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                inputStatus.isHasInput = s.isNotEmpty()
+                setViewGone(imageView, s.isNotEmpty())
+                LogUtils.iTag(mTag, "hasInputAll=" + hasInputAll())
+                showButtonByInput(hasInputAll())
+            }
+        })
+
+    }
+
+
+    private fun listenInputLegal(editText: EditText, imageView: ImageView?) {
+        var inputStatus = InputStatus()
+        checkInputList?.add(inputStatus)
+        imageView?.setOnClickListener { editText.setText("") }
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                inputStatus.isHasInput = s.isNotEmpty()
+                setViewGone(imageView, s.toString().length == 18)
+                LogUtils.iTag(mTag, "hasInputAll=" + hasInputAll())
+                showButtonByInput(hasInputAll())
+            }
+        })
+
+    }
+
+    private fun hasInputAll(): Boolean {
+        for (hasInput in checkInputList!!) {
+            if (!hasInput.isHasInput) {
+                return false
+            } else {
+                continue
+            }
+        }
+        return true
+    }
+
+
+    private fun listenInputFocus(editText: EditText, lineView: View) {
+        editText.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                //获得焦点
+                showSelectLine(lineView)
+            } else {
+                //失去焦点
+                showUnSelectLine(lineView)
+            }
+        }
+    }
+
+    private fun showSelectLine(view: View?) {
+        if (view != null) {
+            view.background = ResourceUtil.getDrawable(R.color.colorPrimaryDark)
+        }
+    }
+
+    private fun showUnSelectLine(view: View?) {
+        if (view != null) {
+            view.background = ResourceUtil.getDrawable(R.color.grayA0A0A0)
+        }
+    }
 }
 
