@@ -1210,11 +1210,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      * 播放状态切换
      */
     private fun onPlayStateSwitch(playerState: Int) {
-        if (playerState == IPlayer.started) {
-            ToastUtils.showShort("IPlayer.started")
-        } else if (playerState == IPlayer.paused) {
-            ToastUtils.showShort("IPlayer.paused")
-        }
+//        if (playerState == IPlayer.started) {
+//            ToastUtils.showShort("IPlayer.started")
+//        } else if (playerState == IPlayer.paused) {
+//            ToastUtils.showShort("IPlayer.paused")
+//        }
     }
 
     private class MySeekCompleteListener internal constructor(activity: AliYunPlayVideoActivity) : IPlayer.OnSeekCompleteListener {

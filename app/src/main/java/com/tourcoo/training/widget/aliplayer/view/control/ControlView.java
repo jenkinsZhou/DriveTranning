@@ -8,6 +8,7 @@ import android.os.Message;
 
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -329,9 +330,25 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
                 mHideHandler.sendEmptyMessageDelayed(WHAT_HIDE, DELAY_TIME);
             }
         };
-        //seekbar的滑动监听
-        mLargeSeekbar.setOnSeekBarChangeListener(seekBarChangeListener);
-        mSmallSeekbar.setOnSeekBarChangeListener(seekBarChangeListener);
+        //禁用seekbar的滑动监听
+//        mLargeSeekbar.setOnSeekBarChangeListener(seekBarChangeListener);
+//        mSmallSeekbar.setOnSeekBarChangeListener(seekBarChangeListener);
+        mSmallSeekbar.setEnabled(false);
+        mLargeSeekbar.setEnabled(false);
+        mSmallSeekbar.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        mLargeSeekbar.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+
+
         //全屏下的切换分辨率按钮监听
         mLargeChangeQualityBtn.setOnClickListener(new OnClickListener() {
             @Override

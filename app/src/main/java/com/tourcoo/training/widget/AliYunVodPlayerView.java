@@ -1139,26 +1139,27 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
 
             @Override
             public void onHorizontalDistance(float downX, float nowX) {
+                //todo:手势禁用
                 //水平滑动调节seek。
                 // seek需要在手势结束时操作。
-                long duration = mAliyunVodPlayer.getDuration();
-                long position = mCurrentPosition;
-                long deltaPosition = 0;
-                int targetPosition = 0;
-                if (mPlayerState == IPlayer.prepared ||
-                        mPlayerState == IPlayer.paused ||
-                        mPlayerState == IPlayer.started) {
-                    //在播放时才能调整大小
-                    deltaPosition = (long) (nowX - downX) * duration / getWidth();
-                    targetPosition = getTargetPosition(duration, position, deltaPosition);
-                }
-
-                if (mGestureDialogManager != null) {
-                    inSeek = true;
-                    mControlView.setVideoPosition(targetPosition);
-                    requestBitmapByPosition(targetPosition);
-                    showThumbnailView();
-                }
+//                long duration = mAliyunVodPlayer.getDuration();
+//                long position = mCurrentPosition;
+//                long deltaPosition = 0;
+//                int targetPosition = 0;
+//                if (mPlayerState == IPlayer.prepared ||
+//                        mPlayerState == IPlayer.paused ||
+//                        mPlayerState == IPlayer.started) {
+//                    //在播放时才能调整大小
+//                    deltaPosition = (long) (nowX - downX) * duration / getWidth();
+//                    targetPosition = getTargetPosition(duration, position, deltaPosition);
+//                }
+//
+//                if (mGestureDialogManager != null) {
+//                    inSeek = true;
+//                    mControlView.setVideoPosition(targetPosition);
+//                    requestBitmapByPosition(targetPosition);
+//                    showThumbnailView();
+//                }
             }
 
             @Override
@@ -1197,18 +1198,20 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
                 if (mGestureDialogManager != null) {
                     mGestureDialogManager.dismissBrightnessDialog();
                     mGestureDialogManager.dismissVolumeDialog();
-                    if (inSeek) {
-                        int seekPosition = mControlView.getVideoPosition();
-                        if (seekPosition >= mAliyunVodPlayer.getDuration()) {
-                            seekPosition = (int) (mAliyunVodPlayer.getDuration() - 1000);
-                        }
-                        if (seekPosition >= 0) {
-                            seekTo(seekPosition);
-                            hideThumbnailView();
-                        } else {
-                            inSeek = false;
-                        }
-                    }
+
+                    //todo:手势禁用
+//                    if (inSeek) {
+//                        int seekPosition = mControlView.getVideoPosition();
+//                        if (seekPosition >= mAliyunVodPlayer.getDuration()) {
+//                            seekPosition = (int) (mAliyunVodPlayer.getDuration() - 1000);
+//                        }
+//                        if (seekPosition >= 0) {
+//                            seekTo(seekPosition);
+//                            hideThumbnailView();
+//                        } else {
+//                            inSeek = false;
+//                        }
+//                    }
 
                 }
             }
