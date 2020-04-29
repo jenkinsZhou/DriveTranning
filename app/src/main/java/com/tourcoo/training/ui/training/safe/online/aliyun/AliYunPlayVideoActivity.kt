@@ -17,6 +17,7 @@ import com.aliyun.player.bean.ErrorCode
 import com.aliyun.player.nativeclass.PlayerConfig
 import com.aliyun.player.source.UrlSource
 import com.aliyun.player.source.VidSts
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
@@ -283,11 +284,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         for (entry in mCourseHashMap!!.entries) {
             loadCourseStatus(entry.value, entry.key)
         }
+
+        LogUtils.e(countCatalog,countNode)
+
         tvCourseCountInfoAli.text = "共" + countCatalog + "章" + countNode + "小节"
         tvCourseTimeAli.text = "课时：" + detail.courseTime.toString()
-        setViewGone(tvCourseCountInfoAli,true)
-        setViewGone(tvCourseTimeAli,true)
-        setViewGone(llCourseInfoAli,true)
         tvTitle.text = getNotNullValue(detail.title)
     }
 
