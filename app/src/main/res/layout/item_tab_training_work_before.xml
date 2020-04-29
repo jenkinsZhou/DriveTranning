@@ -22,9 +22,8 @@
             <ImageView
                 android:id="@+id/ivVideoThumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/dp_110"
-                android:scaleType="centerCrop"
+                android:layout_height="@dimen/dp_140"
+                android:scaleType="centerInside"
                 android:src="@drawable/img_training_free_video" />
 
             <ImageView

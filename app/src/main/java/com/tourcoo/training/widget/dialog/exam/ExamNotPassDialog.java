@@ -25,8 +25,8 @@ public class ExamNotPassDialog {
 
     private Context mContext;
     private Dialog dialog;
-    private TextView tvPositive;
     private TextView tvTips;
+    private TextView btnSubmit;
 
     public ExamNotPassDialog(Context context) {
         this.mContext = context;
@@ -46,9 +46,8 @@ public class ExamNotPassDialog {
         // 定义Dialog布局和参数
         dialog = new Dialog(mContext, R.style.AlertDialogStyle);
         dialog.setContentView(view);
-        tvPositive = view.findViewById(R.id.tvPositive);
+        btnSubmit = view.findViewById(R.id.btnSubmit);
         tvTips = view.findViewById(R.id.tvTips);
-        view.findViewById(R.id.tvNegative).setOnClickListener(v -> dismiss());
         Window window = dialog.getWindow();
         if (window != null) {
             WindowManager m = window.getWindowManager();
@@ -99,8 +98,8 @@ public class ExamNotPassDialog {
 
 
     public ExamNotPassDialog setPositiveButtonListener(View.OnClickListener onClickListener) {
-        if (tvPositive != null) {
-            tvPositive.setOnClickListener(onClickListener);
+        if (btnSubmit != null) {
+            btnSubmit.setOnClickListener(onClickListener);
         }
         return this;
     }

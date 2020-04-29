@@ -249,7 +249,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_17"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:text="依法规定3年以下处罚，导致他人伤亡 但没有提到逃逸。所以也是三年以下。" />
+                    android:text="" />
             </LinearLayout>
 
 

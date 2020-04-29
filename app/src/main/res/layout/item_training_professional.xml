@@ -8,8 +8,9 @@
         android:id="@+id/ivCover"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_100"
+        android:scaleType="centerCrop"
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginRight="@dimen/dp_15"
-        android:src="@mipmap/icon_car_networking" />
+        android:src="@drawable/ic_rect_default" />
 
 </LinearLayout>

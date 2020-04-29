@@ -26,6 +26,7 @@ import com.tourcoo.training.entity.training.HlsParams;
 import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
 import com.tourcoo.training.entity.training.ProfessionalTwoTypeModel;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
+import com.tourcoo.training.entity.training.TwoTypeModel;
 
 import java.util.List;
 import java.util.Map;
@@ -182,6 +183,10 @@ public interface ApiService {
     @POST("v1.0/training/get-exam-detail")
     Observable<BaseResult<ExamEntity>> requestExam(@Body Map<String, Object> map);
 
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/open/Special/list-special-training-present-month-plan")
+    Observable<BaseResult<TwoTypeModel>> requestTwoTypeDetailsList(@Body Map<String, Object> map);
+
 
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
     @POST("v1.0/open/Special/list-special-training-by-module-id")
@@ -294,5 +299,9 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
     @POST("v1.0/open/Individual/individual-business-payinfo-pay")
     Observable<BaseResult> requestBusinessPayInfo(@Body Map<String, Object> map);
+
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
+    @POST("v1.0/open/Special/special-payinfo-pay")
+    Observable<BaseResult> requestTwoPayInfo(@Body Map<String, Object> map);
 
 }

@@ -28,7 +28,7 @@ public class ProfessionalTrainingAdapter extends BaseQuickAdapter<ProfessionTrai
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, ProfessionTrainingEntity item) {
-        GlideManager.loadImg(item.getCoverUrl(), helper.getView(R.id.ivCover),R.mipmap.icon_car_networking);
+        GlideManager.loadImg(item.getCoverUrl(), helper.getView(R.id.ivCover),R.drawable.ic_rect_default);
     }
 
 }

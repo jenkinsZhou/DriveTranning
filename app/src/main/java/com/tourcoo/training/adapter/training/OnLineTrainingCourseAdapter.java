@@ -37,7 +37,7 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
     @Override
     protected void convert(@NonNull BaseViewHolder helper, CourseInfo item) {
         ImageView ivVideoThumbnail = helper.getView(R.id.ivVideoThumbnail);
-        GlideManager.loadImg(CommonUtil.getUrl(item.getCoverUrl()), ivVideoThumbnail, R.mipmap.icon_car_networking);
+        GlideManager.loadImg(CommonUtil.getUrl(item.getCoverUrl()), ivVideoThumbnail, R.drawable.ic_rect_default);
         helper.setText(R.id.tvCourseTimeRange, CommonUtil.getNotNullValue(item.getTimeRange()));
         helper.setText(R.id.tvCourseTitle, CommonUtil.getNotNullValue(item.getTitle()));
         ProgressBar progressBarOnLine = helper.getView(R.id.progressBarOnLine);

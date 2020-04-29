@@ -32,6 +32,7 @@ import com.tourcoo.training.entity.training.HlsParams;
 import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
 import com.tourcoo.training.entity.training.ProfessionalTwoTypeModel;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
+import com.tourcoo.training.entity.training.TwoTypeModel;
 import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
@@ -235,6 +236,15 @@ public class ApiRepository extends BaseRepository {
     }
 
 
+    public Observable<BaseResult<TwoTypeModel>> requestTwoTypeDetailsList(String ID, String childModuleId) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("ID", ID);
+        params.put("ChildModuleId", childModuleId);
+        return CommonTransformer.switchSchedulers(getApiService().requestTwoTypeDetailsList(params).retryWhen(new RetryWhen()));
+    }
+
+
+
     public Observable<BasePageResult<ProfessionTrainingEntity>> requestCourseProfessionalTraining(int page) {
         Map<String, Object> params = new HashMap<>(2);
         if (page == 0) {
@@ -381,5 +391,15 @@ public class ApiRepository extends BaseRepository {
         params.put("num", num);
         return CommonTransformer.switchSchedulers(getApiService(). requestBusinessPayInfo(params).retryWhen(new RetryWhen()));
     }
+
+
+    public Observable<BaseResult> requestTwoPayInfo(String ID,String childModuleId,String coins) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("ID", ID);
+        params.put("ChildModuleId", childModuleId);
+        params.put("Coins", coins);
+        return CommonTransformer.switchSchedulers(getApiService(). requestTwoPayInfo(params).retryWhen(new RetryWhen()));
+    }
+
 
 }

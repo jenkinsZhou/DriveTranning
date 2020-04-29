@@ -26,6 +26,7 @@ public class ExamPassDialog {
     private Context mContext;
     private Dialog dialog;
     private TextView tvPositive;
+    private TextView tvNegative;
     private TextView tvTips;
 
     public ExamPassDialog(Context context) {
@@ -47,8 +48,8 @@ public class ExamPassDialog {
         dialog = new Dialog(mContext, R.style.AlertDialogStyle);
         dialog.setContentView(view);
         tvPositive = view.findViewById(R.id.tvPositive);
+        tvNegative = view.findViewById(R.id.tvNegative);
         tvTips = view.findViewById(R.id.tvTips);
-        view.findViewById(R.id.tvNegative).setOnClickListener(v -> dismiss());
         Window window = dialog.getWindow();
         if (window != null) {
             WindowManager m = window.getWindowManager();
@@ -101,6 +102,13 @@ public class ExamPassDialog {
     public ExamPassDialog setPositiveButtonListener(View.OnClickListener onClickListener) {
         if (tvPositive != null) {
             tvPositive.setOnClickListener(onClickListener);
+        }
+        return this;
+    }
+
+    public ExamPassDialog setNegativeButtonListener(View.OnClickListener onClickListener) {
+        if (tvNegative != null) {
+            tvNegative.setOnClickListener(onClickListener);
         }
         return this;
     }

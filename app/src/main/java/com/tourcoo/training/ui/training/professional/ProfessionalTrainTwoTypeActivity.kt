@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.training.professional
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import com.blankj.utilcode.util.ConvertUtils
@@ -31,8 +32,10 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
         return R.layout.frame_layout_title_refresh_recycler
     }
 
+    private var adapter: ProfessionalTrainingTwoTypeAdapter? = null
     override fun getAdapter(): BaseQuickAdapter<ProfessionalTwoTypeModel, BaseViewHolder> {
-        return ProfessionalTrainingTwoTypeAdapter()
+        adapter = ProfessionalTrainingTwoTypeAdapter()
+        return adapter!!
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
@@ -49,17 +52,23 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
         mRecyclerView.addItemDecoration(RecycleViewDivider(this, LinearLayout.VERTICAL, ConvertUtils.dp2px(10f), resources.getColor(R.color.grayFBF8FB), true))
 
 
-        adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+        adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             val info = adapter.data[position] as ProfessionalTwoTypeModel
             if (info.type == "0") {//直接跳转到课程列表
                 ToastUtil.show("直接跳转到课程列表")
-            } else {//直接跳转到考试分类列表
 
+                val intent = Intent(this, ProfessionalExamSelectActivity::class.java)
+                intent.putExtra("id",id)
+                intent.putExtra("childModuleId", info.childModuleId)
+                intent.putExtra("title", info.title)
+                intent.putExtra("coins", info.coins)
+                startActivity(intent)
+
+            } else {//直接跳转到考试分类列表
+                ToastUtil.show("直接跳转到考试列表")
             }
 
-//            val intent = Intent(this,CertificationDetailsActivity::class.java)
-//            intent.putExtra("id",info.id)
-//            startActivity(intent)
+
         }
 
 
@@ -71,7 +80,7 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
 
 
     private fun requestTwoTypeDatas() {
-        ApiRepository.getInstance().requestTwoType(id).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<List<ProfessionalTwoTypeModel>>>() {
+        ApiRepository.getInstance().requestTwoType(id).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<List<ProfessionalTwoTypeModel>>>(iHttpRequestControl) {
             override fun onSuccessNext(entity: BaseResult<List<ProfessionalTwoTypeModel>>?) {
                 UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity!!.data == null) ArrayList<ProfessionalTwoTypeModel>() else entity.data, null)
             }

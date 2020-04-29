@@ -159,37 +159,15 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         achievementAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {
-                    val intent = Intent(mContext, ProfessionalExamSelectActivity::class.java)
-                    startActivity(intent)
 
                 }
 
                 1 -> {
-                    val dialog = ExamNotPassDialog(mContext)
-                    dialog.setTips(" 总共40道题，答对20道题，总分60分。\n(80分合格）")
-//                                .setPositiveButtonClick("确认") {
-//                                    verifyByStatus(courseInfo)
-//                                    dialog.dismiss()
-//                                }
-//                                .setNegativeButtonClick("取消") {
-//                                    dialog.dismiss()
-//                                }
-                            .create()
-                            .show()
+
                 }
 
                 2 -> {
-                    val dialog = ExamPassDialog(mContext)
-                    dialog.setTips(" 总共40道题，答对20道题，总分60分。\n(80分合格）")
-//                                .setPositiveButtonClick("确认") {
-//                                    verifyByStatus(courseInfo)
-//                                    dialog.dismiss()
-//                                }
-//                                .setNegativeButtonClick("取消") {
-//                                    dialog.dismiss()
-//                                }
-                            .create()
-                            .show()
+
                 }
 
                 3 -> {
@@ -324,7 +302,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         val orderItem = MineItem()
         orderItem.iconId = R.drawable.icon_indent
         orderItem.itemName = "订单"
-        val accountList: MutableList<MineItem> = ArrayList()
+        val accountList: MutableList<MineItem> = ArrayList<MineItem>()
         accountList.add(accountItem)
         accountList.add(chargeItem)
         accountList.add(orderItem)

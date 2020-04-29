@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.exam
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -9,6 +10,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -29,6 +31,8 @@ import com.tourcoo.training.core.util.Base64Util
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.exam.*
+import com.tourcoo.training.ui.MainTabActivity
+import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
 import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
@@ -126,7 +130,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                 baseHandler.postDelayed(Runnable {
                     //交卷
                     doCommitExam()
-                },500)
+                }, 500)
             }
             else -> {
             }
@@ -166,6 +170,8 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
         val hasAnswer = fragment.answerQuestion()
         if (hasAnswer) {
+
+
             skipNextQuestionDelay(delayTime)
         } else {
             skipNextQuestionNow()
@@ -318,13 +324,11 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                         val dialog = ExamNotPassDialog(mContext)
                         dialog.create()
                                 .setTips(entity.data.tips)
-//                                .setPositiveButtonClick("确认") {
-//                                    verifyByStatus(courseInfo)
-//                                    dialog.dismiss()
-//                                }
-//                                .setNegativeButtonClick("取消") {
-//                                    dialog.dismiss()
-//                                }
+                                .setPositiveButtonListener {
+                                    dialog.dismiss()
+                                    startActivity(Intent(this@OnlineExamActivity, MainTabActivity::class.java))
+                                    ActivityUtils.finishOtherActivities(MainTabActivity::class.java)
+                                }
                                 .show()
                     }
 
@@ -345,12 +349,16 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                     val dialog = ExamPassDialog(mContext)
                     dialog.create()
                             .setTips(tips)
-//                                .setPositiveButtonClick("确认") {
-//                                    dialog.dismiss()
-//                                }
-//                                .setNegativeButtonClick("查看证书") {
-//                                    dialog.dismiss()
-//                                }
+                            .setPositiveButtonListener {
+                                dialog.dismiss()
+                                startActivity(Intent(this@OnlineExamActivity, MainTabActivity::class.java))
+                                ActivityUtils.finishOtherActivities(MainTabActivity::class.java)
+                            }
+                            .setNegativeButtonListener {
+                                dialog.dismiss()
+                                startActivity(Intent(this@OnlineExamActivity, MyCertificationActivity::class.java))
+                                finish()
+                            }
                             .show()
                 } else {
                     ToastUtil.show(entity.msg)
@@ -467,7 +475,6 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             setViewGone(tvNextQuestion, true)
         }
     }
-
 
 
 }
