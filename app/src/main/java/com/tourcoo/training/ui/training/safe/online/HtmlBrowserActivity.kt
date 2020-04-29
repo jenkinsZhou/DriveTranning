@@ -316,7 +316,7 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
                 setViewGone(tvPlanDesc, false)
             }
             TencentPlayVideoActivity.COURSE_STATUS_PLAYING -> {
-                imageView.setImageResource(R.mipmap.ic_playing)
+                imageView.setImageResource(R.mipmap.ic_eyes)
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))

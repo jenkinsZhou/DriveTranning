@@ -25,4 +25,6 @@ public class AppConfig {
     public static  String[] PERMISSION = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
 
     public static final String TEXT_NO_FINISH_TIP = "此功能正在开发中，预计5月15日上线使用";
+
+    public static final String TEXT_REQUEST_ERROR = "服务器异常 请稍后再试";
 }
