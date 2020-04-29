@@ -165,4 +165,8 @@ public class SplashActivity extends BaseTitleActivity {
     public void onBackPressed() {
         //do nothing
     }
+
+
+
+
 }

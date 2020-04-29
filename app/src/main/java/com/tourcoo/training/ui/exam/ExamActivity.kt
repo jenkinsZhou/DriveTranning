@@ -47,7 +47,7 @@ import org.apache.commons.lang.StringUtils
  * @date 2020年03月09日17:14
  * @Email: 971613168@qq.com
  */
-class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
+class ExamActivity : BaseTitleActivity(), View.OnClickListener {
     private val mTag = "OnlineExamActivity"
     private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
     private var questionNumAdapter: QuestionNumberAdapter? = null
@@ -169,6 +169,8 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
         val hasAnswer = fragment.answerQuestion()
+        //控制题解显示或隐藏
+        fragment.showQuestionAnalysis(hasAnswer)
         if (hasAnswer) {
 
 
@@ -326,7 +328,7 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                                 .setTips(entity.data.tips)
                                 .setPositiveButtonListener {
                                     dialog.dismiss()
-                                    startActivity(Intent(this@OnlineExamActivity, MainTabActivity::class.java))
+                                    startActivity(Intent(this@ExamActivity, MainTabActivity::class.java))
                                     ActivityUtils.finishOtherActivities(MainTabActivity::class.java)
                                 }
                                 .show()
@@ -351,12 +353,12 @@ class OnlineExamActivity : BaseTitleActivity(), View.OnClickListener {
                             .setTips(tips)
                             .setPositiveButtonListener {
                                 dialog.dismiss()
-                                startActivity(Intent(this@OnlineExamActivity, MainTabActivity::class.java))
+                                startActivity(Intent(this@ExamActivity, MainTabActivity::class.java))
                                 ActivityUtils.finishOtherActivities(MainTabActivity::class.java)
                             }
                             .setNegativeButtonListener {
                                 dialog.dismiss()
-                                startActivity(Intent(this@OnlineExamActivity, MyCertificationActivity::class.java))
+                                startActivity(Intent(this@ExamActivity, MyCertificationActivity::class.java))
                                 finish()
                             }
                             .show()

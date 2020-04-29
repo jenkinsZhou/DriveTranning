@@ -86,13 +86,13 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
 //        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
 //        imageView.setImageResource(R.drawable.img_training_free_video)
 
-        tvTest.setOnClickListener {
+        /*tvTest.setOnClickListener {
             if (mTitleBar.visibility != View.GONE) {
                 mTitleBar.visibility = View.GONE
             } else {
                 mTitleBar.visibility = View.VISIBLE
             }
-        }
+        }*/
 
         requestPlanDetail()
     }

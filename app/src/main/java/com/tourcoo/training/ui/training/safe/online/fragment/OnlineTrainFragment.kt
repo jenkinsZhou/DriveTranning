@@ -355,7 +355,7 @@ class OnlineTrainFragment : BaseFragment() {
             }
             TYPE_COURSE_OTHER -> {
                 //混合非加密 使用腾讯播放器
-                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+                intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
             }
 
         }
@@ -415,7 +415,7 @@ class OnlineTrainFragment : BaseFragment() {
 
 
     private fun showInputDialog() {
-         inputAlert = InputPayNumAlert(mContext)
+        inputAlert = InputPayNumAlert(mContext)
         inputAlert!!.create().setConfirmClick {
             if (inputAlert!!.inputCount <= 0) {
                 ToastUtil.show("请选择课程时长")
@@ -424,7 +424,7 @@ class OnlineTrainFragment : BaseFragment() {
             requestBusinessPayInfo(inputAlert!!.inputCount)
             inputAlert!!.dismiss()
         }
-        inputAlert!!.show()
+                .setLimitCount(0, 12, 1).show()
     }
 
 

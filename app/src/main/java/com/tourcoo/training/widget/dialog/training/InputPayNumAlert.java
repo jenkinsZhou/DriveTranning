@@ -31,6 +31,7 @@ public class InputPayNumAlert {
     private TextView tvAlertTile;
     private TextView tvAlertConfirm;
     private int count;
+    private AddSubtractView addSubtractView;
 
 
     public InputPayNumAlert(Context context) {
@@ -48,7 +49,8 @@ public class InputPayNumAlert {
     public InputPayNumAlert create() {
         // 获取Dialog布局
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_buy_course_industroy, null);
-        AddSubtractView addSubtractView = view.findViewById(R.id.asView);
+        addSubtractView = view.findViewById(R.id.asView);
+        addSubtractView.setLimit(0, 12, 1);
         addSubtractView.setListener(new AddSubtractView.OnAddSubtractListener() {
             @Override
             public void onMoreMax() {
@@ -74,6 +76,12 @@ public class InputPayNumAlert {
             }
         });
         tvAlertTile = view.findViewById(R.id.tvAlertTile);
+        view.findViewById(R.id.ivCloseRect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         // 设置Dialog最小宽度为屏幕宽度
         view.setMinimumWidth(width);
         // 定义Dialog布局和参数
@@ -159,4 +167,11 @@ public class InputPayNumAlert {
     public void setInputCount(int count) {
         this.count = count;
     }
+
+    public InputPayNumAlert setLimitCount(int min, int max, int current) {
+        addSubtractView.setLimit(min, max, current);
+        count = current;
+        return this;
+    }
+
 }

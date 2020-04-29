@@ -25,8 +25,8 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.TrainingPlanDetail
-import com.tourcoo.training.ui.exam.OnlineExamActivity
-import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
+import com.tourcoo.training.ui.exam.ExamActivity
+import com.tourcoo.training.ui.exam.ExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -544,7 +544,7 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("未获取到考试信息")
             return
         }
-        val intent = Intent(mContext, OnlineExamActivity::class.java)
+        val intent = Intent(mContext, ExamActivity::class.java)
         //培训计划id
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         //考试题id

@@ -62,7 +62,7 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
     @Override
     public RefreshHeader createRefreshHeader(@NonNull Context context, @NonNull RefreshLayout layout) {
         layout.setEnableHeaderTranslationContent(true)
-                .setPrimaryColorsId(R.color.colorAccent)
+                .setPrimaryColorsId(R.color.white)
                 .setEnableOverScrollDrag(true);
         ClassicsHeader classicsHeader = new ClassicsHeader(mContext);
         return classicsHeader;
@@ -75,8 +75,8 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
             //设置动画是否一直开启
             adapter.isFirstOnly(false);
             //设置动画
-            adapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
-            adapter.openLoadAnimation();
+//            adapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
+//            adapter.openLoadAnimation();
         }
         //方式一:设置FastLoadMoreView--可参考FastLoadMoreView.Builder相应set方法
         //默认配置请参考FastLoadMoreView.Builder(mContext)里初始化

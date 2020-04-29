@@ -26,6 +26,7 @@ import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
+import com.tourcoo.training.entity.setting.SettingEntity;
 import com.tourcoo.training.entity.study.BannerBean;
 import com.tourcoo.training.entity.training.DRMParams;
 import com.tourcoo.training.entity.training.HlsParams;
@@ -390,6 +391,9 @@ public class ApiRepository extends BaseRepository {
         Map<String, Object> params = new HashMap<>(1);
         params.put("num", num);
         return CommonTransformer.switchSchedulers(getApiService(). requestBusinessPayInfo(params).retryWhen(new RetryWhen()));
+    }
+    public Observable<BaseResult<SettingEntity>> requestSystemConfig() {
+        return CommonTransformer.switchSchedulers(getApiService(). requestSystemConfig().retryWhen(new RetryWhen()));
     }
 
 

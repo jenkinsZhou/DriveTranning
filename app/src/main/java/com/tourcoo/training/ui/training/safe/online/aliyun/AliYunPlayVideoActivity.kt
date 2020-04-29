@@ -32,7 +32,7 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.*
-import com.tourcoo.training.ui.exam.OnlineExamActivity
+import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.widget.AliYunVodPlayerView
@@ -60,10 +60,6 @@ import com.tourcoo.training.widget.aliplayer.view.tipsview.ErrorInfo
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_ali.*
-import kotlinx.android.synthetic.main.activity_play_video_tencent.llPlanContentView
-import kotlinx.android.synthetic.main.activity_play_video_tencent.tvExam
-import kotlinx.android.synthetic.main.activity_play_video_tencent.tvTest
-import kotlinx.android.synthetic.main.activity_play_video_tencent.tvTitle
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -154,6 +150,16 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     private val downloadDialog: Dialog? = null
 
+    /**
+     * 章的数量
+     */
+    private var countCatalog = 0
+
+    /**
+     * 节的数量
+     */
+    private var countNode = 0
+
     companion object {
         const val IMG_TRANSITION = "IMG_TRANSITION"
         const val TRANSITION = "TRANSITION"
@@ -190,16 +196,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         mCourseList = ArrayList()
         mCourseHashMap = HashMap()
         //todo 增加封面
-
-
-        tvTest.setOnClickListener {
-            if (mTitleBar.visibility != View.GONE) {
-                mTitleBar.visibility = View.GONE
-            } else {
-                mTitleBar.visibility = View.VISIBLE
-            }
-        }
-
         requestPlanDetail()
     }
 
@@ -271,7 +267,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         mCourseHashMap!!.clear()
         mCourseList!!.clear()
         llPlanContentView.removeAllViews()
-        tvTitle.text = getNotNullValue(detail.title)
         val subjects = detail.subjects
         for (subject in subjects) {
             //如果标题名称不为空则添加标题
@@ -288,8 +283,12 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         for (entry in mCourseHashMap!!.entries) {
             loadCourseStatus(entry.value, entry.key)
         }
-
-
+        tvCourseCountInfoAli.text = "共" + countCatalog + "章" + countNode + "小节"
+        tvCourseTimeAli.text = "课时：" + detail.courseTime.toString()
+        setViewGone(tvCourseCountInfoAli,true)
+        setViewGone(tvCourseTimeAli,true)
+        setViewGone(llCourseInfoAli,true)
+        tvTitle.text = getNotNullValue(detail.title)
     }
 
 
@@ -311,6 +310,12 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         for (index in newCatalogs.size - 1 downTo 0) {
             val catalog = newCatalogs[index]
+            if (catalog.level == 1) {
+                countCatalog++
+            }
+            if(catalog.level == 2){
+                countNode++
+            }
             if (!TextUtils.isEmpty(catalog.name)) {
                 //标题不为空时添加TextView
                 val contentView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_content, null)
@@ -497,11 +502,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("未获取到考试信息")
             return
         }
-        val intent = Intent(mContext, OnlineExamActivity::class.java)
+        val intent = Intent(mContext, ExamActivity::class.java)
         //培训计划id
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         //考试题id
-        intent.putExtra(OnlineExamActivity.EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
+        intent.putExtra(ExamActivity.EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
         startActivity(intent)
     }
 
@@ -543,6 +548,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private fun showExit() {
+        val progress = aliYunPlayer.currentSecond
+        if (progress <= 0) {
+            finish()
+            return
+        }
         IosAlertDialog(mContext)
                 .init()
                 .setCancelable(false)

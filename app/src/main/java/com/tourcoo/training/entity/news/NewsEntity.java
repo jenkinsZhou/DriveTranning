@@ -3,6 +3,7 @@ package com.tourcoo.training.entity.news;
 import android.text.TextUtils;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -58,8 +59,17 @@ public class NewsEntity implements MultiItemEntity {
     private int ReadTotal;
     private String CreateTime;
     private String SystemTime;
-    private String time;
 
+    @SerializedName("time")
+    private String publishTime;
+
+    public String getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
+    }
 
     private int Tag;
     private int SharedNum;

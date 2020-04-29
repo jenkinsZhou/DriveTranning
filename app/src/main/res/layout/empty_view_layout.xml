@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:minHeight="@dimen/dp_500"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ivNoData"
+                android:layout_width="wrap_content"
+                android:layout_height="155dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/img_no_content" />
+
+            <TextView
+                android:id="@+id/tvErrorContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="暂无数据" />
+
+            <TextView
+                android:visibility="gone"
+                android:minWidth="@dimen/dp_140"
+                android:id="@+id/tvRefreshRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_18"
+                android:layout_marginTop="@dimen/dp_25"
+                android:layout_marginEnd="@dimen/dp_18"
+                android:background="@drawable/selector_gradient_radius_25_blue"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:paddingStart="@dimen/dp_38"
+                android:paddingTop="@dimen/dp_7"
+                android:paddingEnd="@dimen/dp_38"
+                android:paddingBottom="@dimen/dp_7"
+                android:text="刷  新"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_15" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

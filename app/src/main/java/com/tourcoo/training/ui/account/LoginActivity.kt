@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import com.blankj.utilcode.util.ToastUtils
 import com.tourcoo.training.R
-import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -20,9 +18,11 @@ import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.account.UserInfoEvent
+import com.tourcoo.training.entity.setting.SettingEntity
 import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.account.register.RecognizeLicenseActivity
+import com.tourcoo.training.ui.training.RichWebViewActivity
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_login.*
 import org.greenrobot.eventbus.EventBus
@@ -58,6 +58,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         tvRegisterIndustrial.setOnClickListener(this)
         tvLogin.setOnClickListener(this)
         btnForgetPassword.setOnClickListener(this)
+        btnContent.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -73,9 +74,12 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             R.id.tvLogin -> {
                 doLogin()
             }
+            R.id.btnContent-> {
+                requestSystemConfigAndSkip()
+            }
 
-            R.id.btnForgetPassword ->{
-                CommonUtil.startActivity(this,FindPassActivity::class.java)
+            R.id.btnForgetPassword -> {
+                CommonUtil.startActivity(this, FindPassActivity::class.java)
             }
 
         }
@@ -146,4 +150,25 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         startActivity(intent)
         finish()
     }
+
+    private fun requestSystemConfigAndSkip() {
+        ApiRepository.getInstance().requestSystemConfig().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<SettingEntity>>() {
+            override fun onSuccessNext(entity: BaseResult<SettingEntity>?) {
+                if (entity != null) {
+                    if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                        if (entity.data != null) {
+                            val intent = Intent(mContext, RichWebViewActivity::class.java)
+                            intent.putExtra(RichWebViewActivity.EXTRA_RICH_TEXT, CommonUtil.getNotNullValue(entity.data.agreement))
+                            startActivity(intent)
+                        }
+
+                    } else {
+                        ToastUtil.show(entity.msg)
+                    }
+                }
+            }
+        })
+    }
+
 }
+

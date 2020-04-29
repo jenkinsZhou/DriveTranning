@@ -42,6 +42,10 @@ public class NewsMultipleAdapter extends BaseMultiItemQuickAdapter<NewsEntity, B
     protected void convert(@NonNull BaseViewHolder helper, NewsEntity item) {
         switch (helper.getItemViewType()) {
             case NEWS_TYPE_IMAGE_ONE:
+                helper.setText(R.id.tvTime,CommonUtil.getNotNullValue(item.getPublishTime()));
+                helper.setGone(R.id.ivFlagTop,item.getMountainTop() == 1);
+                helper.setText(R.id.tvShareCount,item.getSharedNum()+"");
+                helper.setText(R.id.tvCommentCount,item.getRecommendationTotal()+"");
                 helper.setText(R.id.tvNewsTitle, CommonUtil.getNotNullValue(item.getTitle()));
                 ImageView ivImageNew = helper.getView(R.id.ivImageNew);
                 List<NewsImage> imageList = item.getImages();
@@ -50,6 +54,10 @@ public class NewsMultipleAdapter extends BaseMultiItemQuickAdapter<NewsEntity, B
                 }
                 break;
             case NEWS_TYPE_IMAGE_MULTI:
+                helper.setText(R.id.tvTime,CommonUtil.getNotNullValue(item.getPublishTime()));
+                helper.setGone(R.id.ivFlagTop,item.getMountainTop() == 1);
+                helper.setText(R.id.tvShareCount,item.getSharedNum()+"");
+                helper.setText(R.id.tvCommentCount,item.getRecommendationTotal()+"");
                 helper.setText(R.id.tvNewsTitle, CommonUtil.getNotNullValue(item.getTitle()));
                 if (item.getImages() != null && !item.getImages().isEmpty()) {
                     helper.setGone(R.id.rvNewsImage, true);
@@ -67,7 +75,11 @@ public class NewsMultipleAdapter extends BaseMultiItemQuickAdapter<NewsEntity, B
                 }
                 break;
             case NEWS_TYPE_VIDEO:
+                helper.setText(R.id.tvTime,CommonUtil.getNotNullValue(item.getPublishTime()));
+                helper.setGone(R.id.ivFlagTop,item.getMountainTop() == 1);
                 helper.setText(R.id.tvNewsTitle, CommonUtil.getNotNullValue(item.getTitle()));
+                helper.setText(R.id.tvShareCount,item.getSharedNum()+"");
+                helper.setText(R.id.tvCommentCount,item.getRecommendationTotal()+"");
                 ImageView ivVideoCover = helper.getView(R.id.ivVideoCover);
                 GlideManager.loadImg(CommonUtil.getUrl(item.getCoverUrl()), ivVideoCover);
                 break;

@@ -38,7 +38,7 @@ public class RichWebViewActivity extends BaseTitleActivity {
 
     @Override
     public void setTitleBar(TitleBarView titleBar) {
-
+        titleBar.setTitleMainText("注册协议");
     }
 
 

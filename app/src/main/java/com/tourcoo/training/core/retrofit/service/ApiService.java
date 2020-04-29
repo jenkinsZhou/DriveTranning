@@ -20,6 +20,7 @@ import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
+import com.tourcoo.training.entity.setting.SettingEntity;
 import com.tourcoo.training.entity.study.BannerBean;
 import com.tourcoo.training.entity.training.DRMParams;
 import com.tourcoo.training.entity.training.HlsParams;
@@ -90,8 +91,6 @@ public interface ApiService {
      */
    /* @POST("api/v1.0/open/user/register-individual-business")
     Observable<BaseResult<UserInfoOld>> requestIndustryRegister(@Body Map<String, Object> map);*/
-
-
     @POST("v1.0/open/utils/smscode")
     Observable<BaseResult> requestVCode(@QueryMap Map<String, Object> map);
 
@@ -276,6 +275,7 @@ public interface ApiService {
 
     /**
      * HLS解密接口
+     *
      * @param map
      * @return
      */
@@ -285,6 +285,7 @@ public interface ApiService {
 
     /**
      * 转线上
+     *
      * @param map
      * @return
      */
@@ -303,5 +304,10 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
     @POST("v1.0/open/Special/special-payinfo-pay")
     Observable<BaseResult> requestTwoPayInfo(@Body Map<String, Object> map);
+
+
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
+    @POST("v1.0/open/app/system-config")
+    Observable<BaseResult<SettingEntity>> requestSystemConfig();
 
 }

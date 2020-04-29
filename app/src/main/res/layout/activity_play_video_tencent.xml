@@ -46,13 +46,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tvCourseCountInfo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="共6章 10小节" />
+                    android:text="共-章 -小节" />
 
                 <TextView
-                    android:id="@+id/tvTest"
+                    android:id="@+id/tvCourseTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="课时：16"

@@ -125,6 +125,11 @@ public class HttpRequestControlImpl implements HttpRequestControl {
                 reason = R.string.frame_exception_class_cast;
             }
         }
+        if(httpRequestControl==null){
+            TourCooLogUtil.e(TAG,"httpRequestControl==null!");
+        }else if(httpRequestControl.getStatusLayoutManager() == null){
+            TourCooLogUtil.e(TAG,"getStatusLayoutManager==null!");
+        }
         if (httpRequestControl == null || httpRequestControl.getStatusLayoutManager() == null) {
 //            ToastUtil.show(reason);
             ToastUtil.show(e.getMessage());

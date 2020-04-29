@@ -10,7 +10,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-import com.blankj.utilcode.util.LogUtils
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tencent.liteav.demo.play.SuperPlayerConst
@@ -33,8 +32,8 @@ import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.DRMParams
 import com.tourcoo.training.entity.training.TrainingPlanDetail
-import com.tourcoo.training.ui.exam.OnlineExamActivity
-import com.tourcoo.training.ui.exam.OnlineExamActivity.Companion.EXTRA_EXAM_ID
+import com.tourcoo.training.ui.exam.ExamActivity
+import com.tourcoo.training.ui.exam.ExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -68,6 +67,17 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private var hasRequireExam = true
     private var mTimerTask: CountDownTimerSupport? = null
+
+    /**
+     * 章的数量
+     */
+    private var countCatalog = 0
+
+    /**
+     * 节的数量
+     */
+    private var countNode = 0
+
 
     companion object {
         const val IMG_TRANSITION = "IMG_TRANSITION"
@@ -110,14 +120,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 //        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
 //        imageView.setImageResource(R.drawable.img_training_free_video)
 
-        tvTest.setOnClickListener {
+     /*   tvTest.setOnClickListener {
             if (mTitleBar.visibility != View.GONE) {
                 mTitleBar.visibility = View.GONE
             } else {
                 mTitleBar.visibility = View.VISIBLE
             }
-        }
-
+        }*/
         requestPlanDetail()
     }
 
@@ -366,8 +375,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         for (entry in mCourseHashMap!!.entries) {
             loadCourseStatus(entry.value, entry.key)
         }
-
-
+        tvCourseCountInfo.text = "共" + countCatalog + "章"+countNode+"小节"
+        tvCourseTime.text = "课时："+detail.courseTime.toString()
     }
 
 
@@ -389,6 +398,12 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         for (index in newCatalogs.size - 1 downTo 0) {
             val catalog = newCatalogs[index]
+            if (catalog.level == 1) {
+                countCatalog++
+            }
+            if(catalog.level == 2){
+                countNode++
+            }
             if (!TextUtils.isEmpty(catalog.name)) {
                 //标题不为空时添加TextView
                 val contentView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_content, null)
@@ -404,7 +419,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             } else {
                 addCourse(catalog.courses)
             }
-
 
         }
 
@@ -551,7 +565,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("未获取到考试信息")
             return
         }
-        val intent = Intent(mContext, OnlineExamActivity::class.java)
+        val intent = Intent(mContext, ExamActivity::class.java)
         //培训计划id
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         //考试题id
@@ -621,6 +635,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private fun showExit() {
+        if (smartVideoPlayer.currentProgress <= 0) {
+            finish()
+            return
+        }
         IosAlertDialog(mContext)
                 .init()
                 .setCancelable(false)

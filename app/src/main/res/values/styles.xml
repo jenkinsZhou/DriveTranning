@@ -394,4 +394,7 @@
     <style name="barrage_switch_text_color" parent="@android:style/TextAppearance.Small">\
         <item name="android:textColor">@android:color/black</item>
     </style>
+
+
+
 </resources>

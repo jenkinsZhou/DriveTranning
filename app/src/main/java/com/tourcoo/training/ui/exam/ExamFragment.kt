@@ -195,7 +195,7 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
             }
         }
         tvCurrentQuestion?.text = question?.question
-        tvAnswerParsing?.text = question?.analysis
+        tvAnswerAnalysis?.text = question?.analysis
     }
 
 
@@ -312,10 +312,10 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
                     setHasAnswer(question.answerItems)
                     answerItem.isSelect = true
                     question.isHasAnswered = true
-
                 }
             }
         }
+        showQuestionAnalysis(getQuestionStatus() != STATUS_NO_ANSWER)
     }
 
     private fun setHasAnswer(allAnswer: MutableList<Answer>) {
@@ -333,7 +333,7 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     }
 
 
-     fun getQuestionStatus(): Int {
+    fun getQuestionStatus(): Int {
         if (question == null || question!!.answer == null || question!!.answer.isEmpty() || question!!.answerItems == null || question!!.correctAnswer == null) {
             //未回答
             return STATUS_NO_ANSWER
@@ -346,4 +346,8 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
         return STATUS_ANSWER_WRONG
     }
 
+
+    fun showQuestionAnalysis(visible: Boolean) {
+        setViewVisible(llQuestionAnalysis, visible)
+    }
 }

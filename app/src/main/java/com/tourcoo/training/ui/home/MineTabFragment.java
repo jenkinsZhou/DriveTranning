@@ -33,7 +33,7 @@ import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.mine.MineItem;
 import com.tourcoo.training.ui.account.LoginActivity;
 import com.tourcoo.training.ui.certificate.MyCertificationActivity;
-import com.tourcoo.training.ui.exam.OnlineExamActivity;
+import com.tourcoo.training.ui.exam.ExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.pay.BuyNowActivity;
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog;
@@ -189,7 +189,7 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
 //                CommonUtil.startActivity(mContext, UploadIdCardActivity.class);
                 break;
             case R.id.ivAddCar:
-                CommonUtil.startActivity(mContext, OnlineExamActivity.class);
+                CommonUtil.startActivity(mContext, ExamActivity.class);
                 break;
             case R.id.llGoldLevel:
 

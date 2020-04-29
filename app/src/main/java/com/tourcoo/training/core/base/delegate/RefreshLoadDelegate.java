@@ -114,13 +114,16 @@ public class RefreshLoadDelegate<T> {
         if (contentView == null) {
             return;
         }
+        /*  .setDefaultEmptyClickViewTextColor(ContextCompat.getColor(mContext, R.color.colorTitleText))
+                .setDefaultLoadingText(R.string.frame_multi_loading)
+                .setDefaultErrorText(R.string.frame_multi_error)
+                .setDefaultErrorClickViewTextColor(ContextCompat.getColor(mContext, R.color.colorTitleText))*/
         StatusLayoutManager.Builder builder = new StatusLayoutManager.Builder(contentView)
                 .setDefaultLayoutsBackgroundColor(android.R.color.transparent)
                 .setDefaultEmptyText(R.string.frame_multi_empty)
-                .setDefaultEmptyClickViewTextColor(ContextCompat.getColor(mContext, R.color.colorTitleText))
-                .setDefaultLoadingText(R.string.frame_multi_loading)
-                .setDefaultErrorText(R.string.frame_multi_error)
-                .setDefaultErrorClickViewTextColor(ContextCompat.getColor(mContext, R.color.colorTitleText))
+                .setEmptyLayout(R.layout.empty_view_layout)
+                .setErrorLayout(R.layout.error_view_layout)
+                .setErrorClickViewID(R.id.tvRefreshRequest)
                 .setOnStatusChildClickListener(new OnStatusChildClickListener() {
                     @Override
                     public void onEmptyChildClick(View view) {

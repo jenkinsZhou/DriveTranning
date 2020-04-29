@@ -14,7 +14,7 @@
         android:layout_height="@dimen/dp_200" />
 
     <LinearLayout
-        android:id="@+id/llCourseInfo"
+        android:id="@+id/llCourseInfoAli"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -23,12 +23,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:orientation="vertical"
             android:paddingStart="@dimen/dp_10"
             android:paddingTop="@dimen/dp_15"
             android:paddingEnd="@dimen/dp_10"
-            android:paddingBottom="@dimen/dp_15">
-
+            android:paddingBottom="@dimen/dp_15"
+            android:orientation="vertical"
+         >
+        <!--    android:paddingStart="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_15"
+            android:paddingEnd="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_15"-->
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
@@ -46,13 +50,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tvCourseCountInfoAli"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="共6章 10小节" />
+                    android:text="共-章 -小节" />
 
                 <TextView
-                    android:id="@+id/tvTest"
+                    android:id="@+id/tvCourseTimeAli"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="课时：16"

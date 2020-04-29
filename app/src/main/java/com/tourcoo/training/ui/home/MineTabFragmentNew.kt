@@ -34,11 +34,10 @@ import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.MyAccountActivity
 import com.tourcoo.training.ui.account.PersonalInfoActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
-import com.tourcoo.training.ui.exam.OnlineExamActivity
+import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.guide.GuideActivity
 import com.tourcoo.training.ui.setting.SettingActivity
 import com.tourcoo.training.ui.training.professional.ProfessionalExamSelectActivity
-import com.tourcoo.training.widget.aliplayer.activity.AliyunPlayerSkinActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
 import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
@@ -84,7 +83,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 skipPersonalInfo()
             }
             R.id.ivAddCar -> {
-                CommonUtil.startActivity(mContext, OnlineExamActivity::class.java)
+                CommonUtil.startActivity(mContext, ExamActivity::class.java)
             }
             R.id.llGoldLevel -> {
                 CommonUtil.startActivity(mContext, FindPassActivity::class.java)

@@ -18,7 +18,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
-import com.tourcoo.training.ui.exam.OnlineExamActivity
+import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
@@ -525,11 +525,11 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
 
 
     private fun doExamPlanDetail() {
-        val intent = Intent(mContext, OnlineExamActivity::class.java)
+        val intent = Intent(mContext, ExamActivity::class.java)
         //培训计划id
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingPlanId)
         //考试题id
-        intent.putExtra(OnlineExamActivity.EXTRA_EXAM_ID, latestExamID)
+        intent.putExtra(ExamActivity.EXTRA_EXAM_ID, latestExamID)
         startActivity(intent)
     }
 
