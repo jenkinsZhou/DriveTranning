@@ -38,10 +38,7 @@ import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.guide.GuideActivity
 import com.tourcoo.training.ui.setting.SettingActivity
-import com.tourcoo.training.ui.training.professional.ProfessionalExamSelectActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
-import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
-import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog

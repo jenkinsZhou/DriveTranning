@@ -81,7 +81,7 @@ class PersonalInfoActivity : BaseTitleActivity() {
 
         GlideManager.loadCircleImg(userInfo.avatar, civAvatar, R.mipmap.ic_avatar_default)
 
-        GlideManager.loadImg(userInfo.idCardUrl, ivIdCardUrl, R.mipmap.ic_avatar_default)
+        GlideManager.loadImg(userInfo.idCardUrl, ivIdCardUrl, R.drawable.img_front)
 
         tvName.text = userInfo.name
         tvPhone.text = userInfo.phone

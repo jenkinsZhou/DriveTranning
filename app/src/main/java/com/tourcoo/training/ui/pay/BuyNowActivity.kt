@@ -130,7 +130,6 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
     }
 
-
     private val SDK_PAY_FLAG = 1
     @SuppressLint("HandlerLeak")
     private val mHandler = object : Handler() {

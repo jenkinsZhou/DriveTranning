@@ -90,6 +90,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         }
         ivStudentToOnline.setOnClickListener(this)
         ivStudentSignOut.setOnClickListener(this)
+        ivStudentSignIn.setOnClickListener(this)
 
         ivTeacherSign.setOnClickListener(this)
         ivWaitExam.setOnClickListener(this)
@@ -137,26 +138,33 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
         tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManager)
 
-        when (planDetail.safetyManagerStatus){
+        when (planDetail.safetyManagerStatus) {
             /**
              * 未开始
              */
             TrainingConstant.TRAIN_STATUS_NO_START -> {
-                //未开始 学员模块只有转线上
-                setViewGone(llStudentTimeLayout, false)
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignIn, false)
                 //隐藏学员签退按钮
                 setViewGone(ivStudentSignOut, false)
 
-                if(planDetail.traineeStatus == TrainingConstant.TRAIN_STATUS_TO_ONLINE){
+                if (planDetail.traineeStatus == TrainingConstant.TRAIN_STATUS_TO_ONLINE) {
                     setViewGone(ivStudentToOnline, false)
-                    setViewGone(rlButtonLayout,false)
-                    setViewGone(llTrainStatusLayout,true)
+                    setViewGone(rlButtonLayout, false)
+                    setViewGone(llTrainStatusLayout, true)
                     //显示标签
-                    setViewGone(ivStatusTag, true)
-                    ivStatusTag.setImageResource(R.mipmap.ic_training_state_turn_online)
-                }else{
+                    setViewGone(ivStudentStatusTag, true)
+                    ivStudentStatusTag.setImageResource(R.mipmap.ic_training_state_turn_online)
+
+                    //未开始 学员模块只有转线上
+                    setViewGone(llStudentTimeLayout, true)
+                    tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                    tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
+
+
+                } else {
+                    //未开始 学员模块只有转线上
+                    setViewGone(llStudentTimeLayout, false)
                     //显示转线上
                     setViewGone(ivStudentToOnline, true)
                 }
@@ -182,20 +190,76 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
              * 已签到
              */
             TrainingConstant.TRAIN_STATUS_SIGNED -> {
-                //未开始 学员模块 有签到 和转线上按钮
-                //显示学员签到按钮
-                setViewGone(ivStudentSignOut, true)
-                setViewGone(ivStudentSignIn, false)
-                setViewGone(ivScanCode, false)
-                //显示转线上
-                setViewGone(ivStudentToOnline, true)
+
+                //隐藏签退时间
+                setViewGone(llStudentSignOutLayout, false)
+
+                when(planDetail.traineeStatus){
+                    TrainingConstant.TRAIN_STATUS_NO_START ->{
+                        setViewGone(ivStudentSignIn, true)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                        setViewGone(ivScanCode, false)
+                    }
+
+
+                    TrainingConstant.TRAIN_STATUS_SIGNED->{
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, true)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                        setViewGone(ivScanCode, false)
+                    }
+
+                    TrainingConstant.TRAIN_STATUS_SIGN_OUT->{
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                        setViewGone(ivScanCode, false)
+                    }
+
+                    TrainingConstant.TRAIN_STATUS_TO_ONLINE ->{
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, false)
+                        setViewGone(ivScanCode, false)
+
+                        setViewGone(ivStudentStatusTag,true)
+                        ivStudentStatusTag.setImageResource(R.mipmap.ic_training_state_turn_online)
+                        setViewGone(llStudentSignOutLayout, true)
+                        tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
+
+                    }
+
+                    TrainingConstant.TRAIN_STATUS_CHECK_STATUS ->{
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                        setViewGone(ivScanCode, true)
+                    }
+
+                    TrainingConstant.TRAIN_STATUS_NO_COMPLETE ->{
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, false)
+                        setViewGone(ivScanCode, false)
+                        setViewGone(ivStudentStatusTag,true)
+                        ivStudentStatusTag.setImageResource(R.mipmap.ic_training_state_no_complete)
+                    }
+
+                }
+
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
                 tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
-                //隐藏签退时间
-                setViewGone(llStudentSignOutLayout, false)
+
                 //显示安全员预计结束时间
                 setViewGone(llPreTeacherEndTime, true)
                 tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
@@ -252,7 +316,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
-                setViewGone(rlButtonLayout,false)
+                setViewGone(rlButtonLayout, false)
                 setViewGone(ivStudentSignOut, false)
                 //隐藏转线上
                 setViewGone(ivStudentToOnline, false)
@@ -328,7 +392,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
             TrainingConstant.TRAIN_STATUS_CHECK_STATUS -> {
                 //被抽验 学员模块 有签到 和转线上按钮
                 //显示学员签到按钮
-                setViewGone(rlButtonLayout,true)
+                setViewGone(rlButtonLayout, true)
                 setViewGone(ivStudentSignOut, true)
                 setViewGone(ivStudentSignIn, false)
                 setViewGone(ivScanCode, true)
@@ -654,7 +718,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
             /**
              * 抽验成功回调
              */
-            REQUEST_CODE_CHECK_STATUS_STUDENT ->{
+            REQUEST_CODE_CHECK_STATUS_STUDENT -> {
                 showCheckStatusSuccess()
             }
 
@@ -690,6 +754,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         currentAction = TrainingConstant.ACTION_SAFE_MANAGER_SIGN
         scanCode()
     }
+
     /**
      * 学员被抽验
      */

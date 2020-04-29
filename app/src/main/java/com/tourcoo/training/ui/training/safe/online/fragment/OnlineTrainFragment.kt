@@ -59,7 +59,7 @@ class OnlineTrainFragment : BaseFragment() {
     private var adapter: OnLineTrainingCourseAdapter? = null
     private var refreshLayout: SmartRefreshLayout? = null
     private var recyclerView: RecyclerView? = null
-    private var currentPlanId: String? = null
+    private var currentCourseInfo: CourseInfo? = null
     private var dialog: RecognizeStepDialog? = null
     private var inputAlert: InputPayNumAlert? = null
     override fun getContentLayout(): Int {
@@ -116,39 +116,10 @@ class OnlineTrainFragment : BaseFragment() {
         const val REQUEST_CODE_FACE_COMPARE = 202
 
         const val REQUEST_CODE_FACE_VERIFY = 203
+
+        const val REQUEST_CODE_AUTH = 204
     }
 
-
-    /**
-     * 选择课程时长
-     */
-    private fun showCourseDialog() {
-        val adapter = CourseSelectAdapter()
-        adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
-            override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
-                for (entity in adapter!!.data) {
-                    val item = entity as CourseEntity
-                    val clickEntity = adapter.data[position] as CourseEntity
-                    if (item.id == clickEntity.id) {
-                        clickEntity.isSelect = !clickEntity.isSelect
-                    } else {
-                        item.isSelect = false
-                    }
-                }
-                adapter.notifyDataSetChanged()
-            }
-        })
-        val list = ArrayList<CourseEntity>()
-        for (i in 0 until 3) {
-            var item = CourseEntity()
-            item.id = "900$i"
-            item.courseDurationDesc = "d"
-            list.add(item)
-        }
-        val dialog = CommonListDialog<CourseEntity>(mContext).create().setDataAdapter(adapter)
-                .setDataList(list)
-        dialog.show()
-    }
 
     private fun requestCourseOnLine() {
         if (!AccountHelper.getInstance().isLogin) {
@@ -198,7 +169,7 @@ class OnlineTrainFragment : BaseFragment() {
             return
         }
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            val courseInfo = adapter!!.data[position] as CourseInfo
+             currentCourseInfo = adapter!!.data[position] as CourseInfo
 
             if (!AccountHelper.getInstance().isLogin) {
                 ToastUtil.show("请先登录")
@@ -207,19 +178,18 @@ class OnlineTrainFragment : BaseFragment() {
 
             when (AccountHelper.getInstance().userInfo.isAuthenticated) {
                 0 -> {  //未认证
-                    currentPlanId = courseInfo.trainingPlanID
-                    showRecognize(currentPlanId)
+                    showRecognize(currentCourseInfo!!.trainingPlanID)
                 }
 
                 1 -> {  //已认证
-                    verifyByStatus(courseInfo)
+                    verifyByStatus(currentCourseInfo!!)
                 }
 
                 2 -> {  //认证失败
                     val dialog = LocalTrainingConfirmDialog(mContext)
                     dialog.setContent("请确认是否为本人学习？")
                             .setPositiveButtonClick("确认") {
-                                verifyByStatus(courseInfo)
+                                verifyByStatus(currentCourseInfo!!)
                                 dialog.dismiss()
                             }
                             .setNegativeButtonClick("取消") {
@@ -247,14 +217,15 @@ class OnlineTrainFragment : BaseFragment() {
         }
         when (courseInfo.status) {
             COURSE_STATUS_NEED_PAY -> {
+                trainingPlanID = courseInfo.trainingPlanID
+                trainingType = courseInfo.type
+
                 val intent = Intent(context, BuyNowActivity::class.java)
                 intent.putExtra("trainingPlanID", courseInfo.trainingPlanID)
-                startActivityForResult(intent, 0)
+                startActivityForResult(intent, REQUEST_CODE_AUTH)
             }
 
             COURSE_STATUS_CONTINUE -> {
-                trainingPlanID = courseInfo.trainingPlanID
-                trainingType = courseInfo.type
                 skipFaceVefify(courseInfo.trainingPlanID)
             }
 
@@ -304,6 +275,11 @@ class OnlineTrainFragment : BaseFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
+                REQUEST_CODE_AUTH ->{
+                    currentCourseInfo!!.status = COURSE_STATUS_CONTINUE
+                    verifyByStatus(currentCourseInfo!!)
+                }
+
                 REQUEST_CODE_FACE_RECORD -> {
                     if (data != null) {
                         handleStepOneSuccess()
@@ -329,7 +305,7 @@ class OnlineTrainFragment : BaseFragment() {
     private fun handleStepOneSuccess() {
         dialog?.showStepOneSuccess()
         dialog?.setPositiveButton(View.OnClickListener {
-            skipIdCardRecognize(currentPlanId)
+            skipIdCardRecognize(currentCourseInfo!!.trainingPlanID)
         })
     }
 
@@ -379,7 +355,6 @@ class OnlineTrainFragment : BaseFragment() {
         }
         intent?.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
         startActivity(intent)
-//        WebViewActivity.start(mContext,"https://baidu.com")
     }
 
 

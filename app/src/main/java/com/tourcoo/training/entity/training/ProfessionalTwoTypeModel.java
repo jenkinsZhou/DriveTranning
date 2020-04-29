@@ -18,6 +18,15 @@ public class ProfessionalTwoTypeModel {
     private String SubTitle;
     private String Coins;
     private String Type;
+    private int Status;
+
+    public int getStatus() {
+        return Status;
+    }
+
+    public void setStatus(int status) {
+        Status = status;
+    }
 
     public String getSpecialId() {
         return specialId;

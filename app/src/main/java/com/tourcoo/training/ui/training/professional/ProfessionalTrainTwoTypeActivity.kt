@@ -55,15 +55,21 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             val info = adapter.data[position] as ProfessionalTwoTypeModel
             if (info.type == "0") {//直接跳转到课程列表
-                val intent = Intent(this, ProfessionalExamSelectActivity::class.java)
-                intent.putExtra("id",id)
+                val intent = Intent(this, ProfessionalSelectActivity::class.java)
+                intent.putExtra("id",info.specialId)
                 intent.putExtra("childModuleId", info.childModuleId)
                 intent.putExtra("title", info.title)
                 intent.putExtra("coins", info.coins)
                 startActivity(intent)
 
             } else {//直接跳转到考试分类列表
-                ToastUtil.show("直接跳转到考试列表")
+                val intent = Intent(this, ProfessionalExamSelectActivity::class.java)
+                intent.putExtra("id",info.specialId)
+                intent.putExtra("childModuleId", info.childModuleId)
+                intent.putExtra("title", info.title)
+                intent.putExtra("coins", info.coins)
+                intent.putExtra("status",info.status)
+                startActivity(intent)
             }
 
 
