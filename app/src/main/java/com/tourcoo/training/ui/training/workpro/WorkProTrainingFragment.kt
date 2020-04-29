@@ -31,6 +31,7 @@ import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
+import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.fragment.OnlineTrainFragment
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
@@ -96,6 +97,8 @@ class WorkProTrainingFragment  : BaseFragment()  {
         const val REQUEST_CODE_FACE_RECORD = 201
 
         const val REQUEST_CODE_FACE_COMPARE = 202
+
+        const val REQUEST_CODE_FACE_VERIFY = 203
 
     }
 
@@ -199,11 +202,13 @@ class WorkProTrainingFragment  : BaseFragment()  {
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_CONTINUE -> {
-                skipPlayVideo(courseInfo.trainingPlanID)
+                trainingPlanID = courseInfo.trainingPlanID
+                trainingType = courseInfo.type
+                skipFaceVefify(courseInfo.trainingPlanID)
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_WAIT_EXAM -> {
-                skipPlayVideo(courseInfo.trainingPlanID)
+                skipPlayVideoByType(courseInfo.trainingPlanID,courseInfo.type)
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_FINISHED -> {
@@ -211,16 +216,18 @@ class WorkProTrainingFragment  : BaseFragment()  {
             }
 
             else -> {
-                skipPlayVideo(courseInfo.trainingPlanID)
-                /* val intent = Intent(mContext, OnlineExamActivity::class.java)
-                 //培训计划id
-                 intent.putExtra(EXTRA_TRAINING_PLAN_ID, courseInfo.trainingPlanID)
-                 //考试题id
-                 //todo 考试id 暂时写死
-                 intent.putExtra(EXTRA_EXAM_ID, "0")
-                 startActivity(intent)*/
+                skipPlayVideoByType(courseInfo.trainingPlanID,courseInfo.type)
             }
         }
+    }
+
+    private var trainingPlanID:String = ""
+    private var trainingType:Int = -1
+
+    private fun skipFaceVefify(trainingId: String) {
+        val intent = Intent(mContext, FaceRecognitionActivity::class.java)
+        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
+        startActivityForResult(intent, REQUEST_CODE_FACE_VERIFY)
     }
 
 
@@ -245,15 +252,20 @@ class WorkProTrainingFragment  : BaseFragment()  {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                OnlineTrainFragment.REQUEST_CODE_FACE_RECORD -> {
+                REQUEST_CODE_FACE_RECORD -> {
                     if (data != null) {
                         handleStepOneSuccess()
                     }
                 }
-                OnlineTrainFragment.REQUEST_CODE_FACE_COMPARE -> {
+                REQUEST_CODE_FACE_COMPARE -> {
                     ToastUtil.showSuccess("验证通过")
                     closeFaceDialog()
                 }
+
+                REQUEST_CODE_FACE_VERIFY ->{
+                    skipPlayVideoByType(trainingPlanID, trainingType)
+                }
+
             }
         } else {
             baseHandler.postDelayed({
@@ -293,9 +305,28 @@ class WorkProTrainingFragment  : BaseFragment()  {
     }
 
 
-    private fun skipPlayVideo(trainingId: String?) {
-        val intent = Intent(mContext, TencentPlayVideoActivity::class.java)
-        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
+    private fun skipPlayVideoByType(trainingId: String?, courseType: Int) {
+        var intent: Intent? = null
+        when (courseType) {
+            TrainingConstant.TYPE_COURSE_HTML -> {
+                //todo 全部为html
+                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+            }
+            TrainingConstant.TYPE_COURSE_TYPE_DRIVE -> {
+                //车学堂 使用腾讯播放器
+                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+            }
+            TrainingConstant.TYPE_TYPE_COURSE_HLS -> {
+                //hls 使用阿里播放器
+                intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
+            }
+            TrainingConstant.TYPE_COURSE_OTHER -> {
+                //混合非加密 使用腾讯播放器
+                intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
+            }
+
+        }
+        intent?.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
         startActivity(intent)
     }
 

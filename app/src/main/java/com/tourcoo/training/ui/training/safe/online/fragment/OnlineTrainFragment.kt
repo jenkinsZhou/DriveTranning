@@ -114,6 +114,8 @@ class OnlineTrainFragment : BaseFragment() {
         const val REQUEST_CODE_FACE_RECORD = 201
 
         const val REQUEST_CODE_FACE_COMPARE = 202
+
+        const val REQUEST_CODE_FACE_VERIFY = 203
     }
 
 
@@ -251,11 +253,13 @@ class OnlineTrainFragment : BaseFragment() {
             }
 
             COURSE_STATUS_CONTINUE -> {
-                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
+                trainingPlanID = courseInfo.trainingPlanID
+                trainingType = courseInfo.type
+                skipFaceVefify(courseInfo.trainingPlanID)
             }
 
-            COURSE_STATUS_WAIT_EXAM -> {
-                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
+            COURSE_STATUS_WAIT_EXAM ->{
+                skipPlayVideoByType(courseInfo.trainingPlanID,courseInfo.type)
             }
 
             COURSE_STATUS_FINISHED -> {
@@ -286,6 +290,16 @@ class OnlineTrainFragment : BaseFragment() {
         startActivityForResult(intent, REQUEST_CODE_FACE_RECORD)
     }
 
+
+    private var trainingPlanID:String = ""
+    private var trainingType:Int = -1
+
+    private fun skipFaceVefify(trainingId: String) {
+        val intent = Intent(mContext, FaceRecognitionActivity::class.java)
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
+        startActivityForResult(intent, REQUEST_CODE_FACE_VERIFY)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -298,6 +312,10 @@ class OnlineTrainFragment : BaseFragment() {
                 REQUEST_CODE_FACE_COMPARE -> {
                     ToastUtil.showSuccess("验证通过")
                     closeFaceDialog()
+                }
+
+                REQUEST_CODE_FACE_VERIFY ->{
+                    skipPlayVideoByType(trainingPlanID, trainingType)
                 }
             }
         } else {

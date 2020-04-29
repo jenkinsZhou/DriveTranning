@@ -49,6 +49,7 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
 
         const val REQUEST_CODE_FACE_COMPARE = 202
 
+        const val REQUEST_CODE_FACE_VERIFY = 203
     }
 
     override fun getAdapter(): BaseQuickAdapter<CourseInfo, BaseViewHolder> {
