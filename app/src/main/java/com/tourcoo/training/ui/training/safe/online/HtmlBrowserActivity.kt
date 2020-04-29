@@ -58,7 +58,15 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
     private var hasRequireExam = true
     private var mTimerTask: CountDownTimerSupport? = null
 
+    /**
+     * 章的数量
+     */
+    private var countCatalog = 0
 
+    /**
+     * 节的数量
+     */
+    private var countNode = 0
 
     override fun getContentLayout(): Int {
         return R.layout.activity_browser_html
@@ -149,6 +157,8 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
         for (entry in mCourseHashMap!!.entries) {
             loadCourseStatus(entry.value, entry.key)
         }
+
+        tvSubjectDesc.text = getNotNullValue(detail.description)
     }
 
 
@@ -214,7 +224,7 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
 
     private fun getNotNullValue(value: String?): String {
         if (TextUtils.isEmpty(value)) {
-            return "未知"
+            return "暂无"
         }
         return value!!
     }
@@ -231,6 +241,12 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
         for (index in newCatalogs.size - 1 downTo 0) {
             val catalog = newCatalogs[index]
             if (!TextUtils.isEmpty(catalog.name)) {
+                if (catalog.level == 1) {
+                    countCatalog++
+                }
+                if(catalog.level == 2){
+                    countNode++
+                }
                 //标题不为空时添加TextView
                 val contentView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_content, null)
                 val tvPlanTitle = contentView.findViewById<TextView>(R.id.tvPlanTitle)

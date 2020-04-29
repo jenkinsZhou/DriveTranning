@@ -18,6 +18,7 @@ import com.tourcoo.training.core.impl.HttpRequestControlImpl;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.retrofit.RetrofitHelper;
 import com.tourcoo.training.core.util.NotificationUtil;
+import com.tourcoo.training.core.util.ToastUtils;
 import com.tourcoo.training.entity.greendao.GreenDaoHelper;
 
 import static com.tourcoo.training.core.log.cores.LogLevel.TYPE_VERBOSE;
@@ -50,6 +51,8 @@ public class MyApplication extends MultiDexApplication {
         initLogConfig();
         SpiderMan.init(this);
         GreenDaoHelper.getInstance().initDatabase(this);
+        ToastUtils.init(this);
+
 //        initDebugKit();
 /*//# 支持写入日志到文件
         TourCooLogUtil.getLog2FileConfig().configLog2FileEnable(true)
@@ -149,27 +152,6 @@ public class MyApplication extends MultiDexApplication {
         TourCooLogUtil.getLog2FileConfig()
                 //不开启日志写入文件
                 .configLog2FileEnable(false);
-     /*   // 支持输入日志到文件
-        String filePath = Environment.getExternalStorageDirectory() + File.separator + "DriverTraining" + File.separator + "logs/";
-        TourCooLogUtil.getLog2FileConfig()
-                .configLog2FileEnable(true)
-                // 是否输出日志到文件
-                .configLogFileEngine(new LogFileEngineFactory(this))
-                // 日志文件引擎实现
-                .configLog2FilePath(filePath)
-                // 日志路径
-                .configLog2FileNameFormat("app-%d{yyyyMMdd}.log")
-                // 日志文件名称
-                .configLog2FileLevel(LogLevel.TYPE_VERBOSE)
-                // 文件日志等级
-                .configLogFileFilter(new LogFileFilter() {
-                    // 文件日志过滤
-                    @Override
-                    public boolean accept(int level, String tag, String logContent) {
-                        return true;
-                    }
-                });*/
-
     }
 
     private void initDebugKit(){

@@ -229,8 +229,14 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         payDialog!!.show()
         payDialog!!.setPositiveButton(View.OnClickListener {
             if (mCoinList != null || mCoinList!!.isEmpty()) {
-                //todo 后面再改
-                requestRecharge(mCoinList!![0])
+                for (coin in mCoinList!!){
+                    if(coin.isSelected){
+                        requestRecharge(coin)
+                        return@OnClickListener
+                    }
+                }
+                ToastUtil.show("请选择充值套餐")
+                return@OnClickListener
             }
         })
     }

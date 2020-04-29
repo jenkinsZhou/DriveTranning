@@ -79,8 +79,8 @@
         <activity android:name=".ui.account.register.RecognizeIdCardActivity" />
         <activity
             android:name=".widget.idcardcamera.camera.CameraActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+            android:theme="@style/ThemeWindowFullscreen"
+           />
         <activity android:name=".ui.account.register.RecognizeResultActivity" />
         <activity android:name=".ui.account.FindPassActivity" />
         <activity android:name=".ui.pay.BuyNowActivity" />

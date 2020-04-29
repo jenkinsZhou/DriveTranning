@@ -7,13 +7,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.gyf.immersionbar.ImmersionBar;
 import com.tourcoo.training.R;
 
 import java.io.BufferedOutputStream;
@@ -99,6 +103,9 @@ public class LicenseCameraActivity extends Activity implements View.OnClickListe
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_license);
         licenseCameraPreview = (LicenseCameraPreview) findViewById(R.id.camera_surface);
         //获取屏幕最小边，设置为cameraPreview较窄的一边
@@ -169,7 +176,7 @@ public class LicenseCameraActivity extends Activity implements View.OnClickListe
                 cropView.setImageResource(R.mipmap.camera_company);
                 break;
             case TYPE_COMPANY_LANDSCAPE:
-                cropView.setImageResource(R.mipmap.camera_company_landscape);
+//                cropView.setImageResource(R.mipmap.camera_company_landscape);
                 break;
                 case TYPE_DRIVE_LICENCE: //行驶证
                     cropView.setImageResource(R.mipmap.camera_company_landscape);
@@ -188,6 +195,8 @@ public class LicenseCameraActivity extends Activity implements View.OnClickListe
         flashImageView.setOnClickListener(this);
         findViewById(R.id.camera_result_ok).setOnClickListener(this);
         findViewById(R.id.camera_result_cancel).setOnClickListener(this);
+
+
     }
 
     @Override

@@ -70,7 +70,7 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.ivSelectedLicense -> {
-                handleCallback(photoPath)
+                doTakePhoto()
             }
             R.id.ivSelectedImage -> {
                 doTakePhoto()
@@ -301,7 +301,7 @@ class RecognizeLicenseActivity : BaseTitleActivity(), View.OnClickListener, Easy
 
     private fun handleCallback(imagePath: String) {
         if (TextUtils.isEmpty(imagePath)) {
-            ToastUtil.show("请先上传身份证照片")
+            ToastUtil.show("请先上传营业执照")
             return
         }
         uploadImage(imagePath)

@@ -2,6 +2,8 @@ package com.tourcoo.training.config;
 
 import android.Manifest;
 
+import com.tourcoo.training.BuildConfig;
+
 /**
  * @author :JenkinsZhou
  * @description :
@@ -21,4 +23,6 @@ public class AppConfig {
 
     //权限参数
     public static  String[] PERMISSION = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
+
+    public static final String TEXT_NO_FINISH_TIP = "此功能正在开发中，预计5月15日上线使用";
 }

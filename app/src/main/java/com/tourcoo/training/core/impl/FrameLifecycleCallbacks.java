@@ -38,6 +38,7 @@ import com.tourcoo.training.core.widget.navigation.NavigationViewHelper;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.core.widget.view.status.StatusViewHelper;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
+import com.tourcoo.training.widget.idcardcamera.camera.CameraActivity;
 import com.tourcoo.training.widget.idcardcamera.camera.LicenseCameraActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -274,7 +275,7 @@ public class FrameLifecycleCallbacks extends FragmentManager.FragmentLifecycleCa
         }
         TitleBarView titleBarView = FindViewUtil.getTargetView(activity.getWindow().getDecorView(), TitleBarView.class);
         //不包含TitleBarView处理
-        if (titleBarView == null && !(activity instanceof BaseMainActivity)) {
+        if (titleBarView == null && !(activity instanceof BaseMainActivity) &&  !(activity instanceof CameraActivity) ) {
             View topView = getTopView(CommonUtil.getRootView(activity));
             TourCooLogUtil.i("其它三方库设置状态栏沉浸");
             StatusViewHelper statusViewHelper = StatusViewHelper.with(activity)

@@ -377,12 +377,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         tvCourseCountInfo.text = "共" + countCatalog + "章"+countNode+"小节"
         tvCourseTime.text = "课时："+detail.courseTime.toString()
+        tvSubjectDesc.text = getNotNullValue(detail.description)
     }
 
 
     private fun getNotNullValue(value: String?): String {
         if (TextUtils.isEmpty(value)) {
-            return "未知"
+            return "暂无"
         }
         return value!!
     }

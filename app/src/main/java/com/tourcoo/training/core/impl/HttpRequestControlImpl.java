@@ -9,7 +9,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.JsonParseException;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
+import com.tourcoo.training.BuildConfig;
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.interfaces.HttpRequestControl;
 import com.tourcoo.training.core.interfaces.IHttpRequestControl;
 import com.tourcoo.training.core.interfaces.OnHttpRequestListener;
@@ -50,7 +52,6 @@ public class HttpRequestControlImpl implements HttpRequestControl {
         int page = httpRequestControl.getCurrentPage();
         int size = httpRequestControl.getPageSize();
 
-       TourCooLogUtil.i("smartRefreshLayout:" + smartRefreshLayout + ";adapter:" + adapter + ";status:" + ";page:" + page + ";class:" + httpRequestControl.getRequestClass());
         if (smartRefreshLayout != null) {
             smartRefreshLayout.finishRefresh();
         }
@@ -75,7 +76,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
             return;
         }
         statusLayoutManager.showSuccessLayout();
-        if (smartRefreshLayout.getState() == RefreshState.Refreshing || page == START_PAGE ||  page == 0) {
+        if (smartRefreshLayout.getState() == RefreshState.Refreshing || page == START_PAGE || page == 0) {
             adapter.setNewData(new ArrayList());
         }
         adapter.addData(list);
@@ -92,7 +93,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
 
     @Override
     public void httpRequestError(IHttpRequestControl httpRequestControl, Throwable e) {
-       TourCooLogUtil.e( "httpRequestError:" + e.getMessage());
+        TourCooLogUtil.e("httpRequestError:" + e.getMessage());
         int reason = R.string.frame_exception_other_error;
 //        int code = FastError.EXCEPTION_OTHER_ERROR;
         if (!NetworkUtils.isConnected()) {
@@ -125,14 +126,19 @@ public class HttpRequestControlImpl implements HttpRequestControl {
                 reason = R.string.frame_exception_class_cast;
             }
         }
-        if(httpRequestControl==null){
-            TourCooLogUtil.e(TAG,"httpRequestControl==null!");
-        }else if(httpRequestControl.getStatusLayoutManager() == null){
-            TourCooLogUtil.e(TAG,"getStatusLayoutManager==null!");
+        if (httpRequestControl == null) {
+            TourCooLogUtil.e(TAG, "httpRequestControl==null!");
+        } else if (httpRequestControl.getStatusLayoutManager() == null) {
+            TourCooLogUtil.e(TAG, "getStatusLayoutManager==null!");
         }
         if (httpRequestControl == null || httpRequestControl.getStatusLayoutManager() == null) {
 //            ToastUtil.show(reason);
-            ToastUtil.show(e.getMessage());
+            if (AppConfig.DEBUG_MODE) {
+                ToastUtil.show(e.getMessage());
+            } else {
+                ToastUtil.show(reason);
+            }
+
             return;
         }
         SmartRefreshLayout smartRefreshLayout = httpRequestControl.getRefreshLayout();
@@ -153,7 +159,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
 //                    //可自定义网络错误页面展示
 //                    statusLayoutManager.showCustomLayout(R.layout.layout_status_layout_manager_error);
 //                } else {
-                    statusLayoutManager.showErrorLayout();
+                statusLayoutManager.showErrorLayout();
 //                }
                 return;
             }

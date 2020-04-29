@@ -70,28 +70,12 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
 
     override fun setTitleBar(titleBar: TitleBarView?) {
         super.setTitleBar(titleBar)
-        titleBar?.setTitleMainText("交通安培在线课堂")
-        val leftView = titleBar?.getTextView(Gravity.START)
-        val linearLayout = titleBar?.getLinearLayout(Gravity.START)
-        val rootView = LayoutInflater.from(mContext).inflate(R.layout.view_image, linearLayout, false)
-        val imageView = rootView.findViewById(R.id.ivContent) as ImageView
-        imageView.setImageResource(R.drawable.icon_kf_nol)
-        imageView.setOnClickListener(View.OnClickListener {
-            requestSystemConfigAndSkip()
-        })
-        val rootViewMsg = LayoutInflater.from(mContext).inflate(R.layout.view_image, linearLayout, false)
-        val imageViewMsg = rootViewMsg.findViewById(R.id.ivContent) as ImageView
-        imageViewMsg.setImageResource(R.drawable.icon_xx_nol)
-        imageViewMsg.setOnClickListener(View.OnClickListener {
-            //todo
-        })
-        setViewGone(leftView, false)
+        initTitleBar()
         showPageChange(0)
         llTrainingSafe.setOnClickListener(this@StudyTabFragment)
         llTrainingWorkBefore.setOnClickListener(this@StudyTabFragment)
         llTrainingProfession.setOnClickListener(this@StudyTabFragment)
-        linearLayout!!.addView(rootView)
-        linearLayout.addView(rootViewMsg)
+
 
         val list: MutableList<BannerEntity> = ArrayList()
 
@@ -275,6 +259,31 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
         intent.action = Intent.ACTION_DIAL
         intent.data = Uri.parse("tel:" + tel)
         startActivity(intent)
+    }
+
+    private fun initTitleBar() {
+        mTitleBar?.setTitleMainText("交通安培在线课堂")
+        val leftView = mTitleBar?.getTextView(Gravity.START)
+        val linearLayout = mTitleBar?.getLinearLayout(Gravity.START)
+        val rootView = LayoutInflater.from(mContext).inflate(R.layout.view_image, linearLayout, false)
+        val imageView = rootView.findViewById(R.id.ivContent) as ImageView
+        val tvContent = rootView.findViewById(R.id.tvContent) as TextView
+        tvContent.text = "客服"
+        imageView.setImageResource(R.drawable.icon_kf_nol)
+        imageView.setOnClickListener(View.OnClickListener {
+            requestSystemConfigAndSkip()
+        })
+        val rootViewMsg = LayoutInflater.from(mContext).inflate(R.layout.view_image, linearLayout, false)
+        val imageViewMsg = rootViewMsg.findViewById(R.id.ivContent) as ImageView
+        val tvMsgContent = rootViewMsg.findViewById(R.id.tvContent) as TextView
+        tvMsgContent.text = "信息"
+        imageViewMsg.setImageResource(R.drawable.icon_xx_nol)
+        imageViewMsg.setOnClickListener(View.OnClickListener {
+            //todo
+        })
+        linearLayout!!.addView(rootView)
+        linearLayout.addView(rootViewMsg)
+        setViewGone(leftView, false)
     }
 }
 

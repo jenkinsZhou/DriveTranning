@@ -1,18 +1,20 @@
 package com.tourcoo.training.ui.guide
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SPUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
-import com.tourcoo.training.core.util.ToastUtil
+import com.tourcoo.training.core.util.StatusBarUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.ui.MainTabActivity
@@ -33,15 +35,17 @@ class GuideActivity : BaseTitleActivity() {
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
-        setViewGone(titleBar, false)
+        titleBar?.setStatusBarLightMode(false)?.visibility = View.GONE
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        ImmersionBar.hideStatusBar(window)
         initAdapter()
         tvSkip.setOnClickListener(View.OnClickListener {
             doGoHome()
         })
     }
+
 
 
 
@@ -88,7 +92,6 @@ class GuideActivity : BaseTitleActivity() {
         val tvGo = guideView3.findViewById<TextView>(R.id.tvGo)
         setViewGone(tvGo, true)
         tvGo.setOnClickListener(View.OnClickListener {
-            ToastUtil.show("前往")
             doGoHome()
         })
         tvGuideTitle3.text = "行业资讯 一览无余"
