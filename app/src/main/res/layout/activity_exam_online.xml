@@ -72,8 +72,6 @@
 
         <include layout="@layout/frame_layout_title_bar" />
 
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -93,6 +91,8 @@
                 android:layout_alignParentTop="true" />
 
             <RelativeLayout
+                android:id="@+id/rlBottomLayout"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/vpExamOnline"

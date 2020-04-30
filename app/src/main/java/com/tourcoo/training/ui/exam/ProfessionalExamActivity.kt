@@ -208,7 +208,9 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
                 if (entity == null) {
                     return
                 }
+
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    rlBottomLayout.visibility = View.VISIBLE
                     handleExamResult(entity.data)
                 } else {
                     ToastUtil.show(entity.msg)
