@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -46,6 +47,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
         tvLogout.setOnClickListener(this)
         llForgetPassword.setOnClickListener(this)
         llClearCache.setOnClickListener(this)
+        llAboutUs.setOnClickListener(this)
         showCache()
     }
 
@@ -62,6 +64,9 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
             }
             R.id.llClearCache -> {
                 doClearCache()
+            }
+            R.id.llAboutUs->{
+                ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
             }
             else -> {
             }
