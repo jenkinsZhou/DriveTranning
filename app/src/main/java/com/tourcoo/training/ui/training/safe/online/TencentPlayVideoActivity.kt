@@ -185,92 +185,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
         })
 
-//        smartVideoPlayer!!.setVideoAllCallBack(object : VideoAllCallBack {
-//            override fun onClickResumeFullscreen(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickResumeFullscreen")
-//                //全屏模式下的恢复播放
-//                timerResume()
-//            }
-//
-//            override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickResume(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickResume")
-//                //正常模式下的恢复播放
-//                timerResume()
-//            }
-//
-//            override fun onClickSeekbarFullscreen(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onStartPrepared(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickStartIcon(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onTouchScreenSeekLight(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickStartThumb(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onEnterSmallWidget(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickStartError(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickStartError")
-//            }
-//
-//            override fun onClickBlankFullscreen(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onPrepared(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onAutoComplete(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onAutoComplete")
-//            }
-//
-//            override fun onQuitSmallWidget(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onTouchScreenSeekVolume(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickBlank")
-//            }
-//
-//            override fun onClickBlank(url: String?, vararg objects: Any?) {
-//            }
-//
-//            override fun onClickStop(url: String?, vararg objects: Any?) {
-//                //正常模式下的暂停播放
-//                timerPause()
-//                ToastUtil.show("onClickStop")
-//            }
-//
-//            override fun onClickSeekbar(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onClickSeekbar")
-//            }
-//
-//            override fun onPlayError(url: String?, vararg objects: Any?) {
-//                ToastUtil.show("onPlayError")
-//                timerPause()
-//            }
-//
-//            override fun onClickStopFullscreen(url: String?, vararg objects: Any?) {
-//                //全屏模式下的暂停播放
-//                timerPause()
-//            }
-//
-//            override fun onTouchScreenSeekPosition(url: String?, vararg objects: Any?) {
-//            }
-//
-//        })
-
     }
 
 
@@ -348,6 +262,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         faceVerifyInterval = detail.faceVerifyInterval
         //初始化计时器
         initTimerAndStart()
+
+        if(detail.requireExam == 1){
+            tvExam.visibility = View.VISIBLE
+        }
+
         if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true

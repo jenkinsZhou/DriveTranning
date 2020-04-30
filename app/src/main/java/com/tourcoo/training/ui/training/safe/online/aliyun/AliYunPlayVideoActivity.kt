@@ -263,6 +263,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         faceVerifyInterval = detail.faceVerifyInterval
         //初始化计时器
         initTimerAndStart()
+
+        if(detail.requireExam == 1){
+            tvExam.visibility = View.VISIBLE
+        }
+
         if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true

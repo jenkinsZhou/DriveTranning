@@ -129,6 +129,10 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         faceVerifyInterval = detail.faceVerifyInterval
         //不需要初始化计时器 因此屏蔽
 //        initTimerAndStart()
+        if(detail.requireExam == 1){
+            tvExam.visibility = View.VISIBLE
+        }
+
         if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
