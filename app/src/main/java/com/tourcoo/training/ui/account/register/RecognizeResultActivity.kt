@@ -75,7 +75,7 @@ class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
                 etIdCard.setText(AccountTempHelper.getInstance().idCardInfo.idCard)
             }
         } else {
-            tvLabel1.text  = "姓名"
+            tvLabel1.text  = "名称"
             tvLabel2.text  = "统一社会信用代码"
             if (AccountTempHelper.getInstance().businessLicenseInfo != null) {
                 etName.setText(AccountTempHelper.getInstance().businessLicenseInfo.name)

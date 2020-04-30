@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.WebViewActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -280,6 +281,7 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
         imageViewMsg.setImageResource(R.drawable.icon_xx_nol)
         imageViewMsg.setOnClickListener(View.OnClickListener {
             //todo
+            ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
         })
         linearLayout!!.addView(rootView)
         linearLayout.addView(rootViewMsg)
