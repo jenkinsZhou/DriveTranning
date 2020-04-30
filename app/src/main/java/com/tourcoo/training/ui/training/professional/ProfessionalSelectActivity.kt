@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.training.professional
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,6 +11,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
+import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter.COURSE_STATUS_CONTINUE
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.UiManager
@@ -20,8 +22,11 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.entity.training.TwoTypeModel
+import com.tourcoo.training.ui.account.LoginActivity
+import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
@@ -50,6 +55,9 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
         const val REQUEST_CODE_FACE_COMPARE = 202
 
         const val REQUEST_CODE_FACE_VERIFY = 203
+
+        const val REQUEST_CODE_AUTH = 204
+
     }
 
     override fun getAdapter(): BaseQuickAdapter<CourseInfo, BaseViewHolder> {
@@ -72,7 +80,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
     private var id = ""
     private var coins = ""
     private var childModuleId = ""
-    private var currentPlanId: String? = null
+    private var currentCourseInfo: CourseInfo? = null
     private var dialog: RecognizeStepDialog? = null
 
     //是否需要购买
@@ -100,7 +108,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
             return
         }
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            val courseInfo = adapter!!.data[position] as CourseInfo
+            currentCourseInfo = adapter!!.data[position] as CourseInfo
 
             if (!AccountHelper.getInstance().isLogin) {
                 ToastUtil.show("请先登录")
@@ -109,19 +117,18 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
 
             when (AccountHelper.getInstance().userInfo.isAuthenticated) {
                 0 -> {  //未认证
-                    currentPlanId = courseInfo.trainingPlanID
-                    showRecognize(currentPlanId)
+                    showRecognize(currentCourseInfo!!.trainingPlanID)
                 }
 
                 1 -> {  //已认证
-                    verifyByStatus(courseInfo)
+                    verifyByStatus(currentCourseInfo!!)
                 }
 
                 2 -> {  //认证失败
                     val dialog = LocalTrainingConfirmDialog(mContext)
                     dialog.setContent("请确认是否为本人学习？")
                             .setPositiveButtonClick("确认") {
-                                verifyByStatus(courseInfo)
+                                verifyByStatus(currentCourseInfo!!)
                                 dialog.dismiss()
                             }
                             .setNegativeButtonClick("取消") {
@@ -151,6 +158,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
     private fun skipFaceRecord(trainingId: String) {
         val intent = Intent(mContext, FaceRecognitionActivity::class.java)
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
+        intent.putExtra("OnlyBase64", true)
         startActivityForResult(intent, REQUEST_CODE_FACE_RECORD)
     }
 
@@ -182,7 +190,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
         when (courseInfo.status) {
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_CONTINUE -> {
-                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
+                skipFaceVefify(courseInfo.trainingPlanID)
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_WAIT_EXAM -> {
@@ -197,6 +205,12 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
                 skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
             }
         }
+    }
+
+    private fun skipFaceVefify(trainingId: String) {
+        val intent = Intent(mContext, FaceRecognitionActivity::class.java)
+        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
+        startActivityForResult(intent, REQUEST_CODE_FACE_VERIFY)
     }
 
 
@@ -280,4 +294,70 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
             }
         }
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REQUEST_CODE_AUTH -> {
+                    currentCourseInfo!!.status = COURSE_STATUS_CONTINUE
+                    verifyByStatus(currentCourseInfo!!)
+                }
+
+                REQUEST_CODE_FACE_RECORD -> {
+                    if (data != null) {
+                        handleStepOneSuccess()
+                    }
+                }
+                REQUEST_CODE_FACE_COMPARE -> {
+                    AccountHelper.getInstance().userInfo.isAuthenticated = 1
+                    ToastUtil.showSuccess("验证通过")
+                    closeFaceDialog()
+                    verifyByStatus(currentCourseInfo!!)
+                }
+
+                REQUEST_CODE_FACE_VERIFY -> {
+                    skipPlayVideoByType(currentCourseInfo!!.trainingPlanID, currentCourseInfo!!.type)
+                }
+            }
+        } else {
+            baseHandler.postDelayed({
+                closeFaceDialog()
+            }, 500)
+        }
+    }
+
+
+    private fun handleStepOneSuccess() {
+        dialog?.showStepOneSuccess()
+        dialog?.setPositiveButton(View.OnClickListener {
+            skipIdCardRecognize(currentCourseInfo!!.trainingPlanID)
+        })
+    }
+
+
+    /**
+     * 人脸和身份证比对
+     */
+    private fun skipIdCardRecognize(trainingId: String?) {
+        if (TextUtils.isEmpty(trainingId)) {
+            ToastUtil.show("'未获取到培训信息")
+            return
+        }
+        val bundle = Bundle()
+        bundle.putInt(LoginActivity.EXTRA_KEY_REGISTER_TYPE, LoginActivity.EXTRA_REGISTER_TYPE_DRIVER)
+        AccountTempHelper.getInstance().recognizeType = LoginActivity.EXTRA_TYPE_RECOGNIZE_COMPARE
+        val intent = Intent(mContext, RecognizeIdCardActivity::class.java)
+        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
+        intent.putExtras(bundle)
+        startActivityForResult(intent, REQUEST_CODE_FACE_COMPARE)
+    }
+
+
+    private fun closeFaceDialog() {
+        dialog?.dismiss()
+    }
+
+
 }

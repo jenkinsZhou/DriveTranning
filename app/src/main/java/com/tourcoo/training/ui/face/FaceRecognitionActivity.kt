@@ -60,6 +60,9 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
     private var trainId = ""
     private var cameraHelper: CameraHelper? = null
     private val cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT
+
+    private var onlyBase64 = false
+
     override fun getContentLayout(): Int {
         return R.layout.activity_face_recognition
     }
@@ -70,6 +73,8 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
 
     override fun initView(savedInstanceState: Bundle?) {
         trainId = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID) as String
+        onlyBase64 = intent.getBooleanExtra("OnlyBase64", false)
+
         if (TextUtils.isEmpty(trainId)) {
             ToastUtil.show("未获取到培训计划")
             finish()
@@ -168,10 +173,6 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                         notifyMedia(photoPath)
                         AccountTempHelper.getInstance().facePhotoPath = photoPath
                         uploadFaceImage(trainId, faceBitmap)
-                        /*  saveImage(photoPath, toTurn(resource)!!)
-                          notifyMedia(photoPath)
-                          setResult(photoPath)
-                          finish()*/
                     }
                 }, 200)
 
@@ -335,23 +336,29 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
             return
         }
         val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
-        ApiRepository.getInstance().requestFaceVerify(trainId, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
-            override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
-                if (entity == null) {
-                    return
+        if (onlyBase64) {
+            val intent = Intent()
+            AccountTempHelper.getInstance().faceBase64Image = base64Image
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        } else {
+            ApiRepository.getInstance().requestFaceVerify(trainId, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
+                override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
+                    if (entity == null) {
+                        return
+                    }
+                    if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                        ToastUtil.showSuccess("" + entity.data.confidence)
+                        handleRecognizeSuccessCallback()
+                    } else {
+                        ToastUtil.show(entity.msg)
+                        //todo 暂时模拟成功
+                        handleRecognizeSuccessCallback()
+                    }
                 }
-                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess("" + entity.data.confidence)
-                    handleRecognizeSuccessCallback()
-                } else {
-                    ToastUtil.show(entity.msg)
-                    //todo 暂时模拟成功
-                    handleRecognizeSuccessCallback()
-                }
-            }
-        })
+            })
+        }
     }
-
 
 
 }

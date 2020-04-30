@@ -219,7 +219,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
             ToastUtil.show("请先上传身份证照片")
             return
         }
-        if (AccountTempHelper.getInstance().recognizeType == EXTRA_TYPE_RECOGNIZE_COMPARE) {
+        if (AccountTempHelper.getInstance().recognizeType == EXTRA_TYPE_RECOGNIZE_COMPARE) { //身份证比对
             uploadFaceImage(BitmapFactory.decodeFile(imagePath), AccountTempHelper.getInstance().facePhotoPath)
         } else {
             uploadImage(imagePath)
@@ -364,8 +364,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
                     handleRecognizeSuccessCallback()
                 } else {
                     ToastUtil.show(entity.msg)
-                    //todo 暂时模拟成功
-                    handleRecognizeSuccessCallback()
+                    finish()
                 }
             }
 
@@ -384,5 +383,6 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
+
 
 }

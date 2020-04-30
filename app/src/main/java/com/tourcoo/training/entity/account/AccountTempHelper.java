@@ -74,6 +74,26 @@ public class AccountTempHelper {
 
     private String businessLicensePath;
 
+    private String faceBase64Image;
+
+    private String idCardBase64Image;
+
+    public String getIdCardBase64Image() {
+        return idCardBase64Image;
+    }
+
+    public void setIdCardBase64Image(String idCardBase64Image) {
+        this.idCardBase64Image = idCardBase64Image;
+    }
+
+    public String getFaceBase64Image() {
+        return faceBase64Image;
+    }
+
+    public void setFaceBase64Image(String faceBase64Image) {
+        this.faceBase64Image = faceBase64Image;
+    }
+
     public String getBusinessLicensePath() {
         return businessLicensePath;
     }

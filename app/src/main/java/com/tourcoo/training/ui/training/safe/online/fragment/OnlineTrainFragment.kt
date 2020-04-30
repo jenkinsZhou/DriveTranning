@@ -253,6 +253,7 @@ class OnlineTrainFragment : BaseFragment() {
     private fun skipFaceRecord(trainingId: String) {
         val intent = Intent(mContext, FaceRecognitionActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
+        intent.putExtra("OnlyBase64",true)
         startActivityForResult(intent, REQUEST_CODE_FACE_RECORD)
     }
 
@@ -278,8 +279,10 @@ class OnlineTrainFragment : BaseFragment() {
                     }
                 }
                 REQUEST_CODE_FACE_COMPARE -> {
+                    AccountHelper.getInstance().userInfo.isAuthenticated = 1
                     ToastUtil.showSuccess("验证通过")
                     closeFaceDialog()
+                    verifyByStatus(currentCourseInfo!!)
                 }
 
                 REQUEST_CODE_FACE_VERIFY ->{

@@ -53,13 +53,13 @@ class WorkProTrainingFragment  : BaseFragment()  {
     private var adapter: OnLineTrainingCourseAdapter? = null
     private var refreshLayout: SmartRefreshLayout? = null
     private var recyclerView: RecyclerView? = null
-    private var currentPlanId: String? = null
+    private var currentCourseInfo: CourseInfo? = null
     private var dialog: RecognizeStepDialog? = null
+
+
     override fun getContentLayout(): Int {
         return R.layout.fragment_training_pre_work
     }
-
-
 
     override fun initView(savedInstanceState: Bundle?) {
 
@@ -147,7 +147,7 @@ class WorkProTrainingFragment  : BaseFragment()  {
             return
         }
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            val courseInfo = adapter!!.data[position] as CourseInfo
+            currentCourseInfo = adapter!!.data[position] as CourseInfo
 
             if (!AccountHelper.getInstance().isLogin) {
                 ToastUtil.show("请先登录")
@@ -156,19 +156,18 @@ class WorkProTrainingFragment  : BaseFragment()  {
 
             when (AccountHelper.getInstance().userInfo.isAuthenticated) {
                 0 -> {  //未认证
-                    currentPlanId = courseInfo.trainingPlanID
-                    showRecognize(currentPlanId)
+                    showRecognize(currentCourseInfo!!.trainingPlanID)
                 }
 
                 1 -> {  //已认证
-                    verifyByStatus(courseInfo)
+                    verifyByStatus(currentCourseInfo!!)
                 }
 
                 2 -> {  //认证失败
                     val dialog = LocalTrainingConfirmDialog(mContext)
                     dialog.setContent("请确认是否为本人学习？")
                             .setPositiveButtonClick("确认") {
-                                verifyByStatus(courseInfo)
+                                verifyByStatus(currentCourseInfo!!)
                                 dialog.dismiss()
                             }
                             .setNegativeButtonClick("取消") {
@@ -202,8 +201,6 @@ class WorkProTrainingFragment  : BaseFragment()  {
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_CONTINUE -> {
-                trainingPlanID = courseInfo.trainingPlanID
-                trainingType = courseInfo.type
                 skipFaceVefify(courseInfo.trainingPlanID)
             }
 
@@ -221,8 +218,6 @@ class WorkProTrainingFragment  : BaseFragment()  {
         }
     }
 
-    private var trainingPlanID:String = ""
-    private var trainingType:Int = -1
 
     private fun skipFaceVefify(trainingId: String) {
         val intent = Intent(mContext, FaceRecognitionActivity::class.java)
@@ -245,6 +240,7 @@ class WorkProTrainingFragment  : BaseFragment()  {
     private fun skipFaceRecord(trainingId: String) {
         val intent = Intent(mContext, FaceRecognitionActivity::class.java)
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
+        intent.putExtra("OnlyBase64",true)
         startActivityForResult(intent, OnlineTrainFragment.REQUEST_CODE_FACE_RECORD)
     }
 
@@ -258,12 +254,14 @@ class WorkProTrainingFragment  : BaseFragment()  {
                     }
                 }
                 REQUEST_CODE_FACE_COMPARE -> {
+                    AccountHelper.getInstance().userInfo.isAuthenticated = 1
                     ToastUtil.showSuccess("验证通过")
                     closeFaceDialog()
+                    verifyByStatus(currentCourseInfo!!)
                 }
 
                 REQUEST_CODE_FACE_VERIFY ->{
-                    skipPlayVideoByType(trainingPlanID, trainingType)
+                    skipPlayVideoByType(currentCourseInfo!!.trainingPlanID, currentCourseInfo!!.type)
                 }
 
             }
@@ -278,7 +276,7 @@ class WorkProTrainingFragment  : BaseFragment()  {
     private fun handleStepOneSuccess() {
         dialog?.showStepOneSuccess()
         dialog?.setPositiveButton(View.OnClickListener {
-            skipIdCardRecognize(currentPlanId)
+            skipIdCardRecognize(currentCourseInfo!!.trainingPlanID)
         })
     }
 
