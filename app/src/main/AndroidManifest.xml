@@ -30,8 +30,8 @@
         android:roundIcon="@mipmap/icon_car_networking"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.certificate.CertificationDetailsActivity"></activity>
-        <!-- 设置key -->
+        <activity android:name=".ui.training.professional.ProfessionalExamSelectChildActivity"></activity>
+        <activity android:name=".ui.certificate.CertificationDetailsActivity" /> <!-- 设置key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="5466d4e008e6990e81f9dc1b536c708c" />
@@ -79,8 +79,7 @@
         <activity android:name=".ui.account.register.RecognizeIdCardActivity" />
         <activity
             android:name=".widget.idcardcamera.camera.CameraActivity"
-            android:theme="@style/ThemeWindowFullscreen"
-           />
+            android:theme="@style/ThemeWindowFullscreen" />
         <activity android:name=".ui.account.register.RecognizeResultActivity" />
         <activity android:name=".ui.account.FindPassActivity" />
         <activity android:name=".ui.pay.BuyNowActivity" />
@@ -126,11 +125,10 @@
         <activity android:name=".ui.home.news.NewsTabFragmentNew" />
         <activity android:name=".ui.training.professional.ProfessionalSelectActivity" />
         <activity android:name=".ui.training.professional.ProfessionalExamSelectActivity" />
+        <activity android:name=".ui.exam.ProfessionalExamActivity" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
         <activity android:name=".ui.FeedbackActivity" />
-
-
     </application>
 
 </manifest>

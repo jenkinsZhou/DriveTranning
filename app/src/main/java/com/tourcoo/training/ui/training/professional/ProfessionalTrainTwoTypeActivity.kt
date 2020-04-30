@@ -2,12 +2,14 @@ package com.tourcoo.training.ui.training.professional
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.LinearLayout
 import com.blankj.utilcode.util.ConvertUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.training.ProfessionalTrainingTwoTypeAdapter
+import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.UiManager
 import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -17,6 +19,7 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.ProfessionalTwoTypeModel
 import com.tourcoo.training.utils.RecycleViewDivider
+import com.tourcoo.training.widget.dialog.CommonBellDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 
 /**
@@ -54,29 +57,53 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
 
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             val info = adapter.data[position] as ProfessionalTwoTypeModel
-            if (info.type == "0") {//直接跳转到课程列表
-                val intent = Intent(this, ProfessionalSelectActivity::class.java)
-                intent.putExtra("id",info.specialId)
-                intent.putExtra("childModuleId", info.childModuleId)
-                intent.putExtra("title", info.title)
-                intent.putExtra("coins", info.coins)
-                startActivity(intent)
+            jumpByModelType(info)
+        }
 
-            } else {//直接跳转到考试分类列表
-                val intent = Intent(this, ProfessionalExamSelectActivity::class.java)
-                intent.putExtra("id",info.specialId)
-                intent.putExtra("childModuleId", info.childModuleId)
-                intent.putExtra("title", info.title)
-                intent.putExtra("coins", info.coins)
-                intent.putExtra("status",info.status)
-                startActivity(intent)
+        adapter!!.setOnItemChildClickListener { adapter, view, position ->
+            val info = adapter.data[position] as ProfessionalTwoTypeModel
+            when (view.id) {
+                R.id.btnSubmit -> {
+                    if (info.status == 1) { //已购买
+                        jumpByModelType(info)
+                    } else {
+                        val dialog = CommonBellDialog(mContext)
+                        dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
+                            override fun onClick(v: View?) {
+                                requestPayInfo(info.specialId,info.childModuleId,info.coins)
+                                dialog.dismiss()
+                            }
+                        })
+                        dialog.show()
+                    }
+                }
             }
-
-
         }
 
 
     }
+
+
+    private fun jumpByModelType(info: ProfessionalTwoTypeModel) {
+        if (info.type == "0") {//直接跳转到课程列表
+            val intent = Intent(this, ProfessionalSelectActivity::class.java)
+            intent.putExtra("id", info.specialId)
+            intent.putExtra("childModuleId", info.childModuleId)
+            intent.putExtra("title", info.title)
+            intent.putExtra("coins", info.coins)
+            startActivity(intent)
+
+        } else {//直接跳转到考试分类列表
+            val intent = Intent(this, ProfessionalExamSelectActivity::class.java)
+            intent.putExtra("id", info.specialId)
+            intent.putExtra("childModuleId", info.childModuleId)
+            intent.putExtra("title", info.title)
+            intent.putExtra("coins", info.coins)
+            intent.putExtra("status", info.status)
+            startActivity(intent)
+        }
+    }
+
 
     override fun loadData(page: Int) {
         requestTwoTypeDatas()
@@ -90,6 +117,24 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
             }
         })
     }
+
+
+    private fun requestPayInfo(id:String,childModuleId:String,coins:String) {
+        ApiRepository.getInstance().requestTwoPayInfo(id, childModuleId, coins).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any?>>() {
+            override fun onSuccessNext(entity: BaseResult<Any?>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    ToastUtil.showSuccess("支付完成")
+                    requestTwoTypeDatas()
+                } else {
+                    ToastUtil.show(entity.msg)
+                }
+            }
+        })
+    }
+
 
 
 }

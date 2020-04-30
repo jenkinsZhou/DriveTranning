@@ -240,12 +240,25 @@ public interface ApiService {
     Observable<BaseResult<ExamResultEntity>> requestFinishExam(@Body Map<String, Object> map);
 
     /**
+     * 专项交卷接口
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/Special/finish-exam")
+    Observable<BaseResult<ExamResultEntity>> requestProfessionalFinishExam(@Body Map<String, Object> map);
+
+    /**
      * 保存考试状态
      */
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/save-exam-answers")
     Observable<BaseResult> requestSaveAnswer(@Body Map<String, Object> map);
 
+    /**
+     * 保存专项考试状态
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/Special/save-exam-answers")
+    Observable<BaseResult> requestProfessionalSaveAnswer(@Body Map<String, Object> map);
 
     /**
      * 上传证书图片
@@ -304,6 +317,9 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
     @POST("v1.0/open/Special/special-payinfo-pay")
     Observable<BaseResult> requestTwoPayInfo(@Body Map<String, Object> map);
+
+    @POST("v1.0/Special/get-exam-detail")
+    Observable<BaseResult<ExamEntity>> requestProfessionalExamInfo(@Body Map<String, Object> map);
 
 
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})

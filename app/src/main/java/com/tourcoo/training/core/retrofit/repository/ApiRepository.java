@@ -301,10 +301,24 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult<ExamResultEntity>> requestFinishExam(String examId, List<CommitAnswer> commitAnswerList) {
         Map<String, Object> params = new HashMap<>(4);
         params.put("examId", examId);
-        //todo
-//        params.put("questions", commitAnswerList);
         params.put("questions", JSON.toJSONString(commitAnswerList));
         return CommonTransformer.switchSchedulers(getApiService().requestFinishExam(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<ExamResultEntity>> requestProfessionalFinishExam(String examId, List<CommitAnswer> commitAnswerList) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("examId", examId);
+//        params.put("questions", commitAnswerList);
+        params.put("questions", JSON.toJSONString(commitAnswerList));
+        return CommonTransformer.switchSchedulers(getApiService().requestProfessionalFinishExam(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult> requestProfessionalSaveAnswer(String examId, List<CommitAnswer> commitAnswerList) {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("examId", examId);
+//        params.put("questions", commitAnswerList);
+        params.put("questions", JSON.toJSONString(commitAnswerList));
+        return CommonTransformer.switchSchedulers(getApiService().requestProfessionalSaveAnswer(params).retryWhen(new RetryWhen()));
     }
 
     public Observable<BaseResult> requestSaveAnswer(String examId, List<CommitAnswer> commitAnswerList) {
@@ -403,6 +417,13 @@ public class ApiRepository extends BaseRepository {
         params.put("ChildModuleId", childModuleId);
         params.put("Coins", coins);
         return CommonTransformer.switchSchedulers(getApiService(). requestTwoPayInfo(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<ExamEntity>> requestProfessionalExamInfo(String trainingPlanID,int type) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("trainingPlanID", trainingPlanID);
+        params.put("type", type);
+        return CommonTransformer.switchSchedulers(getApiService(). requestProfessionalExamInfo(params).retryWhen(new RetryWhen()));
     }
 
 

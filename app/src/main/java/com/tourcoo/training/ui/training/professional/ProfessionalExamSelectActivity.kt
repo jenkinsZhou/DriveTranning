@@ -1,18 +1,30 @@
 package com.tourcoo.training.ui.training.professional
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
+import com.blankj.utilcode.util.ConvertUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
 import com.tourcoo.training.R
+import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.core.UiManager
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
+import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.course.CourseInfo
+import com.tourcoo.training.entity.training.TwoTypeModel
+import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonBellDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_professional_exam_select.*
+import kotlinx.android.synthetic.main.sample_video_pick.*
 
 /**
  *@description :专项测试选择页面
@@ -21,7 +33,28 @@ import kotlinx.android.synthetic.main.activity_professional_exam_select.*
  * @date 2020年04月28日14:22
  * @Email: 971613168@qq.com
  */
-class ProfessionalExamSelectActivity : BaseTitleActivity(), View.OnClickListener {
+class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), View.OnClickListener {
+
+
+    private var adapter: OnLineTrainingCourseAdapter? = null
+
+    companion object {
+        const val REQUEST_CODE_FACE_RECORD = 201
+
+        const val REQUEST_CODE_FACE_COMPARE = 202
+
+        const val REQUEST_CODE_FACE_VERIFY = 203
+    }
+
+    override fun getAdapter(): BaseQuickAdapter<CourseInfo, BaseViewHolder> {
+        adapter = OnLineTrainingCourseAdapter()
+        return adapter!!
+    }
+
+
+    override fun loadData(page: Int) {
+        requestData()
+    }
 
     override fun getContentLayout(): Int {
         return R.layout.activity_professional_exam_select
@@ -34,7 +67,6 @@ class ProfessionalExamSelectActivity : BaseTitleActivity(), View.OnClickListener
     private var id = ""
     private var coins = ""
     private var childModuleId = ""
-    private var currentPlanId: String? = null
 
     //是否需要购买
     private var needBuy = true
@@ -54,9 +86,42 @@ class ProfessionalExamSelectActivity : BaseTitleActivity(), View.OnClickListener
 
         mTitleBar.setTitleMainText(title)
 
+        mRecyclerView.addItemDecoration(RecycleViewDivider(this, LinearLayout.VERTICAL, ConvertUtils.dp2px(10f), resources.getColor(R.color.grayFBF8FB), true))
+
+        adapter!!.setOnItemClickListener { adapter, view, position ->
+            val info = adapter.data[position] as CourseInfo
+            if (needBuy) {
+                showBuyDialog()
+                return@setOnItemClickListener
+            }
+
+            val intent = Intent(this, ProfessionalExamSelectChildActivity::class.java)
+            intent.putExtra("trainingPlanId", info.trainingPlanID)
+            startActivity(intent)
+        }
+
+
         tvBuy.setOnClickListener(this)
-        rlExamSimulation.setOnClickListener(this)
-        rlExamFormal.setOnClickListener(this)
+
+    }
+
+
+    private fun requestData() {
+        ApiRepository.getInstance().requestTwoTypeDetailsList(id, childModuleId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<TwoTypeModel>>(iHttpRequestControl) {
+            override fun onSuccessNext(entity: BaseResult<TwoTypeModel>?) {
+                if (entity == null) {
+                    return
+                }
+                needBuy = entity.data.status == 0
+                if (entity.data.status == 1) { //已购买
+                    llHeaderBar.visibility = View.GONE
+                } else { //暂未购买
+                    llHeaderBar.visibility = View.VISIBLE
+                }
+
+                UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity.data == null) ArrayList<CourseInfo>() else entity.data.planData, null)
+            }
+        })
     }
 
     private fun requestPayInfo() {
@@ -67,8 +132,7 @@ class ProfessionalExamSelectActivity : BaseTitleActivity(), View.OnClickListener
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     ToastUtil.showSuccess("支付完成")
-                    needBuy = false
-                    //todo  dasdfasdf
+                    requestData()
                 } else {
                     ToastUtil.show(entity.msg)
                 }
@@ -80,27 +144,26 @@ class ProfessionalExamSelectActivity : BaseTitleActivity(), View.OnClickListener
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvBuy -> {
-                ToastUtil.show("点击购买")
-//                if (needBuy) {
-                val dialog = CommonBellDialog(mContext)
-                dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
-                    override fun onClick(v: View?) {
-                        requestPayInfo()
-                        dialog.dismiss()
-                    }
-                })
-                dialog.show()
-                return
-//                }
+                if (needBuy) {
+                    showBuyDialog()
+                    return
+                }
             }
-            R.id.rlExamSimulation -> {
-                ToastUtil.show("模拟测试")
-            }
-            R.id.rlExamFormal -> {
 
-            }
             else -> {
             }
         }
+    }
+
+
+    private fun showBuyDialog() {
+        val dialog = CommonBellDialog(mContext)
+        dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                requestPayInfo()
+                dialog.dismiss()
+            }
+        })
+        dialog.show()
     }
 }

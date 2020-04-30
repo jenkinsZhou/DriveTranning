@@ -113,5 +113,12 @@ public class ExamPassDialog {
         return this;
     }
 
+    public ExamPassDialog setNegativeGone(boolean visibility) {
+        if (tvNegative != null) {
+            tvNegative.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        }
+        return this;
+    }
+
 
 }

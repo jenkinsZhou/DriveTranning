@@ -41,6 +41,15 @@ public class ProfessionalTrainingTwoTypeAdapter extends BaseQuickAdapter<Profess
         helper.setText(R.id.tvTitle,item.getTitle());
         helper.setText(R.id.tvDetails,item.getSubTitle());
         helper.setText(R.id.tvCoins,"学币："+item.getCoins());
+
+        if(item.getStatus() == 1){ //已购买
+            helper.setText(R.id.btnSubmit,"立即学习");
+        }else {
+            helper.setText(R.id.btnSubmit,"立即购买");
+        }
+
+        helper.addOnClickListener(R.id.btnSubmit);
+
     }
 
 }
