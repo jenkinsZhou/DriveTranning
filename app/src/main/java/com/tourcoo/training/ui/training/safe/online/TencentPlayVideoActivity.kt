@@ -120,13 +120,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 //        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
 //        imageView.setImageResource(R.drawable.img_training_free_video)
 
-     /*   tvTest.setOnClickListener {
-            if (mTitleBar.visibility != View.GONE) {
-                mTitleBar.visibility = View.GONE
-            } else {
-                mTitleBar.visibility = View.VISIBLE
-            }
-        }*/
+        /*   tvTest.setOnClickListener {
+               if (mTitleBar.visibility != View.GONE) {
+                   mTitleBar.visibility = View.GONE
+               } else {
+                   mTitleBar.visibility = View.VISIBLE
+               }
+           }*/
         requestPlanDetail()
     }
 
@@ -375,8 +375,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         for (entry in mCourseHashMap!!.entries) {
             loadCourseStatus(entry.value, entry.key)
         }
-        tvCourseCountInfo.text = "共" + countCatalog + "章"+countNode+"小节"
-        tvCourseTime.text = "课时："+detail.courseTime.toString()
+        tvCourseCountInfo.text = "共" + countCatalog + "章" + countNode + "小节"
+        tvCourseTime.text = "课时：" + detail.courseTime.toString()
         tvSubjectDesc.text = getNotNullValue(detail.description)
     }
 
@@ -402,7 +402,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             if (catalog.level == 1) {
                 countCatalog++
             }
-            if(catalog.level == 2){
+            if (catalog.level == 2) {
                 countNode++
             }
             if (!TextUtils.isEmpty(catalog.name)) {
@@ -541,6 +541,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
             }
             else -> {
+
                 //外链URL
                 ToastUtil.show("跳转外链逻辑")
             }
@@ -632,6 +633,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 }
                 finish()
             }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                finish()
+            }
         })
     }
 
@@ -718,7 +724,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         mTimerTask = CountDownTimerSupport(faceVerifyInterval.toLong() * 1000, 1000L)
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
             override fun onFinish() {
-                ToastUtil.show("时间到")
                 //时间到 开始下一个计时
                 startTimer()
                 //todo 处理认证逻辑

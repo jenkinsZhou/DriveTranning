@@ -120,8 +120,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".ui.training.professional.ProfessionalTrainTwoTypeActivity" />
-        <activity android:name=".ui.training.TrainingWebViewActivity" />
-        <activity android:name=".ui.training.safe.online.HtmlBrowserActivity" />
+        <activity android:name=".ui.training.safe.online.web.TrainingWebViewActivity" />
+        <activity android:name=".ui.training.safe.online.web.HtmlBrowserActivity" />
         <activity android:name=".ui.home.news.NewsTabFragmentNew" />
         <activity android:name=".ui.training.professional.ProfessionalSelectActivity" />
         <activity android:name=".ui.training.professional.ProfessionalExamSelectActivity" />

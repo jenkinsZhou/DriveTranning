@@ -10,7 +10,6 @@ import com.tourcoo.training.R;
 import com.tourcoo.training.constant.ExamConstant;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ResourceUtil;
-import com.tourcoo.training.entity.exam.ExaminationEntityOld;
 import com.tourcoo.training.entity.exam.Question;
 
 /**

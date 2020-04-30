@@ -19,6 +19,9 @@ public class ExamTempHelper {
     private static class SingletonInstance {
         private static final ExamTempHelper INSTANCE = new ExamTempHelper();
     }
+    public static ExamTempHelper getInstance() {
+        return ExamTempHelper.SingletonInstance.INSTANCE;
+    }
 
     public ExamEntity getExamInfo() {
         return examInfo;
@@ -28,7 +31,5 @@ public class ExamTempHelper {
         this.examInfo = examInfo;
     }
 
-    public static ExamTempHelper getInstance() {
-        return ExamTempHelper.SingletonInstance.INSTANCE;
-    }
+
 }

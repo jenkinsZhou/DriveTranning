@@ -68,14 +68,18 @@ class RecognizeResultActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun showResultInfo() {
         if (isRecognizeId) {
+            tvLabel1.text  = "姓名"
+            tvLabel2.text  = "身份证号码"
             if (AccountTempHelper.getInstance().idCardInfo != null) {
-                tvName.text = AccountTempHelper.getInstance().idCardInfo.name
-                tvIdCard.text = AccountTempHelper.getInstance().idCardInfo.idCard
+                etName.setText(AccountTempHelper.getInstance().idCardInfo.name)
+                etIdCard.setText(AccountTempHelper.getInstance().idCardInfo.idCard)
             }
         } else {
+            tvLabel1.text  = "姓名"
+            tvLabel2.text  = "统一社会信用代码"
             if (AccountTempHelper.getInstance().businessLicenseInfo != null) {
-                tvName.text = AccountTempHelper.getInstance().businessLicenseInfo.name
-                tvIdCard.text = AccountTempHelper.getInstance().businessLicenseInfo.creditCode
+                etName.setText(AccountTempHelper.getInstance().businessLicenseInfo.name)
+                etIdCard.setText(AccountTempHelper.getInstance().businessLicenseInfo.creditCode)
             }
         }
 

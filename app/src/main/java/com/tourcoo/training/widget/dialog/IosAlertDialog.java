@@ -2,6 +2,7 @@ package com.tourcoo.training.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -92,6 +93,7 @@ public class IosAlertDialog {
         dialog.setCancelable(cancel);
         return this;
     }
+
     public IosAlertDialog setCanceledOnTouchOutside(boolean cancel) {
         dialog.setCanceledOnTouchOutside(cancel);
         return this;
@@ -133,15 +135,13 @@ public class IosAlertDialog {
     }
 
 
-
-
     public IosAlertDialog setDialogBackground(Drawable dialogBackground) {
-       container.setBackground(dialogBackground);
+        container.setBackground(dialogBackground);
         return this;
     }
 
     public IosAlertDialog setNegativeTextColor(int color) {
-        if(negBtn == null){
+        if (negBtn == null) {
             return this;
         }
         negBtn.setTextColor(color);
@@ -197,4 +197,26 @@ public class IosAlertDialog {
         setLayout();
         dialog.show();
     }
+
+    public IosAlertDialog setOnDismissListener(DialogInterface.OnDismissListener dismissListener) {
+        if (dialog != null) {
+            dialog.setOnDismissListener(dismissListener);
+        }
+        return this;
+    }
+
+    public boolean isShowing() {
+        if (dialog == null) {
+            return false;
+        }
+        return dialog.isShowing();
+    }
+
+
+    public void dismiss() {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+    }
+
 }

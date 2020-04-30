@@ -9,6 +9,7 @@ package com.tourcoo.training.constant;
  */
 public class TrainingConstant {
     public static final String EXTRA_TRAINING_PLAN_ID = "EXTRA_TRAINING_PLAN_ID";
+    public static final String EXTRA_COURSE_INFO = "EXTRA_COURSE_INFO";
     public static final String EXTRA_KEY_QR_SCAN_RESULT = "EXTRA_KEY_QR_SCAN_RESULT";
     public static final String BASE_SOCKET_URL_ = "wss://api.ggjtaq.com/v1.0/ws/training?token=";
 

@@ -76,82 +76,8 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     }
 
 
-    private fun getAllAnswerList(hasAnswer: Boolean): ArrayList<AnswerOld> {
-        val answerList = ArrayList<AnswerOld>()
-        val answerA = AnswerOld()
-        answerA.answerId = "1"
-        answerA.answerContent = "我是A选项"
-        answerA.isHasAnswered = hasAnswer
-        answerA.selectedIcon = R.drawable.img_a_selected
-        answerA.unSelectedIcon = R.drawable.img_a
-        answerList.add(answerA)
-        val answerB = AnswerOld()
-        answerB.answerId = "2"
-        answerB.answerContent = "我是B选项"
-        answerB.isHasAnswered = hasAnswer
-        answerB.selectedIcon = R.drawable.img_b_selected
-        answerB.unSelectedIcon = R.drawable.img_b
-        answerList.add(answerB)
-        val answerC = AnswerOld()
-        answerC.answerId = "3"
-        answerC.answerContent = "我是C选项"
-        answerC.isHasAnswered = hasAnswer
-        answerC.selectedIcon = R.drawable.img_c_selected
-        answerC.unSelectedIcon = R.drawable.img_c
-        answerC.isCorrectAnswer = true
-        answerList.add(answerC)
-        val answerD = AnswerOld()
-        answerD.answerContent = "我是D选项"
-        answerD.answerId = "4"
-        answerD.isHasAnswered = hasAnswer
-        answerD.selectedIcon = R.drawable.img_d_selected
-        answerD.unSelectedIcon = R.drawable.img_d
-        answerList.add(answerD)
-        val answerE = AnswerOld()
-        answerE.answerContent = "我是E选项"
-        answerE.answerId = "5"
-        answerE.isHasAnswered = hasAnswer
-        answerE.selectedIcon = R.drawable.img_d_selected
-        answerE.unSelectedIcon = R.drawable.img_d
-        answerList.add(answerE)
-        val answerF = AnswerOld()
-        answerF.answerContent = "我是F选项"
-        answerF.answerId = "6"
-        answerF.isHasAnswered = hasAnswer
-        answerF.selectedIcon = R.drawable.img_d_selected
-        answerF.unSelectedIcon = R.drawable.img_d
-        answerList.add(answerF)
-        val answerG = AnswerOld()
-        answerG.answerContent = "我是G选项"
-        answerG.answerId = "7"
-        answerG.isHasAnswered = hasAnswer
-        answerG.selectedIcon = R.drawable.img_d_selected
-        answerG.unSelectedIcon = R.drawable.img_d
-        answerList.add(answerG)
-        return answerList
-    }
 
 
-    private fun getCorrectAnswerList(hasAnswer: Boolean): ArrayList<AnswerOld> {
-        val answerList = ArrayList<AnswerOld>()
-        val answerC = AnswerOld()
-        answerC.answerId = "3"
-        answerC.answerContent = "我是C选项"
-        answerC.selectedIcon = R.drawable.img_c_selected
-        answerC.unSelectedIcon = R.drawable.img_c
-        answerC.isCorrectAnswer = true
-        answerC.isHasAnswered = hasAnswer
-        answerList.add(answerC)
-        val answerD = AnswerOld()
-        answerD.answerContent = "我是D选项"
-        answerD.answerId = "4"
-        answerD.isCorrectAnswer = true
-        answerD.isHasAnswered = hasAnswer
-        answerD.selectedIcon = R.drawable.img_d_selected
-        answerD.unSelectedIcon = R.drawable.img_d
-        answerList.add(answerD)
-        return answerList
-    }
 
     private fun loadItemClick(question: Question) {
         if (adapter == null) {

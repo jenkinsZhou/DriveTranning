@@ -290,7 +290,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             loadCourseStatus(entry.value, entry.key)
         }
 
-        LogUtils.e(countCatalog,countNode)
+        LogUtils.e(countCatalog, countNode)
 
         tvCourseCountInfoAli.text = "共" + countCatalog + "章" + countNode + "小节"
         tvCourseTimeAli.text = "课时：" + detail.courseTime.toString()
@@ -320,7 +320,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             if (catalog.level == 1) {
                 countCatalog++
             }
-            if(catalog.level == 2){
+            if (catalog.level == 2) {
                 countNode++
             }
             if (!TextUtils.isEmpty(catalog.name)) {
@@ -526,6 +526,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     requestPlanDetail()
                 }
+            }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                finish()
             }
         })
     }

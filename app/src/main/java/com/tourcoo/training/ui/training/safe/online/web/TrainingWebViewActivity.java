@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.training;
+package com.tourcoo.training.ui.training.safe.online.web;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.TextView;
 
+import com.dyhdyh.support.countdowntimer.CountDownTimerSupport;
+import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener;
 import com.just.agentweb.AbsAgentWebSettings;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.IAgentWebSettings;
@@ -23,28 +26,45 @@ import com.just.agentweb.download.DefaultDownloadImpl;
 import com.just.agentweb.download.DownloadListenerAdapter;
 import com.just.agentweb.download.DownloadingService;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.tencent.liteav.demo.play.SuperPlayerConst;
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.RequestConfig;
+import com.tourcoo.training.constant.TrainingConstant;
 import com.tourcoo.training.core.base.activity.BaseWebActivity;
 import com.tourcoo.training.core.base.activity.WebViewActivity;
+import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.RxJavaManager;
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
 import com.tourcoo.training.core.retrofit.BaseObserver;
+import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.FileUtil;
 import com.tourcoo.training.core.util.NotificationUtil;
 import com.tourcoo.training.core.util.RomUtil;
 import com.tourcoo.training.core.util.SPUtil;
 import com.tourcoo.training.core.util.StackUtil;
+import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.navigation.NavigationBarUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
+import com.tourcoo.training.entity.course.CourseInfo;
+import com.tourcoo.training.entity.training.Course;
 import com.tourcoo.training.ui.MainActivity;
+import com.tourcoo.training.ui.MainTabActivity;
+import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity;
+import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity;
+import com.tourcoo.training.widget.dialog.IosAlertDialog;
+import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import java.io.File;
 
+import static com.tourcoo.training.constant.TrainingConstant.EXTRA_COURSE_INFO;
+import static com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID;
+
 /**
  * @author :JenkinsZhou
- * @description :
- * @company :途酷科技
+ * @description :网页课件
+ * * @company :途酷科技
  * @date 2020年04月27日17:26
  * @Email: 971613168@qq.com
  */
@@ -53,14 +73,18 @@ public class TrainingWebViewActivity extends BaseWebActivity {
     private String mFormat = "保存图片<br><small><font color='#2394FE'>图片文件夹路径:%1s</font></small>";
     private static boolean mIsShowTitle = true;
     private RefreshLayout mRefreshLayout;
+    private CountDownTimerSupport mTimerTask;
+    private long faceVerifyInterval;
+    private String trainingPlanID;
+    private Course mCourse;
+    public static final String TAG = "TrainingWebViewActivity";
+    private TextView tvLimitTips;
+    private long currentProgress;
 
-    public static void start(Context mActivity, String url) {
-        start(mActivity, url, true);
-    }
 
-    public static void start(Context mActivity, String url, boolean isShowTitle) {
-        mIsShowTitle = isShowTitle;
-        start(mActivity, WebViewActivity.class, url);
+    @Override
+    public int getContentLayout() {
+        return R.layout.activity_training_webview;
     }
 
     @Override
@@ -72,9 +96,14 @@ public class TrainingWebViewActivity extends BaseWebActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         String url = intent.getStringExtra("url");
-        if (!TextUtils.isEmpty(url)) {
-            start(mContext, url);
-            finish();
+        trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID);
+        if (!TextUtils.isEmpty(url) && WebCourseTempHelper.getInstance().getCourse() != null) {
+            mUrl = url;
+            mCourse = WebCourseTempHelper.getInstance().getCourse();
+            //todo 设置计时时间
+//            faceVerifyInterval = mCourse.getProgress();
+        } else {
+            ToastUtil.show("未获取到课件");
         }
     }
 
@@ -108,12 +137,16 @@ public class TrainingWebViewActivity extends BaseWebActivity {
                     @Override
                     public void onProgressChanged(WebView view, int newProgress) {
                         super.onProgressChanged(view, newProgress);
-                        if (newProgress == 100 && mRefreshLayout != null) {
+                        if (newProgress == 100) {
                             mCurrentUrl = view.getUrl();
-                            mRefreshLayout.finishRefresh();
-                            int position = (int) SPUtil.get(mContext, mCurrentUrl, 0);
+                        /*    int position = (int) SPUtil.get(mContext, mCurrentUrl, 0);
                             view.scrollTo(0, position);
+                            ToastUtil.showSuccess("加载成功");*/
+                            //网页加载成功 开始计时
+                            //todo 计时器模块暂不添加
+//                            initTimerAndStart();
                         }
+
                     }
 
                     @Override
@@ -169,9 +202,6 @@ public class TrainingWebViewActivity extends BaseWebActivity {
     }
 
 
-
-
-
     public View getContentView() {
         if (mAgentWeb != null) {
             TourCooLogUtil.i("getContentView", "webView:" + mAgentWeb.getWebCreator().getWebView());
@@ -181,28 +211,29 @@ public class TrainingWebViewActivity extends BaseWebActivity {
     }
 
 
-
-
     protected boolean isTrans() {
         return (RomUtil.isEMUI() && (RomUtil.getEMUIVersion().compareTo("EmotionUI_4.1") > 0));
     }
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        tvLimitTips = findViewById(R.id.tvLimitTips);
+        tvLimitTips.setText("文件至少要学习5min");
     }
 
     @Override
     public void onBackPressed() {
-        Activity activity = StackUtil.getInstance().getPrevious();
+       /* Activity activity = StackUtil.getInstance().getPrevious();
         if (activity == null) {
-            CommonUtil.startActivity(mContext, MainActivity.class);
-        }
-        super.onBackPressed();
+            CommonUtil.startActivity(mContext, MainTabActivity.class);
+        }*/
+        showExitDialog();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        timerPause();
         WebView webView = mAgentWeb.getWebCreator().getWebView();
         SPUtil.put(mContext, webView.getUrl(), webView.getScrollY());
     }
@@ -359,4 +390,160 @@ public class TrainingWebViewActivity extends BaseWebActivity {
             }
         };
     }
+
+
+    /**
+     * 初始化计时器 并开始计时
+     */
+    private void initTimerAndStart() {
+        cancelTimer();
+        TourCooLogUtil.i(TAG, "间隔时间=" + faceVerifyInterval);
+        //总时长 间隔时间
+        if (faceVerifyInterval <= 0) {
+            //取消计时器
+            cancelTimer();
+            return;
+        }
+        //初始化计时器
+//        faceVerifyInterval = 12
+        mTimerTask = new CountDownTimerSupport(faceVerifyInterval * 1000L, 1000L);
+        mTimerTask.setOnCountDownTimerListener(new OnCountDownTimerListener() {
+
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                //计时完成 说明课件已看完
+                //todo 处理认证逻辑
+                skipRecognize();
+
+            }
+        });
+        startTimer();
+    }
+
+
+    private void cancelTimer() {
+        if (mTimerTask != null) {
+            mTimerTask.stop();
+        }
+    }
+
+
+    private void startTimer() {
+        if (mTimerTask != null) {
+            //先重置 在启动
+            mTimerTask.reset();
+            mTimerTask.start();
+        }
+    }
+
+    private void timerPause() {
+        if (mTimerTask != null) {
+            //暂停
+            mTimerTask.pause();
+        }
+    }
+
+    private void timerResume() {
+        if (mTimerTask != null) {
+            //恢复
+            mTimerTask.resume();
+        }
+    }
+
+
+    private void skipRecognize() {
+        //暂停计时器
+        timerPause();
+        //跳转到人脸认证
+        skipFace();
+    }
+
+    private void skipFace() {
+        //人脸认证
+        Intent intent = new Intent(mContext, OnLineFaceRecognitionActivity.class);
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID));
+        startActivityForResult(intent, PlayVideoActivity.REQUEST_CODE_FACE);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelTimer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        timerResume();
+    }
+
+
+    /**
+     * 保存当前观看进度
+     */
+    private void requestSaveProgress(String courseId, String second) {
+        ApiRepository.getInstance().requestSaveProgress(trainingPlanID, courseId, second).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
+            @Override
+            public void onSuccessNext(BaseResult entity) {
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    //todo
+                    ToastUtil.showSuccess("进度保存成功");
+                } else {
+                    ToastUtil.show(entity.msg);
+                }
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                finish();
+            }
+        });
+    }
+
+    private void showExitDialog() {
+        if (currentProgress <= 0) {
+            finish();
+            return;
+        }
+        IosAlertDialog dialog = new IosAlertDialog(mContext)
+                .init()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(false)
+                .setTitle("确认退出学习")
+                .setMsg("退出前会保存当前学习进度")
+                .setPositiveButton("确认退出", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doSaveProgressAndFinish();
+                    }
+                })
+                .setNegativeButton("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                        setStatusBarDarkMode(mContext, isStatusBarDarkMode());
+                    }
+                });
+    }
+
+    /**
+     * 保存进度并关闭当前页面
+     */
+    private void doSaveProgressAndFinish() {
+        if (mCourse == null) {
+            return;
+        }
+        requestSaveProgress(mCourse.getID() + "", currentProgress + "");
+    }
+
+
 }

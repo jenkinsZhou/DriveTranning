@@ -1,6 +1,7 @@
 package com.tourcoo.training.ui;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -39,6 +40,8 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     public static final int REQUEST_CODE_PERMISSION = 1006;
     private CommonTabLayout mTabLayout;
     private ArrayList<FrameTabEntity> mTabEntities;
+    private boolean permissionDialogShowing = false;
+    private IosAlertDialog mIosAlertDialog;
 
     @Nullable
     @Override
@@ -74,18 +77,24 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        closePermissionDialog();
 
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (permissionDialogShowing) {
+            return;
+        } else {
+            permissionDialogShowing = true;
+        }
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) { //这个方法有个前提是，用户点击了“不再询问”后，才判断权限没有被获取到
             baseHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showSetting();
+                    showPermissionSetting();
                 }
-            }, 300);
+            }, 500);
         } else if (!EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             //这里响应的是除了AppSettingsDialog这个弹出框，剩下的两个弹出框被拒绝或者取消的效果
             ToastUtil.show("您未授予权限 应用即将退出");
@@ -100,11 +109,13 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     }
 
 
-    private void showSetting() {
-        IosAlertDialog dialog = new IosAlertDialog(mContext)
+    private void showPermissionSetting() {
+        mIosAlertDialog = new IosAlertDialog(mContext)
                 .init()
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(false)
+                .setOnDismissListener(dialog1 -> {
+                })
                 .setTitle("权限申请")
                 .setMsg("应用需要您授予相关权限 请前往授权管理页面授权")
                 .setPositiveButton("前往授权", new View.OnClickListener() {
@@ -119,8 +130,7 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
                         finish();
                     }
                 });
-        dialog.show();
-
+        mIosAlertDialog.show();
     }
 
 
@@ -158,7 +168,7 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
                     }
                 }
             }
-        }, 500);
+        }, 300);
     }
 
     @Override
@@ -173,6 +183,24 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     @Override
     protected void onResume() {
         super.onResume();
+        if (permissionDialogShowing || (mIosAlertDialog != null && mIosAlertDialog.isShowing())) {
+            return;
+        }
+        checkPermission();
+    }
+
+
+    private void closePermissionDialog() {
+        if (mIosAlertDialog != null) {
+            mIosAlertDialog.dismiss();
+            mIosAlertDialog = null;
+        }
+        permissionDialogShowing = false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         checkPermission();
     }
 }

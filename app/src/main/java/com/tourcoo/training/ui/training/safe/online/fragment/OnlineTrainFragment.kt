@@ -14,13 +14,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
-import com.tourcoo.training.adapter.dialog.CourseSelectAdapter
 import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
 import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter.*
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant.*
-import com.tourcoo.training.core.base.activity.WebViewActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
@@ -29,17 +27,16 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfoEvent
-import com.tourcoo.training.entity.course.CourseEntity
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_TYPE_RECOGNIZE_COMPARE
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
+import com.tourcoo.training.ui.training.safe.online.web.HtmlBrowserActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
 import com.tourcoo.training.utils.RecycleViewDivider
-import com.tourcoo.training.widget.dialog.CommonListDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
 import com.tourcoo.training.widget.dialog.training.InputPayNumAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
@@ -332,7 +329,7 @@ class OnlineTrainFragment : BaseFragment() {
         when (courseType) {
             TYPE_COURSE_HTML -> {
                 //todo 全部为html
-                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+                intent = Intent(mContext, HtmlBrowserActivity::class.java)
             }
             TYPE_COURSE_TYPE_DRIVE -> {
                 //车学堂 使用腾讯播放器

@@ -1,5 +1,7 @@
 package com.tourcoo.training.entity.training;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 /**
@@ -9,7 +11,7 @@ import android.text.TextUtils;
  * @date 2020年04月20日9:44
  * @Email: 971613168@qq.com
  */
-public class VideoStream {
+public class VideoStream implements Parcelable {
     /**
      * CourseID : 612008
      * Bitrate : 0
@@ -122,4 +124,52 @@ public class VideoStream {
     public void setHeight(int Height) {
         this.Height = Height;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.CourseID);
+        dest.writeInt(this.Bitrate);
+        dest.writeString(this.Definition);
+        dest.writeInt(this.Duration);
+        dest.writeInt(this.Encrypt);
+        dest.writeString(this.EncryptType);
+        dest.writeString(this.URL);
+        dest.writeInt(this.Width);
+        dest.writeInt(this.Height);
+        dest.writeString(this.DefinitionDesc);
+    }
+
+    public VideoStream() {
+    }
+
+    protected VideoStream(Parcel in) {
+        this.CourseID = in.readInt();
+        this.Bitrate = in.readInt();
+        this.Definition = in.readString();
+        this.Duration = in.readInt();
+        this.Encrypt = in.readInt();
+        this.EncryptType = in.readString();
+        this.URL = in.readString();
+        this.Width = in.readInt();
+        this.Height = in.readInt();
+        this.DefinitionDesc = in.readString();
+    }
+
+    public static final Parcelable.Creator<VideoStream> CREATOR = new Parcelable.Creator<VideoStream>() {
+        @Override
+        public VideoStream createFromParcel(Parcel source) {
+            return new VideoStream(source);
+        }
+
+        @Override
+        public VideoStream[] newArray(int size) {
+            return new VideoStream[size];
+        }
+    };
 }

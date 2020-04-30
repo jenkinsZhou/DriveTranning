@@ -1,5 +1,8 @@
 package com.tourcoo.training.entity.training;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -9,7 +12,7 @@ import java.util.List;
  * @date 2020年04月20日9:46
  * @Email: 971613168@qq.com
  */
-public class Course {
+public class Course implements Parcelable {
 
     /**
      * ID : 612010
@@ -212,4 +215,72 @@ public class Course {
     public void setCurrentVideoStream(VideoStream currentVideoStream) {
         this.currentVideoStream = currentVideoStream;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.ID);
+        dest.writeInt(this.PID);
+        dest.writeString(this.Name);
+        dest.writeInt(this.SN);
+        dest.writeString(this.Remark);
+        dest.writeInt(this.Enabled);
+        dest.writeInt(this.Duration);
+        dest.writeString(this.CoverURL);
+        dest.writeString(this.MediaUrl);
+        dest.writeInt(this.MediaType);
+        dest.writeInt(this.Level);
+        dest.writeString(this.subjectName);
+        dest.writeInt(this.SubjectID);
+        dest.writeString(this.VideoID);
+        dest.writeInt(this.Progress);
+        dest.writeInt(this.Completed);
+        dest.writeString(this.ThirdOrderID);
+        dest.writeTypedList(this.Streams);
+        dest.writeInt(this.currentPlayStatus);
+        dest.writeParcelable(this.currentVideoStream, flags);
+    }
+
+    public Course() {
+    }
+
+    protected Course(Parcel in) {
+        this.ID = in.readInt();
+        this.PID = in.readInt();
+        this.Name = in.readString();
+        this.SN = in.readInt();
+        this.Remark = in.readString();
+        this.Enabled = in.readInt();
+        this.Duration = in.readInt();
+        this.CoverURL = in.readString();
+        this.MediaUrl = in.readString();
+        this.MediaType = in.readInt();
+        this.Level = in.readInt();
+        this.subjectName = in.readString();
+        this.SubjectID = in.readInt();
+        this.VideoID = in.readString();
+        this.Progress = in.readInt();
+        this.Completed = in.readInt();
+        this.ThirdOrderID = in.readString();
+        this.Streams = in.createTypedArrayList(VideoStream.CREATOR);
+        this.currentPlayStatus = in.readInt();
+        this.currentVideoStream = in.readParcelable(VideoStream.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Course> CREATOR = new Parcelable.Creator<Course>() {
+        @Override
+        public Course createFromParcel(Parcel source) {
+            return new Course(source);
+        }
+
+        @Override
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
 }

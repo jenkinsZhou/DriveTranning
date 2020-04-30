@@ -162,15 +162,15 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         achievementAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {
-
+                    ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
                 }
 
                 1 -> {
-
+                    ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
                 }
 
                 2 -> {
-
+                    ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
                 }
 
                 3 -> {
@@ -178,6 +178,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 }
 
                 else -> {
+                    ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
                 }
             }
         }

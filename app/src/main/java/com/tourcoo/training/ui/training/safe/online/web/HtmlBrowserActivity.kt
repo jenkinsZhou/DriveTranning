@@ -1,22 +1,20 @@
-package com.tourcoo.training.ui.training.safe.online
+package com.tourcoo.training.ui.training.safe.online.web
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
-import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig
-import com.tencent.liteav.demo.play.SuperPlayerModel
-import com.tencent.liteav.demo.play.SuperPlayerView
-import com.tencent.rtmp.TXLiveConstants
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
+import com.tourcoo.training.constant.TrainingConstant.EXTRA_COURSE_INFO
+import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -28,6 +26,8 @@ import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
+import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
+import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 
@@ -38,9 +38,8 @@ import kotlinx.android.synthetic.main.activity_play_video_tencent.*
  * @date 2020年04月27日17:30
  * @Email: 971613168@qq.com
  */
-class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
+class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
     private val mTag = "HtmlBrowserActivity"
-    private var currentCourseId: String = ""
 
     private var mCourseList: MutableList<Course>? = null
 
@@ -128,8 +127,8 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
         }
         //拿到后台配置的间隔时间
         faceVerifyInterval = detail.faceVerifyInterval
-        //初始化计时器
-        initTimerAndStart()
+        //不需要初始化计时器 因此屏蔽
+//        initTimerAndStart()
         if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
@@ -155,9 +154,10 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
         }
         parseTrainingStatus(mCourseList)
         for (entry in mCourseHashMap!!.entries) {
-            loadCourseStatus(entry.value, entry.key)
+            loadCourseStatusAndClick(entry.value, entry.key)
         }
-
+        tvCourseCountInfo.text = "共" + countCatalog + "章" + countNode + "小节"
+        tvCourseTime.text = "课时：" + detail.courseTime.toString()
         tvSubjectDesc.text = getNotNullValue(detail.description)
     }
 
@@ -244,7 +244,7 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
                 if (catalog.level == 1) {
                     countCatalog++
                 }
-                if(catalog.level == 2){
+                if (catalog.level == 2) {
                     countNode++
                 }
                 //标题不为空时添加TextView
@@ -278,7 +278,6 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-
     private fun parseTrainingStatus(list: MutableList<Course>?) {
         if (list == null) {
             return
@@ -287,7 +286,7 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
         for (i in 0 until list.size) {
             val course = list[i]
             if (course.completed <= 0 && index == -1) {
-                //该视频没有播放过,当前正在播放的视频
+                //该课件没有播放过,当前正在播放的视频
                 course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_PLAYING
                 index = i
             } else if (course.completed <= 0 && index != -1) {
@@ -300,9 +299,14 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
 
 
     /**
-     * 定位上次播放位置
+     * 定位上次播放位置 并加载点击事件
      */
-    private fun loadCourseStatus(view: View, course: Course) {
+    private fun loadCourseStatusAndClick(view: View, course: Course?) {
+        if (course == null) {
+            return
+        }
+        //先禁止点击
+        view.isEnabled = false
         val tvPlanDesc = view.findViewById<TextView>(R.id.tvPlanDesc)
         val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
@@ -320,7 +324,8 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
-                playStreamUrl(course)
+                //只有当前正在浏览的课件才允许点击
+                setCourseInfoClick(view, course)
             }
             else -> {
             }
@@ -329,24 +334,26 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun playStreamUrl(course: Course?) {
+    /**
+     * 跳转浏览网页课件
+     */
+    private fun loadWebAndSkipBrowser(course: Course?) {
         if (course == null || course.streams == null && course.streams.size == 0) {
             return
         }
         when (course.mediaType) {
             //视频
             0 -> {
-                //todo
-
+                //todo 模拟跳转
+                skipWebView(course)
             }
             else -> {
                 //外链URL
-                ToastUtil.show("跳转外链逻辑")
+                //跳转web链接
+                skipWebView(course)
             }
         }
     }
-
-
 
 
     private fun skipRecognize() {
@@ -391,6 +398,41 @@ class HtmlBrowserActivity  : BaseTitleActivity(), View.OnClickListener {
                 mCourseList!!.add(course)
             }
 
+        }
+    }
+
+    /**
+     * 设置课程
+     */
+    private fun setCourseInfoClick(view: View, course: Course) {
+        //先解禁点击事件
+        view.isEnabled = true
+        view.setOnClickListener {
+            loadWebAndSkipBrowser(course)
+        }
+    }
+
+    private fun skipWebView(course: Course) {
+        //缓存当前课件
+        WebCourseTempHelper.getInstance().course = course
+        val intent = Intent(this, TrainingWebViewActivity::class.java)
+        val bundle = Bundle()
+        var url = course.mediaUrl
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+//        if (isSingle) CommonUtil.ACTIVITY_SINGLE_FLAG else
+        //
+        url = "https://www.baidu.com"
+        intent.putExtra("url", CommonUtil.getNotNullValue(url))
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
+//        bundle.putParcelable(EXTRA_COURSE_INFO, course)
+        startActivityForResult(intent, 1001, bundle)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            //刷新课件
+            requestPlanDetail()
         }
     }
 }

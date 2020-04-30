@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -38,7 +39,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
  * 1、调整WebView自适应屏幕代码属性{@link #initAgentWeb()}
  * 2、2019-3-20 11:45:07 增加url自动添加http://功能及规范url
  */
-public abstract class BaseWebActivity extends BaseTitleActivity  {
+public abstract class BaseWebActivity extends BaseTitleActivity {
 
     protected ViewGroup mContainer;
     /**
@@ -72,6 +73,7 @@ public abstract class BaseWebActivity extends BaseTitleActivity  {
         bundle.putString("url", url);
         CommonUtil.startActivity(mActivity, activity, bundle);
     }
+
 
 
     protected void setAgentWeb(AgentWeb mAgentWeb) {
@@ -135,15 +137,15 @@ public abstract class BaseWebActivity extends BaseTitleActivity  {
                 onBackPressed();
             }
         })
-             /*   .setRightTextDrawable(DrawableUtil.setTintDrawable(
-                        ContextCompat.getDrawable(mContext, R.drawable.fast_ic_more),
-                        ContextCompat.getColor(mContext, R.color.colorTitleText)))
-                .setOnRightTextClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showActionSheet();
-                    }
-                })*/
+                /*   .setRightTextDrawable(DrawableUtil.setTintDrawable(
+                           ContextCompat.getDrawable(mContext, R.drawable.fast_ic_more),
+                           ContextCompat.getColor(mContext, R.color.colorTitleText)))
+                   .setOnRightTextClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           showActionSheet();
+                       }
+                   })*/
                 .addLeftAction(titleBar.new ImageAction(
                         DrawableUtil.setTintDrawable(ContextCompat.getDrawable(mContext, R.drawable.fast_ic_close),
                                 ContextCompat.getColor(mContext, R.color.colorTitleText)), new View.OnClickListener() {
@@ -164,7 +166,7 @@ public abstract class BaseWebActivity extends BaseTitleActivity  {
                 .setAgentWebParent(mContainer, new ViewGroup.LayoutParams(-1, -1))
                 .useDefaultIndicator(getProgressColor() != -1 ? getProgressColor() : ContextCompat.getColor(mContext, R.color.colorTitleText),
                         getProgressHeight())
-                .useMiddlewareWebChrome(new MiddlewareWebChromeBase(){
+                .useMiddlewareWebChrome(new MiddlewareWebChromeBase() {
                     @Override
                     public void onReceivedTitle(WebView view, String title) {
                         super.onReceivedTitle(view, title);
@@ -283,7 +285,6 @@ public abstract class BaseWebActivity extends BaseTitleActivity  {
         }
         super.onDestroy();
     }
-
 
 
 }
