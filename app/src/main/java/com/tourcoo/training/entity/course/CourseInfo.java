@@ -34,6 +34,15 @@ public class CourseInfo {
     private String address;
     private int Role;
     private int type;
+    private String examId;
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
+    }
 
     public int getType() {
         return type;

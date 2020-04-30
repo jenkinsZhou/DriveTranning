@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -29,19 +30,25 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         val trainingPlanId = intent.getStringExtra("trainingPlanId")
+        val examId = intent.getStringExtra("examId")
+
+        LogUtils.e(examId)
 
         rlExamSimulation.setOnClickListener {
             val intent = Intent(this, ProfessionalExamActivity::class.java)
             intent.putExtra("trainingPlanId", trainingPlanId)
             intent.putExtra("type", 1)
+            intent.putExtra("examId", examId)
             startActivity(intent)
         }
 
 
+        //正式测试
         rlExamFormal.setOnClickListener {
             val intent = Intent(this, ProfessionalExamActivity::class.java)
             intent.putExtra("trainingPlanId", trainingPlanId)
             intent.putExtra("type", 0)
+            intent.putExtra("examId", examId)
             startActivity(intent)
         }
 

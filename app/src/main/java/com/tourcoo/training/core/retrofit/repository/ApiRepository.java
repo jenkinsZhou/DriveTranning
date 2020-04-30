@@ -419,10 +419,14 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService(). requestTwoPayInfo(params).retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult<ExamEntity>> requestProfessionalExamInfo(String trainingPlanID,int type) {
+    public Observable<BaseResult<ExamEntity>> requestProfessionalExamInfo(String trainingPlanID,int type,String examId) {
         Map<String, Object> params = new HashMap<>(2);
         params.put("trainingPlanID", trainingPlanID);
         params.put("type", type);
+        //正式考试需要传examId
+        if(type == 0) {
+            params.put("examId", examId);
+        }
         return CommonTransformer.switchSchedulers(getApiService(). requestProfessionalExamInfo(params).retryWhen(new RetryWhen()));
     }
 

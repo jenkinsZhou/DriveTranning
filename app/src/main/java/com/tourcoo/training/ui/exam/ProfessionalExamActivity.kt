@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -75,7 +76,10 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
     override fun initView(savedInstanceState: Bundle?) {
         trainPlanId = intent.getStringExtra("trainingPlanId")
         type = intent.getIntExtra("type", 0)
+        examId = intent.getStringExtra("examId")
 
+
+        LogUtils.e(examId)
 
         list = ArrayList()
         tvNextQuestion.setOnClickListener(this)
@@ -203,7 +207,7 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun requestExamQuestions(trainId: String, type: Int) {
-        ApiRepository.getInstance().requestProfessionalExamInfo(trainId, type).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamEntity>?>() {
+        ApiRepository.getInstance().requestProfessionalExamInfo(trainId, type, examId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamEntity>?>() {
             override fun onSuccessNext(entity: BaseResult<ExamEntity>?) {
                 if (entity == null) {
                     return
@@ -230,8 +234,6 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
         if (examEntity == null || examEntity.questions == null) {
             return
         }
-
-        examId = "" + examEntity.examID
 
         ExamTempHelper.getInstance().examInfo = examEntity
         fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
@@ -439,7 +441,7 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (!isSubmit) {
+        if (!isSubmit && type == 0) {
             saveExam(getAllQuestions())
         }
     }

@@ -97,6 +97,7 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
 
             val intent = Intent(this, ProfessionalExamSelectChildActivity::class.java)
             intent.putExtra("trainingPlanId", info.trainingPlanID)
+            intent.putExtra("examId", info.examId)
             startActivity(intent)
         }
 
