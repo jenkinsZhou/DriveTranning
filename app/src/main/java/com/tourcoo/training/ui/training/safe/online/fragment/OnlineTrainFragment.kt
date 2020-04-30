@@ -217,8 +217,6 @@ class OnlineTrainFragment : BaseFragment() {
         }
         when (courseInfo.status) {
             COURSE_STATUS_NEED_PAY -> {
-                trainingPlanID = courseInfo.trainingPlanID
-                trainingType = courseInfo.type
 
                 val intent = Intent(context, BuyNowActivity::class.java)
                 intent.putExtra("trainingPlanID", courseInfo.trainingPlanID)
@@ -262,9 +260,6 @@ class OnlineTrainFragment : BaseFragment() {
     }
 
 
-    private var trainingPlanID:String = ""
-    private var trainingType:Int = -1
-
     private fun skipFaceVefify(trainingId: String) {
         val intent = Intent(mContext, FaceRecognitionActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
@@ -291,7 +286,7 @@ class OnlineTrainFragment : BaseFragment() {
                 }
 
                 REQUEST_CODE_FACE_VERIFY ->{
-                    skipPlayVideoByType(trainingPlanID, trainingType)
+                    skipPlayVideoByType(currentCourseInfo!!.trainingPlanID, currentCourseInfo!!.type)
                 }
             }
         } else {

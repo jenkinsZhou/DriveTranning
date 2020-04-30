@@ -82,15 +82,15 @@ class ProfessionalExamSelectActivity : BaseTitleActivity(), View.OnClickListener
             R.id.tvBuy -> {
                 ToastUtil.show("点击购买")
 //                if (needBuy) {
-                    val dialog = CommonBellDialog(mContext)
-                    dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
-                        override fun onClick(v: View?) {
-                            requestPayInfo()
-                            dialog.dismiss()
-                        }
-                    })
-                    dialog.show()
-                    return
+                val dialog = CommonBellDialog(mContext)
+                dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
+                    override fun onClick(v: View?) {
+                        requestPayInfo()
+                        dialog.dismiss()
+                    }
+                })
+                dialog.show()
+                return
 //                }
             }
             R.id.rlExamSimulation -> {
