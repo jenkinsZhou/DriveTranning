@@ -40,6 +40,7 @@ import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.guide.GuideActivity
 import com.tourcoo.training.ui.setting.SettingActivity
+import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert
@@ -170,10 +171,12 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 }
 
                 2 -> {
-                    ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
+                    //学习勋章
+                    CommonUtil.startActivity(mContext, StudyMedalRecordActivity::class.java)
                 }
 
                 3 -> {
+                    //学习证书
                     CommonUtil.startActivity(mContext, MyCertificationActivity::class.java)
                 }
 

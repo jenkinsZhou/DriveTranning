@@ -52,7 +52,7 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
                 break;
             case 2:
                 helper.setVisible(R.id.ivTag,true);
-                helper.setImageResource(R.id.ivTag,R.mipmap.icon_video_new);
+                helper.setImageResource(R.id.ivTag,R.mipmap.icon_video_new_tag);
                 break;
             default:
                 helper.setVisible(R.id.ivTag,false);

@@ -140,6 +140,7 @@ class OnlineTrainFragment : BaseFragment() {
 
             override fun onError(e: Throwable) {
                 refreshLayout?.finishRefresh(false)
+                dismissProgressDialog()
                 if (AppConfig.DEBUG_MODE) {
                     ToastUtil.showFailed(e.toString())
                 }

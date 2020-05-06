@@ -18,7 +18,7 @@ public class StudyMedal implements MultiItemEntity {
 
     public boolean isHeader ;
 
-    public boolean isLock;
+    public int isLock;
     @Override
     public int getItemType() {
         return itemType;

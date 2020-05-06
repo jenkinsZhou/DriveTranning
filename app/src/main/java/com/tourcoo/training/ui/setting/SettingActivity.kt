@@ -18,6 +18,7 @@ import com.tourcoo.training.core.util.StackUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
+import com.tourcoo.training.ui.EditPassActivity
 import com.tourcoo.training.ui.account.FindPassActivity
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.utils.DataCleanUtil
@@ -58,15 +59,15 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
             R.id.llForgetPassword -> {
-                val bundle = Bundle()
-                bundle.putBoolean("isLogin", AccountHelper.getInstance().isLogin)
-                CommonUtil.startActivity(mContext, FindPassActivity::class.java, bundle)
+                /*     val bundle = Bundle()
+                     bundle.putBoolean("isLogin", AccountHelper.getInstance().isLogin)*/
+                CommonUtil.startActivity(mContext, EditPassActivity::class.java)
             }
             R.id.llClearCache -> {
                 doClearCache()
             }
-            R.id.llAboutUs->{
-                ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
+            R.id.llAboutUs -> {
+                CommonUtil.startActivity(mContext, AboutUsActivity::class.java)
             }
             else -> {
             }
@@ -157,6 +158,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
         StackUtil.getInstance().popAll()
         CommonUtil.startActivity(mContext, LoginActivity::class.java)
     }
+
 
 }
 

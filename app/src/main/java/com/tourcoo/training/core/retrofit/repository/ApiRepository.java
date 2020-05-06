@@ -22,6 +22,7 @@ import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.CommitAnswer;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
+import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
@@ -429,5 +430,9 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService(). requestProfessionalExamInfo(params).retryWhen(new RetryWhen()));
     }
 
+
+    public Observable<BaseResult<StudyMedalEntity>> requestStudyMedalList() {
+        return CommonTransformer.switchSchedulers(getApiService(). requestStudyMedalList().retryWhen(new RetryWhen()));
+    }
 
 }

@@ -23,11 +23,11 @@
     <application
         android:name=".core.app.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/icon_car_networking"
+        android:icon="@mipmap/ic_app_logo_round"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/icon_car_networking"
+        android:roundIcon="@mipmap/ic_app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.training.professional.ProfessionalExamSelectChildActivity"></activity>
@@ -128,7 +128,11 @@
         <activity android:name=".ui.exam.ProfessionalExamActivity" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
-        <activity android:name=".ui.FeedbackActivity" />
+        <activity android:name=".ui.FeedbackActivity"
+            />
+        <activity android:name=".ui.EditPassActivity" />
+        <activity android:name=".ui.setting.AboutUsActivity" />
+        <activity android:name=".ui.home.news.NewsDetailActivity" />
     </application>
 
 </manifest>

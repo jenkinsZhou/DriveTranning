@@ -16,6 +16,7 @@ import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
+import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
@@ -325,5 +326,13 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
     @POST("v1.0/open/app/system-config")
     Observable<BaseResult<SettingEntity>> requestSystemConfig();
+
+    /**
+     * 勋章列表
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
+    @POST("v1.0/user/list-medal")
+    Observable<BaseResult<StudyMedalEntity>> requestStudyMedalList();
 
 }

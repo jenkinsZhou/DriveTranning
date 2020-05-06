@@ -32,7 +32,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_find_password.*
 
 /**
- *@description :
+ *@description :找回密码
  *@company :途酷科技
  * @author :JenkinsZhou
  * @date 2020年03月17日11:12

@@ -49,7 +49,8 @@ class NewsTabFragmentNew : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, Ne
     override fun initView(savedInstanceState: Bundle?) {
         adapter!!.setOnItemClickListener { adapter, view, position ->
             //todo
-            ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
+//            ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
+            CommonUtil.startActivity(mContext,NewsDetailActivity::class.java)
         }
     }
 

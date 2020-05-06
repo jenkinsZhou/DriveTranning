@@ -27,6 +27,7 @@ import com.tourcoo.training.core.retrofit.UploadRequestListener;
 import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.ToastUtil;
+import com.tourcoo.training.core.widget.navigation.KeyboardHelper;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.ui.feedback.UploadImageAdapter;
 import com.tourcoo.training.utils.TourCooUtil;
@@ -77,8 +78,10 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
         mRecyclerView = findViewById(R.id.rvUploadImage);
         tvQuestionType.setOnClickListener(this);
         etDetail = findViewById(R.id.etDetail);
+        etDetail.clearFocus();
         findViewById(R.id.btnSubmit).setOnClickListener(this);
         init();
+
     }
 
     private void init() {
