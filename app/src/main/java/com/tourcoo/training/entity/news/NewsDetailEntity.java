@@ -1,5 +1,7 @@
 package com.tourcoo.training.entity.news;
 
+import java.util.List;
+
 /**
  * @author :JenkinsZhou
  * @description :
@@ -8,4 +10,13 @@ package com.tourcoo.training.entity.news;
  * @Email: 971613168@qq.com
  */
 public class NewsDetailEntity {
+    private List<NewsEntity> RecommendList;
+
+    public List<NewsEntity> getRecommendList() {
+        return RecommendList;
+    }
+
+    public void setRecommendList(List<NewsEntity> recommendList) {
+        RecommendList = recommendList;
+    }
 }

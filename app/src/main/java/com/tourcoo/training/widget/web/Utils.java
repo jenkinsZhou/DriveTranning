@@ -1,4 +1,4 @@
-package com.yongzheng.com.richwebproject.web;
+package com.tourcoo.training.widget.web;
 
 import android.content.Context;
 import android.graphics.Bitmap;

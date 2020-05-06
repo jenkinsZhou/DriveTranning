@@ -1,14 +1,15 @@
-package com.yongzheng.com.richwebproject.view;
+package com.tourcoo.training.widget.web;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ScrollView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 判断滚动是否到达顶部工具类

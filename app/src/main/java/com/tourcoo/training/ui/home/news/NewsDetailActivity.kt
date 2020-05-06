@@ -1,13 +1,10 @@
 package com.tourcoo.training.ui.home.news
 
 import android.os.Bundle
-import android.view.View
-import android.widget.LinearLayout
 import com.just.agentweb.AgentWeb
 import com.tourcoo.training.R
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import kotlinx.android.synthetic.main.activity_news_detail.*
 
 
 /**
@@ -20,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_news_detail.*
 class NewsDetailActivity : BaseTitleActivity() {
     private var mAgentWeb: AgentWeb? = null
     override fun getContentLayout(): Int {
-        return R.layout.activity_news_detail
+        return R.layout.activity_news_detail_old
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
@@ -34,7 +31,7 @@ class NewsDetailActivity : BaseTitleActivity() {
 
     private fun initWeb(){
         //传入Activity
-        mAgentWeb = AgentWeb.with(this) .setAgentWebParent(llWebContainer,LinearLayout.LayoutParams(-1,-2))
+     /*   mAgentWeb = AgentWeb.with(this) .setAgentWebParent(llWebContainer,LinearLayout.LayoutParams(-1,-2))
                 .useDefaultIndicator()
 
                 // 使用默认进度条
@@ -42,6 +39,6 @@ class NewsDetailActivity : BaseTitleActivity() {
 //                .setReceivedTitleCallback(mCallback) //设置 Web 页面的 title 回调
                 .createAgentWeb() //
                 .ready()
-                .go("http://www.baidu.com")
+                .go("http://www.baidu.com")*/
     }
 }

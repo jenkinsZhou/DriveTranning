@@ -1,10 +1,12 @@
-package com.yongzheng.com.richwebproject.base;
+package com.tourcoo.training.widget.web;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.yongzheng.com.richwebproject.util.LogUtil;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.tourcoo.training.widget.websocket.util.LogUtil;
 
 import java.util.List;
 

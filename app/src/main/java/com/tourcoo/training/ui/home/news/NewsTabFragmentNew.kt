@@ -1,20 +1,16 @@
 package com.tourcoo.training.ui.home.news
 
 import android.os.Bundle
-import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter
-import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.core.base.fragment.BaseTitleMvpRefreshLoadFragment
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.SizeUtil
-import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.news.NewsEntity
-import kotlinx.android.synthetic.main.frame_layout_recycler.*
+import com.tourcoo.training.widget.web.NewsDetailActivityNew
 
 /**
  *@description :
@@ -49,8 +45,13 @@ class NewsTabFragmentNew : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, Ne
     override fun initView(savedInstanceState: Bundle?) {
         adapter!!.setOnItemClickListener { adapter, view, position ->
             //todo
-//            ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
-            CommonUtil.startActivity(mContext,NewsDetailActivity::class.java)
+            val news =      adapter.data[position] as NewsEntity
+            val bundle =  Bundle()
+            bundle.putString(EXTRA_NEWS_ID,news.id)
+            bundle.putString(EXTRA_NEWS_URL,news.url)
+            CommonUtil.startActivity(mContext, NewsDetailActivityNew::class.java,bundle)
+
+
         }
     }
 
@@ -75,6 +76,9 @@ class NewsTabFragmentNew : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, Ne
             fragment.arguments = args
             return fragment
         }
+
+        const val EXTRA_NEWS_ID = "EXTRA_NEWS_ID"
+        const val EXTRA_NEWS_URL = "EXTRA_NEWS_URL"
     }
 }
 

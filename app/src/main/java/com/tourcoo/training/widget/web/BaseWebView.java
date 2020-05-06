@@ -1,4 +1,4 @@
-package com.yongzheng.com.richwebproject.web;
+package com.tourcoo.training.widget.web;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

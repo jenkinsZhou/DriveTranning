@@ -169,6 +169,8 @@ dependencies {
 
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
 
+    implementation 'com.coolindicator.sdk:coolindicator:1.0.0-beta'
+
 }
 repositories {
     mavenCentral()

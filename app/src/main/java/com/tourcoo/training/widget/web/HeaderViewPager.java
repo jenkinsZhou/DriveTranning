@@ -1,4 +1,4 @@
-package com.yongzheng.com.richwebproject.view;
+package com.tourcoo.training.widget.web;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,8 +12,8 @@ import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
-import com.yongzheng.com.richwebproject.R;
-import com.yongzheng.com.richwebproject.util.LogUtil;
+import com.tourcoo.training.R;
+import com.tourcoo.training.widget.websocket.util.LogUtil;
 
 /**
  * 伸缩头部

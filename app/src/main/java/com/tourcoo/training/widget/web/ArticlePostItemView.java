@@ -1,9 +1,10 @@
-package com.yongzheng.com.richwebproject.view;
+package com.tourcoo.training.widget.web;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
+
+import androidx.annotation.Nullable;
 
 /**
  * 文章下面帖子
@@ -18,7 +19,7 @@ public class ArticlePostItemView extends LinearLayout{
     private ItemMeasureCallBack callBack;
 
     public interface ItemMeasureCallBack{
-        void measureItem(int index,int h);
+        void measureItem(int index, int h);
     }
 
     public ArticlePostItemView(Context context) {

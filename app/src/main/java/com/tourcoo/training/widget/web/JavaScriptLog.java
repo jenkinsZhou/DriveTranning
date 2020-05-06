@@ -1,9 +1,10 @@
-package com.yongzheng.com.richwebproject.web;
+package com.tourcoo.training.widget.web;
 
 import android.content.Context;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
-import com.yongzheng.com.richwebproject.util.LogUtil;
+
+import com.tourcoo.training.widget.websocket.util.LogUtil;
 
 /**
  * 用于JavaScript交互

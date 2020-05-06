@@ -133,6 +133,7 @@
         <activity android:name=".ui.EditPassActivity" />
         <activity android:name=".ui.setting.AboutUsActivity" />
         <activity android:name=".ui.home.news.NewsDetailActivity" />
+        <activity android:name=".widget.web.NewsDetailActivityNew" />
     </application>
 
 </manifest>
