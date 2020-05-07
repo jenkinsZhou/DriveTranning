@@ -12,6 +12,8 @@ public class StudyInfo {
     private int ClassDuration;
     private int Progress;
     private String SecurityOfficer;
+    private String Address;
+
 
     public String getTime() {
         return Time;
@@ -43,5 +45,13 @@ public class StudyInfo {
 
     public void setSecurityOfficer(String securityOfficer) {
         SecurityOfficer = securityOfficer;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
     }
 }

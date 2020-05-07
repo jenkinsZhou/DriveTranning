@@ -37,6 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/dp_18"
                     android:text="@string/app_name"
                     android:textColor="@color/black333333"
                     android:textSize="@dimen/sp_16"
@@ -66,18 +67,19 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_15"
                         android:orientation="vertical">
 
                         <ImageView
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_5"
                             android:src="@drawable/shape_circle_blue_5087ff" />
 
                         <View
+                            android:id="@+id/startLineView"
                             android:layout_width="@dimen/dp_0_5"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:background="@color/grayEEEEEE" />
 
@@ -85,19 +87,20 @@
 
                     <!--最右侧信息布局-->
                     <LinearLayout
+                        android:id="@+id/llStartTimeRight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_10"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <!--开始时间-->
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/dp_18"
                             android:orientation="horizontal">
-
+                            <!--开始时间-->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -188,6 +191,7 @@
                         </LinearLayout>
 
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <!--签到模块-->
@@ -214,16 +218,17 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_15"
                         android:orientation="vertical">
 
                         <ImageView
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_5"
                             android:src="@drawable/shape_circle_gray99999" />
 
                         <View
+                            android:id="@+id/lineViewSignIn"
                             android:layout_width="@dimen/dp_0_5"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
@@ -233,6 +238,7 @@
 
                     <!--最右侧信息布局-->
                     <LinearLayout
+                        android:id="@+id/llSignInRight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_10"
@@ -290,16 +296,17 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_15"
                         android:orientation="vertical">
 
                         <ImageView
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_5"
                             android:src="@drawable/shape_circle_gray99999" />
 
                         <View
+                            android:id="@+id/lineViewSignOut"
                             android:layout_width="@dimen/dp_0_5"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
@@ -309,6 +316,7 @@
 
                     <!--最右侧信息布局-->
                     <LinearLayout
+                        android:id="@+id/llSignOutRight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_10"
@@ -366,16 +374,17 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_15"
                         android:orientation="vertical">
 
                         <ImageView
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_5"
                             android:src="@drawable/shape_circle_gray99999" />
 
                         <View
+                            android:id="@+id/lineViewOnline"
                             android:layout_width="@dimen/dp_0_5"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
@@ -385,6 +394,7 @@
 
                     <!--最右侧信息布局-->
                     <LinearLayout
+                        android:id="@+id/llOnLineRight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_10"
@@ -491,16 +501,17 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_15"
                         android:orientation="vertical">
 
                         <ImageView
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_5"
                             android:src="@drawable/shape_circle_gray99999" />
 
                         <View
+                            android:id="@+id/lineViewExam"
                             android:layout_width="@dimen/dp_0_5"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
@@ -510,6 +521,7 @@
 
                     <!--最右侧信息布局-->
                     <LinearLayout
+                        android:id="@+id/llExamRight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_10"
@@ -573,7 +585,7 @@
                 <LinearLayout
                     android:id="@+id/llEnd"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_100"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -582,10 +594,11 @@
                         android:orientation="vertical">
 
                         <TextView
+
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:text="结束"
-                            android:textColor="@color/gray999999"
+                            android:textColor="@color/yellowF39800"
                             android:textSize="@dimen/sp_15" />
                     </LinearLayout>
 
@@ -593,25 +606,26 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_15"
                         android:orientation="vertical">
 
                         <ImageView
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_5"
                             android:src="@drawable/shape_circle_yellow_f39800" />
 
-                        <View
-                            android:layout_width="@dimen/dp_0_5"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@color/grayEEEEEE" />
+                        <!--  <View
+                              android:layout_width="@dimen/dp_0_5"
+                              android:layout_height="match_parent"
+                              android:layout_gravity="center_horizontal"
+                              android:background="@color/grayEEEEEE" />-->
 
                     </LinearLayout>
 
                     <!--最右侧信息布局-->
                     <LinearLayout
+                        android:id="@+id/llEndRight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_10"
@@ -658,6 +672,7 @@
                 android:layout_marginStart="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_18"
                 android:layout_marginEnd="@dimen/dp_12"
+                android:layout_marginBottom="@dimen/dp_20"
                 android:background="@drawable/bg_radius_10_white"
                 android:orientation="vertical"
                 android:paddingStart="@dimen/dp_12"
@@ -669,11 +684,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/dp_18"
                     android:text="目录"
                     android:textColor="@color/black333333"
                     android:textSize="@dimen/sp_16"
                     android:textStyle="bold" />
 
+                <LinearLayout
+                    android:id="@+id/llDirectory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                </LinearLayout>
 
             </LinearLayout>
 

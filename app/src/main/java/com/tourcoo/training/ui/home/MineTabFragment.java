@@ -100,6 +100,7 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
         loadMineAccount();
         loadAchievement();
         requestUserInfo();
+
     }
 
     private void loadMineAccount() {

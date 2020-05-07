@@ -121,17 +121,24 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
             e.printStackTrace()
         }
         val maps = CommonUtil.sortStudyRecord(list)
+        var count = 0
+        val mapSize = maps.size
         for (map in maps) {
             val values = map.value
             val record = StudyRecord()
             record.title = map.key
             record.isHeader = true
             values.add(0, record)
-            result.addAll(values)
+            result.addAll(values.asReversed())
+            count++
+            if(count == mapSize-1){
+                for (value in result) {
+                    value.isFolding = true
+                }
+            }
         }
-        TourCooLogUtil.e("StudyRecordActivity", maps)
-        return result
 
+        return result.asReversed()
     }
 
 
@@ -170,7 +177,7 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
     private fun initPicker() {
         val calendar = Calendar.getInstance()
         val currentYear = calendar[Calendar.YEAR]
-        for (year in currentYear downTo currentYear - 5) {
+        for (year in currentYear downTo currentYear - 3) {
             options1Items.add(year)
         }
         pvCustomOptions = OptionsPickerBuilder(mContext, OnOptionsSelectListener { options1, options2, options3, v ->
@@ -207,4 +214,6 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
     private fun showSelectYear(year: Int) {
         tvSelect!!.text = year.toString() + "年度"
     }
+
+
 }

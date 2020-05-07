@@ -37,9 +37,9 @@ public class StudyRecord implements MultiItemEntity {
     private String title;
 
     /**
-     * 是否折叠
+     * 是否折叠(默认折叠所有)
      */
-    private boolean folding = true;
+    private boolean folding = false ;
 
     public boolean isFolding() {
         return folding;
