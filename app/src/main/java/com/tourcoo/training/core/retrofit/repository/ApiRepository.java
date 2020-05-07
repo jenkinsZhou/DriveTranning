@@ -30,6 +30,8 @@ import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.setting.SettingEntity;
 import com.tourcoo.training.entity.study.BannerBean;
+import com.tourcoo.training.entity.study.StudyDetail;
+import com.tourcoo.training.entity.study.StudyRecord;
 import com.tourcoo.training.entity.training.DRMParams;
 import com.tourcoo.training.entity.training.HlsParams;
 import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
@@ -141,7 +143,7 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestGetCoursePayInfo(params).retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult<PayInfo>> requestPayCourse(String trainingPlanID,int payType) {
+    public Observable<BaseResult<PayInfo>> requestPayCourse(String trainingPlanID, int payType) {
         Map<String, Object> params = new HashMap<>(2);
         params.put("trainingPlanID", trainingPlanID);
         params.put("payType", payType);
@@ -247,7 +249,6 @@ public class ApiRepository extends BaseRepository {
     }
 
 
-
     public Observable<BasePageResult<ProfessionTrainingEntity>> requestCourseProfessionalTraining(int page) {
         Map<String, Object> params = new HashMap<>(2);
         if (page == 0) {
@@ -260,7 +261,6 @@ public class ApiRepository extends BaseRepository {
     }
 
 
-
     public Observable<BaseResult<FaceRecognizeResult>> requestFaceVerify(String trainingPlanID, String photoBase64) {
         Map<String, Object> params = new HashMap<>(3);
         params.put("trainingPlanID", trainingPlanID);
@@ -268,7 +268,6 @@ public class ApiRepository extends BaseRepository {
         params.put("photo", photoBase64);
         return CommonTransformer.switchSchedulers(getApiService().requestFaceVerify(params).retryWhen(new RetryWhen()));
     }
-
 
 
     public Observable<BaseResult<FaceRecognizeResult>> requestIdCardVerify(String trainingPlanID, String idPhotoBase64, String facePhotoBase64) {
@@ -280,10 +279,11 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 培训相关的人脸验证
+     *
      * @param params
      * @return
      */
-    public Observable<BaseResult<FaceRecognizeResult>> requestTrainFaceVerify( Map<String, Object> params) {
+    public Observable<BaseResult<FaceRecognizeResult>> requestTrainFaceVerify(Map<String, Object> params) {
         return CommonTransformer.switchSchedulers(getApiService().requestFaceVerify(params).retryWhen(new RetryWhen()));
     }
 
@@ -374,6 +374,7 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 转线上
+     *
      * @param trainingPlanID
      * @return
      */
@@ -382,7 +383,6 @@ public class ApiRepository extends BaseRepository {
         params.put("trainingPlanID", trainingPlanID);
         return CommonTransformer.switchSchedulers(getApiService().requestTurnOnline(params).retryWhen(new RetryWhen()));
     }
-
 
 
     public Observable<BasePageResult<NewsEntity>> requestNewsList(int page) {
@@ -399,49 +399,63 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 个体工商户购买课时接口
+     *
      * @param num
      * @return
      */
     public Observable<BaseResult> requestBusinessPayInfo(int num) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("num", num);
-        return CommonTransformer.switchSchedulers(getApiService(). requestBusinessPayInfo(params).retryWhen(new RetryWhen()));
+        return CommonTransformer.switchSchedulers(getApiService().requestBusinessPayInfo(params).retryWhen(new RetryWhen()));
     }
+
     public Observable<BaseResult<SettingEntity>> requestSystemConfig() {
-        return CommonTransformer.switchSchedulers(getApiService(). requestSystemConfig().retryWhen(new RetryWhen()));
+        return CommonTransformer.switchSchedulers(getApiService().requestSystemConfig().retryWhen(new RetryWhen()));
     }
 
 
-    public Observable<BaseResult> requestTwoPayInfo(String ID,String childModuleId,String coins) {
+    public Observable<BaseResult> requestTwoPayInfo(String ID, String childModuleId, String coins) {
         Map<String, Object> params = new HashMap<>(3);
         params.put("ID", ID);
         params.put("ChildModuleId", childModuleId);
         params.put("Coins", coins);
-        return CommonTransformer.switchSchedulers(getApiService(). requestTwoPayInfo(params).retryWhen(new RetryWhen()));
+        return CommonTransformer.switchSchedulers(getApiService().requestTwoPayInfo(params).retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult<ExamEntity>> requestProfessionalExamInfo(String trainingPlanID,int type,String examId) {
+    public Observable<BaseResult<ExamEntity>> requestProfessionalExamInfo(String trainingPlanID, int type, String examId) {
         Map<String, Object> params = new HashMap<>(2);
         params.put("trainingPlanID", trainingPlanID);
         params.put("type", type);
         //正式考试需要传examId
-        if(type == 0) {
+        if (type == 0) {
             params.put("examId", examId);
         }
-        return CommonTransformer.switchSchedulers(getApiService(). requestProfessionalExamInfo(params).retryWhen(new RetryWhen()));
+        return CommonTransformer.switchSchedulers(getApiService().requestProfessionalExamInfo(params).retryWhen(new RetryWhen()));
     }
 
 
     public Observable<BaseResult<StudyMedalEntity>> requestStudyMedalList() {
-        return CommonTransformer.switchSchedulers(getApiService(). requestStudyMedalList().retryWhen(new RetryWhen()));
+        return CommonTransformer.switchSchedulers(getApiService().requestStudyMedalList().retryWhen(new RetryWhen()));
     }
 
 
-    public Observable<BaseResult<NewsDetailEntity>> requestNewsDetail(String  newsId) {
+    public Observable<BaseResult<NewsDetailEntity>> requestNewsDetail(String newsId) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("id", newsId);
         return CommonTransformer.switchSchedulers(getApiService().requestNewsDetail(params).retryWhen(new RetryWhen()));
     }
 
+
+    public Observable<BaseResult<List<StudyRecord>>> requestStudyRecordList(String year) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("year", year);
+        return CommonTransformer.switchSchedulers(getApiService().requestStudyRecordList(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<StudyDetail>> requestStudyDetail(String trainingPlanID) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("trainingPlanID", trainingPlanID);
+        return CommonTransformer.switchSchedulers(getApiService().requestStudyDetail(params).retryWhen(new RetryWhen()));
+    }
 
 }

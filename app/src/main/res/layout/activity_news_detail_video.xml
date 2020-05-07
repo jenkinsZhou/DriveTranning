@@ -9,7 +9,7 @@
     <include layout="@layout/frame_layout_title_bar" />
 
     <com.tencent.liteav.demo.play.SuperPlayerView
-        android:id="@+id/smartVideoPlayer"
+        android:id="@+id/superPlayerView"
         android:layout_width="match_parent"
         android:background="@color/black"
         android:layout_height="@dimen/dp_200" />
@@ -26,18 +26,20 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/llRead"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_news_look" />
@@ -55,7 +57,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -68,6 +70,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_news_like" />
@@ -75,6 +78,7 @@
                     <TextView
                         android:id="@+id/tvNewsLikeCount"
                         android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_8"
                         android:text="-" />
@@ -84,23 +88,26 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/llShare"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_news_share" />
 
                     <TextView
+                        android:layout_gravity="center_vertical"
                         android:id="@+id/tvNewsShareCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -1,6 +1,7 @@
 package com.tourcoo.training.ui.home.news
 
 import android.os.Bundle
+import android.text.TextUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.tourcoo.training.R
@@ -10,7 +11,6 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.news.NewsEntity
-import com.tourcoo.training.widget.web.NewsDetailActivityNew
 
 /**
  *@description :
@@ -44,12 +44,14 @@ class NewsTabFragmentNew : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, Ne
 
     override fun initView(savedInstanceState: Bundle?) {
         adapter!!.setOnItemClickListener { adapter, view, position ->
-            //todo
-            val news =      adapter.data[position] as NewsEntity
-            val bundle =  Bundle()
-            bundle.putString(EXTRA_NEWS_ID,news.id)
-            bundle.putString(EXTRA_NEWS_URL,news.url)
-            CommonUtil.startActivity(mContext, NewsDetailActivityNew::class.java,bundle)
+            val news = adapter.data[position] as NewsEntity
+            val bundle = Bundle()
+            bundle.putSerializable(EXTRA_NEWS_BEAN, news)
+            if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(news.videoUrl))) {
+                CommonUtil.startActivity(mContext, NewsDetailVideoActivity::class.java, bundle)
+            } else {
+                CommonUtil.startActivity(mContext, NewsDetailHtmlActivity::class.java, bundle)
+            }
 
 
         }
@@ -77,8 +79,8 @@ class NewsTabFragmentNew : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, Ne
             return fragment
         }
 
-        const val EXTRA_NEWS_ID = "EXTRA_NEWS_ID"
-        const val EXTRA_NEWS_URL = "EXTRA_NEWS_URL"
+        const val EXTRA_NEWS_BEAN = "EXTRA_NEWS_BEAN"
+
     }
 }
 

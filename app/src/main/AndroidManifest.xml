@@ -132,7 +132,15 @@
             />
         <activity android:name=".ui.EditPassActivity" />
         <activity android:name=".ui.setting.AboutUsActivity" />
-        <activity android:name=".widget.web.NewsDetailActivityNew" />
+        <activity android:name=".ui.home.news.NewsDetailHtmlActivity" />
+        <activity android:name=".ui.home.news.NewsDetailVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            />
+        <activity android:name=".ui.study.StudyRecordActivity" />
+        <activity android:name=".ui.study.StudyDetailActivity" />
     </application>
 
 </manifest>

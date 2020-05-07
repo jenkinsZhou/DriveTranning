@@ -24,6 +24,8 @@ import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.setting.SettingEntity;
 import com.tourcoo.training.entity.study.BannerBean;
+import com.tourcoo.training.entity.study.StudyDetail;
+import com.tourcoo.training.entity.study.StudyRecord;
 import com.tourcoo.training.entity.training.DRMParams;
 import com.tourcoo.training.entity.training.HlsParams;
 import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
@@ -335,10 +337,35 @@ public interface ApiService {
 
     /**
      * 勋章列表
+     *
      * @return
      */
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
     @POST("v1.0/user/list-medal")
     Observable<BaseResult<StudyMedalEntity>> requestStudyMedalList();
+
+    /**
+     * 点赞
+     *
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN})
+    @POST("v1.0/open/news/like-news")
+    Observable<BaseResult> requestNewsLike();
+
+
+    /**
+     * 学习记录列表
+     *
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN})
+    @POST("v1.0/training/list_study")
+    Observable<BaseResult<List<StudyRecord>>> requestStudyRecordList(@Body Map<String, Object> map);
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN})
+    @POST("v1.0/training/get-study-detail")
+    Observable<BaseResult<StudyDetail>> requestStudyDetail(@Body Map<String, Object> map);
 
 }

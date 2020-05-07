@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginStart="@dimen/dp_15"
+        android:id="@+id/tvTrainDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_radius_20_blue_cadbff"
+        android:gravity="center"
+        android:minWidth="@dimen/dp_85"
+        android:paddingStart="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_6"
+        android:paddingEnd="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_6"
+        android:text="2020-01"
+        android:textColor="@color/blue5087FF"
+        android:textSize="@dimen/sp_12" />
+</LinearLayout>

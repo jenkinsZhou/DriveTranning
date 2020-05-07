@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.tourcoo.training.adapter.news.NewsMultipleAdapter.NEWS_TYPE_IMAGE_MULTI;
@@ -18,7 +19,7 @@ import static com.tourcoo.training.adapter.news.NewsMultipleAdapter.NEWS_TYPE_VI
  * @date 2020年04月28日9:04
  * @Email: 971613168@qq.com
  */
-public class NewsEntity implements MultiItemEntity {
+public class NewsEntity implements MultiItemEntity , Serializable {
 
     /**
      * ID : a247a3f79c5b4ca8936d813c97d04a60bcab3e38

@@ -33,6 +33,7 @@ import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.constant.FrameConstant;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.entity.certificate.CertificateInfo;
+import com.tourcoo.training.entity.study.StudyRecord;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -581,8 +582,31 @@ public class CommonUtil {
     }
 
 
+    public static Map<String, ArrayList<StudyRecord>> sortStudyRecord(List<StudyRecord> list) {
+        TreeMap tm = new TreeMap();
+        for (int i = 0; i < list.size(); i++) {
+            StudyRecord record = (StudyRecord) list.get(i);
+            if (record == null || record.getTrainDate() == null) {
+                continue;
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(record.getTrainDate());
+            if (tm.containsKey("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1))) {//
+                ArrayList<StudyRecord> l11 = (ArrayList) tm.get("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1));
+                l11.add(record);
+            } else {
+                ArrayList<StudyRecord> tem = new ArrayList<>();
+                if (record.getTrainDate() != null) {
+                    tem.add(record);
+                    tm.put("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1), tem);
+                }
+            }
+        }
+        return tm;
+    }
+
     /**
-     * 方法3
+     *
      * 利用HashMap key唯一，value可以重复的特点，把list中各种元素放到hashMap中
      */
     public static boolean checkDifferent(List<String> list, List<String> list1) {

@@ -129,6 +129,7 @@
     <color name="green0DBD00">#0DBD00</color>
     <color name="green42AF3D">#42AF3D</color>
     <color name="green67C23A">#67C23A</color>
+    <color name="green69C33C">#69C33C</color>
     <color name="green4EBBBF">#4EBBBF</color>
     <color name="green78C2E4">#78C2E4</color>
     <color name="green73C7DF">#73C7DF</color>
@@ -160,7 +161,7 @@
 
     <color name="blue53BFFF">#53BFFF</color>
 
-
+    <color name="blueF39800">#F39800</color>
     <color name="blueE7EFFF">#E7EFFF</color>
     <color name="default_black_text_color">#333333</color>
     <color name="default_gray_text_color">#A2A2A2</color>
