@@ -53,6 +53,8 @@ class StudyDetailActivity : BaseTitleActivity() {
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     showDetail(entity.data)
+                } else {
+                    ToastUtil.show(entity.msg)
                 }
             }
         })
@@ -63,7 +65,7 @@ class StudyDetailActivity : BaseTitleActivity() {
         if (detail == null) {
             return
         }
-        tvTrainName.text =CommonUtil.getNotNullValue(detail.title)
+        tvTrainName.text = CommonUtil.getNotNullValue(detail.title)
         if (detail.start == null) {
             setViewGone(llStartTime, false)
         } else {

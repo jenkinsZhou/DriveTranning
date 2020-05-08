@@ -24,6 +24,7 @@ import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.setting.SettingEntity;
 import com.tourcoo.training.entity.study.BannerBean;
+import com.tourcoo.training.entity.study.StudyDataEntity;
 import com.tourcoo.training.entity.study.StudyDetail;
 import com.tourcoo.training.entity.study.StudyRecord;
 import com.tourcoo.training.entity.training.DRMParams;
@@ -363,9 +364,20 @@ public interface ApiService {
     @POST("v1.0/training/list_study")
     Observable<BaseResult<List<StudyRecord>>> requestStudyRecordList(@Body Map<String, Object> map);
 
-
+    /**
+     * 学习详情
+     * @param map
+     * @return
+     */
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN})
     @POST("v1.0/training/get-study-detail")
     Observable<BaseResult<StudyDetail>> requestStudyDetail(@Body Map<String, Object> map);
+
+    /**
+     * 学习数据
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN})
+    @POST("v1.0/training/list-study-statistics")
+    Observable<BaseResult<StudyDataEntity>> requestStudyDataList(@Body Map<String, Object> map);
 
 }

@@ -40,6 +40,7 @@ import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.guide.GuideActivity
 import com.tourcoo.training.ui.setting.SettingActivity
+import com.tourcoo.training.ui.study.StudyDataActivity
 import com.tourcoo.training.ui.study.StudyRecordActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
@@ -164,11 +165,13 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         achievementAdapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {
+                    //学习记录
                     CommonUtil.startActivity(mContext, StudyRecordActivity::class.java)
                 }
 
                 1 -> {
-                    ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
+                    //学习数据
+                    CommonUtil.startActivity(mContext, StudyDataActivity::class.java)
                 }
 
                 2 -> {

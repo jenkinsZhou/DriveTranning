@@ -30,6 +30,7 @@ import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
 import com.tourcoo.training.entity.setting.SettingEntity;
 import com.tourcoo.training.entity.study.BannerBean;
+import com.tourcoo.training.entity.study.StudyDataEntity;
 import com.tourcoo.training.entity.study.StudyDetail;
 import com.tourcoo.training.entity.study.StudyRecord;
 import com.tourcoo.training.entity.training.DRMParams;
@@ -457,5 +458,13 @@ public class ApiRepository extends BaseRepository {
         params.put("trainingPlanID", trainingPlanID);
         return CommonTransformer.switchSchedulers(getApiService().requestStudyDetail(params).retryWhen(new RetryWhen()));
     }
+
+
+    public Observable<BaseResult<StudyDataEntity>> requestStudyDataList(String year) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("year", year);
+        return CommonTransformer.switchSchedulers(getApiService().requestStudyDataList(params).retryWhen(new RetryWhen()));
+    }
+
 
 }

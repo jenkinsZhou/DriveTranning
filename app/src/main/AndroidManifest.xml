@@ -141,6 +141,7 @@
             />
         <activity android:name=".ui.study.StudyRecordActivity" />
         <activity android:name=".ui.study.StudyDetailActivity" />
+        <activity android:name=".ui.study.StudyDataActivity" />
     </application>
 
 </manifest>

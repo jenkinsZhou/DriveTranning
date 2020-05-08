@@ -79,6 +79,7 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
         rootView!!.setOnClickListener(this)
         rightTitleBarLayout!!.addView(rootView)
         smartRefreshLayoutCommon.setRefreshHeader(ClassicsHeader(mContext))
+        smartRefreshLayoutCommon.setOnRefreshListener(this)
         rvCommon.layoutManager = LinearLayoutManager(mContext)
         adapter!!.bindToRecyclerView(rvCommon)
         initItemAndChildClick()
@@ -89,12 +90,20 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
     private fun requestStudyRecordList(year: String) {
         ApiRepository.getInstance().requestStudyRecordList(year).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MutableList<StudyRecord>>>() {
             override fun onSuccessNext(entity: BaseResult<MutableList<StudyRecord>>?) {
+                smartRefreshLayoutCommon?.finishRefresh()
                 if (entity == null) {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     showRecord(entity.data)
+                }else{
+                    ToastUtil.show(entity.msg)
                 }
+            }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                smartRefreshLayoutCommon?.finishRefresh(false)
             }
         })
     }
@@ -143,12 +152,11 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
 
 
     private fun showRecord(list: MutableList<StudyRecord>?) {
-        smartRefreshLayoutCommon?.finishRefresh()
         adapter!!.setNewData(assemblyData(list))
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-
+        requestStudyRecordList(selectYear.toString())
     }
 
     private fun initItemAndChildClick() {

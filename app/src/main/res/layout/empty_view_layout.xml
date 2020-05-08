@@ -2,9 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/custom_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/dp_300"
     android:background="@color/white"
-    android:minHeight="@dimen/dp_500"
     android:orientation="vertical">
 
     <RelativeLayout
