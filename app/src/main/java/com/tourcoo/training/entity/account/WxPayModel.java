@@ -24,6 +24,15 @@ public class WxPayModel {
     private String return_msg;
     private String sign;
     private String trade_type;
+    private String timeStamp;
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public String getAppid() {
         return appid;

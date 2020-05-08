@@ -9,6 +9,7 @@
     app:title_actionTextColor="@color/colorTitleText"
     app:title_dividerBackground="@color/colorTitleDivider"
     app:title_dividerHeight="@dimen/dp_line_size"
+    app:title_outPadding="@dimen/dp_10"
     app:title_leftTextColor="@color/colorTitleText"
     app:title_rightTextColor="@color/colorTitleText"
     app:title_titleMainTextColor="@color/colorTitleText"

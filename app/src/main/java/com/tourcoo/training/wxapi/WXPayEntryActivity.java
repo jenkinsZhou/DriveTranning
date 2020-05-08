@@ -10,6 +10,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.training.R;
 import com.tourcoo.training.constant.TrainingConstant;
 import com.tourcoo.training.core.log.TourCooLogUtil;
+import com.tourcoo.training.core.util.ToastUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,8 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class WXPayEntryActivity extends AppCompatActivity implements IWXAPIEventHandler {
 
-    private static final String TAG = "WXPayEntryActivity";
-
+    private static final String TAG = "微信支付回调";
     private IWXAPI api;
 
     @Override
@@ -50,7 +50,8 @@ public class WXPayEntryActivity extends AppCompatActivity implements IWXAPIEvent
     @Override
     public void onResp(BaseResp baseResp) {
         int errCode = baseResp.errCode;
-
+        ToastUtil.show(errCode+"");
+        TourCooLogUtil.i(TAG,baseResp);
         if (errCode == 0) {
             // 成功
 

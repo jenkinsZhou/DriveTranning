@@ -123,9 +123,9 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
             setResult(Activity.RESULT_OK)
             finish()
         } else if (payType == 3) {
-            payByAlipay(payInfo!!.thirdPayInfo)
+            payByAlipay(payInfo!!.thirdPayInfo.toString())
         } else if (payType == 4) {
-            payByWx(payInfo!!.thirdPayInfo)
+            payByWx(payInfo!!.thirdPayInfo.toString())
         }
 
     }
@@ -181,9 +181,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
     }
 
 
-    private fun payByWx(orderInfo: String) {
-        val wxPayModel = Gson().fromJson<WxPayModel>(orderInfo, WxPayModel::class.java)
-
+    private fun payByWx(orderInfo: Any) {
+        val wxPayModel = Gson().fromJson<WxPayModel>(Gson().toJson(orderInfo), WxPayModel::class.java)
         if (wxPayModel == null) {
             ToastUtil.show("微信支付数据异常")
             return
@@ -204,6 +203,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         request.packageValue = "Sign=WXPay"
         request.nonceStr = wxPayModel.nonce_str
         request.sign = wxPayModel.sign
+        //todo 微信支付
         request.timeStamp = "" + System.currentTimeMillis() / 1000
 
         wxapi.sendReq(request)

@@ -141,7 +141,6 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
                 if (entity != null) {
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                        TourCooLogUtil.i(mTag, "--->" + "回调成功")
                         handleLoginCallback(entity.data)
                     } else {
                         ToastUtil.show(entity.msg)

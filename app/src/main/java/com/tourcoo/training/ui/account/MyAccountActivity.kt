@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.fastjson.JSON
 import com.alipay.sdk.app.PayTask
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.gson.Gson
@@ -257,13 +258,13 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
 
-        ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, "1", "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<PayInfo>>() {
+        ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, coinInfo.price, "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<PayInfo>>() {
             override fun onSuccessNext(entity: BaseResult<PayInfo>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     if (payDialog!!.payType == 1) {
-                        payByAlipay(entity.data.thirdPayInfo)
+                        payByAlipay(entity.data.thirdPayInfo.toString())
                     } else {
-                        payByWx(entity.data.thirdPayInfo)
+                        payByWx(entity.data.thirdPayInfo,entity.data)
                     }
                 } else {
                     ToastUtil.show(entity?.msg)
@@ -333,14 +334,14 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun payByWx(orderInfo: String) {
-        val wxPayModel = Gson().fromJson<WxPayModel>(orderInfo, WxPayModel::class.java)
-
+    private fun payByWx(orderInfo: Any,patInfo : PayInfo) {
+        val wxPayModelStr= JSON.toJSONString(orderInfo)
+      val wxPayModel =      JSON.parseObject(wxPayModelStr,WxPayModel::class.java)
         if (wxPayModel == null) {
             ToastUtil.show("微信支付数据异常")
             return
         }
-
+        TourCooLogUtil.w("微信支付参数", wxPayModel)
         // 将该app注册到微信
         val wxapi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID);
 
@@ -348,7 +349,6 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("您尚未安装微信客户端")
             return
         }
-
         val request = PayReq()
         request.appId = wxPayModel.appid
         request.partnerId = wxPayModel.mch_id
@@ -356,8 +356,8 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         request.packageValue = "Sign=WXPay"
         request.nonceStr = wxPayModel.nonce_str
         request.sign = wxPayModel.sign
-        request.timeStamp = "" + System.currentTimeMillis() / 1000
-
+        request.timeStamp = patInfo.timeStamp
+        TourCooLogUtil.d("微信支付参数", request)
         wxapi.sendReq(request)
 
     }

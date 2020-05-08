@@ -142,6 +142,10 @@
         <activity android:name=".ui.study.StudyRecordActivity" />
         <activity android:name=".ui.study.StudyDetailActivity" />
         <activity android:name=".ui.study.StudyDataActivity" />
+        <activity android:name=".ui.order.OrderListActivity" />
+        <activity android:name=".ui.message.MessageListActivity" />
+        <activity android:name=".ui.message.MessageDetailActivity" />
+        <activity android:name=".ui.message.MessageWebViewActivity" />
     </application>
 
 </manifest>

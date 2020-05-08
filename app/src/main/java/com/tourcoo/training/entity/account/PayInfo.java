@@ -8,7 +8,8 @@ public class PayInfo {
      */
 
     private String OrderID;
-    private String ThirdPayInfo;
+    private Object ThirdPayInfo;
+    private String timeStamp;
 
     public String getOrderID() {
         return OrderID;
@@ -18,11 +19,19 @@ public class PayInfo {
         this.OrderID = OrderID;
     }
 
-    public String getThirdPayInfo() {
+    public Object getThirdPayInfo() {
         return ThirdPayInfo;
     }
 
-    public void setThirdPayInfo(String ThirdPayInfo) {
+    public void setThirdPayInfo(Object ThirdPayInfo) {
         this.ThirdPayInfo = ThirdPayInfo;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

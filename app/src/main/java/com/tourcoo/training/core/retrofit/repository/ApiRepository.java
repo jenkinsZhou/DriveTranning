@@ -23,8 +23,11 @@ import com.tourcoo.training.entity.exam.CommitAnswer;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
+import com.tourcoo.training.entity.message.MessageDetail;
+import com.tourcoo.training.entity.message.MessageEntity;
 import com.tourcoo.training.entity.news.NewsDetailEntity;
 import com.tourcoo.training.entity.news.NewsEntity;
+import com.tourcoo.training.entity.order.OrderEntity;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
@@ -466,5 +469,38 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestStudyDataList(params).retryWhen(new RetryWhen()));
     }
 
+
+
+
+    public Observable<BaseResult<List<OrderEntity>>> requestOrderList(int page,int type) {
+        Map<String, Object> params = new HashMap<>(2);
+        if (page == 0) {
+            page = 1;
+        }
+        params.put("page", page);
+        //每次请求10条
+        params.put("rows", 10);
+        params.put("type", type);
+        return CommonTransformer.switchSchedulers(getApiService().requestOrderList(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BasePageResult<MessageEntity>> requestMessageList(int page, int type) {
+        Map<String, Object> params = new HashMap<>(3);
+        if (page == 0) {
+            page = 1;
+        }
+        params.put("page", page);
+        //每次请求10条
+        params.put("rows", 10);
+        params.put("type", type);
+        return CommonTransformer.switchSchedulers(getApiService().requestMessageList(params).retryWhen(new RetryWhen()));
+    }
+
+
+    public Observable<BaseResult<MessageDetail>> requestMessageDetail(int id) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("id", id);
+        return CommonTransformer.switchSchedulers(getApiService().requestMessageDetail(params).retryWhen(new RetryWhen()));
+    }
 
 }

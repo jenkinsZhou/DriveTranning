@@ -49,7 +49,6 @@ public class StudyDataFragment extends BaseFragment {
 
     @Override
     public void loadData() {
-        TourCooLogUtil.d("数据："+studyDataInfoList.size());
         adapter.setNewData(studyDataInfoList);
     }
 

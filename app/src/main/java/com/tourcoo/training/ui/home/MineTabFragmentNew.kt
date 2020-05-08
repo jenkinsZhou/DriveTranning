@@ -39,6 +39,7 @@ import com.tourcoo.training.ui.account.PersonalInfoActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.guide.GuideActivity
+import com.tourcoo.training.ui.order.OrderListActivity
 import com.tourcoo.training.ui.setting.SettingActivity
 import com.tourcoo.training.ui.study.StudyDataActivity
 import com.tourcoo.training.ui.study.StudyRecordActivity
@@ -154,9 +155,11 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 0, 1 -> {
                     CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
                 }
-                2 ->
-                   ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
-//                    showDialog3()
+                2 ->{
+                    //订单列表
+                    CommonUtil.startActivity(mContext, OrderListActivity::class.java)
+                }
+
                 else -> {
 
                 }

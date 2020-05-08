@@ -2,7 +2,6 @@ package com.tourcoo.training.ui.study;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.github.mikephil.charting.charts.LineChart;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter;
 import com.tourcoo.training.config.RequestConfig;
@@ -20,6 +20,8 @@ import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
 import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.ResourceUtil;
+import com.tourcoo.training.core.util.TimeUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.study.StudyDataEntity;
@@ -50,6 +52,10 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
     private WrapContentHeightViewPager wrapViewpager;
     private StudyDataEntity mStudyDataEntity;
     public static final String EXTRA_STUDY_DATA_LIST_KEY = "EXTRA_STUDY_DATA_LIST_KEY";
+    private LineChart lineChartView;
+    private LineChartManager oilLineChartManager;
+
+    private List<String> monthTimeList = new ArrayList<>();
 
     @Override
     public int getContentLayout() {
@@ -60,6 +66,8 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
     public void initView(Bundle savedInstanceState) {
         tvSelectYear = findViewById(R.id.tvSelectYear);
         tvSelectDateShow = findViewById(R.id.tvSelectDateShow);
+        lineChartView = findViewById(R.id.lineChartView);
+        oilLineChartManager = new LineChartManager(lineChartView);
         findViewById(R.id.ivArrowRight).setOnClickListener(this);
         findViewById(R.id.ivArrowLeft).setOnClickListener(this);
         wrapViewpager = findViewById(R.id.wrapViewpager);
@@ -93,6 +101,7 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
 
 
     private void requestStudyData(String year) {
+        TourCooLogUtil.i("year="+year);
         ApiRepository.getInstance().requestStudyDataList(year).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<StudyDataEntity>>() {
             @Override
             public void onSuccessNext(BaseResult<StudyDataEntity> entity) {
@@ -165,12 +174,14 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
             return;
         }
         mStudyDataEntity = detail;
+        mStudyDataEntity.setTotalHour(TimeUtil.secondToHour(detail.getTotalHour()));
+        loadChart(detail);
         tvSelectDateShow.setText(mStudyDataEntity.getMonths().get(currentPosition).getTime());
+
         tvTotalStudyLength.setText(CommonUtil.doubleTransStringZhen(detail.getTotalHour()) + "小时");
         List<Fragment> fragmentList = new ArrayList<>();
         for (StudyDataInfo month : detail.getMonths()) {
             fragmentList.add(StudyDataFragment.newInstance(month.getDay()));
-            TourCooLogUtil.i("添加的数量:" + fragmentList.size());
         }
         pagerAdapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         wrapViewpager.setAdapter(pagerAdapter);
@@ -193,5 +204,23 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
         tvSelectDateShow.setText(mStudyDataEntity.getMonths().get(currentPosition - 1).getTime());
         wrapViewpager.setCurrentItem(currentPosition - 1, true);
 
+    }
+
+    private void loadChart(StudyDataEntity entity) {
+        if (entity.getMonths() == null) {
+            return;
+        }
+        List<String> list = new ArrayList<>();
+        List<Float> floatList = new ArrayList<>();
+        int count = 1;
+        for (StudyDataInfo month : entity.getMonths()) {
+            if (month == null) {
+                continue;
+            }
+            count++;
+            list.add(CommonUtil.getNotNullValue(count + ""));
+            floatList.add((float) TimeUtil.secondToHour(month.getStudyHour()));
+        }
+        oilLineChartManager.showLineChart(list,floatList,"小时", ResourceUtil.getColor(R.color.blue5087FF));
     }
 }

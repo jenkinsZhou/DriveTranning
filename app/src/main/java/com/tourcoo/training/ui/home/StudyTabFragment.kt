@@ -29,6 +29,7 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.setting.SettingEntity
 import com.tourcoo.training.entity.study.BannerBean
+import com.tourcoo.training.ui.message.MessageListActivity
 import com.tourcoo.training.ui.training.professional.ProfessionalTrainingFragment
 import com.tourcoo.training.ui.training.safe.online.fragment.SafeTrainingFragment
 import com.tourcoo.training.ui.training.workpro.WorkProTrainingFragment
@@ -279,9 +280,10 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
         val tvMsgContent = rootViewMsg.findViewById(R.id.tvContent) as TextView
         tvMsgContent.text = "信息"
         imageViewMsg.setImageResource(R.drawable.icon_xx_nol)
-        imageViewMsg.setOnClickListener(View.OnClickListener {
+        rootViewMsg.setOnClickListener(View.OnClickListener {
             //todo
-            ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
+             val intent = Intent(mContext, MessageListActivity::class.java )
+                     startActivityForResult(intent,2013)
         })
         linearLayout!!.addView(rootView)
         linearLayout.addView(rootViewMsg)

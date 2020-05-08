@@ -17,8 +17,11 @@ import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
+import com.tourcoo.training.entity.message.MessageDetail;
+import com.tourcoo.training.entity.message.MessageEntity;
 import com.tourcoo.training.entity.news.NewsDetailEntity;
 import com.tourcoo.training.entity.news.NewsEntity;
+import com.tourcoo.training.entity.order.OrderEntity;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult;
 import com.tourcoo.training.entity.recharge.CoinPackageEntity;
@@ -379,5 +382,29 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN})
     @POST("v1.0/training/list-study-statistics")
     Observable<BaseResult<StudyDataEntity>> requestStudyDataList(@Body Map<String, Object> map);
+
+    /**
+     * 订单列表
+     * @param map
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/list-order")
+    Observable<BaseResult<List<OrderEntity>>> requestOrderList(@Body Map<String, Object> map);
+
+
+    /**
+     * 消息列表
+     * @param map
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/notice/list-notice")
+    Observable<BasePageResult<MessageEntity>> requestMessageList(@Body Map<String, Object> map);
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/notice/get-notice-detail")
+    Observable<BaseResult<MessageDetail>> requestMessageDetail(@Body Map<String, Object> map);
 
 }

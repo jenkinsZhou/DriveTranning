@@ -14,6 +14,8 @@ import com.tourcoo.training.core.interfaces.IRefreshLoadView;
 
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
+import static com.tourcoo.training.config.RequestConfig.START_PAGE;
+
 /**
  * @Author: JenkinsZhou on 2018/7/20 16:55
  * @E-Mail: 971613168@qq.com
@@ -82,7 +84,7 @@ public abstract class BaseRefreshLoadFragment<T>
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        mDefaultPage = 0;
+        mDefaultPage = START_PAGE;
         loadData(mDefaultPage);
     }
 
