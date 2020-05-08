@@ -31,16 +31,18 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
     private LinearLayout mLayoutBottom;
     private ImageView mIvPause;
     private ImageView mIvFullScreen;
-//    private TextView mTvCurrent;
+    //    private TextView mTvCurrent;
 //    private TextView mTvDuration;
 //    private SeekBar mSeekBarProgress;
     private TextView mTvTitle;
-//    private LinearLayout mLayoutReplay;
+    //    private LinearLayout mLayoutReplay;
     private TextView mTvBackToLive;
-//    private ProgressBar mPbLiveLoading;
+    //    private ProgressBar mPbLiveLoading;
     private ImageView mBackground;
     private Bitmap mBackgroundBmp;
     private ImageView mIvWatermark;
+    private boolean seekEnable;
+
 
     public TCVodControllerSmall(Context context) {
         super(context);
@@ -70,7 +72,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
         }
 
     }
-
 
 
     /**
@@ -103,7 +104,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
 //                break;
 //        }
 //    }
-
     private void initViews() {
         mLayoutInflater.inflate(R.layout.vod_controller_small, this);
 
@@ -133,15 +133,15 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
 
         mSeekBarProgress.setOnSeekBarChangeListener(this);
 
-        mGestureVolumeBrightnessProgressLayout = (TCVolumeBrightnessProgressLayout)findViewById(R.id.gesture_progress);
+        mGestureVolumeBrightnessProgressLayout = (TCVolumeBrightnessProgressLayout) findViewById(R.id.gesture_progress);
 
 //        mGestureVideoProgressLayout = (TCVideoProgressLayout) findViewById(R.id.video_progress_layout);
 //        mGestureVideoProgressLayout = (TCVideoProgressLayout) findViewById(R.id.video_progress_layout);
 
-        mBackground = (ImageView)findViewById(R.id.small_iv_background);
+        mBackground = (ImageView) findViewById(R.id.small_iv_background);
         setBackground(mBackgroundBmp);
 
-        mIvWatermark = (ImageView)findViewById(R.id.small_iv_water_mark);
+        mIvWatermark = (ImageView) findViewById(R.id.small_iv_water_mark);
     }
 
 
@@ -232,7 +232,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
     }
 
 
-
     /**
      * 返回窗口模式
      */
@@ -246,7 +245,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
     private void fullScreen() {
         mVodController.onRequestPlayMode(SuperPlayerConst.PLAYMODE_FULLSCREEN);
     }
-
 
 
 //    @Override
@@ -406,7 +404,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
     }
 
 
-
     @Override
     public void setWaterMarkBmp(final Bitmap bmp, final float xR, final float yR) {
         super.setWaterMarkBmp(bmp, xR, yR);
@@ -432,4 +429,12 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
         }
     }
 
+    public boolean isSeekEnable() {
+        return seekEnable;
+    }
+
+    public void setSeekEnable(boolean seekEnable) {
+        this.seekEnable = seekEnable;
+        mSeekBarProgress.setEnabled(seekEnable);
+    }
 }

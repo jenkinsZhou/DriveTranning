@@ -45,6 +45,7 @@ public class TCVodControllerLarge extends TCVodControllerBase
     private Context mContext;
     private ImageView mIvBack;
     private ImageView mIvPause;
+    private boolean seekEnable;
     //    private TextView mTvCurrent;
 //    private TextView mTvDuration;
 //    private SeekBar mSeekBarProgress;
@@ -721,5 +722,14 @@ public class TCVodControllerLarge extends TCVodControllerBase
         } else {
             mIvWatermark.setVisibility(GONE);
         }
+    }
+
+    public boolean isSeekEnable() {
+        return seekEnable;
+    }
+
+    public void setSeekEnable(boolean seekEnable) {
+        this.seekEnable = seekEnable;
+        mSeekBarProgress.setEnabled(seekEnable);
     }
 }

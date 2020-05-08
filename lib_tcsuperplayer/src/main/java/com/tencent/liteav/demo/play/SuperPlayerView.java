@@ -138,7 +138,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     }
 
 
-    public void seekTo(int currentTime){
+    public void seekTo(int currentTime) {
         if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
             if (mVodPlayer != null) {
                 mVodPlayer.seek(currentTime);
@@ -147,7 +147,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     }
 
     //获取当前播放到哪一秒
-    public int getCurrentProgress(){
+    public int getCurrentProgress() {
         if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
             if (mVodPlayer != null) {
                 return (int) mVodPlayer.getCurrentPlaybackTime();
@@ -1356,12 +1356,14 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      * 点播播放器进度回调处理
      */
     private OnPlayStatusListener onPlayStatusListener;
+
     public void setOnPlayStatusListener(OnPlayStatusListener onPlayStatusListener) {
         this.onPlayStatusListener = onPlayStatusListener;
     }
 
 
     private boolean isFirstFrame = true;
+
     public interface OnPlayStatusListener {
         //支持seek
         void enableSeek();
@@ -1423,8 +1425,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                 mVodControllerLarge.setVideoQualityList(videoQulities);
             }
         } else if (event == TXLiveConstants.PLAY_EVT_RCV_FIRST_I_FRAME) {
-            if(onPlayStatusListener != null && isFirstFrame){
-               onPlayStatusListener.enableSeek();
+            if (onPlayStatusListener != null && isFirstFrame) {
+                onPlayStatusListener.enableSeek();
             }
 
             isFirstFrame = false;
@@ -1435,7 +1437,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                 mChangeHWAcceleration = false;
             }
         } else if (event == TXLiveConstants.PLAY_EVT_PLAY_END) {
-            if(onPlayStatusListener != null){
+            if (onPlayStatusListener != null) {
                 onPlayStatusListener.onAutoPlayComplete();
             }
 
@@ -1700,5 +1702,11 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         } catch (Exception e) {
         } catch (Error e) {
         }
+    }
+
+
+    public void setSeekEnable(boolean enable) {
+        mVodControllerSmall.setSeekEnable(enable);
+        mVodControllerLarge.setSeekEnable(enable);
     }
 }
