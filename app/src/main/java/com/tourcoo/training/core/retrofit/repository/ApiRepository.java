@@ -22,6 +22,7 @@ import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.CommitAnswer;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
+import com.tourcoo.training.entity.feedback.FeedBackEntity;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.message.MessageDetail;
 import com.tourcoo.training.entity.message.MessageEntity;
@@ -501,6 +502,10 @@ public class ApiRepository extends BaseRepository {
         Map<String, Object> params = new HashMap<>(1);
         params.put("id", id);
         return CommonTransformer.switchSchedulers(getApiService().requestMessageDetail(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<List<FeedBackEntity>>> requestFeedbackReasonList() {
+        return CommonTransformer.switchSchedulers(getApiService().requestFeedbackReasonList().retryWhen(new RetryWhen()));
     }
 
 }

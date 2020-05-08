@@ -16,6 +16,7 @@ import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
+import com.tourcoo.training.entity.feedback.FeedBackEntity;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.message.MessageDetail;
 import com.tourcoo.training.entity.message.MessageEntity;
@@ -406,5 +407,11 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/notice/get-notice-detail")
     Observable<BaseResult<MessageDetail>> requestMessageDetail(@Body Map<String, Object> map);
+
+
+
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/feedback/list_questions_feedback")
+    Observable<BaseResult<List<FeedBackEntity>>> requestFeedbackReasonList();
 
 }

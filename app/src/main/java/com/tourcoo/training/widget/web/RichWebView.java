@@ -13,6 +13,8 @@ import android.view.Gravity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.tourcoo.training.core.util.ToastUtil;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;

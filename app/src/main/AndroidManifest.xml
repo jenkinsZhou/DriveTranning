@@ -128,7 +128,7 @@
         <activity android:name=".ui.exam.ProfessionalExamActivity" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
-        <activity android:name=".ui.FeedbackActivity"
+        <activity android:name=".ui.feedback.FeedbackActivity"
             />
         <activity android:name=".ui.EditPassActivity" />
         <activity android:name=".ui.setting.AboutUsActivity" />
@@ -145,7 +145,8 @@
         <activity android:name=".ui.order.OrderListActivity" />
         <activity android:name=".ui.message.MessageListActivity" />
         <activity android:name=".ui.message.MessageDetailActivity" />
-        <activity android:name=".ui.message.MessageWebViewActivity" />
+        <activity android:name=".ui.message.MessageWebViewActivityOld" />
+        <activity android:name=".ui.message.MessageDetailActivity" />
     </application>
 
 </manifest>

@@ -29,7 +29,7 @@ import static com.trello.rxlifecycle3.android.ActivityEvent.*;
  * @date 2020年05月08日20:18
  * @Email: 971613168@qq.com
  */
-public class MessageWebViewActivity extends BaseTitleActivity {
+public class MessageWebViewActivityOld extends BaseTitleActivity {
     public static final String EXTRA_RICH_TEXT = "EXTRA_RICH_TEXT";
     private WebView webView;
     @Override

@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui;
+package com.tourcoo.training.ui.feedback;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +8,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -20,17 +22,18 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
+import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.log.TourCooLogUtil;
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
 import com.tourcoo.training.core.retrofit.UploadProgressBody;
 import com.tourcoo.training.core.retrofit.UploadRequestListener;
 import com.tourcoo.training.core.retrofit.repository.ApiRepository;
-import com.tourcoo.training.core.util.SizeUtil;
+import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
-import com.tourcoo.training.core.widget.navigation.KeyboardHelper;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
-import com.tourcoo.training.ui.feedback.UploadImageAdapter;
-import com.tourcoo.training.utils.TourCooUtil;
+import com.tourcoo.training.entity.feedback.FeedBackEntity;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +41,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -54,6 +58,9 @@ import okhttp3.RequestBody;
  */
 public class FeedbackActivity extends BaseTitleActivity implements View.OnClickListener {
     private UploadImageAdapter uploadImageAdapter;
+    private OptionsPickerView pvCustomOptions;
+    private FeedBackEntity selectReason;
+    private ArrayList<FeedBackEntity> options1Items = new ArrayList<>();
     private TextView tvQuestionType;
     private String currentImagePath;
     private String mImages;
@@ -62,7 +69,6 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
     private List<String> imagePathList = new ArrayList<>();
     private List<String> imageUrlList = new ArrayList<>();
     private List<LocalMedia> selectList = new ArrayList<>();
-    private String[] reasonArray = new String[]{"质量问题", "服务问题", "用户体验问题", "其他问题"};
     private EditText etDetail;
     private Message message;
     private MyHandler mHandler = new MyHandler(this);
@@ -124,29 +130,9 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
         });
     }
 
-    private void showReasonDialog() {
-       /* new ActionSheetDialog.ListIOSBuilder(this)
-                .addItems(reasonArray)
-                .setItemsTextColorResource(R.color.greenCommon)
-                .setBackgroundColor(TourCooUtil.getColor(R.color.whiteCommon))
-                .setCancel("关闭")
-                .setCancelMarginTop(SizeUtil.dp2px(8))
-                .setCancelTextColorResource(R.color.greenCommon)
-                .setOnItemClickListener(mReasonOnItemClickListener)
-                .create()
-//                .setDimAmount(0.6f)
-//                .setAlpha(0.6f)
-                .show();*/
-    }
 
 
-  /*  private ActionSheetDialog.OnItemClickListener mReasonOnItemClickListener = new ActionSheetDialog.OnItemClickListener() {
-        @Override
-        public void onClick(BaseDialog dialog, View itemView, int position) {
-            setTextValue(tvQuestionType, reasonArray[position]);
-            dialog.dismiss();
-        }
-    };*/
+
 
 
     private UploadImageAdapter.OnAddPictureClickListener onAddPicClickListener = new UploadImageAdapter.OnAddPictureClickListener() {
@@ -294,10 +280,10 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvQuestionType:
-//                showTypeDialog();
+                requestFeedbackReasonListAndShow();
                 break;
             case R.id.btnSubmit:
-                if(TextUtils.isEmpty(etDetail.getText().toString())){
+                if (TextUtils.isEmpty(etDetail.getText().toString())) {
                     ToastUtil.show("请输入问题");
                     return;
                 }
@@ -462,6 +448,60 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
                     break;
             }
         }
+    }
+
+
+    private void requestFeedbackReasonListAndShow() {
+        ApiRepository.getInstance().requestFeedbackReasonList().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<List<FeedBackEntity>>>() {
+            @Override
+            public void onSuccessNext(BaseResult<List<FeedBackEntity>> entity) {
+                if (entity == null) {
+                    return;
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    initPickerAndShow(entity.getData()) ;
+                } else {
+                    ToastUtil.show(entity.msg);
+                }
+
+
+            }
+        });
+    }
+
+    private void initPickerAndShow(List<FeedBackEntity> reasonList) {
+        if(reasonList == null){
+            ToastUtil.show("未获取到问题");
+            return;
+        }
+        options1Items.clear();
+        options1Items.addAll(reasonList);
+        pvCustomOptions = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                selectReason = options1Items.get(options1);
+                //todo
+                showSelectReason(selectReason);
+                //关键点 选择年份后重新请求数据
+//                requestStudyData(selectYear + "");
+            }
+        }).setCyclic(false, false, false)
+                .isDialog(false)
+                .setContentTextSize(18)
+                .setLineSpacingMultiplier(2.0f)
+                .setDividerColor(CommonUtil.getColor(R.color.transparent))
+                .setTextColorOut(CommonUtil.getColor(R.color.gray999999))
+                .setTextColorCenter(CommonUtil.getColor(R.color.black333333))
+                .build()
+        ;
+
+        pvCustomOptions.setPicker(options1Items);
+        pvCustomOptions.show();
+        //添加数据
+    }
+
+    private void showSelectReason(FeedBackEntity selectReson) {
+        tvQuestionType.setText(CommonUtil.getNotNullValue(selectReson.getName()));
     }
 
 }

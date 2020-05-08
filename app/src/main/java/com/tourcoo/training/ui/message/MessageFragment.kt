@@ -8,18 +8,11 @@ import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.UiManager
 import com.tourcoo.training.core.base.entity.BasePageResult
-import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseRefreshLoadFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
-import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.message.MessageEntity
-import com.tourcoo.training.entity.order.OrderEntity
-import com.tourcoo.training.ui.order.OrderListFragment
-import com.tourcoo.training.ui.training.RichWebViewActivity
-import com.trello.rxlifecycle3.RxLifecycle
-import com.trello.rxlifecycle3.RxLifecycle.bindUntilEvent
 import com.trello.rxlifecycle3.android.FragmentEvent
 
 /**
@@ -80,7 +73,7 @@ class MessageFragment : BaseRefreshLoadFragment<MessageEntity>() {
     }
 
     private fun skipWebDetail(id: Int) {
-        val intent = Intent(mContext, MessageWebViewActivity::class.java)
+        val intent = Intent(mContext, MessageDetailActivity::class.java)
         intent.putExtra("id", id)
         startActivity(intent)
     }
