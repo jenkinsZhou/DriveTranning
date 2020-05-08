@@ -14,8 +14,8 @@
         android:layout_height="@dimen/dp_7"/>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/orderTabLayout"
-        android:layout_marginEnd="@dimen/dp_12"
-        android:layout_marginStart="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_35"
+        android:layout_marginStart="@dimen/dp_35"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
         app:tabIndicatorColor="@color/blue5087FF"

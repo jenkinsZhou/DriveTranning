@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.message
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -14,6 +15,7 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.message.MessageEntity
 import com.trello.rxlifecycle3.android.FragmentEvent
+import kotlinx.android.synthetic.main.fragment_mine_tab_new.*
 
 /**
  *@description :
@@ -72,19 +74,27 @@ class MessageFragment : BaseRefreshLoadFragment<MessageEntity>() {
         }
     }
 
-    private fun skipWebDetail(id: Int) {
+    private fun skipWebDetail(id: Int, readFlag : Int) {
         val intent = Intent(mContext, MessageDetailActivity::class.java)
         intent.putExtra("id", id)
-        startActivity(intent)
+        intent.putExtra("readFlag", readFlag)
+        startActivityForResult(intent,2014)
     }
 
     private fun initItemClick() {
         adapter!!.setOnItemClickListener { adapter, view, position ->
             var entity = adapter!!.data.get(position) as MessageEntity
-            skipWebDetail(entity.id)
+            skipWebDetail(entity.id,entity.isRead)
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK){
+            mRefreshLayout.autoRefresh()
+        }
+    }
 
 }
 

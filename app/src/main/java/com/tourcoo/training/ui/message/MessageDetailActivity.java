@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.message;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import kotlin.jvm.internal.PackageReference;
+
 import static com.tourcoo.training.ui.home.news.NewsTabFragmentNew.EXTRA_NEWS_BEAN;
 import static com.trello.rxlifecycle3.android.ActivityEvent.DESTROY;
 
@@ -60,6 +63,7 @@ public class MessageDetailActivity extends BaseTitleActivity {
 
     private TextView tvDate;
     private TextView tvTitle;
+    private boolean refreshEnable = true;
 
 
 
@@ -77,6 +81,8 @@ public class MessageDetailActivity extends BaseTitleActivity {
         indicator = findViewById(R.id.indicator);
         indicator = findViewById(R.id.indicator);
         initWebView();
+        //是否需要刷新
+        refreshEnable =   getIntent().getIntExtra("readFlag", -1) == 0;
         requestMessageDetail(getIntent().getIntExtra("id", -1));
     }
 
@@ -127,6 +133,10 @@ public class MessageDetailActivity extends BaseTitleActivity {
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
                     //设置html内容
                     showDetail(entity.getData());
+                    if(refreshEnable){
+                        //沒有阅读过 才需要刷新
+                        setResult(Activity.RESULT_OK);
+                    }
                 } else {
                     ToastUtil.show(entity.getMsg());
                 }
