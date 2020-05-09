@@ -42,7 +42,7 @@ import com.tourcoo.training.ui.setting.SettingActivity
 import com.tourcoo.training.ui.study.StudyDataActivity
 import com.tourcoo.training.ui.study.StudyRecordActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
-import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
+import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
@@ -209,7 +209,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     }
 
     private fun showDialog3() {
-        val dialog = CommitAnswerDialog(mContext)
+        val dialog = ExamCommonDialog(mContext)
         dialog.create().show()
     }
 

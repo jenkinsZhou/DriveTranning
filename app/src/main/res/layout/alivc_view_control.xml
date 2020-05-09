@@ -181,7 +181,7 @@
 
                 <SeekBar
                     android:id="@+id/alivc_info_large_seekbar"
-                    style="@style/alivc_info_seekbar"
+                    style="@style/alivc_info_seekbar_blue"
                     android:layout_toRightOf="@id/alivc_info_large_duration"
                     android:layout_toLeftOf="@id/alivc_info_large_rate_btn"
                     android:layout_centerVertical="true"

@@ -140,4 +140,14 @@ public class TrainingConstant {
      * HTML课件类型
      */
     public static final int MEDIA_TYPE_HTML= 1;
+
+    /**
+     * 当前课程已学习完成
+     */
+    public static final int COURSE_STATUS_FINISH= 1;
+
+    /**
+     * 当前课程未完成
+     */
+    public static final int COURSE_STATUS_NOT_FINISH= 0;
 }

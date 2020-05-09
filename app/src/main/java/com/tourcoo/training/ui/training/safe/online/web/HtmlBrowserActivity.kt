@@ -25,9 +25,11 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.TrainingPlanDetail
+import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
+import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 
@@ -91,8 +93,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         requestPlanDetail()
     }
 
-    override fun onClick(v: View?) {
-    }
+
 
 
     private fun requestPlanDetail() {
@@ -123,6 +124,9 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
+            //todo 弹出是否考试弹窗
+            //延时弹出是否考试弹窗
+          showAcceptExamDialog()
         } else {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
             tvExam.isEnabled = false
@@ -414,7 +418,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             intent.putExtra(EXTRA_COURSE_INFO, course)
             intent.putExtra("url", CommonUtil.getNotNullValue(course.html.url))
         }
-//        var url = course.mediaUrl
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID,trainingPlanID)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
         startActivityForResult(intent, 1001, bundle)
@@ -442,5 +446,42 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         timerResume()
+    }
+
+    /**
+     * 显示参加考试对话框
+     */
+    private fun showAcceptExamDialog(){
+        baseHandler.postDelayed({
+            val dialog = ExamCommonDialog(mContext)
+            dialog.create().setContent("学习完成是否参加考试？").setPositiveButtonListener(View.OnClickListener {
+                //跳转考试
+                skipExamActivity(trainingPlanDetail)
+            }).show()
+        },500)
+
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.tvExam -> {
+                skipExamActivity(trainingPlanDetail)
+            }
+            else -> {
+            }
+        }
+    }
+
+    private fun skipExamActivity(trainingPlanDetail: TrainingPlanDetail?) {
+        if (trainingPlanDetail == null) {
+            ToastUtil.show("未获取到考试信息")
+            return
+        }
+        val intent = Intent(mContext, ExamActivity::class.java)
+        //培训计划id
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
+        //考试题id
+        intent.putExtra(ExamActivity.EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
+        startActivity(intent)
     }
 }

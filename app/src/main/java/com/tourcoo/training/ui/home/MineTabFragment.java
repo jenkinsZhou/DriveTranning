@@ -36,7 +36,7 @@ import com.tourcoo.training.ui.certificate.MyCertificationActivity;
 import com.tourcoo.training.ui.exam.ExamActivity;
 import com.tourcoo.training.ui.face.DialogFaceRecognitionActivity;
 import com.tourcoo.training.ui.pay.BuyNowActivity;
-import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog;
+import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog;
 import com.tourcoo.training.widget.dialog.medal.MedalDialog;
 import com.tourcoo.training.widget.dialog.pay.MultiplePayDialog;
 import com.tourcoo.training.widget.dialog.training.LocalTrainingAlert;
@@ -275,7 +275,7 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
     }
 
     private void showDialog3() {
-        CommitAnswerDialog dialog = new CommitAnswerDialog(mContext);
+        ExamCommonDialog dialog = new ExamCommonDialog(mContext);
         dialog.create().show();
     }
 

@@ -21,13 +21,14 @@ import com.tourcoo.training.R;
  * @date 2020年04月07日11:16
  * @Email: 971613168@qq.com
  */
-public class CommitAnswerDialog {
+public class ExamCommonDialog {
 
     private Context mContext;
     private Dialog dialog;
     private TextView tvPositive;
+    private TextView tvContent;
 
-    public CommitAnswerDialog(Context context) {
+    public ExamCommonDialog(Context context) {
         this.mContext = context;
         WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         if (windowManager == null) {
@@ -37,7 +38,7 @@ public class CommitAnswerDialog {
         windowManager.getDefaultDisplay().getMetrics(metrics);
     }
 
-    public CommitAnswerDialog create() {
+    public ExamCommonDialog create() {
         // 获取Dialog布局
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_exam_answer_commit, null);
         // 设置Dialog最小宽度为屏幕宽度
@@ -46,6 +47,7 @@ public class CommitAnswerDialog {
         dialog = new Dialog(mContext, R.style.AlertDialogStyle);
         dialog.setContentView(view);
         tvPositive = view.findViewById(R.id.tvPositive);
+        tvContent = view.findViewById(R.id.tvContent);
         view.findViewById(R.id.tvNegative).setOnClickListener(v -> dismiss());
         Window window = dialog.getWindow();
         if (window != null) {
@@ -87,12 +89,18 @@ public class CommitAnswerDialog {
         }
     }
 
-    public CommitAnswerDialog setPositiveButtonListener(View.OnClickListener onClickListener) {
+    public ExamCommonDialog setPositiveButtonListener(View.OnClickListener onClickListener) {
         if (tvPositive != null) {
             tvPositive.setOnClickListener(onClickListener);
         }
         return this;
     }
 
+    public ExamCommonDialog setContent(String content) {
+        if (tvContent != null) {
+            tvContent.setText(content);
+        }
+        return this;
+    }
 
 }

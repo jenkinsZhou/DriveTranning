@@ -59,6 +59,7 @@
 
 
 
+        <!--biz_audio_progress_second-->
         <com.tencent.liteav.demo.play.view.TCPointSeekBar
             android:id="@+id/seekbar_progress"
             android:layout_width="0.0dip"
@@ -67,12 +68,12 @@
             android:layout_marginLeft="5.0dip"
             android:layout_marginRight="5.0dip"
             android:layout_weight="1.0"
-            app:psb_backgroundColor="@color/biz_audio_progress_second"
+            app:psb_backgroundColor="@color/white"
             app:psb_max="100"
-            app:psb_thumbBackground="@drawable/ic_vod_thumb"
+            app:psb_thumbBackground="@mipmap/ic_bg_video_seek_bar"
             app:psb_progress="0"
             app:psb_progressHeight="2dp"
-            app:psb_progressColor="#FF584C"/>
+            app:psb_progressColor="#5087FF"/>
 
         <!--总时长-->
         <TextView

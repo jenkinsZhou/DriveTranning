@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.text.TextUtils
 import android.view.View
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -22,7 +21,6 @@ import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.ExamConstant.*
-import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -34,7 +32,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.exam.*
 import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
-import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
+import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
 import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -277,7 +275,7 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private fun doCommitExam() {
 
-        val dialog = CommitAnswerDialog(mContext)
+        val dialog = ExamCommonDialog(mContext)
         dialog.create().show()
         dialog.setPositiveButtonListener(View.OnClickListener {
             isSubmit = true

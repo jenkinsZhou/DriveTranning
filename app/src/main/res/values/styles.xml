@@ -300,9 +300,9 @@
     </style>
 
     <style name="alivc_info_seekbar_blue" parent="alivc_info_seekbar">
-        <item name="android:progressDrawable">@drawable/alivc_info_seekbar_bg_blue</item>
-        <item name="android:indeterminateDrawable">@drawable/alivc_info_seekbar_bg_blue</item>
-        <item name="android:thumb">@drawable/alivc_seekbar_thumb_blue</item>
+        <item name="android:progressDrawable">@color/white</item>
+        <item name="android:indeterminateDrawable">@color/blue5087FF</item>
+        <item name="android:thumb">@mipmap/ic_video_seek_bar</item>
     </style>
 
     <style name="alivc_info_seekbar_green" parent="alivc_info_seekbar">

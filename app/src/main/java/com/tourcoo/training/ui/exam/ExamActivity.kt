@@ -33,7 +33,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.exam.*
 import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
-import com.tourcoo.training.widget.dialog.exam.CommitAnswerDialog
+import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
 import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -276,7 +276,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private fun doCommitExam() {
 
-        val dialog = CommitAnswerDialog(mContext)
+        val dialog = ExamCommonDialog(mContext)
         dialog.create().show()
         dialog.setPositiveButtonListener(View.OnClickListener {
             isSubmit = true
