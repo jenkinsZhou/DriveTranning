@@ -44,6 +44,9 @@ public class Course implements Parcelable {
     private int Duration;
     private String CoverURL;
     private String MediaUrl;
+    /**
+     * 0表示视频课件 1表示网页课件
+     */
     private int MediaType;
     private int Level;
     private String subjectName;
@@ -55,7 +58,7 @@ public class Course implements Parcelable {
     private List<VideoStream> Streams;
     private int currentPlayStatus;
     private VideoStream currentVideoStream;
-
+    private HtmlInfo Html;
     public int getCurrentPlayStatus() {
         return currentPlayStatus;
     }
@@ -217,6 +220,15 @@ public class Course implements Parcelable {
     }
 
 
+    public HtmlInfo getHtml() {
+        return Html;
+    }
+
+    public void setHtml(HtmlInfo html) {
+        Html = html;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -244,6 +256,7 @@ public class Course implements Parcelable {
         dest.writeTypedList(this.Streams);
         dest.writeInt(this.currentPlayStatus);
         dest.writeParcelable(this.currentVideoStream, flags);
+        dest.writeParcelable(this.Html, flags);
     }
 
     public Course() {
@@ -270,9 +283,10 @@ public class Course implements Parcelable {
         this.Streams = in.createTypedArrayList(VideoStream.CREATOR);
         this.currentPlayStatus = in.readInt();
         this.currentVideoStream = in.readParcelable(VideoStream.class.getClassLoader());
+        this.Html = in.readParcelable(HtmlInfo.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Course> CREATOR = new Parcelable.Creator<Course>() {
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
         @Override
         public Course createFromParcel(Parcel source) {
             return new Course(source);

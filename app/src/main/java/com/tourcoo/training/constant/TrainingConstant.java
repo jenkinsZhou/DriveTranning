@@ -9,6 +9,9 @@ package com.tourcoo.training.constant;
  */
 public class TrainingConstant {
     public static final String EXTRA_TRAINING_PLAN_ID = "EXTRA_TRAINING_PLAN_ID";
+    /**
+     * 当前课程key
+     */
     public static final String EXTRA_COURSE_INFO = "EXTRA_COURSE_INFO";
     public static final String EXTRA_KEY_QR_SCAN_RESULT = "EXTRA_KEY_QR_SCAN_RESULT";
     public static final String BASE_SOCKET_URL_ = "wss://api.ggjtaq.com/v1.0/ws/training?token=";
@@ -127,4 +130,14 @@ public class TrainingConstant {
      * 非加密课程(可能有html)
      */
     public static final int TYPE_COURSE_OTHER = 4;
+
+    /**
+     * 视频课件类型
+     */
+    public static final int MEDIA_TYPE_VIDEO = 0;
+
+    /**
+     * HTML课件类型
+     */
+    public static final int MEDIA_TYPE_HTML= 1;
 }

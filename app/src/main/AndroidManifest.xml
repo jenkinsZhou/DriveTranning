@@ -122,7 +122,7 @@
         <activity android:name=".ui.training.professional.ProfessionalTrainTwoTypeActivity" />
         <activity android:name=".ui.training.safe.online.web.TrainingWebViewActivity" />
         <activity android:name=".ui.training.safe.online.web.HtmlBrowserActivity" />
-        <activity android:name=".ui.home.news.NewsTabFragmentNew" />
+        <activity android:name=".ui.home.news.NewsTabFragment" />
         <activity android:name=".ui.training.professional.ProfessionalSelectActivity" />
         <activity android:name=".ui.training.professional.ProfessionalExamSelectActivity" />
         <activity android:name=".ui.exam.ProfessionalExamActivity" />
@@ -147,6 +147,11 @@
         <activity android:name=".ui.message.MessageDetailActivity" />
         <activity android:name=".ui.message.MessageWebViewActivityOld" />
         <activity android:name=".ui.message.MessageDetailActivity" />
+        <activity android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            />
+        <activity android:name=".ui.training.safe.online.web.PlayHtmlWebActivity" />
     </application>
 
 </manifest>

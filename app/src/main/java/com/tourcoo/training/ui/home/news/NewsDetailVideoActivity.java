@@ -5,11 +5,8 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,7 +38,7 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.news.NewsDetailEntity;
 import com.tourcoo.training.entity.news.NewsEntity;
-import com.tourcoo.training.ui.training.safe.online.detail.common.CommonDetailContract;
+import com.tourcoo.training.entity.pay.WxShareEvent;
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
 import com.tourcoo.training.widget.dialog.share.ShareEntity;
 import com.tourcoo.training.widget.web.HeaderScrollHelper;
@@ -50,11 +47,15 @@ import com.tourcoo.training.widget.web.JavaScriptLog;
 import com.tourcoo.training.widget.web.RichWebView;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import static com.tourcoo.training.constant.TrainingConstant.APP_ID;
-import static com.tourcoo.training.ui.home.news.NewsTabFragmentNew.EXTRA_NEWS_BEAN;
+import static com.tourcoo.training.ui.home.news.NewsTabFragment.EXTRA_NEWS_BEAN;
 
 /**
  * @author :JenkinsZhou
@@ -82,6 +83,9 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
 
     private void initWebView() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         api = WXAPIFactory.createWXAPI(mContext, APP_ID);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new NewsMultipleAdapter(new ArrayList<>());
@@ -114,6 +118,9 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
             ToastUtil.show("未获取到新闻详情");
@@ -165,6 +172,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             webView.destroy();
             webView = null;
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
 
     }
@@ -180,7 +188,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
     private void loadRecommend(NewsDetailEntity detailEntity) {
         adapter.setNewData(detailEntity.getRecommendList());
-        TourCooLogUtil.d("富文本:"+detailEntity.getContent());
+        TourCooLogUtil.d("富文本:" + detailEntity.getContent());
         webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
     }
 
@@ -328,8 +336,6 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     }
 
 
-
-
     private void showShareDialog() {
         ShareEntity wx = new ShareEntity("微信", R.mipmap.ic_share_type_wx);
         ShareEntity pyq = new ShareEntity("朋友圈", R.mipmap.ic_share_type_friend);
@@ -405,4 +411,26 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         return result;
     }
 
+    /**
+     * 收到消息
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWxPayCallbackEvent(WxShareEvent event) {
+        if (event == null) {
+            return;
+        }
+        if (event.isShareSuccess()) {
+            requestShareSuccess(mNewsEntity.getID());
+        }
+    }
+
+    private void requestShareSuccess(String newsId) {
+        ApiRepository.getInstance().requestShareSuccess(newsId + "").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
+            @Override
+            public void onSuccessNext(BaseResult entity) {
+            }
+        });
+    }
 }

@@ -1,22 +1,11 @@
 package com.tourcoo.training.ui.message;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coolindicator.sdk.CoolIndicator;
 import com.tourcoo.training.R;
-import com.tourcoo.training.adapter.news.NewsMultipleAdapter;
 import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
 import com.tourcoo.training.core.base.entity.BaseResult;
@@ -26,25 +15,9 @@ import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.message.MessageDetail;
-import com.tourcoo.training.entity.news.NewsDetailEntity;
-import com.tourcoo.training.entity.news.NewsEntity;
-import com.tourcoo.training.ui.home.news.NewsDetailHtmlActivity;
-import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
-import com.tourcoo.training.widget.dialog.share.ShareEntity;
-import com.tourcoo.training.widget.web.HeaderScrollHelper;
-import com.tourcoo.training.widget.web.HeaderViewPager;
 import com.tourcoo.training.widget.web.JavaScriptLog;
 import com.tourcoo.training.widget.web.RichWebView;
-import com.trello.rxlifecycle3.android.ActivityEvent;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
-import kotlin.jvm.internal.PackageReference;
-
-import static com.tourcoo.training.ui.home.news.NewsTabFragmentNew.EXTRA_NEWS_BEAN;
 import static com.trello.rxlifecycle3.android.ActivityEvent.DESTROY;
 
 /**

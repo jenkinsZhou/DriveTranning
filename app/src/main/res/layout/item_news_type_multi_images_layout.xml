@@ -47,15 +47,27 @@
             android:layout_gravity="center_vertical"
             android:textColor="@color/gray999999"
             android:textSize="@dimen/sp_13" />
-        <TextView
-            android:id="@+id/tvShareCount"
-            android:layout_gravity="center_vertical"
-                android:text="2345"
-            android:drawableStart="@mipmap/ic_share_small"
-            android:drawablePadding="@dimen/dp_3"
-            android:textSize="@dimen/sp_13"
+        <LinearLayout
+            android:id="@+id/llShare"
+            android:padding="@dimen/dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/ic_share_small" />
+
+            <TextView
+                android:id="@+id/tvShareCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/dp_3"
+                android:text="2545" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvCommentCount"

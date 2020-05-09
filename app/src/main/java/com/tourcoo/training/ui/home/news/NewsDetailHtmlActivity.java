@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,11 +12,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.blankj.utilcode.util.ImageUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coolindicator.sdk.CoolIndicator;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -38,6 +33,7 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.news.NewsDetailEntity;
 import com.tourcoo.training.entity.news.NewsEntity;
+import com.tourcoo.training.entity.pay.WxShareEvent;
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
 import com.tourcoo.training.widget.dialog.share.ShareEntity;
 import com.tourcoo.training.widget.web.HeaderScrollHelper;
@@ -46,11 +42,15 @@ import com.tourcoo.training.widget.web.JavaScriptLog;
 import com.tourcoo.training.widget.web.RichWebView;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import static com.tourcoo.training.constant.TrainingConstant.APP_ID;
-import static com.tourcoo.training.ui.home.news.NewsTabFragmentNew.EXTRA_NEWS_BEAN;
+import static com.tourcoo.training.ui.home.news.NewsTabFragment.EXTRA_NEWS_BEAN;
 
 /**
  * @author :JenkinsZhou
@@ -85,6 +85,9 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
         api = WXAPIFactory.createWXAPI(mContext, APP_ID);
         tvNewsLookCount = findViewById(R.id.tvNewsLookCount);
         tvNewsLikeCount = findViewById(R.id.tvNewsLikeCount);
@@ -162,6 +165,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
             webView.destroy();
             webView = null;
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
 
     }
@@ -320,4 +324,28 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         return result;
     }
 
+
+
+    /**
+     * 收到消息
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWxPayCallbackEvent(WxShareEvent event) {
+        if (event == null) {
+            return;
+        }
+        if (event.isShareSuccess()) {
+            requestShareSuccess(mNewsEntity.getID());
+        }
+    }
+
+    private void requestShareSuccess(String newsId) {
+        ApiRepository.getInstance().requestShareSuccess(newsId + "").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
+            @Override
+            public void onSuccessNext(BaseResult entity) {
+            }
+        });
+    }
 }

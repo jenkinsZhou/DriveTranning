@@ -40,10 +40,11 @@ public class NewsMultipleAdapter extends BaseMultiItemQuickAdapter<NewsEntity, B
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, NewsEntity item) {
+        helper.addOnClickListener(R.id.llShare);
         switch (helper.getItemViewType()) {
             case NEWS_TYPE_IMAGE_ONE:
                 helper.setText(R.id.tvTime,CommonUtil.getNotNullValue(item.getPublishTime()));
-                helper.setGone(R.id.ivFlagTop,item.getMountainTop() == 0);
+                helper.setGone(R.id.ivFlagTop,item.getMountainTop() == 1);
                 helper.setText(R.id.tvShareCount,item.getSharedNum()+"");
                 helper.setText(R.id.tvCommentCount,item.getRecommendationTotal()+"");
                 helper.setText(R.id.tvNewsTitle, CommonUtil.getNotNullValue(item.getTitle()));

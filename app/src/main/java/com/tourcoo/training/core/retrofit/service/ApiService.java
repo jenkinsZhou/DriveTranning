@@ -436,4 +436,10 @@ public interface ApiService {
      */
     @POST("v1.0/open/utils/uploads")
     Call<BaseResult<List<UploadResultEntity>>> uploadFiles(@Body RequestBody files);
+
+
+    @Headers({HEADER_NOT_SKIP_LOGIN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/open/news/share-success")
+    Observable<BaseResult> requestShareSuccess(@Body Map<String, Object> map);
+
 }

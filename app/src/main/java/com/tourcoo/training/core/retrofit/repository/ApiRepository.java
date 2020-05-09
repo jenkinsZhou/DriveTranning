@@ -533,4 +533,16 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestFeedbackCommit(params).retryWhen(new RetryWhen()));
     }
 
+
+    /**
+     * 分享成功接口
+     * @param id
+     * @return
+     */
+    public Observable<BaseResult> requestShareSuccess(String id) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("id", id);
+        return CommonTransformer.switchSchedulers(getApiService().requestShareSuccess(params).retryWhen(new RetryWhen()));
+    }
+
 }

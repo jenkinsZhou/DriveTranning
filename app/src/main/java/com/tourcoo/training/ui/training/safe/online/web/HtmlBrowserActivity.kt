@@ -10,11 +10,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
+import com.tencent.liteav.demo.play.SuperPlayerConst
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
-import com.tourcoo.training.constant.TrainingConstant.EXTRA_COURSE_INFO
-import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
+import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -88,19 +88,6 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         tvExam.setOnClickListener(this)
         mCourseList = ArrayList()
         mCourseHashMap = HashMap()
-        //增加封面
-//        val imageView = ImageView(this)
-//        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-//        imageView.setImageResource(R.drawable.img_training_free_video)
-
-        /*tvTest.setOnClickListener {
-            if (mTitleBar.visibility != View.GONE) {
-                mTitleBar.visibility = View.GONE
-            } else {
-                mTitleBar.visibility = View.VISIBLE
-            }
-        }*/
-
         requestPlanDetail()
     }
 
@@ -129,7 +116,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         faceVerifyInterval = detail.faceVerifyInterval
         //不需要初始化计时器 因此屏蔽
 //        initTimerAndStart()
-        if(detail.requireExam == 1){
+        if (detail.requireExam == 1) {
             tvExam.visibility = View.VISIBLE
         }
 
@@ -322,6 +309,8 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             TencentPlayVideoActivity.COURSE_STATUS_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_finish)
                 setViewGone(tvPlanDesc, false)
+                //todo 已学完的课程 暂时允许点击
+                setCourseInfoClick(view, course)
             }
             TencentPlayVideoActivity.COURSE_STATUS_PLAYING -> {
                 imageView.setImageResource(R.mipmap.ic_eyes)
@@ -331,8 +320,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
                 //只有当前正在浏览的课件才允许点击
                 setCourseInfoClick(view, course)
             }
-            else -> {
-            }
+
         }
 
     }
@@ -342,19 +330,21 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
      * 跳转浏览网页课件
      */
     private fun loadWebAndSkipBrowser(course: Course?) {
-        if (course == null || course.streams == null && course.streams.size == 0) {
+        if (course == null) {
             return
         }
         when (course.mediaType) {
             //视频
-            0 -> {
-                //todo 模拟跳转
-                skipWebView(course)
+            MEDIA_TYPE_VIDEO -> {
+                ToastUtil.show("当前课程不是网页类型")
             }
-            else -> {
+            MEDIA_TYPE_HTML -> {
                 //外链URL
                 //跳转web链接
                 skipWebView(course)
+            }
+            else -> {
+                ToastUtil.show("未找到对应课程类型")
             }
         }
     }
@@ -388,21 +378,20 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             tvPlanTitle.text = getNotNullValue(course.name)
             llPlanContentView.addView(contentView)
             contentView.setPadding(SizeUtil.dp2px(course.level * 10f), 0, 0, 0)
-            if (course.streams != null) {
-                val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
-                //播放状态
-                val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
-                val endTime = TimeUtil.secondToDate(course.progress.toLong(), "mm:ss")
-                tvPlanDesc.text = getNotNullValue("00:00学习到$endTime")
-                tvPlanDesc.textSize = 12f
-                setViewGone(tvPlanDesc, true)
-                setViewGone(ivCourseStatus, true)
-                //关键
-                mCourseHashMap!!.put(course, contentView)
-                mCourseList!!.add(course)
-            }
-
+            //关键
+            val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
+            //播放状态
+            val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
+            val endTime = TimeUtil.secondToDate(course.progress.toLong(), "mm:ss")
+            tvPlanDesc.text = getNotNullValue("00:00学习到$endTime")
+            tvPlanDesc.textSize = 12f
+            setViewGone(tvPlanDesc, true)
+            setViewGone(ivCourseStatus, true)
+            mCourseHashMap!!.put(course, contentView)
+            mCourseList!!.add(course)
         }
+
+
     }
 
     /**
@@ -419,16 +408,15 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
     private fun skipWebView(course: Course) {
         //缓存当前课件
         WebCourseTempHelper.getInstance().course = course
-        val intent = Intent(this, TrainingWebViewActivity::class.java)
+        val intent = Intent(this, PlayHtmlWebActivity::class.java)
         val bundle = Bundle()
-        var url = course.mediaUrl
+        if (course.html != null) {
+            intent.putExtra(EXTRA_COURSE_INFO, course)
+            intent.putExtra("url", CommonUtil.getNotNullValue(course.html.url))
+        }
+//        var url = course.mediaUrl
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-//        if (isSingle) CommonUtil.ACTIVITY_SINGLE_FLAG else
-        //
-        url = "https://www.baidu.com"
-        intent.putExtra("url", CommonUtil.getNotNullValue(url))
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
-//        bundle.putParcelable(EXTRA_COURSE_INFO, course)
         startActivityForResult(intent, 1001, bundle)
     }
 
@@ -438,5 +426,21 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             //刷新课件
             requestPlanDetail()
         }
+    }
+
+    override fun onDestroy() {
+        if (smartVideoPlayer != null) {
+            // 释放
+            smartVideoPlayer.release()
+            if (smartVideoPlayer.playMode != SuperPlayerConst.PLAYMODE_FLOAT) {
+                smartVideoPlayer.resetPlayer()
+            }
+        }
+        super.onDestroy()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        timerResume()
     }
 }

@@ -1,7 +1,6 @@
 package com.tourcoo.training.ui;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -18,9 +17,8 @@ import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity;
 import com.tourcoo.training.ui.home.MineTabFragmentNew;
-import com.tourcoo.training.ui.home.NewsTabFragmentOld;
 import com.tourcoo.training.ui.home.StudyTabFragment;
-import com.tourcoo.training.ui.home.news.NewsTabFragmentNew;
+import com.tourcoo.training.ui.home.news.NewsTabFragment;
 import com.tourcoo.training.widget.dialog.IosAlertDialog;
 
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     @Override
     public List<FrameTabEntity> getTabList() {
         mTabEntities = new ArrayList<>();
-        mTabEntities.add(new FrameTabEntity("发现", R.drawable.tab_icon_fx_nol, R.drawable.tab_icon_fx_sel, NewsTabFragmentNew.Companion.newInstance()));
+        mTabEntities.add(new FrameTabEntity("发现", R.drawable.tab_icon_fx_nol, R.drawable.tab_icon_fx_sel, NewsTabFragment.Companion.newInstance()));
         mTabEntities.add(new FrameTabEntity("学习", R.drawable.tab_icon_xx_nol, R.drawable.tab_icon_xx_sel, StudyTabFragment.Companion.newInstance()));
         mTabEntities.add(new FrameTabEntity("我的", R.drawable.tab_icon_wd_nol, R.drawable.tab_icon_wd_sel, MineTabFragmentNew.Companion.newInstance()));
         return mTabEntities;
