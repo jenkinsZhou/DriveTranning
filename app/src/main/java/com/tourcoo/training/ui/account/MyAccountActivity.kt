@@ -16,8 +16,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.fastjson.JSON
 import com.alipay.sdk.app.PayTask
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.gson.Gson
@@ -34,6 +32,7 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.util.ToastUtil
@@ -41,12 +40,17 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.PayInfo
 import com.tourcoo.training.entity.account.PayResult
 import com.tourcoo.training.entity.account.RechargeEntity
-import com.tourcoo.training.entity.account.WxPayModel
+import com.tourcoo.training.entity.account.UserInfoEvent
+import com.tourcoo.training.entity.pay.WxPayEvent
+import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.recharge.CoinInfo
 import com.tourcoo.training.entity.recharge.CoinPackageEntity
 import com.tourcoo.training.widget.dialog.pay.BottomPayDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_my_account.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 /**
@@ -74,7 +78,10 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        rvRecharge.layoutManager = GridLayoutManager(this, 3)
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this)
+        }
+        rvRecharge.layoutManager = GridLayoutManager(mContext, 3)
         tvConfirmPay.setOnClickListener(this)
         requestCoinPackage()
     }
@@ -258,13 +265,13 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
 
-        ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, coinInfo.price, "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<PayInfo>>() {
+        ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, ""+CommonUtil.doubleTransStringZhen(coinInfo.price), "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<PayInfo>>() {
             override fun onSuccessNext(entity: BaseResult<PayInfo>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     if (payDialog!!.payType == 1) {
                         payByAlipay(entity.data.thirdPayInfo.toString())
                     } else {
-                        payByWx(entity.data.thirdPayInfo,entity.data)
+                        payByWx(entity.data.thirdPayInfo, entity.data)
                     }
                 } else {
                     ToastUtil.show(entity?.msg)
@@ -294,7 +301,8 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                     /**
                      * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                      */
-                    val resultInfo = payResult.getResult()// 同步返回需要验证的信息
+                    // 同步返回需要验证的信息
+                    val resultInfo = payResult.getResult()
                     val resultStatus = payResult.getResultStatus()
 
                     TourCooLogUtil.d(resultInfo)
@@ -303,9 +311,11 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         ToastUtil.showSuccess("支付成功")
+                        //刷新学币
+                        requestCoinPackage()
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        ToastUtil.showFailed(payResult.memo)
+                        ToastUtil.show(payResult.memo)
                     }
                 }
                 else -> {
@@ -334,9 +344,12 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun payByWx(orderInfo: Any,patInfo : PayInfo) {
-        val wxPayModelStr= JSON.toJSONString(orderInfo)
-      val wxPayModel =      JSON.parseObject(wxPayModelStr,WxPayModel::class.java)
+    private fun payByWx(orderInfo: Any, patInfo: PayInfo) {
+        val wxPayModelStr = Gson().toJson(orderInfo)
+//        JSON.parseObject(wxPayModelStr,WxPayModel::class.java)
+        val wxPayModel = Gson().fromJson<WxPayModel>(wxPayModelStr, WxPayModel::class.java)
+        TourCooLogUtil.d("微信支付", wxPayModel)
+        TourCooLogUtil.i("微信支付", wxPayModelStr)
         if (wxPayModel == null) {
             ToastUtil.show("微信支付数据异常")
             return
@@ -351,12 +364,12 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         }
         val request = PayReq()
         request.appId = wxPayModel.appid
-        request.partnerId = wxPayModel.mch_id
-        request.prepayId = wxPayModel.prepay_id
+        request.partnerId = wxPayModel.partnerId
+        request.prepayId = wxPayModel.prepayid
         request.packageValue = "Sign=WXPay"
-        request.nonceStr = wxPayModel.nonce_str
+        request.nonceStr = wxPayModel.noncestr
         request.sign = wxPayModel.sign
-        request.timeStamp = patInfo.timeStamp
+        request.timeStamp = "" + wxPayModel.timestamp
         TourCooLogUtil.d("微信支付参数", request)
         wxapi.sendReq(request)
 
@@ -374,4 +387,28 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         return null
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    /**
+     * 收到消息
+     *
+     * @param payEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onWxPayCallbackEvent(payEvent: WxPayEvent?) {
+        if (payEvent == null) {
+            return
+        }
+        if (payEvent.paySuccess) {
+            ToastUtil.showSuccess("支付成功")
+            requestCoinPackage()
+        } else {
+            ToastUtil.show("支付未完成")
+        }
+    }
 }

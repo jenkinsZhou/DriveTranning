@@ -23,8 +23,7 @@
         <ImageView
             android:id="@+id/ivVideoCover"
             android:layout_width="match_parent"
-            android:minHeight="@dimen/dp_180"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/dp_185" />
         <ImageView
            android:layout_gravity="center"
             android:src="@mipmap/ic_news_video_play"

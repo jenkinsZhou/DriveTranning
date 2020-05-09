@@ -10,7 +10,7 @@ import com.tourcoo.training.core.util.CommonUtil;
  * @date 2020年05月08日23:06
  * @Email: 971613168@qq.com
  */
-public class FeedBackEntity implements IPickerViewData {
+public class FeedReasonEntity implements IPickerViewData {
 
 
     /**

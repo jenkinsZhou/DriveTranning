@@ -16,7 +16,7 @@ import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
-import com.tourcoo.training.entity.feedback.FeedBackEntity;
+import com.tourcoo.training.entity.feedback.FeedReasonEntity;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.message.MessageDetail;
 import com.tourcoo.training.entity.message.MessageEntity;
@@ -37,6 +37,7 @@ import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
 import com.tourcoo.training.entity.training.ProfessionalTwoTypeModel;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 import com.tourcoo.training.entity.training.TwoTypeModel;
+import com.tourcoo.training.entity.uploads.UploadResultEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -356,7 +357,7 @@ public interface ApiService {
      */
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN})
     @POST("v1.0/open/news/like-news")
-    Observable<BaseResult> requestNewsLike();
+    Observable<BaseResult> requestNewsLike(@Body Map<String, Object> map);
 
 
     /**
@@ -409,9 +410,30 @@ public interface ApiService {
     Observable<BaseResult<MessageDetail>> requestMessageDetail(@Body Map<String, Object> map);
 
 
-
+    /**
+     * 问题反馈原因选项
+     * @return
+     */
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/feedback/list_questions_feedback")
-    Observable<BaseResult<List<FeedBackEntity>>> requestFeedbackReasonList();
+    Observable<BaseResult<List<FeedReasonEntity>>> requestFeedbackReasonList();
 
+    /**
+     * 提交问题反馈
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/feedback/add_questions_feedback")
+    Observable<BaseResult> requestFeedbackCommit(@Body Map<String, Object> map);
+
+
+
+    /**
+     * 多个文件上传
+     *
+     * @param files
+     * @return
+     */
+    @POST("v1.0/open/utils/uploads")
+    Call<BaseResult<List<UploadResultEntity>>> uploadFiles(@Body RequestBody files);
 }

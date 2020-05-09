@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +34,11 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
-import com.tourcoo.training.entity.feedback.FeedBackEntity;
+import com.tourcoo.training.entity.account.AccountHelper;
+import com.tourcoo.training.entity.feedback.FeedReasonEntity;
+import com.tourcoo.training.entity.feedback.FeedbackCommitEntity;
+import com.tourcoo.training.entity.uploads.UploadResultEntity;
+import com.tourcoo.training.widget.aliplayer.utils.Common;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import org.apache.commons.lang.StringUtils;
@@ -41,12 +46,16 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.tourcoo.training.config.RequestConfig.CODE_REQUEST_SUCCESS;
 
 
 /**
@@ -59,8 +68,8 @@ import okhttp3.RequestBody;
 public class FeedbackActivity extends BaseTitleActivity implements View.OnClickListener {
     private UploadImageAdapter uploadImageAdapter;
     private OptionsPickerView pvCustomOptions;
-    private FeedBackEntity selectReason;
-    private ArrayList<FeedBackEntity> options1Items = new ArrayList<>();
+    private FeedReasonEntity selectReason;
+    private ArrayList<FeedReasonEntity> options1Items = new ArrayList<>();
     private TextView tvQuestionType;
     private String currentImagePath;
     private String mImages;
@@ -71,6 +80,7 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
     private List<LocalMedia> selectList = new ArrayList<>();
     private EditText etDetail;
     private Message message;
+    private EditText etPhone;
     private MyHandler mHandler = new MyHandler(this);
 
     @Override
@@ -81,6 +91,7 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
     @Override
     public void initView(Bundle savedInstanceState) {
         tvQuestionType = findViewById(R.id.tvQuestionType);
+        etPhone = findViewById(R.id.etPhone);
         mRecyclerView = findViewById(R.id.rvUploadImage);
         tvQuestionType.setOnClickListener(this);
         etDetail = findViewById(R.id.etDetail);
@@ -97,7 +108,6 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
         uploadImageAdapter.setOnEmptyCallBack(new UploadImageAdapter.OnEmptyCallBack() {
             @Override
             public void empty() {
-//                showAddIcon();
             }
         });
         mRecyclerView.setAdapter(uploadImageAdapter);
@@ -129,10 +139,6 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
             }
         });
     }
-
-
-
-
 
 
     private UploadImageAdapter.OnAddPictureClickListener onAddPicClickListener = new UploadImageAdapter.OnAddPictureClickListener() {
@@ -191,13 +197,12 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
 
 
     /**
-     * 上传图片
+     * 单个图片图片上传
      *
      * @param imageList
      */
-    private void uploadImage(List<String> imageList) {
-        String defaultValue = "点击选择";
-        if (defaultValue.equals(getTextValue(tvQuestionType))) {
+    private void uploadImageSingle(List<String> imageList) {
+        if (selectReason == null) {
             ToastUtil.show("请选择问题类型");
             return;
         }
@@ -239,17 +244,18 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
             }
         });
         showHudProgressDialog(imageList.size());
-       /* ApiRepository.getInstance().getApiService().uploadFiles(uploadProgressBody).enqueue(new Callback<BaseEntity<UploadEntity>>() {
+        ApiRepository.getInstance().getApiService().uploadFiles(uploadProgressBody).enqueue(new Callback<BaseResult<List<UploadResultEntity>>>() {
             @Override
-            public void onResponse(Call<BaseEntity<UploadEntity>> call, Response<BaseEntity<UploadEntity>> response) {
+            public void onResponse(Call<BaseResult<List<UploadResultEntity>>> call, Response<BaseResult<List<UploadResultEntity>>> response) {
                 closeHudProgressDialog();
-                BaseEntity<UploadEntity> entity = response.body();
+                BaseResult<List<UploadResultEntity>> entity = response.body();
                 if (entity != null) {
-                    if (entity.code == CODE_REQUEST_SUCCESS && entity.data != null) {
+                    if (entity.code == CODE_REQUEST_SUCCESS && entity.getData() != null && !entity.getData().isEmpty()) {
                         //todo
-                        TourCooLogUtil.i("图片URL：", entity.data.getUrl());
+                        String resultImageUrl = entity.data.get(0).getUrl();
+                        TourCooLogUtil.i("图片URL：", resultImageUrl);
                         //上传图片成功，将图片URL添加到集合
-                        imageUrlList.add(entity.data.getUrl());
+                        imageUrlList.add(resultImageUrl);
                         if (imageList.isEmpty()) {
                             //图片全部上传完毕
                             ToastUtil.showSuccess("图片全部上传完毕");
@@ -261,7 +267,7 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
                             TourCooLogUtil.i(TAG, TAG + "已经移除当前图片:" + currentImagePath);
                         }
                         //否则递归调用自己
-                        uploadImage(imageList);
+                        uploadImageSingle(imageList);
                     } else {
                         ToastUtil.showFailed(entity.msg);
                     }
@@ -269,11 +275,13 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
             }
 
             @Override
-            public void onFailure(Call<BaseEntity<UploadEntity>> call, Throwable t) {
+            public void onFailure(Call<BaseResult<List<UploadResultEntity>>> call, Throwable t) {
                 Toast.makeText(mContext, "图片上传失败，稍后重试", Toast.LENGTH_SHORT).show();
                 closeHudProgressDialog();
             }
-        });*/
+
+
+        });
     }
 
     @Override
@@ -287,17 +295,22 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
                     ToastUtil.show("请输入问题");
                     return;
                 }
+                if (selectReason == null) {
+                    ToastUtil.show("请选择问题类型");
+                    return;
+                }
                 showLoading("正在上传...");
                 baseHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         closeLoading();
+                        uploadImage(imagePathList);
                     }
-                }, 2000);
-               /* if (selectList.isEmpty()) {
+                }, 1000);
+                /*if (selectList.isEmpty()) {
                     requestFeedback();
                 } else {
-                    uploadImage(imagePathList);
+                    uploadImageSingle(imagePathList);
                 }*/
                 break;
             default:
@@ -379,6 +392,16 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
         hud.show();
     }
 
+    private void showHudProgressDialog() {
+        if (hud != null) {
+            hud.setProgress(0);
+        } else {
+            initProgressDialog();
+        }
+        hud.setProgress(0);
+        hud.setLabel("正在上传图片...");
+        hud.show();
+    }
 
     private void closeHudProgressDialog() {
         if (hud != null && hud.isShowing()) {
@@ -405,6 +428,8 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
             ToastUtil.showSuccess("请选择问题类型");
             return;
         }
+        //todo
+        ToastUtil.showSuccess("执行提交");
         String detail = etDetail.getText().toString();
         String type = getTextValue(tvQuestionType);
         /*ApiRepository.getInstance().requestFeedback(detail, mImages, type).compose(bindUntilEvent(ActivityEvent.DESTROY)).
@@ -452,14 +477,14 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
 
 
     private void requestFeedbackReasonListAndShow() {
-        ApiRepository.getInstance().requestFeedbackReasonList().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<List<FeedBackEntity>>>() {
+        ApiRepository.getInstance().requestFeedbackReasonList().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<List<FeedReasonEntity>>>() {
             @Override
-            public void onSuccessNext(BaseResult<List<FeedBackEntity>> entity) {
+            public void onSuccessNext(BaseResult<List<FeedReasonEntity>> entity) {
                 if (entity == null) {
                     return;
                 }
-                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    initPickerAndShow(entity.getData()) ;
+                if (entity.code == CODE_REQUEST_SUCCESS) {
+                    initPickerAndShow(entity.getData());
                 } else {
                     ToastUtil.show(entity.msg);
                 }
@@ -469,8 +494,8 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
         });
     }
 
-    private void initPickerAndShow(List<FeedBackEntity> reasonList) {
-        if(reasonList == null){
+    private void initPickerAndShow(List<FeedReasonEntity> reasonList) {
+        if (reasonList == null) {
             ToastUtil.show("未获取到问题");
             return;
         }
@@ -500,8 +525,117 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
         //添加数据
     }
 
-    private void showSelectReason(FeedBackEntity selectReson) {
+    private void showSelectReason(FeedReasonEntity selectReson) {
         tvQuestionType.setText(CommonUtil.getNotNullValue(selectReson.getName()));
+    }
+
+
+    /**
+     * 上传图片
+     *
+     * @param imageList
+     */
+    private void uploadImage(List<String> imageList) {
+        File file;
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+        //注意，file是后台约定的参数，如果是多图，files，如果是单张图片，file就行
+        for (String imagePath : imageList) {
+            //这里上传的是多图
+            file = new File(imagePath);
+            builder.addFormDataPart("file[]", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+        }
+        RequestBody requestBody = builder.build();
+
+        UploadProgressBody uploadProgressBody = new UploadProgressBody(requestBody, new UploadRequestListener() {
+            @Override
+            public void onProgress(float progress, long current, long total) {
+                message = mHandler.obtainMessage();
+                message.what = 1;
+                message.arg1 = (int) (progress * 100);
+                mHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onFail(Throwable e) {
+                TourCooLogUtil.e("异常：" + e.toString());
+                closeHudProgressDialog();
+            }
+        });
+        showHudProgressDialog();
+        ApiRepository.getInstance().getApiService().uploadFiles(uploadProgressBody).enqueue(new Callback<BaseResult<List<UploadResultEntity>>>() {
+            @Override
+            public void onResponse(Call<BaseResult<List<UploadResultEntity>>> call, Response<BaseResult<List<UploadResultEntity>>> response) {
+                closeHudProgressDialog();
+                BaseResult<List<UploadResultEntity>> resp = response.body();
+                if (resp != null) {
+                    if (resp.code == CODE_REQUEST_SUCCESS && resp.data != null) {
+                        //执行提交
+                        requestSubmit(createCommitEntity(resp.data));
+                    } else {
+                        ToastUtil.showFailed(resp.getMsg());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<BaseResult<List<UploadResultEntity>>> call, Throwable t) {
+                Toast.makeText(mContext, "图片上传失败，稍后重试", Toast.LENGTH_SHORT).show();
+                closeHudProgressDialog();
+            }
+        });
+    }
+
+    private FeedbackCommitEntity createCommitEntity(List<UploadResultEntity> uploadResultList) {
+        if (selectReason == null || uploadResultList == null) {
+            return null;
+        }
+        FeedbackCommitEntity entity = new FeedbackCommitEntity();
+        entity.setContent(getTextValue(etDetail));
+        entity.setId(selectReason.getID());
+        if (getTextValue(etPhone).isEmpty()) {
+            if (AccountHelper.getInstance().isLogin()) {
+                entity.setPhone(CommonUtil.getNotNullValue(AccountHelper.getInstance().getUserInfo().getPhone()));
+            } else {
+                entity.setPhone("");
+            }
+        } else {
+            entity.setPhone(CommonUtil.getNotNullValue(getTextValue(etPhone)));
+        }
+
+        List<String> imagePathList = new ArrayList<>();
+        for (UploadResultEntity uploadResultEntity : uploadResultList) {
+            imagePathList.add(CommonUtil.getNotNullValue(uploadResultEntity.getUrl()));
+        }
+        entity.setPhoto(imagePathList);
+
+        return entity;
+    }
+
+
+    /**
+     * 真正提交反馈的方法
+     *
+     * @param entity
+     */
+    private void requestSubmit(FeedbackCommitEntity entity) {
+        if (entity == null) {
+            ToastUtil.show("未获取到提交信息");
+            return;
+        }
+        ApiRepository.getInstance().requestFeedbackCommit(entity).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
+            @Override
+            public void onSuccessNext(BaseResult entity) {
+                if (entity == null) {
+                    return;
+                }
+                ToastUtil.show(entity.getMsg());
+                if (entity.getCode() == CODE_REQUEST_SUCCESS) {
+                    finish();
+                }
+            }
+        });
     }
 
 }

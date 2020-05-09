@@ -25,6 +25,6 @@ public class NewsImageAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
     @Override
     protected void convert(@NonNull BaseViewHolder helper, String url) {
        ImageView ivNewsImage =  helper.getView(R.id.ivNewsImage);
-        GlideManager.loadImageAuto(url,ivNewsImage);
+        GlideManager.loadImg(url,ivNewsImage);
     }
 }

@@ -3,7 +3,6 @@ package com.tourcoo.training.core.retrofit.repository;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.AppUtils;
-import com.google.gson.Gson;
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.BasePageResult;
 import com.tourcoo.training.core.base.entity.BaseResult;
@@ -22,7 +21,8 @@ import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.CommitAnswer;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
-import com.tourcoo.training.entity.feedback.FeedBackEntity;
+import com.tourcoo.training.entity.feedback.FeedReasonEntity;
+import com.tourcoo.training.entity.feedback.FeedbackCommitEntity;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.message.MessageDetail;
 import com.tourcoo.training.entity.message.MessageEntity;
@@ -450,6 +450,17 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestNewsDetail(params).retryWhen(new RetryWhen()));
     }
 
+    public Observable<BaseResult> requestNewsLike(String newsId, boolean like) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("id", newsId);
+        if (like) {
+            params.put("isLike", 1);
+        } else {
+            params.put("isLike", 0);
+        }
+        return CommonTransformer.switchSchedulers(getApiService().requestNewsLike(params).retryWhen(new RetryWhen()));
+    }
+
 
     public Observable<BaseResult<List<StudyRecord>>> requestStudyRecordList(String year) {
         Map<String, Object> params = new HashMap<>(1);
@@ -471,9 +482,7 @@ public class ApiRepository extends BaseRepository {
     }
 
 
-
-
-    public Observable<BaseResult<List<OrderEntity>>> requestOrderList(int page,int type) {
+    public Observable<BaseResult<List<OrderEntity>>> requestOrderList(int page, int type) {
         Map<String, Object> params = new HashMap<>(2);
         if (page == 0) {
             page = 1;
@@ -504,8 +513,24 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestMessageDetail(params).retryWhen(new RetryWhen()));
     }
 
-    public Observable<BaseResult<List<FeedBackEntity>>> requestFeedbackReasonList() {
+    public Observable<BaseResult<List<FeedReasonEntity>>> requestFeedbackReasonList() {
         return CommonTransformer.switchSchedulers(getApiService().requestFeedbackReasonList().retryWhen(new RetryWhen()));
+    }
+
+
+    /**
+     * 问题反馈提交
+     *
+     * @param commitEntity
+     * @return
+     */
+    public Observable<BaseResult> requestFeedbackCommit(FeedbackCommitEntity commitEntity) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("id", commitEntity.getId());
+        params.put("content", commitEntity.getContent());
+        params.put("phone", commitEntity.getPhone());
+        params.put("photo", commitEntity.getPhoto());
+        return CommonTransformer.switchSchedulers(getApiService().requestFeedbackCommit(params).retryWhen(new RetryWhen()));
     }
 
 }

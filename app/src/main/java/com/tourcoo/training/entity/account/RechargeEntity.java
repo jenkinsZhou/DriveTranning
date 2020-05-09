@@ -12,7 +12,7 @@ public class RechargeEntity {
     /**
      * 充值金额
      */
-    public String rechargeMoney;
+    public double rechargeMoney;
     public String rechargeDesc;
     public int id;
 
@@ -24,11 +24,11 @@ public class RechargeEntity {
         this.id = id;
     }
 
-    public RechargeEntity(String rechargeMoney) {
+    public RechargeEntity(double rechargeMoney) {
         this.rechargeMoney = rechargeMoney;
     }
 
-    public RechargeEntity(String rechargeMoney, boolean selected) {
+    public RechargeEntity(double rechargeMoney, boolean selected) {
         this.rechargeMoney = rechargeMoney;
         this.selected = selected;
     }

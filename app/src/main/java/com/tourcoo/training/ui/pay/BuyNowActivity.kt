@@ -14,15 +14,18 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
-import com.tourcoo.training.core.base.mvp.NullPresenter
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.PayInfo
 import com.tourcoo.training.entity.account.PayResult
-import com.tourcoo.training.entity.account.WxPayModel
+import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.pay.CoursePayInfo
+import com.tourcoo.training.entity.pay.WxPayEvent
 import kotlinx.android.synthetic.main.activity_pay_buy_now.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *@description :立即购买（支付）
@@ -53,6 +56,9 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
     private lateinit var trainingPlanId: String
     override fun initView(savedInstanceState: Bundle?) {
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this)
+        }
         trainingPlanId = intent.getStringExtra("trainingPlanID")
     }
 
@@ -153,7 +159,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                         finish()
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        ToastUtil.showFailed(payResult.memo)
+                        ToastUtil.show(payResult.memo)
                     }
                 }
                 else -> {
@@ -198,16 +204,40 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
         val request = PayReq()
         request.appId = wxPayModel.appid
-        request.partnerId = wxPayModel.mch_id
-        request.prepayId = wxPayModel.prepay_id
+        request.partnerId = wxPayModel.partnerId
+        request.prepayId = wxPayModel.prepayid
         request.packageValue = "Sign=WXPay"
-        request.nonceStr = wxPayModel.nonce_str
+        request.nonceStr = wxPayModel.noncestr
         request.sign = wxPayModel.sign
         //todo 微信支付
-        request.timeStamp = "" + System.currentTimeMillis() / 1000
+        request.timeStamp = "" +wxPayModel.timestamp
 
         wxapi.sendReq(request)
 
     }
 
+
+    /**
+     * 收到消息
+     *
+     * @param payEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onWxPayCallbackEvent(payEvent: WxPayEvent?) {
+        if (payEvent == null) {
+            return
+        }
+        if (payEvent.paySuccess) {
+            ToastUtil.showSuccess("支付成功")
+            setResult(Activity.RESULT_OK)
+            finish()
+        } else {
+            ToastUtil.show("支付未完成")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
 }

@@ -7,7 +7,7 @@ public class BaseResult<T> {
 
     public int code;
     public String msg;
-    private T data;
+    public T data;
 
     public String getMsg() {
         return msg;

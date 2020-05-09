@@ -34,9 +34,9 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_news_look" />
 
                     <TextView
@@ -64,17 +64,24 @@
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_gravity="center_vertical"
+                    <!-- <ImageView
+                         android:layout_gravity="center_vertical"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:src="@mipmap/ic_news_like" />-->
+                    <CheckBox
+                        android:id="@+id/cBoxLike"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_news_like" />
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/cb_style_like"
+                        android:button="@null"/>
 
                     <TextView
                         android:id="@+id/tvNewsLikeCount"
-                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_8"
                         android:text="-" />
                 </LinearLayout>
@@ -96,9 +103,9 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_news_share" />
 
                     <TextView
@@ -194,8 +201,6 @@
                                 android:background="@color/grayF4F4F4" />
 
                         </LinearLayout>
-
-
 
 
                     </LinearLayout>

@@ -11,6 +11,7 @@ import com.tourcoo.training.R;
 import com.tourcoo.training.constant.TrainingConstant;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.ToastUtil;
+import com.tourcoo.training.entity.pay.WxPayEvent;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +20,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class WXPayEntryActivity extends AppCompatActivity implements IWXAPIEventHandler {
 
@@ -30,7 +33,7 @@ public class WXPayEntryActivity extends AppCompatActivity implements IWXAPIEvent
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.pay_result);
 
-        api = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID,true);
+        api = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID, true);
         api.registerApp(TrainingConstant.APP_ID);
         api.handleIntent(getIntent(), this);
     }
@@ -50,17 +53,16 @@ public class WXPayEntryActivity extends AppCompatActivity implements IWXAPIEvent
     @Override
     public void onResp(BaseResp baseResp) {
         int errCode = baseResp.errCode;
-        ToastUtil.show(errCode+"");
-        TourCooLogUtil.i(TAG,baseResp);
+        TourCooLogUtil.i(TAG, baseResp);
         if (errCode == 0) {
             // 成功
-
+            EventBus.getDefault().post(new WxPayEvent(true));
         } else if (errCode == -1) {
             // 失败
-
+            EventBus.getDefault().post(new WxPayEvent(false));
         } else if (errCode == -2) {
             // 取消
-
+            EventBus.getDefault().post(new WxPayEvent(false));
         }
 
         finish();

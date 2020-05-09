@@ -27,10 +27,9 @@
             android:id="@+id/ivImageNew"
             android:layout_marginStart="@dimen/dp_5"
             android:src="@drawable/img_verso"
-            android:layout_width="0dp"
-            android:layout_weight="0.4"
-            android:scaleType="fitXY"
-            android:layout_height="wrap_content"/>
+            android:layout_width="@dimen/dp_112"
+            android:scaleType="centerCrop"
+            android:layout_height="75dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="@dimen/dp_6"

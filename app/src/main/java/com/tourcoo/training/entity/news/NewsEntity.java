@@ -60,6 +60,8 @@ public class NewsEntity implements MultiItemEntity , Serializable {
     private int ReadTotal;
     private String CreateTime;
     private String SystemTime;
+    private String Content;
+
 
     @SerializedName("time")
     private String publishTime;
@@ -256,5 +258,13 @@ public class NewsEntity implements MultiItemEntity , Serializable {
         }
 
 
+    }
+
+    public String getContent() {
+        return Content;
+    }
+
+    public void setContent(String content) {
+        Content = content;
     }
 }

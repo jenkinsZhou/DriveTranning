@@ -3,6 +3,7 @@ package com.tourcoo.training.ui.home.news;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,6 +22,11 @@ import com.tencent.liteav.demo.play.SuperPlayerConst;
 import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig;
 import com.tencent.liteav.demo.play.SuperPlayerModel;
 import com.tencent.liteav.demo.play.SuperPlayerView;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.rtmp.TXLiveConstants;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter;
@@ -30,6 +36,7 @@ import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
 import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.news.NewsDetailEntity;
@@ -39,11 +46,14 @@ import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
 import com.tourcoo.training.widget.dialog.share.ShareEntity;
 import com.tourcoo.training.widget.web.HeaderScrollHelper;
 import com.tourcoo.training.widget.web.HeaderViewPager;
+import com.tourcoo.training.widget.web.JavaScriptLog;
 import com.tourcoo.training.widget.web.RichWebView;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import static com.tourcoo.training.constant.TrainingConstant.APP_ID;
 import static com.tourcoo.training.ui.home.news.NewsTabFragmentNew.EXTRA_NEWS_BEAN;
 
 /**
@@ -55,6 +65,7 @@ import static com.tourcoo.training.ui.home.news.NewsTabFragmentNew.EXTRA_NEWS_BE
  */
 public class NewsDetailVideoActivity extends BaseTitleActivity implements View.OnClickListener {
     public static final String TAG = "NewsDetailVideoActivity";
+    private IWXAPI api;
     private RichWebView webView;
     private RecyclerView recyclerView;
     //滚动控件父容器
@@ -71,11 +82,11 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
 
     private void initWebView() {
+        api = WXAPIFactory.createWXAPI(mContext, APP_ID);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new NewsMultipleAdapter(new ArrayList<>());
         adapter.bindToRecyclerView(recyclerView);
         initItemClick();
-        webView.loadUrl(CommonUtil.getUrl(mNewsEntity.getUrl()));
         //滚动绑定
         scrollableLayout.setCurrentScrollableContainer(new HeaderScrollHelper.ScrollableContainer() {
             @Override
@@ -83,19 +94,17 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
                 return recyclerView;
             }
         });
-        webView.setWebViewClient(new WebViewClient() {
+        //设置点击图片
+        webView.addJavascriptInterface(new JavaScriptLog(this, new JavaScriptLog.ClickImageCallBack() {
             @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                indicator.start();
-            }
+            public void clickImage(String src) {
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                indicator.complete();
             }
-        });
+        }), "control");
+        //设置图片加载失败回调
+        webView.setLoadImgError();
+        //添加点击图片脚本事件
+        webView.setImageClickListener();
     }
 
     @Override
@@ -144,7 +153,9 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (api != null) {
+            api.detach();
+        }
         if (webView != null) {
             webView.setWebChromeClient(null);
             webView.setWebViewClient(null);
@@ -154,13 +165,8 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             webView.destroy();
             webView = null;
         }
-        if (smartVideoPlayer != null) {
-            // 释放
-            smartVideoPlayer.release();
-            if (smartVideoPlayer.getPlayMode() != SuperPlayerConst.PLAYMODE_FLOAT) {
-                smartVideoPlayer.resetPlayer();
-            }
-        }
+        super.onDestroy();
+
     }
 
     private void requestNewsDetail(String id) {
@@ -174,6 +180,8 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
     private void loadRecommend(NewsDetailEntity detailEntity) {
         adapter.setNewData(detailEntity.getRecommendList());
+        TourCooLogUtil.d("富文本:"+detailEntity.getContent());
+        webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
     }
 
     private void initItemClick() {
@@ -319,6 +327,9 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         tvNewsShareCount.setText(mNewsEntity.getSharedNum() + "");
     }
 
+
+
+
     private void showShareDialog() {
         ShareEntity wx = new ShareEntity("微信", R.mipmap.ic_share_type_wx);
         ShareEntity pyq = new ShareEntity("朋友圈", R.mipmap.ic_share_type_friend);
@@ -326,16 +337,72 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         dialog.setItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                dialog.dismiss();
                 switch (position) {
                     case 0:
-                        ToastUtil.show("分享到微信");
+                        wxSharePic(true);
                         break;
                     case 1:
-                        ToastUtil.show("分享到朋友圈");
+                        //朋友圈
+                        wxSharePic(false);
                         break;
                 }
             }
         });
         dialog.show();
     }
+
+
+    public void wxSharePic(boolean isSession) {
+        //初始化WXImageObject和WXMediaMessage对象
+        WXWebpageObject webPage = new WXWebpageObject();
+        webPage.webpageUrl = mNewsEntity.getUrl();
+        WXMediaMessage msg = new WXMediaMessage(webPage);
+        msg.title = mNewsEntity.getTitle();
+        msg.description = mNewsEntity.getTitle();
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_news_share_icon);
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, SizeUtil.dp2px(41), SizeUtil.dp2px(40), true);
+        bmp.recycle();
+        msg.thumbData = bmpToByteArray(thumbBmp, true);
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = ("webPage") + System.currentTimeMillis();
+        req.message = msg;
+
+       /* WXImageObject imageObject = new WXImageObject();
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.title = "特大喜讯！濡江铺子试运营今日开启！";
+        msg.mediaObject = imageObject;
+        //设置缩略图
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        msg.thumbData = ImageUtils.bitmap2Bytes(scaledBitmap, Bitmap.CompressFormat.PNG);
+        //构造一个Req
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = "微信分享" + (System.currentTimeMillis());
+        req.message = msg;*/
+        //表示发送给朋友圈  WXSceneTimeline  表示发送给朋友  WXSceneSession
+        req.scene = isSession ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+        //调用api接口发送数据到微信
+        api.sendReq(req);
+       /* bitmap.recycle();
+        scaledBitmap.recycle();*/
+    }
+
+
+    public byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, output);
+        if (needRecycle) {
+            bmp.recycle();
+        }
+
+        byte[] result = output.toByteArray();
+        try {
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 }

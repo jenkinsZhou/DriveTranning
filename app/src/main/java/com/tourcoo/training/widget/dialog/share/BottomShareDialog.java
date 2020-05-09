@@ -204,4 +204,10 @@ public class BottomShareDialog {
         adapter.setOnItemClickListener(listener);
         return this;
     }
+
+    public void dismiss(){
+        if(dialog != null){
+            dialog.dismiss();
+        }
+    }
 }

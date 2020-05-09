@@ -127,7 +127,7 @@ public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         //少于8张，显示继续添加的图标
         if (getItemViewType(position) == TYPE_CAMERA) {
-            viewHolder.roundImageViewPhoto.setImageResource(R.mipmap.ic_add_picture);
+            viewHolder.roundImageViewPhoto.setImageResource(R.mipmap.ic_add_image);
             viewHolder.roundImageViewPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

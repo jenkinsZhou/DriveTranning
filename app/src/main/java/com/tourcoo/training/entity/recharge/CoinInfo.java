@@ -20,7 +20,7 @@ public class CoinInfo {
      */
 
     private int ID;
-    private String Price;
+    private double Price;
     private String Coins;
     private String Gifts;
     private String ExpiredTime;
@@ -43,11 +43,11 @@ public class CoinInfo {
         this.ID = ID;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return Price;
     }
 
-    public void setPrice(String Price) {
+    public void setPrice(double Price) {
         this.Price = Price;
     }
 

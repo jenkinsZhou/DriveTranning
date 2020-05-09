@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ResourceUtil;
 import com.tourcoo.training.entity.account.RechargeEntity;
 
@@ -32,7 +33,7 @@ public class RechargeAmountAdapter extends BaseQuickAdapter<RechargeEntity, Base
 
     @Override
     protected void convert(BaseViewHolder helper, RechargeEntity item) {
-        helper.setText(R.id.tvRechargeMoney,  item.rechargeMoney + "元");
+        helper.setText(R.id.tvRechargeMoney,  CommonUtil.doubleTransStringZhen(item.rechargeMoney/100) + "元");
         if (item.selected) {
             helper.setBackgroundRes(R.id.llRechargeMoney, R.drawable.selector_bg_radius_7_blue_hollow);
             helper.setTextColor(R.id.tvRechargeMoney, ResourceUtil.getColor(R.color.blue5087FF));

@@ -2,26 +2,38 @@ package com.tourcoo.training.ui.home.news;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ImageUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coolindicator.sdk.CoolIndicator;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXImageObject;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter;
+import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
 import com.tourcoo.training.core.base.entity.BaseResult;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
 import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.news.NewsDetailEntity;
@@ -30,11 +42,14 @@ import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
 import com.tourcoo.training.widget.dialog.share.ShareEntity;
 import com.tourcoo.training.widget.web.HeaderScrollHelper;
 import com.tourcoo.training.widget.web.HeaderViewPager;
+import com.tourcoo.training.widget.web.JavaScriptLog;
 import com.tourcoo.training.widget.web.RichWebView;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import static com.tourcoo.training.constant.TrainingConstant.APP_ID;
 import static com.tourcoo.training.ui.home.news.NewsTabFragmentNew.EXTRA_NEWS_BEAN;
 
 /**
@@ -45,7 +60,7 @@ import static com.tourcoo.training.ui.home.news.NewsTabFragmentNew.EXTRA_NEWS_BE
  * @Email: 971613168@qq.com
  */
 public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.OnClickListener {
-
+    private IWXAPI api;
     private RichWebView webView;
     private RecyclerView recyclerView;
     //滚动控件父容器
@@ -59,6 +74,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     private TextView tvNewsLookCount;
     private TextView tvNewsLikeCount;
     private TextView tvNewsShareCount;
+    private CheckBox cBoxLike;
     private LinearLayout llLike;
 
 
@@ -69,9 +85,11 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        api = WXAPIFactory.createWXAPI(mContext, APP_ID);
         tvNewsLookCount = findViewById(R.id.tvNewsLookCount);
         tvNewsLikeCount = findViewById(R.id.tvNewsLikeCount);
         tvNewsShareCount = findViewById(R.id.tvNewsShareCount);
+        cBoxLike = findViewById(R.id.cBoxLike);
         findViewById(R.id.llLike).setOnClickListener(this);
         findViewById(R.id.llRead).setOnClickListener(this);
         findViewById(R.id.llShare).setOnClickListener(this);
@@ -104,7 +122,6 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         adapter = new NewsMultipleAdapter(new ArrayList<>());
         adapter.bindToRecyclerView(recyclerView);
         initItemClick();
-        webView.loadUrl(CommonUtil.getUrl(mNewsEntity.getUrl()));
         //滚动绑定
         scrollableLayout.setCurrentScrollableContainer(new HeaderScrollHelper.ScrollableContainer() {
             @Override
@@ -112,19 +129,17 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                 return recyclerView;
             }
         });
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                indicator.start();
-            }
 
+        //设置点击图片
+        webView.addJavascriptInterface(new JavaScriptLog(this, new JavaScriptLog.ClickImageCallBack() {
             @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                indicator.complete();
+            public void clickImage(String src) {
             }
-        });
+        }), "control");
+        //设置图片加载失败回调
+        webView.setLoadImgError();
+        //添加点击图片脚本事件
+        webView.setImageClickListener();
     }
 
     @Override
@@ -135,7 +150,9 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (api != null) {
+            api.detach();
+        }
         if (webView != null) {
             webView.setWebChromeClient(null);
             webView.setWebViewClient(null);
@@ -145,6 +162,8 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
             webView.destroy();
             webView = null;
         }
+        super.onDestroy();
+
     }
 
     private void requestNewsDetail(String id) {
@@ -158,6 +177,8 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     private void showWebDetail(NewsDetailEntity detailEntity) {
         adapter.setNewData(detailEntity.getRecommendList());
+        TourCooLogUtil.d("富文本:"+detailEntity.getContent());
+        webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
     }
 
     private void initItemClick() {
@@ -200,16 +221,103 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         dialog.setItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                dialog.dismiss();
                 switch (position) {
                     case 0:
-                        ToastUtil.show("分享到微信");
+                        wxSharePic(true);
                         break;
                     case 1:
-                        ToastUtil.show("分享到朋友圈");
+                        //朋友圈
+                        wxSharePic(false);
                         break;
                 }
             }
         });
         dialog.show();
     }
+
+
+    private void requestNewsLike(String id, boolean isLike) {
+        ApiRepository.getInstance().requestNewsLike(id, isLike).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
+            @Override
+            public void onSuccessNext(BaseResult entity) {
+                if (entity == null) {
+                    return;
+                }
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    showLikeCountCallBack(isLike);
+                } else {
+                    ToastUtil.show(entity.getMsg());
+                }
+            }
+        });
+    }
+
+    private void showLikeCountCallBack(boolean like) {
+        String finalLikeCount;
+        if (like) {
+            finalLikeCount = mNewsEntity.getLikeTotal() + 1 + "";
+        } else {
+            if (mNewsEntity.getLikeTotal() <= 0) {
+                finalLikeCount = "0";
+            } else {
+                finalLikeCount = mNewsEntity.getLikeTotal() - 1 + "";
+            }
+        }
+        tvNewsLookCount.setText(finalLikeCount);
+    }
+
+
+    public void wxSharePic(boolean isSession) {
+        //初始化WXImageObject和WXMediaMessage对象
+        WXWebpageObject webPage = new WXWebpageObject();
+        webPage.webpageUrl = mNewsEntity.getUrl();
+        WXMediaMessage msg = new WXMediaMessage(webPage);
+        msg.title = mNewsEntity.getTitle();
+        msg.description = mNewsEntity.getTitle();
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_news_share_icon);
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, SizeUtil.dp2px(41), SizeUtil.dp2px(40), true);
+        bmp.recycle();
+        msg.thumbData = bmpToByteArray(thumbBmp, true);
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = ("webPage") + System.currentTimeMillis();
+        req.message = msg;
+
+       /* WXImageObject imageObject = new WXImageObject();
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.title = "特大喜讯！濡江铺子试运营今日开启！";
+        msg.mediaObject = imageObject;
+        //设置缩略图
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        msg.thumbData = ImageUtils.bitmap2Bytes(scaledBitmap, Bitmap.CompressFormat.PNG);
+        //构造一个Req
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = "微信分享" + (System.currentTimeMillis());
+        req.message = msg;*/
+        //表示发送给朋友圈  WXSceneTimeline  表示发送给朋友  WXSceneSession
+        req.scene = isSession ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+        //调用api接口发送数据到微信
+        api.sendReq(req);
+       /* bitmap.recycle();
+        scaledBitmap.recycle();*/
+    }
+
+
+    public byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, output);
+        if (needRecycle) {
+            bmp.recycle();
+        }
+
+        byte[] result = output.toByteArray();
+        try {
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 }

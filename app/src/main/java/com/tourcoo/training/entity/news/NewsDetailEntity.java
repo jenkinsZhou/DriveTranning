@@ -11,12 +11,26 @@ import java.util.List;
  */
 public class NewsDetailEntity {
     private List<NewsEntity> RecommendList;
+    private String Content;
+
+    public String getContent() {
+        return Content;
+    }
+
+    public void setContent(String content) {
+        Content = content;
+    }
 
     public List<NewsEntity> getRecommendList() {
         return RecommendList;
     }
 
+
     public void setRecommendList(List<NewsEntity> recommendList) {
         RecommendList = recommendList;
     }
+
+
+
+
 }

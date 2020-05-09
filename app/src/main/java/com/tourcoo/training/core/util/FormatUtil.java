@@ -50,7 +50,7 @@ public class FormatUtil {
      * @return
      */
     public static String formatDoubleSize(double value, int maxLength) {
-        return formatDoubleSize(value, maxLength, BigDecimal.ROUND_HALF_UP);
+        return formatDoubleSize(value, maxLength, BigDecimal.ROUND_HALF_EVEN  );
     }
 
     /**

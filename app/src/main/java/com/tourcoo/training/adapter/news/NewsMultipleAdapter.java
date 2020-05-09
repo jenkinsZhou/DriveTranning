@@ -43,14 +43,14 @@ public class NewsMultipleAdapter extends BaseMultiItemQuickAdapter<NewsEntity, B
         switch (helper.getItemViewType()) {
             case NEWS_TYPE_IMAGE_ONE:
                 helper.setText(R.id.tvTime,CommonUtil.getNotNullValue(item.getPublishTime()));
-                helper.setGone(R.id.ivFlagTop,item.getMountainTop() == 1);
+                helper.setGone(R.id.ivFlagTop,item.getMountainTop() == 0);
                 helper.setText(R.id.tvShareCount,item.getSharedNum()+"");
                 helper.setText(R.id.tvCommentCount,item.getRecommendationTotal()+"");
                 helper.setText(R.id.tvNewsTitle, CommonUtil.getNotNullValue(item.getTitle()));
                 ImageView ivImageNew = helper.getView(R.id.ivImageNew);
                 List<NewsImage> imageList = item.getImages();
                 if (imageList != null && !imageList.isEmpty()) {
-                    GlideManager.loadImageAuto(CommonUtil.getUrl(imageList.get(0).getImageUrl()), ivImageNew);
+                    GlideManager.loadImg(CommonUtil.getUrl(imageList.get(0).getImageUrl()), ivImageNew);
                 }
                 break;
             case NEWS_TYPE_IMAGE_MULTI:

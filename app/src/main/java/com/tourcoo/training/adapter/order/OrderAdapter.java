@@ -33,10 +33,11 @@ public class OrderAdapter extends BaseQuickAdapter<OrderEntity, BaseViewHolder> 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, OrderEntity item) {
         TextView tvOrderStatus = helper.getView(R.id.tvOrderStatus);
-        helper.setText(R.id.tvPrice, item.getUnitPrice());
-        helper.setText(R.id.tvTotalMoney, "支付金额：" + CommonUtil.doubleTransStringZhen(item.getAmount()));
+        double yuanPrice = (item.getUnitPrice() / 100);
+        helper.setText(R.id.tvPrice, CommonUtil.doubleTransStringZhen(yuanPrice));
+        helper.setText(R.id.tvTotalMoney, "支付金额：" + CommonUtil.doubleTransStringZhen(item.getAmount()/100));
         helper.setText(R.id.tvCount, "x" + item.getNumber());
-        helper.setText(R.id.tvTotalDesc, "共" + item.getNumber() + "件商品 合计：¥" +CommonUtil.doubleTransStringZhen(item.getAmount()));
+        helper.setText(R.id.tvTotalDesc, "共" + item.getNumber() + "件商品 合计：¥" + CommonUtil.doubleTransStringZhen((item.getAmount() / 100)));
         helper.addOnClickListener(R.id.btnOne);
         switch (item.getOrderType()) {
             case ORDER_TYPE_RECHARGE:
