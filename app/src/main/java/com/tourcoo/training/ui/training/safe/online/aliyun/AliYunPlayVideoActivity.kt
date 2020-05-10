@@ -58,6 +58,7 @@ import com.tourcoo.training.widget.aliplayer.view.gesturedialog.BrightnessDialog
 import com.tourcoo.training.widget.aliplayer.view.more.AliyunShowMoreValue
 import com.tourcoo.training.widget.aliplayer.view.more.SpeedValue
 import com.tourcoo.training.widget.aliplayer.view.tipsview.ErrorInfo
+import com.tourcoo.training.widget.aliplayer.view.tipsview.TipsView
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_ali.*
@@ -65,7 +66,6 @@ import kotlinx.android.synthetic.main.activity_play_video_ali.llPlanContentView
 import kotlinx.android.synthetic.main.activity_play_video_ali.tvExam
 import kotlinx.android.synthetic.main.activity_play_video_ali.tvSubjectDesc
 import kotlinx.android.synthetic.main.activity_play_video_ali.tvTitle
-import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -264,7 +264,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //初始化计时器
         initTimerAndStart()
 
-        if(detail.requireExam == 1){
+        if (detail.requireExam == 1) {
             tvExam.visibility = View.VISIBLE
         }
 
@@ -360,7 +360,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             tvPlanTitle.text = getNotNullValue(course.name)
             llPlanContentView.addView(contentView)
             contentView.setPadding(SizeUtil.dp2px(course.level * 10f), 0, 0, 0)
-            if (course.streams != null) {
+            //不需要判断course.streams是否为空了
+//            if (course.streams != null) {
                 val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
                 //播放状态
                 val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
@@ -372,7 +373,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 //关键
                 mCourseHashMap!!.put(course, contentView)
                 mCourseList!!.add(course)
-            }
+//            }
 
         }
     }
@@ -438,7 +439,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun playStreamUrl(course: Course?) {
-        if (course == null || course.streams == null && course.streams.size == 0) {
+        if (course == null || course.streams == null || course.streams.size == 0) {
             return
         }
         course.streams = sortQuality(course.streams)
@@ -721,7 +722,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (!TextUtils.isEmpty(CommonUtil.getUrl(mCurrentCourse!!.coverURL))) {
             aliYunPlayer.setCoverUri(mCurrentCourse!!.coverURL)
         } else {
-            aliYunPlayer.setCoverResource(R.drawable.img_training_free_video)
+            //设置默认封面图
+            aliYunPlayer.setCoverResource(R.drawable.ic_rect_default)
         }
         //定位到上次播放进度
         TourCooLogUtil.i(mTag, "上次播放进度:" + mCurrentCourse!!.progress * 1000)
@@ -756,6 +758,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         aliYunPlayer.setScreenBrightness(BrightnessDialog.getActivityBrightness(this@AliYunPlayVideoActivity))
         aliYunPlayer.setSeiDataListener(MyOnSeiDataListener(this))
         aliYunPlayer.setOnChangeDefinitionListener(MyChangeDefinitionListener(this))
+        aliYunPlayer.setTipViewShowListener(MyTipViewShowListener(this))
         aliYunPlayer.enableNativeLog()
         setPlaySource(videoUrl)
     }
@@ -1487,11 +1490,29 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     }
 
+    /**
+     * 视频清晰度切换
+     */
+    private class MyTipViewShowListener internal constructor(activity: AliYunPlayVideoActivity) : TipsView.TipViewShowListener {
+        private val weakReference: WeakReference<AliYunPlayVideoActivity> = WeakReference(activity)
+        override fun tipViewShowing() {
+            val weakAct = weakReference.get()
+            weakAct?.onTipViewShow()
+        }
+
+
+    }
+
     private fun onChangeDefinition(finalSteam: VideoStream?, lastSeek: Long) {
         //清晰度切换逻辑
         //关键点 拿到当前清晰度对象赋值给播放器
         aliYunPlayer.currentSteam = finalSteam
         loadPlayerSettingDefinitionAndSeek(finalSteam!!.url, lastSeek)
+    }
+
+    private fun onTipViewShow() {
+        //播放器层的提示框已经显示了 就没必要显示loading框了 因此 关闭
+        closeLoading()
     }
 
     /**
@@ -1517,6 +1538,9 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         var od: VideoStream? = null
         var sq: VideoStream? = null
         var hq: VideoStream? = null
+        var auto: VideoStream? = null
+        //清晰度按照fd,ld,sd,hd,2k,4k,od排序
+        val sortedQuality: MutableList<VideoStream> = LinkedList()
         for (quality in qualities) {
             if (QualityValue.QUALITY_FLUENT == quality.definition) { //                fd = QualityValue.QUALITY_FLUENT;
                 fd = quality
@@ -1540,10 +1564,14 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 sq = quality
             } else if (QualityValue.QUALITY_HQ == quality.definition) {
                 hq = quality
+            } else if (QualityValue.QUALITY_AUTO == quality.definition) {
+                auto = quality
+            } else {
+                sortedQuality.add(quality)
             }
+
         }
-        //清晰度按照fd,ld,sd,hd,2k,4k,od排序
-        val sortedQuality: MutableList<VideoStream> = LinkedList()
+
         //        if (!TextUtils.isEmpty(fd)) {
 //            sortedQuality.add(fd);
 //        }
@@ -1593,6 +1621,9 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         if (od != null) {
             sortedQuality.add(od)
+        }
+        if (auto != null) {
+            sortedQuality.add(auto)
         }
         return sortedQuality
     }

@@ -742,6 +742,7 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
         mCoverView = new ImageView(getContext());
         //这个是为了给自动化测试用的id
         mCoverView.setId(R.id.custom_id_min);
+        mCoverView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         addSubView(mCoverView);
     }
 
@@ -3104,6 +3105,10 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     }
 
 
-
+    public void setTipViewShowListener(TipsView.TipViewShowListener listener) {
+        if (mTipsView != null) {
+            mTipsView.setTipViewShowListener(listener);
+        }
+    }
 
 }

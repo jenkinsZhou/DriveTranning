@@ -20,6 +20,7 @@ import com.alipay.sdk.app.PayTask
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.gson.Gson
 import com.tencent.mm.opensdk.modelpay.PayReq
+import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.account.RechargeAmountAdapter
@@ -69,6 +70,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     private var payDialog: BottomPayDialog? = null
     private val mRechargeEntityList: MutableList<RechargeEntity> = ArrayList()
     private var mCoinList: MutableList<CoinInfo>? = null
+    private var wxApi: IWXAPI ? = null
     override fun getContentLayout(): Int {
         return R.layout.activity_my_account
     }
@@ -78,11 +80,13 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
+
         rvRecharge.layoutManager = GridLayoutManager(mContext, 3)
         tvConfirmPay.setOnClickListener(this)
+        wxApi= WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
         requestCoinPackage()
     }
 
@@ -265,13 +269,13 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
 
-        ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, ""+CommonUtil.doubleTransStringZhen(coinInfo.price), "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<PayInfo>>() {
+        ApiRepository.getInstance().requestRecharge(coinInfo.id.toString(), payDialog!!.payType, "" + CommonUtil.doubleTransStringZhen(coinInfo.price), "1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<PayInfo>>() {
             override fun onSuccessNext(entity: BaseResult<PayInfo>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     if (payDialog!!.payType == 1) {
                         payByAlipay(entity.data.thirdPayInfo.toString())
                     } else {
-                        payByWx(entity.data.thirdPayInfo, entity.data)
+                        payByWx(entity.data.thirdPayInfo)
                     }
                 } else {
                     ToastUtil.show(entity?.msg)
@@ -344,21 +348,16 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun payByWx(orderInfo: Any, patInfo: PayInfo) {
+    private fun payByWx(orderInfo: Any) {
         val wxPayModelStr = Gson().toJson(orderInfo)
 //        JSON.parseObject(wxPayModelStr,WxPayModel::class.java)
         val wxPayModel = Gson().fromJson<WxPayModel>(wxPayModelStr, WxPayModel::class.java)
-        TourCooLogUtil.d("微信支付", wxPayModel)
-        TourCooLogUtil.i("微信支付", wxPayModelStr)
         if (wxPayModel == null) {
             ToastUtil.show("微信支付数据异常")
             return
         }
-        TourCooLogUtil.w("微信支付参数", wxPayModel)
         // 将该app注册到微信
-        val wxapi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID);
-
-        if (!wxapi.isWXAppInstalled) {
+        if (!wxApi!!.isWXAppInstalled) {
             ToastUtil.show("您尚未安装微信客户端")
             return
         }
@@ -371,7 +370,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         request.sign = wxPayModel.sign
         request.timeStamp = "" + wxPayModel.timestamp
         TourCooLogUtil.d("微信支付参数", request)
-        wxapi.sendReq(request)
+        wxApi!!.sendReq(request)
 
     }
 
@@ -390,6 +389,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        wxApi?.detach()
         EventBus.getDefault().unregister(this)
     }
 

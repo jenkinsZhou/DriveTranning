@@ -118,7 +118,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         Bundle bundle = getIntent().getExtras();
@@ -163,6 +163,9 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         if (api != null) {
             api.detach();
         }
+        if (smartVideoPlayer != null) {
+            smartVideoPlayer.release();
+        }
         if (webView != null) {
             webView.setWebChromeClient(null);
             webView.setWebViewClient(null);
@@ -172,6 +175,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             webView.destroy();
             webView = null;
         }
+
         EventBus.getDefault().unregister(this);
         super.onDestroy();
 

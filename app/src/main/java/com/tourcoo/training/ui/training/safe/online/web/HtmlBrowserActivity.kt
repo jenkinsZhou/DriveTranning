@@ -94,8 +94,6 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-
-
     private fun requestPlanDetail() {
         ApiRepository.getInstance().trainingPlanID(trainingPlanID).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<TrainingPlanDetail>>() {
             override fun onSuccessNext(entity: BaseResult<TrainingPlanDetail>?) {
@@ -126,7 +124,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             tvExam.isEnabled = true
             //todo 弹出是否考试弹窗
             //延时弹出是否考试弹窗
-          showAcceptExamDialog()
+            showAcceptExamDialog()
         } else {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
             tvExam.isEnabled = false
@@ -235,13 +233,13 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         }
         for (index in newCatalogs.size - 1 downTo 0) {
             val catalog = newCatalogs[index]
+            if (catalog.level == 1) {
+                countCatalog++
+            }
+            if (catalog.level == 2) {
+                countNode++
+            }
             if (!TextUtils.isEmpty(catalog.name)) {
-                if (catalog.level == 1) {
-                    countCatalog++
-                }
-                if (catalog.level == 2) {
-                    countNode++
-                }
                 //标题不为空时添加TextView
                 val contentView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_content, null)
                 val tvPlanTitle = contentView.findViewById<TextView>(R.id.tvPlanTitle)
@@ -418,7 +416,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             intent.putExtra(EXTRA_COURSE_INFO, course)
             intent.putExtra("url", CommonUtil.getNotNullValue(course.html.url))
         }
-        intent.putExtra(EXTRA_TRAINING_PLAN_ID,trainingPlanID)
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
         startActivityForResult(intent, 1001, bundle)
@@ -451,14 +449,14 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
     /**
      * 显示参加考试对话框
      */
-    private fun showAcceptExamDialog(){
+    private fun showAcceptExamDialog() {
         baseHandler.postDelayed({
             val dialog = ExamCommonDialog(mContext)
             dialog.create().setContent("学习完成是否参加考试？").setPositiveButtonListener(View.OnClickListener {
                 //跳转考试
                 skipExamActivity(trainingPlanDetail)
             }).show()
-        },500)
+        }, 500)
 
     }
 

@@ -10,6 +10,7 @@ import android.view.View
 import com.alipay.sdk.app.PayTask
 import com.google.gson.Gson
 import com.tencent.mm.opensdk.modelpay.PayReq
+import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
@@ -21,6 +22,7 @@ import com.tourcoo.training.entity.account.PayInfo
 import com.tourcoo.training.entity.account.PayResult
 import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.pay.CoursePayInfo
+import com.tourcoo.training.entity.pay.PayResultEvent
 import com.tourcoo.training.entity.pay.WxPayEvent
 import kotlinx.android.synthetic.main.activity_pay_buy_now.*
 import org.greenrobot.eventbus.EventBus
@@ -36,6 +38,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.View {
 
+    private var wxApi: IWXAPI? = null
     override fun createPresenter(): BuyNowPresenter {
         return BuyNowPresenter()
     }
@@ -60,6 +63,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
             EventBus.getDefault().register(this)
         }
         trainingPlanId = intent.getStringExtra("trainingPlanID")
+        // 将该app注册到微信
+        wxApi= WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
     }
 
     override fun getPayInfoSuccess(payInfo: CoursePayInfo) {
@@ -125,13 +130,17 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
 
     override fun setPayInfo(payType: Int, payInfo: PayInfo?) {
+        if(payInfo == null){
+            ToastUtil.show("支付参数异常")
+            return
+        }
         if (payType == 1 || payType == 2) {
             setResult(Activity.RESULT_OK)
             finish()
         } else if (payType == 3) {
-            payByAlipay(payInfo!!.thirdPayInfo.toString())
+            payByAlipay(payInfo.thirdPayInfo.toString())
         } else if (payType == 4) {
-            payByWx(payInfo!!.thirdPayInfo.toString())
+            payByWx(payInfo.thirdPayInfo)
         }
 
     }
@@ -155,6 +164,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         ToastUtil.showSuccess("支付成功")
+                        //支付成功 发送消息通知其他页面 （微信也是一样 需要发送消息）
+                        EventBus.getDefault().post(PayResultEvent(true))
                         setResult(Activity.RESULT_OK)
                         finish()
                     } else {
@@ -180,7 +191,6 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
             msg.obj = result
             mHandler.sendMessage(msg)
         }
-
         // 必须异步调用
         val payThread = Thread(payRunnable)
         payThread.start()
@@ -188,16 +198,14 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
 
     private fun payByWx(orderInfo: Any) {
-        val wxPayModel = Gson().fromJson<WxPayModel>(Gson().toJson(orderInfo), WxPayModel::class.java)
+        val wxPayModelStr = Gson().toJson(orderInfo)
+        val wxPayModel = Gson().fromJson<WxPayModel>(wxPayModelStr, WxPayModel::class.java)
         if (wxPayModel == null) {
             ToastUtil.show("微信支付数据异常")
             return
         }
 
-        // 将该app注册到微信
-        val wxapi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
-
-        if (!wxapi.isWXAppInstalled) {
+        if (!wxApi!!.isWXAppInstalled) {
             ToastUtil.show("您尚未安装微信客户端")
             return
         }
@@ -212,7 +220,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         //todo 微信支付
         request.timeStamp = "" +wxPayModel.timestamp
 
-        wxapi.sendReq(request)
+        wxApi!!.sendReq(request)
 
     }
 
@@ -228,6 +236,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
             return
         }
         if (payEvent.paySuccess) {
+            //支付成功 发送消息通知其他页面 （支付宝也是一样 需要发送消息）
+            EventBus.getDefault().post(PayResultEvent(true))
             ToastUtil.showSuccess("支付成功")
             setResult(Activity.RESULT_OK)
             finish()
@@ -238,6 +248,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
     override fun onDestroy() {
         super.onDestroy()
+        wxApi?.detach()
         EventBus.getDefault().unregister(this)
     }
 }

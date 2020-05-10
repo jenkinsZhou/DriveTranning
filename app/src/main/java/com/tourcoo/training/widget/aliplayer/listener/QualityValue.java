@@ -12,7 +12,7 @@ public class QualityValue {
     public static final String QUALITY_ORIGINAL = "OD";
     public static final String QUALITY_SQ = "SQ";
     public static final String QUALITY_HQ = "HQ";
-
+    public static final String QUALITY_AUTO = "AUTO";
     public QualityValue(){
 
     }

@@ -39,6 +39,8 @@ public class TipsView extends RelativeLayout implements ITheme {
     private LoadingView mBufferLoadingView = null;
     //提示点击事件
     private OnTipClickListener mOnTipClickListener = null;
+
+    private TipViewShowListener tipViewShowListener;
     //当前的主题
     private AliYunVodPlayerView.Theme mCurrentTheme;
 
@@ -113,7 +115,9 @@ public class TipsView extends RelativeLayout implements ITheme {
         } else {
             mNetChangeView.setVisibility(VISIBLE);
         }
-
+        if (tipViewShowListener != null) {
+            tipViewShowListener.tipViewShowing();
+        }
     }
 
     /**
@@ -138,13 +142,16 @@ public class TipsView extends RelativeLayout implements ITheme {
         mErrorView.updateTips(errorCode, errorEvent, errorMsg);
         mErrorView.setVisibility(VISIBLE);
 
-
+        if (tipViewShowListener != null) {
+            tipViewShowListener.tipViewShowing();
+        }
         Log.d(TAG, " errorCode = " + mErrorCode);
     }
 
     /**
      * 显示错误提示,不显示错误码
-     * @param msg   错误信息
+     *
+     * @param msg 错误信息
      */
     public void showErrorTipViewWithoutCode(String msg) {
         if (mErrorView == null) {
@@ -156,6 +163,9 @@ public class TipsView extends RelativeLayout implements ITheme {
 
         if (mErrorView.getVisibility() != VISIBLE) {
             mErrorView.setVisibility(VISIBLE);
+        }
+        if (tipViewShowListener != null) {
+            tipViewShowListener.tipViewShowing();
         }
     }
 
@@ -171,6 +181,9 @@ public class TipsView extends RelativeLayout implements ITheme {
 
         if (mReplayView.getVisibility() != VISIBLE) {
             mReplayView.setVisibility(VISIBLE);
+        }
+        if (tipViewShowListener != null) {
+            tipViewShowListener.tipViewShowing();
         }
     }
 
@@ -369,5 +382,18 @@ public class TipsView extends RelativeLayout implements ITheme {
      */
     public void setOnTipClickListener(OnTipClickListener l) {
         mOnTipClickListener = l;
+    }
+
+
+  public   interface TipViewShowListener {
+        void tipViewShowing();
+    }
+
+    public TipViewShowListener getTipViewShowListener() {
+        return tipViewShowListener;
+    }
+
+    public void setTipViewShowListener(TipViewShowListener tipViewShowListener) {
+        this.tipViewShowListener = tipViewShowListener;
     }
 }

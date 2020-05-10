@@ -28,6 +28,8 @@ import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.course.CourseInfo
+import com.tourcoo.training.entity.pay.PayResultEvent
+import com.tourcoo.training.entity.pay.WxPayEvent
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_TYPE_RECOGNIZE_COMPARE
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
@@ -167,7 +169,7 @@ class OnlineTrainFragment : BaseFragment() {
             return
         }
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-             currentCourseInfo = adapter!!.data[position] as CourseInfo
+            currentCourseInfo = adapter!!.data[position] as CourseInfo
 
             if (!AccountHelper.getInstance().isLogin) {
                 ToastUtil.show("请先登录")
@@ -225,8 +227,8 @@ class OnlineTrainFragment : BaseFragment() {
                 skipFaceVefify(courseInfo.trainingPlanID)
             }
 
-            COURSE_STATUS_WAIT_EXAM ->{
-                skipPlayVideoByType(courseInfo.trainingPlanID,courseInfo.type)
+            COURSE_STATUS_WAIT_EXAM -> {
+                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
             }
 
             COURSE_STATUS_FINISHED -> {
@@ -254,7 +256,7 @@ class OnlineTrainFragment : BaseFragment() {
     private fun skipFaceRecord(trainingId: String) {
         val intent = Intent(mContext, FaceRecognitionActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
-        intent.putExtra("OnlyBase64",true)
+        intent.putExtra("OnlyBase64", true)
         startActivityForResult(intent, REQUEST_CODE_FACE_RECORD)
     }
 
@@ -269,7 +271,7 @@ class OnlineTrainFragment : BaseFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_CODE_AUTH ->{
+                REQUEST_CODE_AUTH -> {
                     currentCourseInfo!!.status = COURSE_STATUS_CONTINUE
                     verifyByStatus(currentCourseInfo!!)
                 }
@@ -286,7 +288,7 @@ class OnlineTrainFragment : BaseFragment() {
                     verifyByStatus(currentCourseInfo!!)
                 }
 
-                REQUEST_CODE_FACE_VERIFY ->{
+                REQUEST_CODE_FACE_VERIFY -> {
                     skipPlayVideoByType(currentCourseInfo!!.trainingPlanID, currentCourseInfo!!.type)
                 }
             }
@@ -345,7 +347,7 @@ class OnlineTrainFragment : BaseFragment() {
             }
             TYPE_COURSE_OTHER -> {
                 //混合非加密 使用腾讯播放器
-                intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
+                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
             }
 
         }
@@ -374,7 +376,26 @@ class OnlineTrainFragment : BaseFragment() {
         } else {
             requestCourseOnLine()
         }
+    }
 
+
+    /**
+     * 支付回调（微信和支付宝共用）
+     * 注意：此消息回调是支付宝和微信共用
+     *
+     * @param payEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onWxPayCallbackEvent(payEvent: PayResultEvent?) {
+        if (payEvent == null) {
+            return
+        }
+        if (payEvent.isPaySuccess) {
+            baseHandler.postDelayed(Runnable {
+                requestCourseOnLine()
+            }, 500)
+
+        }
     }
 
     private fun removeData() {

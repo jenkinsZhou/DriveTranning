@@ -355,7 +355,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             tvPlanTitle.text = getNotNullValue(course.name)
             llPlanContentView.addView(contentView)
             contentView.setPadding(SizeUtil.dp2px(course.level * 10f), 0, 0, 0)
-            if (course.streams != null) {
+            //不需要判断course.streams是否为空了
+//            if (course.streams != null) {
                 val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
                 //播放状态
                 val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
@@ -367,7 +368,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 //关键
                 mCourseHashMap!!.put(course, contentView)
                 mCourseList!!.add(course)
-            }
+//            }
 
         }
     }
@@ -433,7 +434,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun playStreamUrl(course: Course?) {
-        if (course == null || course.streams == null && course.streams.size == 0) {
+        if (course == null || course.streams == null || course.streams.size == 0) {
             return
         }
         when (course.mediaType) {

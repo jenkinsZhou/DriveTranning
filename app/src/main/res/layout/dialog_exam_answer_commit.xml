@@ -53,7 +53,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="否"
-                    android:textColor="@color/blue5087FF"
+                    android:textColor="@color/gray999999"
                     android:textSize="@dimen/sp_17" />
 
                 <View
