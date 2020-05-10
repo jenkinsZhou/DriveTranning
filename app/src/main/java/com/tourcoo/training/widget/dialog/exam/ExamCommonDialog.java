@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.util.ToastUtil;
 
 /**
  * @author :JenkinsZhou
@@ -27,6 +28,8 @@ public class ExamCommonDialog {
     private Dialog dialog;
     private TextView tvPositive;
     private TextView tvContent;
+    private TextView tvNegative;
+    private OnNegativeClickListener negativeClickListener;
 
     public ExamCommonDialog(Context context) {
         this.mContext = context;
@@ -48,7 +51,16 @@ public class ExamCommonDialog {
         dialog.setContentView(view);
         tvPositive = view.findViewById(R.id.tvPositive);
         tvContent = view.findViewById(R.id.tvContent);
-        view.findViewById(R.id.tvNegative).setOnClickListener(v -> dismiss());
+        tvNegative =   view.findViewById(R.id.tvNegative);
+        tvNegative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                if(negativeClickListener != null){
+                    negativeClickListener.onClick(v);
+                }
+            }
+        });
         Window window = dialog.getWindow();
         if (window != null) {
             WindowManager m = window.getWindowManager();
@@ -96,11 +108,17 @@ public class ExamCommonDialog {
         return this;
     }
 
+    public ExamCommonDialog setNegativeButtonListener(OnNegativeClickListener onNegativeClickListener) {
+       this.negativeClickListener = onNegativeClickListener;
+        return this;
+    }
+
     public ExamCommonDialog setContent(String content) {
         if (tvContent != null) {
             tvContent.setText(content);
         }
         return this;
     }
+
 
 }

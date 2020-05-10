@@ -9,7 +9,6 @@ import android.view.View
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ImageUtils
@@ -25,7 +24,6 @@ import com.tourcoo.training.constant.ExamConstant.*
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
-import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
@@ -60,6 +58,10 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var behavior: BottomSheetBehavior<NestedScrollView>? = null
     private var examId = ""
     private var trainPlanId = ""
+    /**
+     * 用来计数是否答完所有试题 (没回答完不让提交答案)
+     */
+    private var answerCount = 0
 
     companion object {
         const val EXTRA_EXAM_ID = "EXTRA_EXAM_ID"
@@ -129,6 +131,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
                 //交卷之前 先把最后一道题回答了
                 doAnswerQuestion()
                 showBottomBarInfo()
+                answerCount = 0
                 baseHandler.postDelayed(Runnable {
                     //交卷
                     doCommitExam()
@@ -277,14 +280,22 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
      * 交卷
      */
     private fun doCommitExam() {
-
+        //先获取一下已答题数量
+        val userAnswerList = getAllQuestions()
+        if (answerCount < list!!.size) {
+            ToastUtil.show("您还有题目没有答完哦")
+            return
+        }
+        //显示交卷确认弹窗
         val dialog = ExamCommonDialog(mContext)
-        dialog.create().show()
+        dialog.create() .show()
         dialog.setPositiveButtonListener(View.OnClickListener {
             isSubmit = true
-            commitExam(getAllQuestions())
+            commitExam(userAnswerList)
             dialog.dismiss()
         })
+
+
     }
 
     /**
@@ -310,10 +321,9 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
                         tvCreateTime.text = entity.data.data.createTime
 
 
-
                         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
                         val startTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.startTime))
-                        val endTime =  simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.endTime))
+                        val endTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.endTime))
 
                         tvDetail.text = SpanUtils()
                                 .append("学员 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
@@ -385,14 +395,18 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun getAllQuestions(): MutableList<Question> {
+        //先重置答题数量
         val results = ArrayList<Question>()
         for (fragment in list!!) {
             val onlineExamFragment = fragment as ExamFragment?
             if (onlineExamFragment != null) {
                 results.add(onlineExamFragment.getQuestion())
+                if (onlineExamFragment.getQuestion().isHasAnswered) {
+                    //回答过 则答题数量+1
+                    answerCount++
+                }
             }
         }
-        TourCooLogUtil.i(mTag, results)
         return results
     }
 
@@ -424,6 +438,12 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
                 } else {
                     ToastUtil.show(entity.msg)
                 }
+                finish()
+            }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                finish()
             }
         })
     }
@@ -433,9 +453,12 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var isSubmit = false
 
     override fun onBackPressed() {
-        super.onBackPressed()
         if (!isSubmit) {
-            saveExam(getAllQuestions())
+            //说明还没交卷 需要保存答题进度
+            showSaveExamAnswerDialog()
+        } else {
+            //不保存 直接退出
+            super.onBackPressed()
         }
     }
 
@@ -492,5 +515,22 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
     }
 
+
+    /**
+     * 显示保存考试进度弹窗
+     */
+    private fun showSaveExamAnswerDialog() {
+        baseHandler.postDelayed({
+            val dialog = ExamCommonDialog(mContext)
+            dialog.create().setContent("题目还没做完，是否保存答题进度？").setPositiveButtonListener(View.OnClickListener {
+                isSubmit = true
+                saveExam(getAllQuestions())
+                dialog.dismiss()
+            }).setNegativeButtonListener {
+                finish()
+            }.
+                    show()
+        }, 100)
+    }
 
 }

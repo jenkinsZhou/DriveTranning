@@ -52,7 +52,8 @@ public class MyApplication extends MultiDexApplication {
         SpiderMan.init(this);
         GreenDaoHelper.getInstance().initDatabase(this);
         ToastUtils.init(this);
-
+        //初始化全局防重复点击
+        GlobalClickCallbacks.init(this);
 //        initDebugKit();
 /*//# 支持写入日志到文件
         TourCooLogUtil.getLog2FileConfig().configLog2FileEnable(true)

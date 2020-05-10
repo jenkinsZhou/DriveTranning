@@ -453,6 +453,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         baseHandler.postDelayed({
             val dialog = ExamCommonDialog(mContext)
             dialog.create().setContent("学习完成是否参加考试？").setPositiveButtonListener(View.OnClickListener {
+                dialog.dismiss()
                 //跳转考试
                 skipExamActivity(trainingPlanDetail)
             }).show()

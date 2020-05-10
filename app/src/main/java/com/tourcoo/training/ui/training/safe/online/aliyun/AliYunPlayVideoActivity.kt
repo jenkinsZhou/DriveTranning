@@ -62,6 +62,7 @@ import com.tourcoo.training.widget.aliplayer.view.more.SpeedValue
 import com.tourcoo.training.widget.aliplayer.view.tipsview.ErrorInfo
 import com.tourcoo.training.widget.aliplayer.view.tipsview.TipsView
 import com.tourcoo.training.widget.dialog.IosAlertDialog
+import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_ali.*
 import kotlinx.android.synthetic.main.activity_play_video_ali.llPlanContentView
@@ -170,8 +171,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private var countNode = 0
 
     companion object {
-        const val IMG_TRANSITION = "IMG_TRANSITION"
-        const val TRANSITION = "TRANSITION"
         //阿里hls标准加密类型
         const val ENCRYPTION_TYPE_HLS = "HLSEncryption"
         //腾讯加密类型
@@ -275,6 +274,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
+            //延时弹出是否考试弹窗
+            showAcceptExamDialog()
         } else {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
             tvExam.isEnabled = false
@@ -1713,6 +1714,20 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun clearCount(){
         countNode = 0
         countCatalog = 0
+    }
+
+    /**
+     * 显示参加考试对话框
+     */
+    private fun showAcceptExamDialog() {
+        baseHandler.postDelayed({
+            val dialog = ExamCommonDialog(mContext)
+            dialog.create().setContent("学习完成是否参加考试？").setPositiveButtonListener(View.OnClickListener {
+                dialog.dismiss()
+                //跳转考试
+                skipExamActivity(trainingPlanDetail)
+            }).show()
+        }, 500)
     }
 }
 

@@ -43,6 +43,7 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
         questionRecyclerView = mContentView.findViewById(R.id.questionRecyclerView)
         llQuestionAnalysis = mContentView.findViewById(R.id.llQuestionAnalysis)
         tvCurrentQuestion = mContentView.findViewById(R.id.tvCurrentQuestion)
+        tvQuestionType = mContentView.findViewById(R.id.tvQuestionType)
         tvAnswerAnalysis = mContentView.findViewById(R.id.tvAnswerAnalysis)
         questionRecyclerView?.layoutManager = LinearLayoutManager(mContext)
         if (ExamTempHelper.getInstance().examInfo == null || question == null) {
