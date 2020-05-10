@@ -213,6 +213,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         if (smartVideoPlayer == null) {
             return;
         }
+        //进度条拖动开关
         smartVideoPlayer.setSeekEnable(true);
         smartVideoPlayer.setOnPlayStatusListener(new SuperPlayerView.OnPlayStatusListener() {
             @Override

@@ -57,10 +57,10 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
 
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             //todo:添加证书详情页
-//            val info = adapter.data[position] as CertificateInfo
-//            val intent = Intent(this,CertificationDetailsActivity::class.java)
-//            intent.putExtra("id",info.id)
-//            startActivity(intent)
+            val info = adapter.data[position] as CertificateInfo
+            val intent = Intent(this,CertificationDetailsActivity::class.java)
+            intent.putExtra("id",info.id)
+            startActivity(intent)
         }
 
     }
@@ -85,13 +85,7 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
         if (list == null || list.isEmpty()) {
             return result
         }
-//        for (i in 0 until list.size - 1) {
-//            if (i % 2 == 0 && i <= 12) {
-//                list[i].certificateTime = "2019-" + "02-15"
-//            } else {
-//                list[i].certificateTime = "2020-" + "01-26"
-//            }
-//        }
+
         try {
             for (certificate in list) {
                 val sdf = SimpleDateFormat("yyyy-MM-dd")

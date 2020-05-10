@@ -24,7 +24,7 @@ import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
-import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
+import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -36,6 +36,8 @@ import com.tourcoo.training.entity.training.*
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
+import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity
+import com.tourcoo.training.ui.training.safe.online.web.WebCourseTempHelper
 import com.tourcoo.training.widget.AliYunVodPlayerView
 import com.tourcoo.training.widget.AliYunVodPlayerView.*
 import com.tourcoo.training.widget.aliplayer.activity.AliyunPlayerSkinActivity.DEFAULT_URL
@@ -66,6 +68,7 @@ import kotlinx.android.synthetic.main.activity_play_video_ali.llPlanContentView
 import kotlinx.android.synthetic.main.activity_play_video_ali.tvExam
 import kotlinx.android.synthetic.main.activity_play_video_ali.tvSubjectDesc
 import kotlinx.android.synthetic.main.activity_play_video_ali.tvTitle
+import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -174,9 +177,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //腾讯加密类型
         const val ENCRYPTION_TYPE_DRM = "DriveDu-DRM"
         const val REQUEST_CODE_FACE = 1006
-        const val COURSE_STATUS_NO_COMPLETE = 0
-        const val COURSE_STATUS_COMPLETE = 2
-        const val COURSE_STATUS_PLAYING = 1
     }
 
     override fun getContentLayout(): Int {
@@ -397,20 +397,29 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
         when (course.currentPlayStatus) {
-            TencentPlayVideoActivity.COURSE_STATUS_NO_COMPLETE -> {
+            COURSE_PLAY_STATUS_NO_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 setViewGone(tvPlanDesc, false)
             }
-            TencentPlayVideoActivity.COURSE_STATUS_COMPLETE -> {
+            COURSE_PLAY_STATUS_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_finish)
                 setViewGone(tvPlanDesc, false)
             }
-            TencentPlayVideoActivity.COURSE_STATUS_PLAYING -> {
-                imageView.setImageResource(R.mipmap.ic_playing)
+            COURSE_PLAY_STATUS_PLAYING -> {
+                if(course.mediaType == MEDIA_TYPE_HTML){
+                    imageView.setImageResource(R.mipmap.ic_eyes)
+                }else{
+                    imageView.setImageResource(R.mipmap.ic_playing)
+                }
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
-                playStreamUrl(course)
+                //只有当前正在浏览的课件 并且是html课件才允许点击
+                if (course.mediaType == MEDIA_TYPE_HTML) {
+                    ToastUtil.show("当前是网页课件,需要手动点击学习")
+                    setCourseInfoClick(view, course)
+                }
+                playStreamUrlOrHtml(course)
             }
             else -> {
             }
@@ -427,33 +436,33 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             val course = list[i]
             if (course.completed <= 0 && index == -1) {
                 //该视频没有播放过,当前正在播放的视频
-                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_PLAYING
+                course.currentPlayStatus =COURSE_PLAY_STATUS_PLAYING
                 index = i
             } else if (course.completed <= 0 && index != -1) {
-                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_NO_COMPLETE
+                course.currentPlayStatus = COURSE_PLAY_STATUS_NO_COMPLETE
             } else {
-                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_COMPLETE
+                course.currentPlayStatus =COURSE_PLAY_STATUS_COMPLETE
             }
         }
     }
 
 
-    private fun playStreamUrl(course: Course?) {
-        if (course == null || course.streams == null || course.streams.size == 0) {
+    private fun playStreamUrlOrHtml(course: Course?) {
+        if (course == null) {
             return
         }
-        course.streams = sortQuality(course.streams)
         when (course.mediaType) {
             //视频
-            0 -> {
+            MEDIA_TYPE_VIDEO -> {
+                //关键点：需要先判断当前是否有视频
+                if (course.streams == null || course.streams.size == 0) {
+                    ToastUtil.show("当前课件不是视频课件")
+                    return
+                }
+                course.streams = sortQuality(course.streams)
                 //从上次播放进度开始播放
                 currentCourseId = "" + course.id
                 mCurrentCourse = course
-                //关键点：需要判断当前视频是否是加密视频
-                if (course.streams == null || course.streams.isEmpty()) {
-                    ToastUtil.show("当前课程为非视频")
-                    return
-                }
                 when (CommonUtil.getNotNullValue(course.streams[0].encryptType)) {
                     ENCRYPTION_TYPE_HLS -> {
                         //阿里加密模式
@@ -489,9 +498,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 }*/
 
             }
-            else -> {
-                //外链URL
-                ToastUtil.show("跳转外链逻辑")
+            MEDIA_TYPE_HTML -> {
+                //因为网页课件需要主动点击触发 因此这里不做任何处理了
             }
         }
 
@@ -632,11 +640,15 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     //人脸认证成功 不做任何处理
                 } else {
                     //人脸识别失败 处理人脸识别逻辑
-//                    handleRecognizeFailedCallback()
+                    handleRecognizeFailedCallback()
                 }
             }
-            else -> {
-            }
+           TencentPlayVideoActivity.REQUEST_CODE_WEB -> {
+               if (resultCode == Activity.RESULT_OK) {
+                   //刷新课件
+                   requestPlanDetail()
+               }
+           }
         }
     }
 
@@ -1626,6 +1638,72 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             sortedQuality.add(auto)
         }
         return sortedQuality
+    }
+
+
+    /**
+     * 设置课程点击事件
+     */
+    private fun setCourseInfoClick(view: View, course: Course) {
+        //先解禁点击事件
+        view.isEnabled = true
+        view.setOnClickListener {
+            loadWebAndSkipBrowser(course)
+        }
+    }
+
+    /**
+     * 跳转浏览网页课件
+     */
+    private fun loadWebAndSkipBrowser(course: Course?) {
+        if (course == null) {
+            return
+        }
+        when (course.mediaType) {
+            //视频
+            MEDIA_TYPE_VIDEO -> {
+                ToastUtil.show("当前课程不是网页类型")
+            }
+            MEDIA_TYPE_HTML -> {
+                //外链URL
+                //跳转web链接
+                skipWebView(course)
+            }
+            else -> {
+                ToastUtil.show("未找到对应课程类型")
+            }
+        }
+    }
+
+
+    private fun skipWebView(course: Course) {
+        //缓存当前课件
+        WebCourseTempHelper.getInstance().course = course
+        val intent = Intent(this, PlayHtmlWebActivity::class.java)
+        val bundle = Bundle()
+        if (course.html != null) {
+            intent.putExtra(EXTRA_COURSE_INFO, course)
+            intent.putExtra("url", CommonUtil.getNotNullValue(course.html.url))
+        }
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
+        startActivityForResult(intent, TencentPlayVideoActivity.REQUEST_CODE_WEB, bundle)
+    }
+
+
+    private fun handleRecognizeFailedCallback() {
+        //将视频置为不可点击
+//        smartVideoPlayer.startButton.isEnabled = false
+        //暂停视频
+        baseHandler.postDelayed(Runnable {
+            smartVideoPlayer?.onPause()
+        }, 1000)
+
+        ToastUtil.show("人脸识别失败")
+        baseHandler.postDelayed(Runnable {
+            doSaveProgressAndFinish()
+        }, 1500)
     }
 }
 

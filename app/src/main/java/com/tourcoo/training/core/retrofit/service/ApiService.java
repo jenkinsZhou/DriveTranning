@@ -13,6 +13,7 @@ import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.entity.certificate.CertificateInfo;
+import com.tourcoo.training.entity.certificate.CertifyDetail;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
@@ -205,6 +206,15 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/training/list-certificate")
     Observable<BasePageResult<CertificateInfo>> requestCertificate(@Body Map<String, Object> map);
+
+    /**
+     * 证书详情
+     * @param map
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/training/detail")
+    Observable<BaseResult<CertifyDetail>> requestCertificateDetail(@Body Map<String, Object> map);
 
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
     @POST("v1.0/open/Special/list-special-training-module")

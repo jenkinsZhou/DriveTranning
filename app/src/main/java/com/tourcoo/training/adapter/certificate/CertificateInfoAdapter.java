@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.entity.certificate.CertificateInfo;
@@ -37,6 +38,7 @@ public class CertificateInfoAdapter extends BaseMultiItemQuickAdapter<Certificat
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, CertificateInfo item) {
+        TourCooLogUtil.d("证书id="+item.getId());
         switch (helper.getItemViewType()) {
             case ITEM_TYPE_HEADER:
                 helper.setText(R.id.tvCertificateMonth, item.getHeaderContent());

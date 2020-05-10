@@ -17,7 +17,7 @@
         android:layout_height="@dimen/dp_60"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp_10"
-        android:src="@mipmap/ic_app_logo_round" />
+        />
 
 
     <ImageView
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_300"
         android:layout_marginTop="@dimen/dp_5"
-        android:src="@mipmap/ic_app_logo_round" />
+       />
 
 
     <ImageView
@@ -34,7 +34,7 @@
         android:layout_height="@dimen/dp_90"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp_5"
-        android:src="@mipmap/ic_app_logo_round" />
+        />
 
     <TextView
         android:layout_width="wrap_content"

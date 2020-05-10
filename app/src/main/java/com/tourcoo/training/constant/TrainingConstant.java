@@ -139,15 +139,23 @@ public class TrainingConstant {
     /**
      * HTML课件类型
      */
-    public static final int MEDIA_TYPE_HTML= 1;
+    public static final int MEDIA_TYPE_HTML = 1;
 
     /**
      * 当前课程已学习完成
      */
-    public static final int COURSE_STATUS_FINISH= 1;
+    public static final int COURSE_STATUS_FINISH = 1;
 
     /**
      * 当前课程未完成
      */
-    public static final int COURSE_STATUS_NOT_FINISH= 0;
+    public static final int COURSE_STATUS_NOT_FINISH = 0;
+
+
+    /**
+     * 课程播放状态
+     */
+    public static final int COURSE_PLAY_STATUS_NO_COMPLETE = 0;
+    public static final int COURSE_PLAY_STATUS_PLAYING = COURSE_STATUS_FINISH;
+    public static final int COURSE_PLAY_STATUS_COMPLETE = 3;
 }

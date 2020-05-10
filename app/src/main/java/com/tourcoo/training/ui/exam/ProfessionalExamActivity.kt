@@ -292,7 +292,7 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
         for (question in questions) {
             val commit = CommitAnswer()
             commit.id = question.id.toString()
-            commit.answer = StringUtils.join(question.answer, ",")
+            commit.answer = StringUtils.join(question.answer, "")
             commitList.add(commit)
         }
 

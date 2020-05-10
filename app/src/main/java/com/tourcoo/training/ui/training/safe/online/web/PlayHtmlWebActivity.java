@@ -47,6 +47,10 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     private RichWebView webView;
     private CoolIndicator indicator;
     private String mUrl;
+    /**
+     * 课件本身时长
+     */
+    private long fixedDuration;
     private long duration;
     private String mTrainingPlanID;
     private CountDownTimerSupport mTimerTask;
@@ -66,7 +70,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     public void initView(Bundle savedInstanceState) {
         mUrl = getIntent().getStringExtra("url");
         mCurrentCourse = getIntent().getParcelableExtra(EXTRA_COURSE_INFO);
-        mTrainingPlanID =getIntent().getStringExtra(EXTRA_TRAINING_PLAN_ID) ;
+        mTrainingPlanID = getIntent().getStringExtra(EXTRA_TRAINING_PLAN_ID);
         if (mCurrentCourse == null) {
             ToastUtil.show("未获取到网页课程");
             finish();
@@ -238,14 +242,15 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     /**
      * 保存当前观看进度
      */
-    private void requestSaveProgress(String second){
-        TourCooLogUtil.i(TAG,"保存的进度："+second);
-        ApiRepository.getInstance().requestSaveProgress(mTrainingPlanID, mCurrentCourse.getID()+"", second).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
+    private void requestSaveProgress(String second) {
+        TourCooLogUtil.i(TAG, "保存的进度：" + second);
+        ApiRepository.getInstance().requestSaveProgress(mTrainingPlanID, mCurrentCourse.getID() + "", second).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
             @Override
             public void onSuccessNext(BaseResult entity) {
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    //todo
                     ToastUtil.showSuccess("进度保存成功");
+                    //关键点：通知上个页面刷新
+                    setResult(Activity.RESULT_OK);
                 } else {
                     ToastUtil.show(entity.msg);
                 }
@@ -263,8 +268,8 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     /**
      * 本次课程学习完成
      */
-    private void requestComplete(){
-        ApiRepository.getInstance().requestSaveProgress(mTrainingPlanID, mCurrentCourse.getID()+"", "-1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
+    private void requestComplete() {
+        ApiRepository.getInstance().requestSaveProgress(mTrainingPlanID, mCurrentCourse.getID() + "", "-1").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
             @Override
             public void onSuccessNext(BaseResult entity) {
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
@@ -297,7 +302,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
 
     @Override
     public void onBackPressed() {
-        if (mCurrentCourse.getCompleted() == COURSE_STATUS_FINISH || mRemainProgress <=  0 ) {
+        if (mCurrentCourse.getCompleted() == COURSE_STATUS_FINISH || mRemainProgress <= 0) {
             //表示课程已完成 所以直接退出
             finish();
         } else {
@@ -306,50 +311,59 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     }
 
 
-
     private void showExitDialog() {
-      new IosAlertDialog(mContext)
+        new IosAlertDialog(mContext)
                 .init()
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(false)
-              .setOnDismissListener(dialog -> {
-                  //计时恢复
-                  timerResume();
-              })
+                .setOnDismissListener(dialog -> {
+                    //计时恢复
+                    timerResume();
+                })
                 .setTitle("确认退出学习")
                 .setMsg("退出前会保存当前学习进度")
                 .setPositiveButton("确认退出", v -> {
-                    //保存进度
-                    requestSaveProgress(mRemainProgress+"");
+                    //保存进度 进度 = 总时长-剩余时长
+                    long progress = fixedDuration - mRemainProgress;
+                    if (progress <= 0) {
+                        //说明学习结束
+                        requestComplete();
+                    } else {
+//                        requestSaveProgress(progress + "");
+                        requestComplete();
+                    }
+
                 })
-                .setNegativeButton("取消", v-> {
-            setStatusBarDarkMode(mContext, isStatusBarDarkMode());
-        }).show();
-            //对话框弹出时 计时停止
-            timerPause();
+                .setNegativeButton("取消", v -> {
+                    setStatusBarDarkMode(mContext, isStatusBarDarkMode());
+                }).show();
+        //对话框弹出时 计时停止
+        timerPause();
     }
 
     /**
      * 初始化学习进度
      */
-    private void initDuration(){
-        if(mCurrentCourse.getCompleted()==COURSE_STATUS_FINISH){
+    private void initDuration() {
+        //获取课件固定的时长
+        fixedDuration = mCurrentCourse.getDuration();
+        if (mCurrentCourse.getCompleted() == COURSE_STATUS_FINISH) {
             //如果当前html课件本来就是已完成状态则将计时器时间置为0
-            TourCooLogUtil.w(TAG,"当前课件已完成 不需要计时");
+            TourCooLogUtil.w(TAG, "当前课件已完成 不需要计时");
             duration = 0;
-        } else{
+        } else {
             //说明当前课件还没有学完 需要判断进度是否为0 如果为0 说明从头开始计时 取时长字段 否则取progress
-            if(mCurrentCourse.getProgress() <=0){
+            if (mCurrentCourse.getProgress() <= 0) {
                 //取getDuration()
-                TourCooLogUtil.d(TAG,"当前课件还没有学完 并且进度为0 执行 duration 改为mCurrentCourse.getDuration()");
+                TourCooLogUtil.d(TAG, "当前课件还没有学完 并且进度为0 执行 duration 改为mCurrentCourse.getDuration()");
                 duration = mCurrentCourse.getDuration();
-            }else {
+            } else {
                 //取progress后剩下的进度
-                duration =mCurrentCourse.getDuration() - mCurrentCourse.getProgress();
-                TourCooLogUtil.i(TAG,"取progress后剩下的进度 duration="+duration);
-                if(duration<0){
-                    duration=0;
-                    TourCooLogUtil.e(TAG,"取progress后剩下的进度 但是 为负数 改成了0");
+                duration = mCurrentCourse.getDuration() - mCurrentCourse.getProgress();
+                TourCooLogUtil.i(TAG, "取progress后剩下的进度 duration=" + duration);
+                if (duration < 0) {
+                    duration = 0;
+                    TourCooLogUtil.e(TAG, "取progress后剩下的进度 但是 为负数 改成了0");
                 }
 
             }
@@ -359,8 +373,8 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     /**
      * 显示头部倒计时剩余时间
      */
-    private void showHeaderTime(long second){
-        if(second<=0){
+    private void showHeaderTime(long second) {
+        if (second <= 0) {
             //隐藏时间
             setViewGone(llHeaderBar, false);
         }

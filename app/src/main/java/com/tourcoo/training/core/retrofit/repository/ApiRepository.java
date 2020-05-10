@@ -17,6 +17,7 @@ import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.account.register.CompanyInfo;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.entity.certificate.CertificateInfo;
+import com.tourcoo.training.entity.certificate.CertifyDetail;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.CommitAnswer;
 import com.tourcoo.training.entity.exam.ExamEntity;
@@ -243,6 +244,12 @@ public class ApiRepository extends BaseRepository {
         //每次请求10条
         params.put("rows", 10);
         return CommonTransformer.switchSchedulers(getApiService().requestCertificate(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseResult<CertifyDetail>> requestCertificateDetail(String id) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("id", id);
+        return CommonTransformer.switchSchedulers(getApiService().requestCertificateDetail(params).retryWhen(new RetryWhen()));
     }
 
 

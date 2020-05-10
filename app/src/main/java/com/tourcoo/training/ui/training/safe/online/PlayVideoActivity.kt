@@ -14,7 +14,7 @@ import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
-import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
+import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
@@ -41,7 +41,7 @@ import kotlinx.android.synthetic.main.activity_play_video.*
  */
 class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private val mTag = "PlayVideoActivity"
-//    private var orientationUtils: OrientationUtils? = null
+    //    private var orientationUtils: OrientationUtils? = null
     private var isTransition = false
 
     private var transition: Transition? = null
@@ -64,9 +64,6 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         const val TRANSITION = "TRANSITION"
 
         const val REQUEST_CODE_FACE = 1006
-        const val COURSE_STATUS_NO_COMPLETE = 0
-        const val COURSE_STATUS_COMPLETE = 2
-        const val COURSE_STATUS_PLAYING = 1
     }
 
 
@@ -220,9 +217,9 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun onPause() {
         super.onPause()
-      /*  if (smartVideoPlayer != null) {
-            smartVideoPlayer!!.onVideoPause()
-        }*/
+        /*  if (smartVideoPlayer != null) {
+              smartVideoPlayer!!.onVideoPause()
+          }*/
         timerPause()
     }
 
@@ -252,20 +249,20 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-   /* private fun addTransitionListener(): Boolean {
-        transition = window.sharedElementEnterTransition
-        if (transition != null) {
-            transition!!.addListener(object : OnTransitionListener() {
-                override fun onTransitionEnd(transition: Transition?) {
-                    super.onTransitionEnd(transition)
-//                    smartVideoPlayer!!.startPlayLogic();
-                    transition!!.removeListener(this);
-                }
-            })
-            return true
-        }
-        return false
-    }*/
+    /* private fun addTransitionListener(): Boolean {
+         transition = window.sharedElementEnterTransition
+         if (transition != null) {
+             transition!!.addListener(object : OnTransitionListener() {
+                 override fun onTransitionEnd(transition: Transition?) {
+                     super.onTransitionEnd(transition)
+ //                    smartVideoPlayer!!.startPlayLogic();
+                     transition!!.removeListener(this);
+                 }
+             })
+             return true
+         }
+         return false
+     }*/
 
     override fun isStatusBarDarkMode(): Boolean {
         return true
@@ -409,15 +406,15 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
         when (course.currentPlayStatus) {
-            COURSE_STATUS_NO_COMPLETE -> {
+            COURSE_PLAY_STATUS_NO_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 setViewGone(tvPlanDesc, false)
             }
-            COURSE_STATUS_COMPLETE -> {
+            COURSE_PLAY_STATUS_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_finish)
                 setViewGone(tvPlanDesc, false)
             }
-            COURSE_STATUS_PLAYING -> {
+            COURSE_PLAY_STATUS_PLAYING -> {
                 imageView.setImageResource(R.mipmap.ic_playing)
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
@@ -439,12 +436,12 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             val course = list[i]
             if (course.completed <= 0 && index == -1) {
                 //该视频没有播放过,当前正在播放的视频
-                course.currentPlayStatus = COURSE_STATUS_PLAYING
+                course.currentPlayStatus = COURSE_PLAY_STATUS_PLAYING
                 index = i
             } else if (course.completed <= 0 && index != -1) {
-                course.currentPlayStatus = COURSE_STATUS_NO_COMPLETE
+                course.currentPlayStatus = COURSE_PLAY_STATUS_NO_COMPLETE
             } else {
-                course.currentPlayStatus = COURSE_STATUS_COMPLETE
+                course.currentPlayStatus = COURSE_PLAY_STATUS_COMPLETE
             }
         }
     }
@@ -458,11 +455,11 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             //视频
             0 -> {
                 //从上次播放进度开始播放
-            /*    //todo
-                smartVideoPlayer.seekOnStart = course.progress * 1000L
-                smartVideoPlayer.currentCourseId = course.id
-                smartVideoPlayer!!.setUp(course.streams, false, getNotNullValue(course.name))
-                loadPlayerSetting()*/
+                /*    //todo
+                    smartVideoPlayer.seekOnStart = course.progress * 1000L
+                    smartVideoPlayer.currentCourseId = course.id
+                    smartVideoPlayer!!.setUp(course.streams, false, getNotNullValue(course.name))
+                    loadPlayerSetting()*/
 
 
             }
@@ -475,16 +472,16 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     }
 
-   /* override fun onPlayComplete(courseId: Int) {
-        //todo
-    }
+    /* override fun onPlayComplete(courseId: Int) {
+         //todo
+     }
 
-    override fun onAutoPlayComplete(courseId: Int) {
-        //todo
-        //通知后台当前课程播放结束
-        requestCompleteCurrentCourse(courseId.toString())
-    }
-*/
+     override fun onAutoPlayComplete(courseId: Int) {
+         //todo
+         //通知后台当前课程播放结束
+         requestCompleteCurrentCourse(courseId.toString())
+     }
+ */
 
     /* private fun handlePlayComplete(courseId: Int) {
          playNext(courseId)
@@ -600,9 +597,9 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     override fun onBackPressed() {
-      /*  if (GSYVideoManager.backFromWindowFull(this)) {
-            return
-        }*/
+        /*  if (GSYVideoManager.backFromWindowFull(this)) {
+              return
+          }*/
         showExit()
     }
 
@@ -716,22 +713,22 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      * 保存进度并关闭当前页面
      */
     private fun doSaveProgressAndFinish() {
-      /*  val progress = smartVideoPlayer!!.currentPositionWhenPlaying / 1000
-        requestSaveProgress(smartVideoPlayer!!.currentCourseId.toString(), progress.toString())*/
+        /*  val progress = smartVideoPlayer!!.currentPositionWhenPlaying / 1000
+          requestSaveProgress(smartVideoPlayer!!.currentCourseId.toString(), progress.toString())*/
     }
 
 
-  /*  private fun handleRecognizeFailedCallback() {
-        //将视频置为不可点击
-        smartVideoPlayer.startButton.isEnabled = false
-        //暂停视频
-        baseHandler.postDelayed(Runnable {
-            smartVideoPlayer?.onVideoPause()
-        }, 1000)
+    /*  private fun handleRecognizeFailedCallback() {
+          //将视频置为不可点击
+          smartVideoPlayer.startButton.isEnabled = false
+          //暂停视频
+          baseHandler.postDelayed(Runnable {
+              smartVideoPlayer?.onVideoPause()
+          }, 1000)
 
-        ToastUtil.show("人脸识别失败")
-        baseHandler.postDelayed(Runnable {
-            doSaveProgressAndFinish()
-        }, 1500)
-    }*/
+          ToastUtil.show("人脸识别失败")
+          baseHandler.postDelayed(Runnable {
+              doSaveProgressAndFinish()
+          }, 1500)
+      }*/
 }

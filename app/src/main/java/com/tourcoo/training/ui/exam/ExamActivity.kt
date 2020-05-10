@@ -293,7 +293,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         for (question in questions) {
             val commit = CommitAnswer()
             commit.id = question.id.toString()
-            commit.answer = StringUtils.join(question.answer, ",")
+            commit.answer = StringUtils.join(question.answer, "")
             commitList.add(commit)
         }
         ApiRepository.getInstance().requestFinishExam(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamResultEntity>?>() {

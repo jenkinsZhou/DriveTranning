@@ -28,7 +28,6 @@ import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
-import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
@@ -122,7 +121,6 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
-            //todo 弹出是否考试弹窗
             //延时弹出是否考试弹窗
             showAcceptExamDialog()
         } else {
@@ -280,12 +278,12 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             val course = list[i]
             if (course.completed <= 0 && index == -1) {
                 //该课件没有播放过,当前正在播放的视频
-                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_PLAYING
+                course.currentPlayStatus = COURSE_PLAY_STATUS_PLAYING
                 index = i
             } else if (course.completed <= 0 && index != -1) {
-                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_NO_COMPLETE
+                course.currentPlayStatus = COURSE_PLAY_STATUS_NO_COMPLETE
             } else {
-                course.currentPlayStatus = TencentPlayVideoActivity.COURSE_STATUS_COMPLETE
+                course.currentPlayStatus = COURSE_PLAY_STATUS_COMPLETE
             }
         }
     }
@@ -304,17 +302,17 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
         when (course.currentPlayStatus) {
-            TencentPlayVideoActivity.COURSE_STATUS_NO_COMPLETE -> {
+            COURSE_PLAY_STATUS_NO_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 setViewGone(tvPlanDesc, false)
             }
-            TencentPlayVideoActivity.COURSE_STATUS_COMPLETE -> {
+            COURSE_PLAY_STATUS_COMPLETE -> {
                 imageView.setImageResource(R.mipmap.ic_play_finish)
                 setViewGone(tvPlanDesc, false)
                 //todo 已学完的课程 暂时允许点击
                 setCourseInfoClick(view, course)
             }
-            TencentPlayVideoActivity.COURSE_STATUS_PLAYING -> {
+            COURSE_PLAY_STATUS_PLAYING -> {
                 imageView.setImageResource(R.mipmap.ic_eyes)
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
@@ -397,7 +395,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     /**
-     * 设置课程
+     * 设置课程点击事件
      */
     private fun setCourseInfoClick(view: View, course: Course) {
         //先解禁点击事件
@@ -438,6 +436,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
                 smartVideoPlayer.resetPlayer()
             }
         }
+        cancelTimer()
         super.onDestroy()
     }
 
@@ -457,7 +456,6 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
                 skipExamActivity(trainingPlanDetail)
             }).show()
         }, 500)
-
     }
 
     override fun onClick(v: View?) {
@@ -482,4 +480,6 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         intent.putExtra(ExamActivity.EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
         startActivity(intent)
     }
+
+
 }
