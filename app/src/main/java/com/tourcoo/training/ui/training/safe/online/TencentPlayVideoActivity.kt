@@ -10,6 +10,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import com.blankj.utilcode.util.LogUtils
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tencent.liteav.demo.play.SuperPlayerConst
@@ -466,6 +467,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (course == null) {
             return
         }
+        LogUtils.e("=================="+course.mediaType)
         when (course.mediaType) {
             //视频
             MEDIA_TYPE_VIDEO -> {

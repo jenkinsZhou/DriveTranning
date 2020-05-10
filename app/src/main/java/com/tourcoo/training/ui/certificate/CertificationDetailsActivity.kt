@@ -1,7 +1,9 @@
 package com.tourcoo.training.ui.certificate
 
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.blankj.utilcode.util.ImageUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.UiManager
@@ -18,6 +20,12 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.certificate.CertifyDetail
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_certification_details.*
+import com.tencent.liteav.muxer.R.id.image
+import androidx.core.app.ComponentActivity.ExtraData
+import com.trello.rxlifecycle3.RxLifecycle.bindUntilEvent
+import androidx.core.content.ContextCompat.getSystemService
+import com.tourcoo.training.utils.TourImageUtils
+
 
 class CertificationDetailsActivity : BaseTitleActivity() {
 
@@ -61,6 +69,18 @@ class CertificationDetailsActivity : BaseTitleActivity() {
         }
         GlideManager.loadImg(CommonUtil.getUrl(detail.avatar), ivAvatar)
         GlideManager.loadImg(CommonUtil.getUrl(detail.certificateImage), ivImage)
+
+
+        btnSave.setOnClickListener {
+            val bitmap = (ivImage.drawable as BitmapDrawable).bitmap
+            TourImageUtils.saveBitmap2Gallery(this,bitmap)
+        }
+
+        btnShare.setOnClickListener {
+            //todo: 微信仅分享图片
+            val bitmap = ImageUtils.view2Bitmap(llShare)
+            TourImageUtils.saveBitmap2Gallery(this,bitmap)
+        }
 
     }
 

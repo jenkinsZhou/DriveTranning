@@ -9,6 +9,7 @@ import android.view.View
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ImageUtils
@@ -39,6 +40,7 @@ import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_exam_online.*
 import org.apache.commons.lang.StringUtils
+import java.text.SimpleDateFormat
 
 /**
  *@description :线上考试
@@ -304,24 +306,35 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     if (entity.data.status == 0) { //合格
 
-                        tvCertificateId.text = "证书编号：NO." + entity.data.data.certificateId
+                        tvCertificateId.text = "证书编号：NO.${entity.data.data.certificateId}"
                         tvCreateTime.text = entity.data.data.createTime
+
+
+
+                        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+                        val startTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.startTime))
+                        val endTime =  simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.endTime))
+
                         tvDetail.text = SpanUtils()
                                 .append("学员 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
-                                .append(entity.data.data.name).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                                .append(entity.data.data.name).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold()
                                 .append(" 身份证号 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
-                                .append(entity.data.data.idCard).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                                .append(entity.data.data.idCard).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold()
                                 .append(" 于 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
-                                .append(entity.data.data.startTime + " - " + entity.data.data.endTime).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                                .append(startTime + " - " + endTime).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold()
                                 .append(" 完整学习了交通安培课程 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
-                                .append(entity.data.data.trainingPlanName).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                                .append(entity.data.data.trainingPlanName).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold()
                                 .append(" 成绩合格，特授此证书。 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
                                 .create()
 
-                        val bitmap = ImageUtils.view2Bitmap(flCertificate)
-                        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
 
-                        uploadCertificate(entity.data.data.certificateId, base64Image, entity.data.tips)
+
+                        baseHandler.postDelayed({
+                            val bitmap = ImageUtils.view2Bitmap(flCertificate)
+                            val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+
+                            uploadCertificate(entity.data.data.certificateId, base64Image, entity.data.tips)
+                        }, 150)
 
                     } else { //不合格
                         val dialog = ExamNotPassDialog(mContext)
