@@ -256,9 +256,13 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
+        if (hasRequireExam) {
+            cancelTimer()
+        }
         if (detail == null || detail.subjects == null) {
             return
         }
+        clearCount()
         //拿到后台配置的间隔时间
         faceVerifyInterval = detail.faceVerifyInterval
         //初始化计时器
@@ -1704,6 +1708,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         baseHandler.postDelayed(Runnable {
             doSaveProgressAndFinish()
         }, 1500)
+    }
+
+    private fun clearCount(){
+        countNode = 0
+        countCatalog = 0
     }
 }
 

@@ -107,6 +107,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        //保持常亮
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         isTransition = intent.getBooleanExtra(TRANSITION, false)
         trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
         if (TextUtils.isEmpty(trainingPlanID)) {
@@ -231,6 +233,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun onDestroy() {
         cancelTimer()
+        //清除常亮设置
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onDestroy()
         if (smartVideoPlayer != null) {
             // 释放
@@ -261,9 +265,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
+        if (hasRequireExam) {
+            cancelTimer()
+        }
         if (detail == null || detail.subjects == null) {
             return
         }
+        clearCount()
         //拿到后台配置的间隔时间
         faceVerifyInterval = detail.faceVerifyInterval
         //初始化计时器
@@ -485,7 +493,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
             }
             MEDIA_TYPE_HTML -> {
-                    //因为网页课件需要主动点击触发 因此这里不做任何处理了
+                //因为网页课件需要主动点击触发 因此这里不做任何处理了
             }
         }
 
@@ -802,5 +810,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         startActivityForResult(intent, REQUEST_CODE_WEB, bundle)
     }
 
+    private fun clearCount() {
+        countNode = 0
+        countCatalog = 0
+    }
 
 }

@@ -75,7 +75,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         if (intent != null) {
             val bundle = intent!!.extras
             trainPlanId = bundle!!.getString(EXTRA_TRAINING_PLAN_ID)!!
-            examId = bundle!!.getString(EXTRA_EXAM_ID)!!
+            examId = bundle.getString(EXTRA_EXAM_ID)!!
         }
         if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
             ToastUtil.show("未获取到考试题数据")

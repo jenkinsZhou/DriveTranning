@@ -552,4 +552,20 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestShareSuccess(params).retryWhen(new RetryWhen()));
     }
 
+    /**
+     * 重置手机号
+     * @param phone
+     * @return
+     */
+    public Observable<BaseResult> requestResetPhone(String phone,String code) {
+        /*{
+            "phone": "17730212467",
+                "code": "8533"
+        }*/
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("phone", phone);
+        params.put("code", code);
+        return CommonTransformer.switchSchedulers(getApiService().requestResetPhone(params).retryWhen(new RetryWhen()));
+    }
+
 }

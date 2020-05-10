@@ -452,4 +452,10 @@ public interface ApiService {
     @POST("v1.0/open/news/share-success")
     Observable<BaseResult> requestShareSuccess(@Body Map<String, Object> map);
 
+
+    @Headers({HEADER_NOT_SKIP_LOGIN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/open/user/reset-phone")
+    Observable<BaseResult> requestResetPhone(@Body Map<String, Object> map);
+
+
 }

@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.account
 
+import android.app.Activity
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -25,7 +26,7 @@ import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_my_phone.*
 
-class ChangePhoneActivity  : BaseTitleActivity(), View.OnClickListener {
+class ChangePhoneActivity : BaseTitleActivity(), View.OnClickListener {
 
     private val disposableList = ArrayList<Disposable>()
     private val mHandler = Handler()
@@ -53,7 +54,7 @@ class ChangePhoneActivity  : BaseTitleActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.tvGetVCode -> {
                 val phone = etPhone.text.toString().trim()
-                if(!phone.startsWith("1") || phone.length != 11){
+                if (!phone.startsWith("1") || phone.length != 11) {
                     ToastUtil.show("手机号格式有误")
                     return
                 }
@@ -61,7 +62,21 @@ class ChangePhoneActivity  : BaseTitleActivity(), View.OnClickListener {
             }
 
             R.id.btnSubmit -> {
-
+                val phone = etPhone.text.toString().trim()
+                if (TextUtils.isEmpty(phone)) {
+                    ToastUtil.show("请输入手机号")
+                    return
+                }
+                if (!phone.startsWith("1") || phone.length != 11) {
+                    ToastUtil.show("手机号格式有误")
+                    return
+                }
+                val code = etVCode.text.toString().trim()
+                if (TextUtils.isEmpty(code)) {
+                    ToastUtil.show("请输入验证码")
+                    return
+                }
+                requestResetPhone(phone, code)
             }
 
             else -> {
@@ -69,23 +84,24 @@ class ChangePhoneActivity  : BaseTitleActivity(), View.OnClickListener {
         }
     }
 
-    private fun requestLogout() {
-        ApiRepository.getInstance().requestLogout().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>>() {
+    private fun requestResetPhone(phone: String, code: String) {
+        ApiRepository.getInstance().requestResetPhone(phone, code).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>>() {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity == null) {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.show("账号已退出")
-                    AccountHelper.getInstance().logout()
+                    ToastUtil.showSuccess("修改成功")
+                    setResult(Activity.RESULT_OK)
                     finish()
+                } else {
+                    ToastUtil.show(entity.getMsg())
                 }
 
             }
 
         })
     }
-
 
 
     /**

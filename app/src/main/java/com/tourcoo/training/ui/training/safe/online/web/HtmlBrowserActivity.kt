@@ -110,6 +110,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         if (detail == null || detail.subjects == null) {
             return
         }
+        clearCount()
         //拿到后台配置的间隔时间
         faceVerifyInterval = detail.faceVerifyInterval
         //不需要初始化计时器 因此屏蔽
@@ -481,5 +482,8 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         startActivity(intent)
     }
 
-
+    private fun clearCount(){
+        countNode = 0
+        countCatalog = 0
+    }
 }

@@ -1,5 +1,7 @@
 package com.tourcoo.training.ui.account
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
@@ -96,7 +98,8 @@ class PersonalInfoActivity : BaseTitleActivity() {
         }
 
         llPhone.setOnClickListener {
-            CommonUtil.startActivity(this, ChangePhoneActivity::class.java)
+            val intent = Intent(this, ChangePhoneActivity::class.java)
+            startActivityForResult(intent, 2015)
         }
 
     }
@@ -174,4 +177,10 @@ class PersonalInfoActivity : BaseTitleActivity() {
         tvIndustryCategoryNames.text = tradeTypeName
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK){
+            requestUserInfo()
+        }
+    }
 }
