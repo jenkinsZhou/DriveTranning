@@ -1,7 +1,9 @@
 package com.tourcoo.training.ui.exam
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,9 +13,10 @@ import com.tourcoo.training.constant.ExamConstant.*
 import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
-import com.tourcoo.training.entity.exam.*
+import com.tourcoo.training.entity.exam.Answer
+import com.tourcoo.training.entity.exam.ExamTempHelper
+import com.tourcoo.training.entity.exam.Question
 import com.tourcoo.training.entity.exam.Question.*
-import kotlinx.android.synthetic.main.fragment_exam_content_online.*
 
 /**
  *@description :
@@ -28,7 +31,9 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     private var questionRecyclerView: RecyclerView? = null
     private var tvCurrentQuestion: TextView? = null
     private var tvQuestionType: TextView? = null
+    private var tvAnswerAnalysis: TextView? = null
     private var question: Question? = null
+    private var llQuestionAnalysis : LinearLayout?=null
     override fun getContentLayout(): Int {
         return R.layout.fragment_exam_content_online
     }
@@ -36,8 +41,9 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     override fun initView(savedInstanceState: Bundle?) {
         question = arguments?.getParcelable("question")
         questionRecyclerView = mContentView.findViewById(R.id.questionRecyclerView)
+        llQuestionAnalysis = mContentView.findViewById(R.id.llQuestionAnalysis)
         tvCurrentQuestion = mContentView.findViewById(R.id.tvCurrentQuestion)
-        tvQuestionType = mContentView.findViewById(R.id.tvQuestionType)
+        tvAnswerAnalysis = mContentView.findViewById(R.id.tvAnswerAnalysis)
         questionRecyclerView?.layoutManager = LinearLayoutManager(mContext)
         if (ExamTempHelper.getInstance().examInfo == null || question == null) {
             ToastUtil.show("未获取到题目信息")
@@ -76,9 +82,6 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     }
 
 
-
-
-
     private fun loadItemClick(question: Question) {
         if (adapter == null) {
             return
@@ -107,7 +110,11 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
 
 
     private fun showQuestion(question: Question?) {
-        when (question?.type) {
+        if (question == null) {
+            ToastUtil.show("未获取到题目信息")
+            return
+        }
+        when (question.type) {
             QUESTION_TYPE_SINGLE -> {
                 tvQuestionType?.text = "单选"
             }
@@ -120,8 +127,10 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
             else -> {
             }
         }
-        tvCurrentQuestion?.text = question?.question
-        tvAnswerAnalysis?.text = question?.analysis
+        tvCurrentQuestion?.text = question.question
+        tvAnswerAnalysis!!.text = getNotNullValue(question.analysis)
+        //如果用户没回答过题目就不显示题解
+        setViewGone(llQuestionAnalysis, !(question.answer==null ||question.answer.isEmpty()) )
     }
 
 
@@ -175,10 +184,17 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
             }
         }
         question!!.answerStatus = getQuestionStatus()
+        //如果用户没回答过题目就不显示题解
+        setViewGone(llQuestionAnalysis, true )
         adapter?.notifyDataSetChanged()
         return true
     }
 
+  private  fun getNotNullValue(number: String?): String? {
+        return if (TextUtils.isEmpty(number)) {
+            "略"
+        } else number
+    }
     /**
      * 判断题目是否选中
      */

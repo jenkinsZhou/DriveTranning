@@ -130,16 +130,20 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
 
     override fun setPayInfo(payType: Int, payInfo: PayInfo?) {
-        if(payInfo == null){
-            ToastUtil.show("支付参数异常")
-            return
-        }
         if (payType == 1 || payType == 2) {
             setResult(Activity.RESULT_OK)
             finish()
         } else if (payType == 3) {
+            if(payInfo == null){
+                ToastUtil.show("支付参数异常")
+                return
+            }
             payByAlipay(payInfo.thirdPayInfo.toString())
         } else if (payType == 4) {
+            if(payInfo == null){
+                ToastUtil.show("支付参数异常")
+                return
+            }
             payByWx(payInfo.thirdPayInfo)
         }
 
