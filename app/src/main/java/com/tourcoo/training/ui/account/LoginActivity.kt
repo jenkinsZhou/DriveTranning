@@ -42,7 +42,6 @@ import org.greenrobot.eventbus.EventBus
 class LoginActivity : BaseTitleActivity(), View.OnClickListener {
     private val mTag = "LoginActivity"
     private var checkInputList: MutableList<InputStatus>? = null
-
     companion object {
         const val EXTRA_KEY_REGISTER_TYPE = "EXTRA_KEY_REGISTER_TYPE"
         const val EXTRA_REGISTER_TYPE_INDUSTRY = 1
@@ -66,11 +65,26 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         tvLogin.setOnClickListener(this)
         btnForgetPassword.setOnClickListener(this)
         btnContent.setOnClickListener(this)
-        listenInput(etPass, ivPassCheck)
+        listenInputClear(etPass,ivClearInputPass)
         listenInputLegal(etIdCard, ivAccountCheck)
         showButtonByInput(hasInputAll())
-        listenInputFocus(etIdCard, viewLineAccount)
-        listenInputFocus(etPass, viewLinePass)
+        listenInputFocus(etIdCard, viewLineAccount, OnFocusListener {
+            if(it){
+                ivUser.setImageResource(R.drawable.icon_identity_card_selected)
+            }else{
+                ivUser.setImageResource(R.drawable.icon_identity_card_normal)
+            }
+        })
+        listenInputFocus(etPass, viewLinePass, OnFocusListener {
+            if(it){
+                ivPass.setImageResource(R.drawable.icon_password_selected)
+            }else{
+                ivPass.setImageResource(R.drawable.icon_password_normal)
+            }
+        })
+        listenInputClear(etIdCard,ivClearInputId)
+        listenInputClear(etPass,ivClearInputPass)
+
         initTestInput()
     }
 
@@ -213,7 +227,6 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
     private fun listenInputLegal(editText: EditText, imageView: ImageView?) {
         var inputStatus = InputStatus()
         checkInputList?.add(inputStatus)
-        imageView?.setOnClickListener { editText.setText("") }
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -224,8 +237,20 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
                 showButtonByInput(hasInputAll())
             }
         })
-
     }
+
+
+    private fun listenInputClear(editText: EditText, imageView: ImageView?) {
+        imageView?.setOnClickListener { editText.setText("") }
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                setViewGone(imageView, !TextUtils.isEmpty(editText.text.toString()))
+            }
+        })
+    }
+
 
     private fun hasInputAll(): Boolean {
         for (hasInput in checkInputList!!) {
@@ -239,14 +264,19 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun listenInputFocus(editText: EditText, lineView: View) {
+    private fun listenInputFocus(editText: EditText, lineView: View,focusListener: OnFocusListener  ) {
         editText.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            focusListener.onFocus(hasFocus)
             if (hasFocus) {
                 //获得焦点
                 showSelectLine(lineView)
+                editText.setHintTextColor(ResourceUtil.getColor(R.color.blue004D8E))
+                editText.setTextColor(ResourceUtil.getColor(R.color.blue004D8E))
             } else {
                 //失去焦点
                 showUnSelectLine(lineView)
+                editText.setHintTextColor(ResourceUtil.getColor(R.color.gray999999))
+                editText.setTextColor(ResourceUtil.getColor(R.color.gray999999))
             }
         }
     }

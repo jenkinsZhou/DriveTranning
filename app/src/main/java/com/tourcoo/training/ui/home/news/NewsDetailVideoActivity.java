@@ -145,6 +145,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         tvNewsLookCount = findViewById(R.id.tvNewsLookCount);
         tvNewsLikeCount = findViewById(R.id.tvNewsLikeCount);
         tvNewsShareCount = findViewById(R.id.tvNewsShareCount);
+        findViewById(R.id.llLike).setOnClickListener(this);
         tvNewsLookCount.setOnClickListener(this);
         tvNewsLikeCount.setOnClickListener(this);
         tvNewsShareCount.setOnClickListener(this);
@@ -323,6 +324,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             case R.id.llLike:
                 //直接点赞
                 requestNewsLike(mNewsEntity.getID(), !cBoxLike.isChecked());
+                break;
             case R.id.llShare:
                 showShareDialog();
                 break;
