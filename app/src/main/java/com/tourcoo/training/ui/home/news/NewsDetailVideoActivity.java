@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.rtmp.TXLiveConstants;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter;
+import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.log.TourCooLogUtil;
@@ -36,7 +38,7 @@ import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
-import com.tourcoo.training.entity.news.NewsDetailEntity;
+import com.tourcoo.training.entity.news.NewsDetail;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.WxShareEvent;
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
@@ -80,7 +82,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     private TextView tvNewsLookCount;
     private TextView tvNewsLikeCount;
     private TextView tvNewsShareCount;
-
+    private CheckBox cBoxLike;
 
     private void initWebView() {
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -146,7 +148,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         tvNewsLookCount.setOnClickListener(this);
         tvNewsLikeCount.setOnClickListener(this);
         tvNewsShareCount.setOnClickListener(this);
-        showNewsDetail();
+        cBoxLike = findViewById(R.id.cBoxLike);
         loadPlayerSettingAndPlay();
         initWebView();
         requestNewsDetail(mNewsEntity.getID());
@@ -181,20 +183,29 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     }
 
     private void requestNewsDetail(String id) {
-        ApiRepository.getInstance().requestNewsDetail(id).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<NewsDetailEntity>>() {
+        ApiRepository.getInstance().requestNewsDetail(id).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<NewsDetail>>() {
             @Override
-            public void onSuccessNext(BaseResult<NewsDetailEntity> entity) {
-                loadRecommend(entity.getData());
+            public void onSuccessNext(BaseResult<NewsDetail> entity) {
+                if (entity == null) {
+                    return;
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    showWebDetail(entity.getData());
+                } else {
+                    ToastUtil.show(entity.getMsg());
+                }
+
+
             }
         });
     }
 
-    private void loadRecommend(NewsDetailEntity detailEntity) {
+    private void showWebDetail(NewsDetail detailEntity) {
         adapter.setNewData(detailEntity.getRecommendList());
         TourCooLogUtil.d("富文本:" + detailEntity.getContent());
         webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
+        showNewsDetail(detailEntity);
     }
-
     private void initItemClick() {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -309,8 +320,9 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tvNewsLikeCount:
-                break;
+            case R.id.llLike:
+                //直接点赞
+                requestNewsLike(mNewsEntity.getID(), !cBoxLike.isChecked());
             case R.id.llShare:
                 showShareDialog();
                 break;
@@ -333,12 +345,11 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         }
     }
 
-    private void showNewsDetail() {
-        tvNewsLookCount.setText(mNewsEntity.getReadTotal() + "");
-        tvNewsLikeCount.setText(mNewsEntity.getLikeTotal() + "");
-        tvNewsShareCount.setText(mNewsEntity.getSharedNum() + "");
+    private void showNewsDetail(NewsDetail newsDetail) {
+        tvNewsLookCount.setText(newsDetail.getSeeNum() + "");
+        tvNewsLikeCount.setText(newsDetail.getLikeNum() + "");
+        tvNewsShareCount.setText(newsDetail.getSharedNum() + "");
     }
-
 
     private void showShareDialog() {
         ShareEntity wx = new ShareEntity("微信", R.mipmap.ic_share_type_wx);
@@ -438,5 +449,22 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         });
     }
 
-
+    private void requestNewsLike(String id, boolean isLike) {
+        ApiRepository.getInstance().requestNewsLike(id, isLike).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
+            @Override
+            public void onSuccessNext(BaseResult entity) {
+                if (entity == null) {
+                    return;
+                }
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+//                    showLikeCountCallBack();
+                    //直接刷新
+                    ToastUtil.show("点赞成功");
+                    requestNewsDetail(mNewsEntity.getID());
+                } else {
+                    ToastUtil.show(entity.getMsg());
+                }
+            }
+        });
+    }
 }

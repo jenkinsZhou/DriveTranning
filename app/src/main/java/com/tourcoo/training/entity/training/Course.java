@@ -41,7 +41,7 @@ public class Course implements Parcelable {
     private int SN;
     private String Remark;
     private int Enabled;
-    private int Duration;
+    private long Duration;
     private String CoverURL;
     private String MediaUrl;
     /**
@@ -115,11 +115,11 @@ public class Course implements Parcelable {
         this.Enabled = Enabled;
     }
 
-    public int getDuration() {
+    public long getDuration() {
         return Duration;
     }
 
-    public void setDuration(int Duration) {
+    public void setDuration(long Duration) {
         this.Duration = Duration;
     }
 
@@ -242,7 +242,7 @@ public class Course implements Parcelable {
         dest.writeInt(this.SN);
         dest.writeString(this.Remark);
         dest.writeInt(this.Enabled);
-        dest.writeInt(this.Duration);
+        dest.writeLong(this.Duration);
         dest.writeString(this.CoverURL);
         dest.writeString(this.MediaUrl);
         dest.writeInt(this.MediaType);

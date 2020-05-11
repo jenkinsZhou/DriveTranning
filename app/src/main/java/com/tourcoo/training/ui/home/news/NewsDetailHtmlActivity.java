@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +30,7 @@ import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
-import com.tourcoo.training.entity.news.NewsDetailEntity;
+import com.tourcoo.training.entity.news.NewsDetail;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.WxShareEvent;
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
@@ -115,7 +114,6 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
             finish();
             return;
         }
-        showNewsDetail();
         initWebView();
         totalLike = mNewsEntity.getLikeTotal();
         requestNewsDetail(mNewsEntity.getID());
@@ -172,18 +170,28 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     }
 
     private void requestNewsDetail(String id) {
-        ApiRepository.getInstance().requestNewsDetail(id).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<NewsDetailEntity>>() {
+        ApiRepository.getInstance().requestNewsDetail(id).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<NewsDetail>>() {
             @Override
-            public void onSuccessNext(BaseResult<NewsDetailEntity> entity) {
-                showWebDetail(entity.getData());
+            public void onSuccessNext(BaseResult<NewsDetail> entity) {
+                if (entity == null) {
+                    return;
+                }
+                if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    showWebDetail(entity.getData());
+                } else {
+                    ToastUtil.show(entity.getMsg());
+                }
+
+
             }
         });
     }
 
-    private void showWebDetail(NewsDetailEntity detailEntity) {
+    private void showWebDetail(NewsDetail detailEntity) {
         adapter.setNewData(detailEntity.getRecommendList());
         TourCooLogUtil.d("富文本:" + detailEntity.getContent());
         webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
+        showNewsDetail(detailEntity);
     }
 
     private void initItemClick() {
@@ -199,10 +207,10 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         });
     }
 
-    private void showNewsDetail() {
-        tvNewsLookCount.setText(mNewsEntity.getReadTotal() + "");
-        tvNewsLikeCount.setText(mNewsEntity.getLikeTotal() + "");
-        tvNewsShareCount.setText(mNewsEntity.getSharedNum() + "");
+    private void showNewsDetail(NewsDetail newsDetail) {
+        tvNewsLookCount.setText(newsDetail.getSeeNum() + "");
+        tvNewsLikeCount.setText(newsDetail.getLikeNum() + "");
+        tvNewsShareCount.setText(newsDetail.getSharedNum() + "");
     }
 
     @Override
@@ -213,7 +221,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                 break;
             case R.id.llLike:
                 //直接点赞
-                requestNewsLike(mNewsEntity.getID(), cBoxLike.isChecked());
+                requestNewsLike(mNewsEntity.getID(), !cBoxLike.isChecked());
                 break;
             default:
                 break;
@@ -252,7 +260,10 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                     return;
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    showLikeCountCallBack();
+//                    showLikeCountCallBack();
+                    //直接刷新
+                    ToastUtil.show("点赞成功");
+                    requestNewsDetail(mNewsEntity.getID());
                 } else {
                     ToastUtil.show(entity.getMsg());
                 }
@@ -266,11 +277,11 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
             if (mNewsEntity.getLikeTotal() <= 0) {
                 finalLikeCount = "0";
             } else {
-                totalLike --;
+                totalLike--;
                 finalLikeCount = totalLike - 1 + "";
             }
         } else {
-            totalLike ++;
+            totalLike++;
             finalLikeCount = totalLike + 1 + "";
         }
         cBoxLike.setChecked(!cBoxLike.isChecked());

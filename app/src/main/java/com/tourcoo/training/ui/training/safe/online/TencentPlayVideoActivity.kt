@@ -379,8 +379,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
             //播放状态
             val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
-            val endTime = TimeUtil.secondToDate(course.progress.toLong(), "mm:ss")
-            tvPlanDesc.text = getNotNullValue("00:00学习到$endTime")
+            val endTime =TimeUtil.formatTimeS(course.progress.toLong())
+            val tips = TimeUtil.formatTimeS(course.duration)  + "  学习到 " + endTime
+            tvPlanDesc.text = tips
+
             tvPlanDesc.textSize = 12f
             setViewGone(tvPlanDesc, true)
             setViewGone(ivCourseStatus, true)
@@ -415,12 +417,26 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
         when (course.currentPlayStatus) {
             COURSE_PLAY_STATUS_NO_COMPLETE -> {
+                //锁定状态 下的提示文字需要修改成 时长+未解锁
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
-                setViewGone(tvPlanDesc, false)
+//                val tips = TimeUtil.secondToDate(course.duration, "HH:mm:ss") + " 未解锁"
+                val tips = TimeUtil.formatTimeS(course.duration) + " 未解锁"
+                tvPlanDesc.text = tips
+                tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.black333333))
+                tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.gray999999))
+                setViewGone(tvPlanDesc, true)
             }
             COURSE_PLAY_STATUS_COMPLETE -> {
+                //已完成 下的提示文字需要修改成 时长+已听完
+                imageView.setImageResource(R.mipmap.ic_play_no_complete)
+//                val tips = TimeUtil.secondToDate(course.duration, "HH:mm:ss") + " 已听完"
+                val tips = TimeUtil.getTime(course.duration) + " 已听完"
+                tvPlanDesc.text = tips
+                tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.grayAAAAAA))
+                tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.gray999999))
+                setViewGone(tvPlanDesc, true)
                 imageView.setImageResource(R.mipmap.ic_play_finish)
-                setViewGone(tvPlanDesc, false)
+                setViewGone(tvPlanDesc, true)
             }
             COURSE_PLAY_STATUS_PLAYING -> {
                 if (course.mediaType == MEDIA_TYPE_HTML) {

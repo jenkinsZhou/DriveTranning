@@ -22,7 +22,7 @@ import com.tourcoo.training.entity.medal.MedalDictionary;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.message.MessageDetail;
 import com.tourcoo.training.entity.message.MessageEntity;
-import com.tourcoo.training.entity.news.NewsDetailEntity;
+import com.tourcoo.training.entity.news.NewsDetail;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.order.OrderEntity;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
@@ -335,7 +335,7 @@ public interface ApiService {
 
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
     @POST("v1.0/open/news/get-news-detail")
-    Observable<BaseResult<NewsDetailEntity>> requestNewsDetail(@Body Map<String, Object> map);
+    Observable<BaseResult<NewsDetail>> requestNewsDetail(@Body Map<String, Object> map);
 
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
     @POST("v1.0/open/Individual/individual-business-payinfo-pay")
