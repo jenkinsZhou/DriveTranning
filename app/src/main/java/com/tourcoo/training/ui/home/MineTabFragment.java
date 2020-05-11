@@ -183,7 +183,7 @@ public class MineTabFragment extends BaseTitleFragment implements View.OnClickLi
                 shareDialog.addData(shareEntity).addData(shareEntity1).addData(shareEntity2).addData(shareEntity3).show();*/
               /*   multiplePayDialog = new MultiplePayDialog(mContext).create();
                 multiplePayDialog.show();*/
-                CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity.class);
+//                CommonUtil.startActivity(mContext, DialogFaceRecognitionActivity.class);
                 break;
             case R.id.llAvatar:
                 CommonUtil.startActivity(mContext, LoginActivity.class);

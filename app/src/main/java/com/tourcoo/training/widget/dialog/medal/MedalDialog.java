@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.util.CommonUtil;
 
 
 /**
@@ -27,6 +29,7 @@ public class MedalDialog {
     private Dialog dialog;
     private TextView tvPositive;
     private TextView tvTitle;
+    private ImageView ivMedalIcon;
 
     public MedalDialog(Context context) {
         this.mContext = context;
@@ -48,6 +51,7 @@ public class MedalDialog {
         dialog.setContentView(view);
         tvPositive = view.findViewById(R.id.tvPositive);
         tvTitle = view.findViewById(R.id.tvTitle);
+        ivMedalIcon = view.findViewById(R.id.ivMedalIcon);
         view.findViewById(R.id.ivCloseRect).setOnClickListener(v -> dismiss());
         Window window = dialog.getWindow();
         if (window != null) {
@@ -109,5 +113,9 @@ public class MedalDialog {
             tvTitle.setText(title);
         }
         return this;
+    }
+
+    public void setMedalImage(int imageId) {
+        ivMedalIcon.setImageResource(imageId);
     }
 }

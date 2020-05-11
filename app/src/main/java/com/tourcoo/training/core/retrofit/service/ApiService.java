@@ -18,6 +18,7 @@ import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.feedback.FeedReasonEntity;
+import com.tourcoo.training.entity.medal.MedalDictionary;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.message.MessageDetail;
 import com.tourcoo.training.entity.message.MessageEntity;
@@ -209,6 +210,7 @@ public interface ApiService {
 
     /**
      * 证书详情
+     *
      * @param map
      * @return
      */
@@ -381,6 +383,7 @@ public interface ApiService {
 
     /**
      * 学习详情
+     *
      * @param map
      * @return
      */
@@ -397,6 +400,7 @@ public interface ApiService {
 
     /**
      * 订单列表
+     *
      * @param map
      * @return
      */
@@ -407,6 +411,7 @@ public interface ApiService {
 
     /**
      * 消息列表
+     *
      * @param map
      * @return
      */
@@ -422,6 +427,7 @@ public interface ApiService {
 
     /**
      * 问题反馈原因选项
+     *
      * @return
      */
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
@@ -430,12 +436,12 @@ public interface ApiService {
 
     /**
      * 提交问题反馈
+     *
      * @return
      */
     @Headers({TokenInterceptor.HEADER_NEED_TOKEN, HEADER_SKIP_LOGIN})
     @POST("v1.0/feedback/add_questions_feedback")
     Observable<BaseResult> requestFeedbackCommit(@Body Map<String, Object> map);
-
 
 
     /**
@@ -457,5 +463,20 @@ public interface ApiService {
     @POST("v1.0/open/user/reset-phone")
     Observable<BaseResult> requestResetPhone(@Body Map<String, Object> map);
 
+
+    /**
+     * 专项模块人脸验证
+     *
+     * @param map
+     * @return
+     */
+    @Headers({HEADER_NOT_SKIP_LOGIN, HEADER_SKIP_LOGIN})
+    @POST("v1.0/Special/face-verify")
+    Observable<BaseResult<FaceRecognizeResult>> requestFaceVerifySpecial(@Body Map<String, Object> map);
+
+
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/user/get-medal-info")
+    Observable<BaseResult<MedalDictionary>> requestMedalDictionary();
 
 }

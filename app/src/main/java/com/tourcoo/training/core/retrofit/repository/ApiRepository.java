@@ -24,6 +24,7 @@ import com.tourcoo.training.entity.exam.ExamEntity;
 import com.tourcoo.training.entity.exam.ExamResultEntity;
 import com.tourcoo.training.entity.feedback.FeedReasonEntity;
 import com.tourcoo.training.entity.feedback.FeedbackCommitEntity;
+import com.tourcoo.training.entity.medal.MedalDictionary;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.message.MessageDetail;
 import com.tourcoo.training.entity.message.MessageEntity;
@@ -543,6 +544,7 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 分享成功接口
+     *
      * @param id
      * @return
      */
@@ -554,18 +556,35 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 重置手机号
+     *
      * @param phone
      * @return
      */
-    public Observable<BaseResult> requestResetPhone(String phone,String code) {
-        /*{
-            "phone": "17730212467",
-                "code": "8533"
-        }*/
+    public Observable<BaseResult> requestResetPhone(String phone, String code) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("phone", phone);
         params.put("code", code);
         return CommonTransformer.switchSchedulers(getApiService().requestResetPhone(params).retryWhen(new RetryWhen()));
     }
+
+
+    /**
+     * 专项考试需要的人脸验证
+     *
+     * @return
+     */
+    public Observable<BaseResult<FaceRecognizeResult>> requestFaceVerifySpecial(String examId, String photoBase64) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("examId", examId);
+        params.put("photo", photoBase64);
+        return CommonTransformer.switchSchedulers(getApiService().requestFaceVerifySpecial(params).retryWhen(new RetryWhen()));
+    }
+
+
+    public Observable<BaseResult<MedalDictionary>> requestMedalDictionary() {
+        return CommonTransformer.switchSchedulers(getApiService().requestMedalDictionary().retryWhen(new RetryWhen()));
+    }
+
+
 
 }

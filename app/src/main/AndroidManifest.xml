@@ -144,12 +144,12 @@
         <activity android:name=".ui.message.MessageListActivity" />
         <activity android:name=".ui.message.MessageDetailActivity" />
         <activity android:name=".ui.message.MessageWebViewActivityOld" />
-        <activity android:name=".ui.message.MessageDetailActivity" />
         <activity android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
             />
         <activity android:name=".ui.training.safe.online.web.PlayHtmlWebActivity" />
+        <activity android:name=".ui.face.ProfessionalFaceRecognitionActivity" />
     </application>
 
 </manifest>

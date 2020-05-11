@@ -131,7 +131,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
                 //交卷之前 先把最后一道题回答了
                 doAnswerQuestion()
                 showBottomBarInfo()
-                answerCount = 0
                 baseHandler.postDelayed(Runnable {
                     //交卷
                     doCommitExam()
@@ -288,7 +287,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
         //显示交卷确认弹窗
         val dialog = ExamCommonDialog(mContext)
-        dialog.create() .show()
+        dialog.create().show()
         dialog.setPositiveButtonListener(View.OnClickListener {
             isSubmit = true
             commitExam(userAnswerList)
@@ -396,6 +395,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun getAllQuestions(): MutableList<Question> {
         //先重置答题数量
+        answerCount = 0
         val results = ArrayList<Question>()
         for (fragment in list!!) {
             val onlineExamFragment = fragment as ExamFragment?
@@ -453,8 +453,9 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var isSubmit = false
 
     override fun onBackPressed() {
-        if (!isSubmit) {
-            //说明还没交卷 需要保存答题进度
+        getAllQuestions()
+        if (!isSubmit && answerCount < list!!.size) {
+            //说明还没交卷并且还有题目没有答完 需要保存答题进度
             showSaveExamAnswerDialog()
         } else {
             //不保存 直接退出
@@ -522,14 +523,13 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
     private fun showSaveExamAnswerDialog() {
         baseHandler.postDelayed({
             val dialog = ExamCommonDialog(mContext)
-            dialog.create().setContent("题目还没做完，是否保存答题进度？").setPositiveButtonListener(View.OnClickListener {
+            dialog.create().setContent("是否保存答题进度？").setPositiveButtonListener(View.OnClickListener {
                 isSubmit = true
                 saveExam(getAllQuestions())
                 dialog.dismiss()
             }).setNegativeButtonListener {
                 finish()
-            }.
-                    show()
+            }.show()
         }, 100)
     }
 

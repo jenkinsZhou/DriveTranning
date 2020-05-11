@@ -8,7 +8,14 @@ package com.tourcoo.training.constant;
  * @Email: 971613168@qq.com
  */
 public class TrainingConstant {
+    /**
+     * 培训计划ID
+     */
     public static final String EXTRA_TRAINING_PLAN_ID = "EXTRA_TRAINING_PLAN_ID";
+    /**
+     * 考试ID
+     */
+    public static final String EXTRA_KEY_EXAM_ID = "EXTRA_EXAM_ID";
     /**
      * 当前课程key
      */

@@ -58,7 +58,10 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var type = 0
     private var trainPlanId = ""
     private var examId = ""
-
+    /**
+     * 用来计数是否答完所有试题 (没回答完不让提交答案)
+     */
+    private var answerCount = 0
     companion object {
         const val EXTRA_EXAM_ID = "EXTRA_EXAM_ID"
     }
@@ -270,19 +273,6 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
         loadBottomSheetBar(examEntity.questions)
     }
 
-    /**
-     * 交卷
-     */
-    private fun doCommitExam() {
-
-        val dialog = ExamCommonDialog(mContext)
-        dialog.create().show()
-        dialog.setPositiveButtonListener(View.OnClickListener {
-            isSubmit = true
-            commitExam(getAllQuestions())
-            dialog.dismiss()
-        })
-    }
 
     /**
      *真正的卷逻辑
@@ -390,14 +380,19 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun getAllQuestions(): MutableList<Question> {
+        //先重置答题数量
+        answerCount = 0
         val results = ArrayList<Question>()
         for (fragment in list!!) {
             val onlineExamFragment = fragment as ExamFragment?
             if (onlineExamFragment != null) {
                 results.add(onlineExamFragment.getQuestion())
+                if (onlineExamFragment.getQuestion().isHasAnswered) {
+                    //回答过 则答题数量+1
+                    answerCount++
+                }
             }
         }
-        TourCooLogUtil.i(mTag, results)
         return results
     }
 
@@ -438,9 +433,13 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
     private var isSubmit = false
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        if (!isSubmit && type == 0) {
-            saveExam(getAllQuestions())
+        getAllQuestions()
+        if (!isSubmit && answerCount < list!!.size) {
+            //说明还没交卷并且还有题目没有答完 需要保存答题进度
+            showSaveExamAnswerDialog()
+        } else {
+            //不保存 直接退出
+            super.onBackPressed()
         }
     }
 
@@ -497,5 +496,40 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
         }
     }
 
+    /**
+     * 交卷
+     */
+    private fun doCommitExam() {
+        //先获取一下已答题数量
+        val userAnswerList = getAllQuestions()
+        if (answerCount < list!!.size) {
+            ToastUtil.show("您还有题目没有答完哦")
+            return
+        }
+        //显示交卷确认弹窗
+        val dialog = ExamCommonDialog(mContext)
+        dialog.create().show()
+        dialog.setPositiveButtonListener(View.OnClickListener {
+            isSubmit = true
+            commitExam(userAnswerList)
+            dialog.dismiss()
+        })
+    }
 
+
+    /**
+     * 显示保存考试进度弹窗
+     */
+    private fun showSaveExamAnswerDialog() {
+        baseHandler.postDelayed({
+            val dialog = ExamCommonDialog(mContext)
+            dialog.create().setContent("是否保存答题进度？").setPositiveButtonListener(View.OnClickListener {
+                isSubmit = true
+                saveExam(getAllQuestions())
+                dialog.dismiss()
+            }).setNegativeButtonListener {
+                finish()
+            }.show()
+        }, 100)
+    }
 }

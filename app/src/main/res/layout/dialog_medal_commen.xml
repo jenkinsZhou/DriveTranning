@@ -15,8 +15,9 @@
         android:src="@mipmap/ic_close_rect" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/ivMedalIcon"
+        android:layout_width="@dimen/dp_180"
+        android:layout_height="@dimen/dp_190"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp_10"
         android:src="@mipmap/icon_medal_star" />

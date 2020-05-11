@@ -22,13 +22,16 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.medal.MedalDictionary
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
+import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
+import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 
@@ -124,6 +127,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             tvExam.isEnabled = true
             //延时弹出是否考试弹窗
             showAcceptExamDialog()
+//            requestMedalDictionary()
         } else {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
             tvExam.isEnabled = false
@@ -483,8 +487,33 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         startActivity(intent)
     }
 
-    private fun clearCount(){
+    private fun clearCount() {
         countNode = 0
         countCatalog = 0
+    }
+
+
+    private fun requestMedalDictionary() {
+        ApiRepository.getInstance().requestMedalDictionary().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MedalDictionary>>() {
+            override fun onSuccessNext(entity: BaseResult<MedalDictionary>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
+                    //显示勋章
+                    showMedalDialog()
+                }
+            }
+        })
+    }
+
+
+    private fun showMedalDialog() {
+        val dialog = MedalDialog(mContext)
+        dialog.create().setPositiveButtonListener {
+            dialog.dismiss()
+            val intent = Intent(this, StudyMedalRecordActivity::class.java)
+            startActivityForResult(intent, 2017)
+        }.show()
     }
 }

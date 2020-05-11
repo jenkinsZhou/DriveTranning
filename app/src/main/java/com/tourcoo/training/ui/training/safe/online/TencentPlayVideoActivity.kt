@@ -29,6 +29,7 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.medal.MedalDictionary
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.DRMParams
@@ -36,10 +37,12 @@ import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.exam.ExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
+import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity
 import com.tourcoo.training.ui.training.safe.online.web.WebCourseTempHelper
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
+import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 
@@ -84,14 +87,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     companion object {
-        const val IMG_TRANSITION = "IMG_TRANSITION"
         const val TRANSITION = "TRANSITION"
-
         const val REQUEST_CODE_FACE = 1006
         const val REQUEST_CODE_WEB = 1001
-        /*   const val COURSE_STATUS_NO_COMPLETE = 0
-           const val COURSE_STATUS_COMPLETE = 2
-           const val COURSE_STATUS_PLAYING = 1*/
+
     }
 
 
@@ -287,6 +286,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             tvExam.isEnabled = true
             //延时弹出是否考试弹窗
             showAcceptExamDialog()
+            //todo 由于没有勋章等级 无法展示各种勋章
+//            requestMedalDictionary()
+
         } else {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
             tvExam.isEnabled = false
@@ -426,7 +428,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 } else {
                     imageView.setImageResource(R.mipmap.ic_playing)
                 }
-
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
@@ -467,7 +468,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (course == null) {
             return
         }
-        LogUtils.e("=================="+course.mediaType)
+        LogUtils.e("==================" + course.mediaType)
         when (course.mediaType) {
             //视频
             MEDIA_TYPE_VIDEO -> {
@@ -818,4 +819,27 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         countCatalog = 0
     }
 
+    private fun requestMedalDictionary() {
+        ApiRepository.getInstance().requestMedalDictionary().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MedalDictionary>>() {
+            override fun onSuccessNext(entity: BaseResult<MedalDictionary>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
+                    //显示勋章
+                    showMedalDialog()
+                }
+            }
+        })
+    }
+
+
+    private fun showMedalDialog() {
+        val dialog = MedalDialog(mContext)
+        dialog.create().setPositiveButtonListener {
+            dialog.dismiss()
+            val intent = Intent(this, StudyMedalRecordActivity::class.java)
+            startActivityForResult(intent, 2017)
+        }.show()
+    }
 }
