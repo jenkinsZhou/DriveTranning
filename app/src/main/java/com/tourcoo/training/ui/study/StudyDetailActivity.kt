@@ -30,18 +30,19 @@ import kotlinx.android.synthetic.main.activity_study_detail.*
  * @Email: 971613168@qq.com
  */
 class StudyDetailActivity : BaseTitleActivity() {
-    private var trainingPlanID = 0
+    private var trainingPlanID = ""
     override fun getContentLayout(): Int {
         return R.layout.activity_study_detail
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
-        titleBar?.setTitleMainText("培训详情")
+        titleBar?.setTitleMainText("培训记录")
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        trainingPlanID = intent.getIntExtra(EXTRA_TRAINING_PLAN_ID, -1)
-        requestDetail(trainingPlanID.toString())
+        trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
+        trainingPlanID =CommonUtil.getNotNullValue(trainingPlanID)
+        requestDetail(trainingPlanID)
     }
 
 

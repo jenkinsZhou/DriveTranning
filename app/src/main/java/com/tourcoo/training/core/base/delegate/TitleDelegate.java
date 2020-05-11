@@ -45,8 +45,7 @@ public class TitleDelegate {
         //默认的MD风格返回箭头icon如使用该风格可以不用设置
         final Activity activity = StackUtil.getInstance().getActivity(cls);
         //设置TitleBarView 所有TextView颜色
-        mTitleBar.setLeftTextDrawablePadding(SizeUtil.dp2px(10));
-        mTitleBar.setLeftTextDrawable(activity != null ? R.drawable.icon_return : 0)
+        mTitleBar.setLeftTextDrawable(activity != null ? R.mipmap.ic: 0)
                 //.setLeftTextDrawableTintResource(R.color.colorTitleText)
                 .setOnLeftTextClickListener(activity == null ? null : new View.OnClickListener() {
                     @Override

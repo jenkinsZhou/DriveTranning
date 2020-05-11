@@ -308,14 +308,17 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
         when (course.currentPlayStatus) {
             COURSE_PLAY_STATUS_NO_COMPLETE -> {
+                //锁定状态 下的提示文字需要修改成 时长+未解锁
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
-                setViewGone(tvPlanDesc, false)
+                //显示未解锁提示
+                showUnlockTips(course,tvPlanDesc,tvPlanTitle)
             }
             COURSE_PLAY_STATUS_COMPLETE -> {
+                //已完成 下的提示文字需要修改成 时长+已听完
+                imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 imageView.setImageResource(R.mipmap.ic_play_finish)
-                setViewGone(tvPlanDesc, false)
-                //todo 已学完的课程 暂时允许点击
-                setCourseInfoClick(view, course)
+                //显示已听完
+                showPlayFinishTips(course,tvPlanDesc,tvPlanTitle)
             }
             COURSE_PLAY_STATUS_PLAYING -> {
                 imageView.setImageResource(R.mipmap.ic_eyes)
@@ -387,11 +390,13 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
             //播放状态
             val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
-            val endTime = TimeUtil.secondToDate(course.progress.toLong(), "mm:ss")
-            tvPlanDesc.text = getNotNullValue("00:00学习到$endTime")
+            val endTime = TimeUtil.getTime(course.progress.toLong())
+            val tips = TimeUtil.getTime(course.duration) + "  学习到 " + endTime
+            tvPlanDesc.text = tips
             tvPlanDesc.textSize = 12f
             setViewGone(tvPlanDesc, true)
             setViewGone(ivCourseStatus, true)
+            //关键
             mCourseHashMap!!.put(course, contentView)
             mCourseList!!.add(course)
         }
@@ -516,4 +521,23 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             startActivityForResult(intent, 2017)
         }.show()
     }
+
+    private fun showUnlockTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+        val tips = TimeUtil.getTime(course.duration) + " 未解锁"
+        tvPlanDesc.text = tips
+        tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.black333333))
+        tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.gray999999))
+        tvPlanDesc.textSize = 12f
+        setViewGone(tvPlanDesc, true)
+    }
+
+    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+        val tips = TimeUtil.getTime(course.duration) + " 已听完"
+        tvPlanDesc.text = tips
+        tvPlanDesc.textSize = 12f
+        tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.grayAAAAAA))
+        tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.gray999999))
+        setViewGone(tvPlanDesc, true)
+    }
+
 }

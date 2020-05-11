@@ -30,11 +30,13 @@ import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.entity.pay.PayResultEvent
 import com.tourcoo.training.entity.pay.WxPayEvent
+import com.tourcoo.training.entity.study.StudyRecord
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_TYPE_RECOGNIZE_COMPARE
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
+import com.tourcoo.training.ui.study.StudyDetailActivity
 import com.tourcoo.training.ui.training.safe.online.web.HtmlBrowserActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
@@ -246,7 +248,8 @@ class OnlineTrainFragment : BaseFragment() {
             }
 
             COURSE_STATUS_FINISHED -> {
-
+                //已完成 跳转到培训记录
+                skipStudyDetailActivity(courseInfo.trainingPlanID)
             }
 
             else -> {
@@ -452,4 +455,9 @@ class OnlineTrainFragment : BaseFragment() {
     }
 
 
+    private fun skipStudyDetailActivity(trainingId: String?){
+        val intent = Intent(mContext, StudyDetailActivity::class.java)
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
+        startActivity(intent)
+    }
 }

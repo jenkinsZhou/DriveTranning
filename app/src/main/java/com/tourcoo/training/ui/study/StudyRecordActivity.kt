@@ -163,7 +163,7 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
         adapter!!.setOnItemClickListener { adapter, view, position ->
             val intent = Intent(this, StudyDetailActivity::class.java)
             val current = adapter.data[position] as StudyRecord
-            intent.putExtra(EXTRA_TRAINING_PLAN_ID, current.trainingPlanID)
+            intent.putExtra(EXTRA_TRAINING_PLAN_ID, current.trainingPlanID.toString())
             startActivity(intent)
 
         }

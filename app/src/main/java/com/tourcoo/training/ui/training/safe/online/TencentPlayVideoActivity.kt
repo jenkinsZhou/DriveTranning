@@ -379,10 +379,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
             //播放状态
             val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
-            val endTime =TimeUtil.formatTimeS(course.progress.toLong())
-            val tips = TimeUtil.formatTimeS(course.duration)  + "  学习到 " + endTime
+            val endTime = TimeUtil.getTime(course.progress.toLong())
+            val tips = TimeUtil.getTime(course.duration) + "  学习到 " + endTime
             tvPlanDesc.text = tips
-
             tvPlanDesc.textSize = 12f
             setViewGone(tvPlanDesc, true)
             setViewGone(ivCourseStatus, true)
@@ -419,24 +418,15 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             COURSE_PLAY_STATUS_NO_COMPLETE -> {
                 //锁定状态 下的提示文字需要修改成 时长+未解锁
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
-//                val tips = TimeUtil.secondToDate(course.duration, "HH:mm:ss") + " 未解锁"
-                val tips = TimeUtil.formatTimeS(course.duration) + " 未解锁"
-                tvPlanDesc.text = tips
-                tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.black333333))
-                tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.gray999999))
-                setViewGone(tvPlanDesc, true)
+                //显示未解锁提示
+                showUnlockTips(course,tvPlanDesc,tvPlanTitle)
             }
             COURSE_PLAY_STATUS_COMPLETE -> {
                 //已完成 下的提示文字需要修改成 时长+已听完
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
-//                val tips = TimeUtil.secondToDate(course.duration, "HH:mm:ss") + " 已听完"
-                val tips = TimeUtil.getTime(course.duration) + " 已听完"
-                tvPlanDesc.text = tips
-                tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.grayAAAAAA))
-                tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.gray999999))
-                setViewGone(tvPlanDesc, true)
                 imageView.setImageResource(R.mipmap.ic_play_finish)
-                setViewGone(tvPlanDesc, true)
+                //显示已听完
+                showPlayFinishTips(course,tvPlanDesc,tvPlanTitle)
             }
             COURSE_PLAY_STATUS_PLAYING -> {
                 if (course.mediaType == MEDIA_TYPE_HTML) {
@@ -857,5 +847,24 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             val intent = Intent(this, StudyMedalRecordActivity::class.java)
             startActivityForResult(intent, 2017)
         }.show()
+    }
+
+
+    private fun showUnlockTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+        val tips = TimeUtil.getTime(course.duration) + " 未解锁"
+        tvPlanDesc.text = tips
+        tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.black333333))
+        tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.gray999999))
+        tvPlanDesc.textSize = 12f
+        setViewGone(tvPlanDesc, true)
+    }
+
+    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+        val tips = TimeUtil.getTime(course.duration) + " 已听完"
+        tvPlanDesc.text = tips
+        tvPlanDesc.textSize = 12f
+        tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.grayAAAAAA))
+        tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.gray999999))
+        setViewGone(tvPlanDesc, true)
     }
 }

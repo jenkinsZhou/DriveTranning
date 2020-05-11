@@ -297,7 +297,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         parseTrainingStatus(mCourseList)
         for (entry in mCourseHashMap!!.entries) {
-            loadCourseStatus(entry.value, entry.key)
+            loadCourseStatusAndClick(entry.value, entry.key)
         }
 
         LogUtils.e(countCatalog, countNode)
@@ -367,17 +367,18 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             contentView.setPadding(SizeUtil.dp2px(course.level * 10f), 0, 0, 0)
             //不需要判断course.streams是否为空了
 //            if (course.streams != null) {
-                val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
-                //播放状态
-                val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
-                val endTime = TimeUtil.secondToDate(course.progress.toLong(), "mm:ss")
-                tvPlanDesc.text = getNotNullValue("00:00学习到$endTime")
-                tvPlanDesc.textSize = 12f
-                setViewGone(tvPlanDesc, true)
-                setViewGone(ivCourseStatus, true)
-                //关键
-                mCourseHashMap!!.put(course, contentView)
-                mCourseList!!.add(course)
+            val tvPlanDesc = contentView.findViewById<TextView>(R.id.tvPlanDesc)
+            //播放状态
+            val ivCourseStatus = contentView.findViewById<ImageView>(R.id.ivCourseStatus)
+            val endTime = TimeUtil.getTime(course.progress.toLong())
+            val tips = TimeUtil.getTime(course.duration) + "  学习到 " + endTime
+            tvPlanDesc.text = tips
+            tvPlanDesc.textSize = 12f
+            setViewGone(tvPlanDesc, true)
+            setViewGone(ivCourseStatus, true)
+            //关键
+            mCourseHashMap!!.put(course, contentView)
+            mCourseList!!.add(course)
 //            }
 
         }
@@ -395,25 +396,30 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     /**
-     * 定位上次播放位置
+     * 定位上次播放位置并设置点击事件
      */
-    private fun loadCourseStatus(view: View, course: Course) {
+    private fun loadCourseStatusAndClick(view: View, course: Course) {
         val tvPlanDesc = view.findViewById<TextView>(R.id.tvPlanDesc)
         val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
         when (course.currentPlayStatus) {
             COURSE_PLAY_STATUS_NO_COMPLETE -> {
+                //锁定状态 下的提示文字需要修改成 时长+未解锁
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
-                setViewGone(tvPlanDesc, false)
+                //显示未解锁提示
+                showUnlockTips(course,tvPlanDesc,tvPlanTitle)
             }
             COURSE_PLAY_STATUS_COMPLETE -> {
+                //已完成 下的提示文字需要修改成 时长+已听完
+                imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 imageView.setImageResource(R.mipmap.ic_play_finish)
-                setViewGone(tvPlanDesc, false)
+                //显示已听完
+                showPlayFinishTips(course,tvPlanDesc,tvPlanTitle)
             }
             COURSE_PLAY_STATUS_PLAYING -> {
-                if(course.mediaType == MEDIA_TYPE_HTML){
+                if (course.mediaType == MEDIA_TYPE_HTML) {
                     imageView.setImageResource(R.mipmap.ic_eyes)
-                }else{
+                } else {
                     imageView.setImageResource(R.mipmap.ic_playing)
                 }
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
@@ -441,12 +447,12 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             val course = list[i]
             if (course.completed <= 0 && index == -1) {
                 //该视频没有播放过,当前正在播放的视频
-                course.currentPlayStatus =COURSE_PLAY_STATUS_PLAYING
+                course.currentPlayStatus = COURSE_PLAY_STATUS_PLAYING
                 index = i
             } else if (course.completed <= 0 && index != -1) {
                 course.currentPlayStatus = COURSE_PLAY_STATUS_NO_COMPLETE
             } else {
-                course.currentPlayStatus =COURSE_PLAY_STATUS_COMPLETE
+                course.currentPlayStatus = COURSE_PLAY_STATUS_COMPLETE
             }
         }
     }
@@ -648,12 +654,12 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     handleRecognizeFailedCallback()
                 }
             }
-           TencentPlayVideoActivity.REQUEST_CODE_WEB -> {
-               if (resultCode == Activity.RESULT_OK) {
-                   //刷新课件
-                   requestPlanDetail()
-               }
-           }
+            TencentPlayVideoActivity.REQUEST_CODE_WEB -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    //刷新课件
+                    requestPlanDetail()
+                }
+            }
         }
     }
 
@@ -1711,7 +1717,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }, 1500)
     }
 
-    private fun clearCount(){
+    private fun clearCount() {
         countNode = 0
         countCatalog = 0
     }
@@ -1728,6 +1734,24 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 skipExamActivity(trainingPlanDetail)
             }).show()
         }, 500)
+    }
+
+    private fun showUnlockTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+        val tips = TimeUtil.getTime(course.duration) + " 未解锁"
+        tvPlanDesc.text = tips
+        tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.black333333))
+        tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.gray999999))
+        tvPlanDesc.textSize = 12f
+        setViewGone(tvPlanDesc, true)
+    }
+
+    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+        val tips = TimeUtil.getTime(course.duration) + " 已听完"
+        tvPlanDesc.text = tips
+        tvPlanDesc.textSize = 12f
+        tvPlanDesc.setTextColor(CommonUtil.getColor(R.color.grayAAAAAA))
+        tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.gray999999))
+        setViewGone(tvPlanDesc, true)
     }
 }
 
