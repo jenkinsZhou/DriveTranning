@@ -21,6 +21,7 @@ import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
+import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.tourcoo.training.widget.websocket.SocketListener
@@ -154,7 +155,7 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
              */
             TrainingConstant.TRAIN_STATUS_SIGNED -> {
                 // 安全员已签到 隐藏签到模块布局按钮
-                setViewGone(rlButtonTeacherLayout, true)
+                setViewGone(rlButtonTeacherLayout, false)
                 setViewVisible(ivSignTeacher, false)
                 //显示转线上
                 setViewGone(ivToOnline, false)
@@ -168,7 +169,34 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
                 setViewGone(llEndTime, false)
 
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
+                //显示安全员预计结束时间
+                tvPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
+                //隐藏标签图片
+                setViewGone(ivStatusTagTeacher, false)
+            }
+
+
+            /**
+             * 已签退
+             */
+            TrainingConstant.TRAIN_STATUS_SIGN_OUT -> {
+                // 安全员已签退 隐藏签到模块布局按钮
+                setViewGone(rlButtonTeacherLayout, false)
+                setViewVisible(ivSignTeacher, false)
+                //显示转线上
+                setViewGone(ivToOnline, false)
+
+                setViewGone(llTrainStatusTeacherLayout, true)
+
+                //显示签到时间 和预计结束时间
+                setViewGone(llSignedTime, true)
+                setViewGone(llPreEndTime, true)
+                //隐藏结束时间
+                setViewGone(llEndTime, false)
+
+                //设置签到时间
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 //显示安全员预计结束时间
                 tvPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
                 //隐藏标签图片
@@ -185,15 +213,17 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
                 setViewGone(llTrainStatusTeacherLayout, true)
                 //显示签到时间 和结束时间
                 setViewGone(llSignedTime, true)
-                setViewGone(llPreEndTime, false)
                 //隐藏预计结束时间
-                setViewGone(llEndTime, false)
+                setViewGone(llPreEndTime, false)
+                setViewGone(llEndTime, true)
+                //设置签到时间
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
+                tvTeacherEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
 
                 //显示标签图片
                 setViewGone(ivStatusTagTeacher, true)
                 ivStatusTagTeacher.setImageResource(R.mipmap.ic_training_state_end)
             }
-
 
 
             /**
@@ -216,6 +246,17 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
 
 
             else -> {
+                // 安全员已签到 隐藏签到模块布局按钮
+                setViewGone(rlButtonTeacherLayout, false)
+                setViewGone(llTrainStatusTeacherLayout, true)
+                //显示签到时间 和结束时间
+                setViewGone(llSignedTime, true)
+                setViewGone(llPreEndTime, false)
+                //隐藏预计结束时间
+                setViewGone(llEndTime, false)
+
+                //隐藏标签图片
+                setViewGone(ivStatusTagTeacher, false)
             }
         }
 
@@ -273,19 +314,26 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (data == null) {
+            return
+        }
+
         when (requestCode) {
             REQUEST_CODE_SCAN -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    val result = data.getStringExtra(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN)
-                    if (result != null) {
-                        when (currentAction) {
+                val result = data.getStringExtra(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN)
+                if (result != null) {
+                    when (currentAction) {
 
-                            TrainingConstant.ACTION_SAFE_MANAGER_SIGN -> {
-                                handleScanSignCallback(result, TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN)
-                            }
+                        TrainingConstant.ACTION_SAFE_MANAGER_SIGN -> {
+                            handleScanSignCallback(result, TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN)
+                        }
 
-                            else -> {
-                            }
+                        else -> {
                         }
                     }
                 }
@@ -324,7 +372,6 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
                         skipSignFaceCertify(scanResult)
                     }
                 }
-
 
                 else -> {
                     ToastUtil.show("请扫描正确的场景二维码")

@@ -2,10 +2,12 @@ package com.tourcoo.training.ui.training.safe.online.detail.common
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.SpanUtils
 import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
@@ -20,6 +22,7 @@ import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
+import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.tourcoo.training.widget.websocket.SocketListener
@@ -138,6 +141,11 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
         tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManager)
 
+        if (planDetail.traineeStatus == TrainingConstant.TRAIN_STATUS_CHECK_STATUS) {
+            showCheckAlert()
+        }
+
+
         when (planDetail.safetyManagerStatus) {
             /**
              * 未开始
@@ -194,8 +202,8 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //隐藏签退时间
                 setViewGone(llStudentSignOutLayout, false)
 
-                when(planDetail.traineeStatus){
-                    TrainingConstant.TRAIN_STATUS_NO_START ->{
+                when (planDetail.traineeStatus) {
+                    TrainingConstant.TRAIN_STATUS_NO_START -> {
                         setViewGone(ivStudentSignIn, true)
                         setViewGone(ivStudentSignOut, false)
                         //显示转线上
@@ -204,7 +212,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     }
 
 
-                    TrainingConstant.TRAIN_STATUS_SIGNED->{
+                    TrainingConstant.TRAIN_STATUS_SIGNED -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, true)
                         //显示转线上
@@ -212,7 +220,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                         setViewGone(ivScanCode, false)
                     }
 
-                    TrainingConstant.TRAIN_STATUS_SIGN_OUT->{
+                    TrainingConstant.TRAIN_STATUS_SIGN_OUT -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
                         //显示转线上
@@ -220,21 +228,21 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                         setViewGone(ivScanCode, false)
                     }
 
-                    TrainingConstant.TRAIN_STATUS_TO_ONLINE ->{
+                    TrainingConstant.TRAIN_STATUS_TO_ONLINE -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
                         //显示转线上
                         setViewGone(ivStudentToOnline, false)
                         setViewGone(ivScanCode, false)
 
-                        setViewGone(ivStudentStatusTag,true)
+                        setViewGone(ivStudentStatusTag, true)
                         ivStudentStatusTag.setImageResource(R.mipmap.ic_training_state_turn_online)
                         setViewGone(llStudentSignOutLayout, true)
                         tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
 
                     }
 
-                    TrainingConstant.TRAIN_STATUS_CHECK_STATUS ->{
+                    TrainingConstant.TRAIN_STATUS_CHECK_STATUS -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
                         //显示转线上
@@ -242,14 +250,16 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                         setViewGone(ivScanCode, true)
                     }
 
-                    TrainingConstant.TRAIN_STATUS_NO_COMPLETE ->{
+                    TrainingConstant.TRAIN_STATUS_NO_COMPLETE -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
                         //显示转线上
                         setViewGone(ivStudentToOnline, false)
                         setViewGone(ivScanCode, false)
-                        setViewGone(ivStudentStatusTag,true)
+                        setViewGone(ivStudentStatusTag, true)
                         ivStudentStatusTag.setImageResource(R.mipmap.ic_training_state_no_complete)
+                        setViewGone(llStudentSignOutLayout, true)
+                        tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                     }
 
                 }
@@ -257,9 +267,8 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
-
                 //显示安全员预计结束时间
                 setViewGone(llPreTeacherEndTime, true)
                 tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
@@ -277,6 +286,68 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
              * 已签退
              */
             TrainingConstant.TRAIN_STATUS_SIGN_OUT -> {
+
+                when (planDetail.traineeStatus) {
+                    TrainingConstant.TRAIN_STATUS_NO_START -> {
+                        setViewGone(ivStudentSignIn, true)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                        setViewGone(ivScanCode, false)
+                    }
+
+
+                    TrainingConstant.TRAIN_STATUS_SIGNED -> {
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, true)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                        setViewGone(ivScanCode, false)
+                    }
+
+                    TrainingConstant.TRAIN_STATUS_SIGN_OUT -> {
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                        setViewGone(ivScanCode, false)
+                    }
+
+                    TrainingConstant.TRAIN_STATUS_TO_ONLINE -> {
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, false)
+                        setViewGone(ivScanCode, false)
+
+                        setViewGone(ivStudentStatusTag, true)
+                        ivStudentStatusTag.setImageResource(R.mipmap.ic_training_state_turn_online)
+                        setViewGone(llStudentSignOutLayout, true)
+                        tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
+
+                    }
+
+                    TrainingConstant.TRAIN_STATUS_CHECK_STATUS -> {
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                        setViewGone(ivScanCode, true)
+                    }
+
+                    TrainingConstant.TRAIN_STATUS_NO_COMPLETE -> {
+                        setViewGone(ivStudentSignIn, false)
+                        setViewGone(ivStudentSignOut, false)
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, false)
+                        setViewGone(ivScanCode, false)
+                        setViewGone(ivStudentStatusTag, true)
+                        ivStudentStatusTag.setImageResource(R.mipmap.ic_training_state_no_complete)
+                    }
+
+                }
+
+
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
@@ -292,7 +363,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 //显示安全员预计结束时间
                 setViewGone(llPreTeacherEndTime, true)
                 tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
@@ -329,7 +400,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 //隐藏安全员预计结束时间
                 setViewGone(llPreTeacherEndTime, false)
                 tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
@@ -366,7 +437,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 //隐藏安全员预计结束时间
                 setViewGone(llPreTeacherEndTime, false)
                 tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
@@ -401,7 +472,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 //隐藏签退时间
                 setViewGone(llStudentSignOutLayout, false)
@@ -438,7 +509,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 //隐藏安全员预计结束时间
                 setViewGone(llPreTeacherEndTime, false)
                 tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
@@ -475,7 +546,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 //隐藏安全员预计结束时间
                 setViewGone(llPreTeacherEndTime, false)
                 tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
@@ -511,7 +582,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
-                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                tvTeacherSignTime.text = CommonUtil.getNotNullValue(planDetail.saftyManagerSignIn)
                 //隐藏安全员预计结束时间
                 setViewGone(llPreTeacherEndTime, false)
                 tvTeacherPreEndTime.text = CommonUtil.getNotNullValue(planDetail.eTime)
@@ -674,29 +745,35 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (data == null) {
+            return
+        }
+
         when (requestCode) {
             REQUEST_CODE_SCAN -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    val result = data.getStringExtra(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN)
-                    if (result != null) {
-                        when (currentAction) {
-                            TrainingConstant.ACTION_STUDENT_SIGN -> {
-                                handleScanSignCallback(result, TrainingConstant.SCENE_STUDENT_SIGN_IN)
-                            }
-                            TrainingConstant.ACTION_SAFE_MANAGER_SIGN -> {
-                                handleScanSignCallback(result, TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN)
-                            }
+                val result = data.getStringExtra(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN)
+                if (result != null) {
+                    when (currentAction) {
+                        TrainingConstant.ACTION_STUDENT_SIGN -> {
+                            handleScanSignCallback(result, TrainingConstant.SCENE_STUDENT_SIGN_IN)
+                        }
+                        TrainingConstant.ACTION_SAFE_MANAGER_SIGN -> {
+                            handleScanSignCallback(result, TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN)
+                        }
 
-                            TrainingConstant.ACTION_STUDENT_SIGN_OUT -> {
-                                handleScanSignCallback(result, TrainingConstant.SCENE_STUDENT_SIGN_OUT)
-                            }
+                        TrainingConstant.ACTION_STUDENT_SIGN_OUT -> {
+                            handleScanSignCallback(result, TrainingConstant.SCENE_STUDENT_SIGN_OUT)
+                        }
 
-                            TrainingConstant.ACTION_STUDENT_CHECK_STATUS -> {
-                                handleScanSignCallback(result, TrainingConstant.SCENE_STUDENT_CHECK_STATUS)
-                            }
+                        TrainingConstant.ACTION_STUDENT_CHECK_STATUS -> {
+                            handleScanSignCallback(result, TrainingConstant.SCENE_STUDENT_CHECK_STATUS)
+                        }
 
-                            else -> {
-                            }
+                        else -> {
                         }
                     }
                 }
@@ -844,6 +921,20 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     }
 
 
+    private fun showCheckAlert() {
+        val dialog = CommonBellAlert(mContext)
+        dialog.create().setContent(SpanUtils().append("系统抽检到你了，快去点击").setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true)
+                .append("扫码").setForegroundColor(Color.parseColor("#5087FF")).setFontSize(14, true)
+                .append("吧").setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true)
+                .create()).setPositiveButton("知道了", object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                dialog.dismiss()
+            }
+        })
+        dialog.show()
+    }
+
+
     private fun showSafeManagerSignSuccess() {
         presenter.getTrainDetail(
                 trainingPlanId)
@@ -874,13 +965,6 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         dialog.setContent(timeNow).show()
     }
 
-    private fun showStudentSignSuccess() {
-        val dialog = CommonSuccessAlert(mContext)
-        dialog.create().setAlertTitle("学员签到成功")
-        val currentTime = System.currentTimeMillis()
-        val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
-        dialog.setContent(timeNow).show()
-    }
     /*  //初始化WebSocket连接
       initWebSocket(socketUrl)*/
 }

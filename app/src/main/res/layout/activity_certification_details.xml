@@ -29,7 +29,7 @@
         <ImageView
             android:id="@+id/ivImage"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_300"
+            android:layout_height="@dimen/dp_280"
             android:layout_marginTop="@dimen/dp_5" />
 
 
@@ -68,7 +68,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/dp_20"
             android:text="  保存证书"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/sp_17" />
 
 
@@ -83,7 +83,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/dp_20"
             android:text="  分享证书"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/sp_17" />
 
     </LinearLayout>

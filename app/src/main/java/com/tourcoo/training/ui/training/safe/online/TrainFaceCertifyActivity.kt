@@ -317,6 +317,10 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
         finish()
     }
 
+    private fun handleRecognizeFailCallback() {
+        finish()
+    }
+
 
     private fun uploadFaceImage(bitmap: Bitmap?, location: AMapLocation?) {
         if (bitmap == null || location == null) {
@@ -342,8 +346,7 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
                     handleRecognizeSuccessCallback()
                 } else {
                     ToastUtil.show(entity.msg)
-                    //todo 暂时模拟成功
-                    handleRecognizeSuccessCallback()
+                    handleRecognizeFailCallback()
                 }
             }
         })
