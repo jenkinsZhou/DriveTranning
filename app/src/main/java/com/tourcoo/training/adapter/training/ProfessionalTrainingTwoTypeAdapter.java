@@ -1,5 +1,7 @@
 package com.tourcoo.training.adapter.training;
 
+import android.graphics.Color;
+
 import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -28,12 +30,15 @@ public class ProfessionalTrainingTwoTypeAdapter extends BaseQuickAdapter<Profess
         int index = helper.getAdapterPosition() % 3;
         switch (index) {
             case 0:
+                helper.setTextColor(R.id.btnSubmit, Color.parseColor("#50AAFE"));
                 helper.getView(R.id.llRoot).setBackgroundResource(R.mipmap.ic_bg_training_item_blue);
                 break;
             case 1:
+                helper.setTextColor(R.id.btnSubmit, Color.parseColor("#9D7BFE"));
                 helper.getView(R.id.llRoot).setBackgroundResource(R.mipmap.ic_bg_training_item_purple);
                 break;
             case 2:
+                helper.setTextColor(R.id.btnSubmit, Color.parseColor("#FB7494"));
                 helper.getView(R.id.llRoot).setBackgroundResource(R.mipmap.ic_bg_training_item_red);
                 break;
         }

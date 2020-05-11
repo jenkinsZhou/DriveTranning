@@ -77,7 +77,25 @@ public class TrainingPlanDetail {
 
     private int TraineeStatus;
     private int SafetyManagerStatus;
+    private String SaftyManagerSignIn;
 
+    private String SaftyManagerSignOut;
+
+    public String getSaftyManagerSignIn() {
+        return SaftyManagerSignIn;
+    }
+
+    public void setSaftyManagerSignIn(String saftyManagerSignIn) {
+        SaftyManagerSignIn = saftyManagerSignIn;
+    }
+
+    public String getSaftyManagerSignOut() {
+        return SaftyManagerSignOut;
+    }
+
+    public void setSaftyManagerSignOut(String saftyManagerSignOut) {
+        SaftyManagerSignOut = saftyManagerSignOut;
+    }
 
     public int getSafetyManagerStatus() {
         return SafetyManagerStatus;

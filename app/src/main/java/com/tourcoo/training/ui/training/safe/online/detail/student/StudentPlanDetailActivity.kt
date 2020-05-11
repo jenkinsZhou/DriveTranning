@@ -2,11 +2,13 @@ package com.tourcoo.training.ui.training.safe.online.detail.student
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SpanUtils
 import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
@@ -21,6 +23,8 @@ import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
+import com.tourcoo.training.ui.training.safe.online.detail.common.CommonPlanDetailActivity
+import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.tourcoo.training.widget.websocket.SocketListener
@@ -50,6 +54,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         const val REQUEST_CODE_SCAN = 1007
         const val REQUEST_CODE_SIGN_STUDENT = 1008
         const val REQUEST_CODE_SIGN_OUT_STUDENT = 1009
+        const val REQUEST_CODE_CHECK_STATUS_STUDENT = 1010
         const val EXTRA_PHOTO_PATH = "EXTRA_PHOTO_PATH"
         const val MSG_CODE_PROGRESS = 1
         const val MSG_CODE_CLOSE_PROGRESS = 201
@@ -138,9 +143,13 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
         tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManager)
 
-        LogUtils.e(planDetail.traineeStatus,planDetail.safetyManagerStatus)
+        LogUtils.e(planDetail.traineeStatus, planDetail.safetyManagerStatus)
 
-        when (planDetail.traineeStatus){
+        if(planDetail.traineeStatus == TRAIN_STATUS_CHECK_STATUS){
+            showCheckAlert()
+        }
+
+        when (planDetail.traineeStatus) {
 
             /**
              * 未开始
@@ -245,7 +254,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
             /**
              * 未完成
              */
-            TRAIN_STATUS_NO_COMPLETE-> {
+            TRAIN_STATUS_NO_COMPLETE -> {
                 //隐藏所有按钮
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
@@ -406,17 +415,33 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (data == null) {
+            return
+        }
+
         when (requestCode) {
             REQUEST_CODE_SCAN -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    val result = data.getStringExtra(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN)
-                    if (result != null) {
-                        when (currentAction) {
-                            ACTION_STUDENT_SIGN -> {
-                                handleScanSignCallback(result)
-                            }
-                            else -> {
-                            }
+                val result = data.getStringExtra(CaptureActivity.INTENT_EXTRA_KEY_QR_SCAN)
+                if (result != null) {
+                    when (currentAction) {
+                        ACTION_STUDENT_SIGN -> {
+                            handleScanSignCallback(result, SCENE_STUDENT_SIGN_IN)
+                        }
+
+                        ACTION_STUDENT_SIGN_OUT -> {
+                            handleScanSignCallback(result, SCENE_STUDENT_SIGN_OUT)
+                        }
+
+                        ACTION_STUDENT_CHECK_STATUS -> {
+                            handleScanSignCallback(result, SCENE_STUDENT_CHECK_STATUS)
+                        }
+
+                        else -> {
                         }
                     }
                 }
@@ -429,8 +454,18 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
             }
 
 
+            /**
+             * 签退成功回调
+             */
             REQUEST_CODE_SIGN_OUT_STUDENT -> {
                 showSignOutSuccess()
+            }
+
+            /**
+             * 抽验成功回调
+             */
+            REQUEST_CODE_CHECK_STATUS_STUDENT -> {
+                showCheckStatusSuccess()
             }
 
             else -> {
@@ -457,8 +492,6 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         val intent = Intent(this, TrainFaceCertifyActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, qrScanResult.trainingPlanID)
         intent.putExtra(EXTRA_KEY_QR_SCAN_RESULT, qrScanResult)
-        //学生签到的action
-        intent.putExtra(EXTRA_TRAIN_ACTION_KEY, ACTION_STUDENT_SIGN)
         val result_code = when (currentAction) {
             TrainingConstant.ACTION_STUDENT_SIGN -> {
                 REQUEST_CODE_SIGN_STUDENT
@@ -468,6 +501,11 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 REQUEST_CODE_SIGN_OUT_STUDENT
             }
 
+            TrainingConstant.ACTION_STUDENT_CHECK_STATUS -> {
+                REQUEST_CODE_CHECK_STATUS_STUDENT
+            }
+
+
             else -> {
                 REQUEST_CODE_SIGN_OUT_STUDENT
             }
@@ -475,17 +513,73 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         startActivityForResult(intent, result_code)
     }
 
-    private fun handleScanSignCallback(result: String) {
+    private fun handleScanSignCallback(result: String, scene: Int) {
         try {
             val scanResult = JSON.parseObject(result, QrScanResult::class.java)
-            skipSignFaceCertify(scanResult)
+
+            when (scene) {
+                TrainingConstant.SCENE_STUDENT_SIGN_IN -> {
+                    if (scanResult.scene.toInt() != TrainingConstant.SCENE_STUDENT_SIGN_IN) {
+                        ToastUtil.show("请扫描正确的场景二维码")
+                    } else {
+                        skipSignFaceCertify(scanResult)
+                    }
+                }
+
+                TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN -> {
+                    if (scanResult.scene.toInt() != TrainingConstant.SCENE_SAFE_MANAGER_SIGN_IN) {
+                        ToastUtil.show("请扫描正确的场景二维码")
+                    } else {
+                        skipSignFaceCertify(scanResult)
+                    }
+                }
+
+
+                TrainingConstant.SCENE_STUDENT_SIGN_OUT -> {
+                    if (scanResult.scene.toInt() != TrainingConstant.SCENE_STUDENT_SIGN_OUT) {
+                        ToastUtil.show("请扫描正确的场景二维码")
+                    } else {
+                        skipSignFaceCertify(scanResult)
+                    }
+                }
+
+                TrainingConstant.SCENE_STUDENT_CHECK_STATUS -> {
+                    if (scanResult.scene.toInt() != TrainingConstant.SCENE_STUDENT_CHECK_STATUS) {
+                        ToastUtil.show("请扫描正确的场景二维码")
+                    } else {
+                        skipSignFaceCertify(scanResult)
+                    }
+                }
+
+                else -> {
+                    ToastUtil.show("请扫描正确的场景二维码")
+                }
+            }
+
         } catch (e: Exception) {
             ToastUtil.show("当前二维码无效")
         }
+
     }
 
 
+
+    private fun showCheckAlert() {
+        val dialog = CommonBellAlert(mContext)
+        dialog.create().setContent(SpanUtils().append("系统抽检到你了，快去点击").setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true)
+                .append("扫码").setForegroundColor(Color.parseColor("#5087FF")).setFontSize(14, true)
+                .append("吧").setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true)
+                .create()).setPositiveButton("知道了", object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                dialog.dismiss()
+            }
+        })
+        dialog.show()
+    }
+
     private fun showSignSuccess() {
+        presenter.getTrainDetail(
+                trainingPlanId)
         val dialog = CommonSuccessAlert(mContext)
         dialog.create().setAlertTitle("学员签到成功")
         val currentTime = System.currentTimeMillis()
@@ -504,6 +598,15 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         dialog.setContent(timeNow).show()
     }
 
+    private fun showCheckStatusSuccess() {
+        presenter.getTrainDetail(
+                trainingPlanId)
+        val dialog = CommonSuccessAlert(mContext)
+        dialog.create().setAlertTitle("学员抽验成功")
+        val currentTime = System.currentTimeMillis()
+        val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
+        dialog.setContent(timeNow).show()
+    }
 
     /*  //初始化WebSocket连接
       initWebSocket(socketUrl)*/

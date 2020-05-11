@@ -34,6 +34,7 @@ import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.fragment.OnlineTrainFragment
 import com.tourcoo.training.utils.RecycleViewDivider
+import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
@@ -151,6 +152,18 @@ class WorkProTrainingFragment  : BaseFragment()  {
 
             if (!AccountHelper.getInstance().isLogin) {
                 ToastUtil.show("请先登录")
+                return@OnItemClickListener
+            }
+
+
+            if(AccountHelper.getInstance().userInfo.status == 0){
+                val dialog = CommonBellAlert(mContext)
+                dialog.create().setContent("驾驶员自主注册，需等待企业管理员审核。").setPositiveButton("知道了", object : View.OnClickListener {
+                    override fun onClick(v: View?) {
+                        dialog.dismiss()
+                    }
+                })
+                dialog.show()
                 return@OnItemClickListener
             }
 
