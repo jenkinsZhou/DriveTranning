@@ -58,6 +58,7 @@
                 <TextView
                     android:id="@+id/province_tv"
                     style="@style/tab"
+                    android:layout_height="match_parent"
                     android:text="请选择" />
 
                 <TextView
@@ -75,7 +76,7 @@
                 android:layout_width="0dp"
                 android:layout_height="2dp"
                 android:layout_below="@+id/choose_tab"
-                android:background="@android:color/holo_red_light" />
+                android:background="@color/blue5087FF" />
 
 
         </RelativeLayout>

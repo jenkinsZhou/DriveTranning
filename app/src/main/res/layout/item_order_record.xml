@@ -101,7 +101,7 @@
                  android:layout_marginTop="@dimen/dp_23"
                  android:layout_marginEnd="@dimen/dp_19"
                  android:text="共1件商品 合计：¥20"
-                 android:textSize="@dimen/sp_10" />
+                 android:textSize="@dimen/sp_12" />
 
 
          </LinearLayout>

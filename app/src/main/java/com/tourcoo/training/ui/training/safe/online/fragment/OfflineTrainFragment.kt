@@ -17,6 +17,7 @@ import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
@@ -128,7 +129,6 @@ class OfflineTrainFragment : BaseFragment() {
 
     private fun skipTrainingDetail(position :Int){
         val courseInfo =  (adapter as OffLineTrainingAdapter).data[position]
-
         when (courseInfo.role) {
             TRAIN_ROLE_STUDENT  -> {
                 val intent = Intent(mContext, StudentPlanDetailActivity::class.java)
@@ -147,6 +147,7 @@ class OfflineTrainFragment : BaseFragment() {
                 startActivity(intent)
             }
             else -> {
+                ToastUtil.show("当前身份未知,Role为"+courseInfo.role)
             }
         }
 

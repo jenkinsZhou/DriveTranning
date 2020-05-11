@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_marginStart="@dimen/dp_12"
     android:layout_marginEnd="@dimen/dp_12"
-    app:cardElevation="@dimen/dp_0"
-    app:cardCornerRadius="@dimen/dp_5">
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/dp_5"
+    app:cardElevation="@dimen/dp_0">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,10 +35,10 @@
 
             <ImageView
                 android:id="@+id/ivTag"
-                android:layout_marginRight="@dimen/dp_10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/dp_10"
                 android:src="@drawable/icon_video_free" />
 
             <View
@@ -52,9 +52,9 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_5"
-                android:layout_gravity="center_vertical"
                 android:layout_above="@id/viewLineHorizon"
                 android:layout_alignParentEnd="true"
+                android:layout_gravity="center_vertical"
                 android:max="100"
                 android:minWidth="@dimen/dp_100"
                 android:progress="0"
@@ -93,14 +93,37 @@
                     android:text="2020.02.18至2020.02.28"
                     android:textColor="@color/gray999999"
                     android:textSize="@dimen/sp_12" />
+
+                <LinearLayout
+                    android:id="@+id/llStudyProgress"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/icon_phone" />
+
+                    <TextView
+                        android:id="@+id/tvStudyProgress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:text="学习进度"
+                        android:textColor="@color/gray999999"
+                        android:textSize="@dimen/sp_12" />
+                </LinearLayout>
             </LinearLayout>
 
 
             <ImageView
                 android:id="@+id/ivCourseStatus"
-                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:src="@mipmap/ic_course_status_need_pay" />
         </LinearLayout>
     </LinearLayout>

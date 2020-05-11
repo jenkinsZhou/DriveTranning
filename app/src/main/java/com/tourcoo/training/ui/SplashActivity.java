@@ -42,7 +42,7 @@ public class SplashActivity extends BaseTitleActivity {
     /**
      * 闪屏
      */
-    private long mDelayTime = 500;
+    private long mDelayTime = 1500;
 
     @Override
     public void beforeSetContentView() {

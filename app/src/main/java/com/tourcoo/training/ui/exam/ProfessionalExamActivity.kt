@@ -436,7 +436,7 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
         getAllQuestions()
         if (!isSubmit && answerCount < list!!.size) {
             //说明还没交卷并且还有题目没有答完 需要保存答题进度
-            showSaveExamAnswerDialog()
+            showExitExamAnswerDialog()
         } else {
             //不保存 直接退出
             super.onBackPressed()
@@ -518,18 +518,16 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     /**
-     * 显示保存考试进度弹窗
+     * 显示是否退出考试
      */
-    private fun showSaveExamAnswerDialog() {
+    private fun showExitExamAnswerDialog() {
         baseHandler.postDelayed({
             val dialog = ExamCommonDialog(mContext)
-            dialog.create().setContent("是否保存答题进度？").setPositiveButtonListener(View.OnClickListener {
+            dialog.create().setContent("是否退出考试 ？").setPositiveButtonListener(View.OnClickListener {
                 isSubmit = true
                 saveExam(getAllQuestions())
                 dialog.dismiss()
-            }).setNegativeButtonListener {
-                finish()
-            }.show()
+            }).show()
         }, 100)
     }
 }

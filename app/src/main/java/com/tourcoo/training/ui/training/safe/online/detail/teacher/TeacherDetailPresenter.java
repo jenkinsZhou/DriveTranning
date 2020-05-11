@@ -6,8 +6,6 @@ import com.tourcoo.training.core.base.mvp.BasePresenter;
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
-import com.tourcoo.training.ui.training.safe.online.detail.student.StudentDetailContract;
-import com.tourcoo.training.ui.training.safe.online.detail.student.StudentDetailModule;
 
 /**
  * @author :JenkinsZhou
@@ -16,7 +14,7 @@ import com.tourcoo.training.ui.training.safe.online.detail.student.StudentDetail
  * @date 2020年04月22日12:41
  * @Email: 971613168@qq.com
  */
-public class TeacherDetailPresenter extends BasePresenter<com.tourcoo.training.ui.training.safe.online.detail.student.StudentDetailContract.TrainDetailModel, com.tourcoo.training.ui.training.safe.online.detail.student.StudentDetailContract.View> implements com.tourcoo.training.ui.training.safe.online.detail.student.StudentDetailContract.TrainDetailPresenter {
+public class TeacherDetailPresenter extends BasePresenter<TeacherDetailContract.TrainDetailModel, TeacherDetailContract.View> implements TeacherDetailContract.TrainDetailPresenter {
     @Override
     public void getTrainDetail(String trainingPlanID) {
         if (!isViewAttached()) {
@@ -60,9 +58,10 @@ public class TeacherDetailPresenter extends BasePresenter<com.tourcoo.training.u
 
     }
 
+
     @Override
-    protected StudentDetailContract.TrainDetailModel createModule() {
-        return new StudentDetailModule();
+    protected TeacherDetailContract.TrainDetailModel createModule() {
+        return new TeacherDetailModule();
     }
 
     @Override

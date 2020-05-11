@@ -12,6 +12,7 @@ import com.tourcoo.training.R;
 import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.entity.course.CourseInfo;
+import com.tourcoo.training.widget.aliplayer.utils.Common;
 
 /**
  * @author :JenkinsZhou
@@ -61,23 +62,32 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
 
 
         ImageView ivCourseStatus = helper.getView(R.id.ivCourseStatus);
+        helper.setText(R.id.tvStudyProgress,"学习进度"+ CommonUtil.doubleTransStringZhen(item.getProgress())+"%");
         switch (item.getStatus()) {
             case COURSE_STATUS_FINISHED:
                 progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_finish);
+                helper.setGone(R.id.llStudyProgress,false);
+                helper.setGone(R.id.tvCourseTimeRange, true);
                 break;
             case COURSE_STATUS_CONTINUE:
                 progressBarOnLine.setVisibility(View.VISIBLE);
                 progressBarOnLine.setProgress((int) item.getProgress());
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_continue);
+                helper.setGone(R.id.llStudyProgress,true);
+                helper.setGone(R.id.tvCourseTimeRange,false);
                 break;
             case COURSE_STATUS_NEED_PAY:
                 progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_need_pay);
+                helper.setGone(R.id.llStudyProgress,false);
+                helper.setGone(R.id.tvCourseTimeRange, true);
                 break;
             case COURSE_STATUS_WAIT_EXAM:
                 progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_wait_exam);
+                helper.setGone(R.id.llStudyProgress,false);
+                helper.setGone(R.id.tvCourseTimeRange, true);
                 break;
         }
     }

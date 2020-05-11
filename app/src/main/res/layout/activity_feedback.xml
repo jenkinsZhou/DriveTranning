@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grayF9F9F9"
     android:orientation="vertical">
     <!--申请退单-->
     <include layout="@layout/frame_layout_title_bar" />
 
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -37,7 +39,7 @@
                 android:layout_marginTop="@dimen/dp_12"
                 android:layout_marginEnd="@dimen/dp_12"
                 android:layout_marginBottom="@dimen/dp_12"
-                android:background="@drawable/bg_radius_10_white"
+                android:background="@drawable/bg_radius_15_white"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -125,6 +127,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_12"
+                    android:layout_marginBottom="@dimen/dp_20"
                     android:layout_marginEnd="@dimen/dp_12"
                     android:orientation="horizontal">
 

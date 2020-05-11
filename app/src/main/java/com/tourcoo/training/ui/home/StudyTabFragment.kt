@@ -272,7 +272,7 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
         val tvContent = rootView.findViewById(R.id.tvContent) as TextView
         tvContent.text = "客服"
         imageView.setImageResource(R.drawable.icon_kf_nol)
-        imageView.setOnClickListener(View.OnClickListener {
+        rootView.setOnClickListener(View.OnClickListener {
             requestSystemConfigAndSkip()
         })
         val rootViewMsg = LayoutInflater.from(mContext).inflate(R.layout.view_image, linearLayout, false)

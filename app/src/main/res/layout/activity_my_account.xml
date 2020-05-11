@@ -19,6 +19,7 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
+                    android:background="@mipmap/ic_bg_my_account"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -26,7 +27,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:scaleType="fitXY"
-                        android:src="@drawable/img_bg" />
+                        android:visibility="gone"
+                        android:src="@mipmap/ic_bg_my_account" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

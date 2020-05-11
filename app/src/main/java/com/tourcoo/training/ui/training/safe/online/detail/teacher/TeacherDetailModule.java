@@ -13,7 +13,7 @@ import com.tourcoo.training.ui.training.safe.online.detail.student.StudentDetail
  * @date 2020年04月22日12:55
  * @Email: 971613168@qq.com
  */
-public class TeacherDetailModule implements StudentDetailContract.TrainDetailModel {
+public class TeacherDetailModule implements TeacherDetailContract.TrainDetailModel {
 
     @Override
     public void requestTrainDetail(String trainingPlanID, BaseObserver<BaseResult<TrainingPlanDetail>> observer) {

@@ -548,14 +548,24 @@ public class CommonUtil {
     }
 
 
-    public static String doubleTransStringZhen(double d) {
-        if (Math.round(d) - d == 0) {
-            return String.valueOf((long) d);
+    public static String doubleTransStringZhen(double number) {
+       /* if (Math.round(number) - number == 0) {
+            return String.valueOf((long) number);
         }
         //四舍五入 并保留两位小数
-        double value = Double.parseDouble(FormatUtil.formatDoubleSize(d, 2));
+        double value = Double.parseDouble(FormatUtil.formatDoubleSize(number, 2));
         DecimalFormat df = new DecimalFormat("#0.00");
-        return df.format(value);
+        return df.format(value);*/
+        String numberStr;
+        if (((int) number * 1000) == (int) (number * 1000)) {
+            //如果是一个整数
+            numberStr = String.valueOf((int) number);
+        } else {
+            DecimalFormat df = new DecimalFormat("######0.00");
+            numberStr = df.format(number);
+        }
+        return numberStr;
+
     }
 
     public static Map<String, ArrayList<CertificateInfo>> sort(List<CertificateInfo> list) {

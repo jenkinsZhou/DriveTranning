@@ -27,6 +27,7 @@ import com.tourcoo.training.entity.account.register.BusinessLicenseInfo
 import com.tourcoo.training.entity.account.register.IndustryCategory
 import com.tourcoo.training.entity.account.register.Supervisors
 import com.tourcoo.training.ui.MainTabActivity
+import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.widget.citypicker.OnCityItemClickListener
 import com.tourcoo.training.widget.citypicker.bean.CityBean
 import com.tourcoo.training.widget.citypicker.bean.DistrictBean
@@ -102,7 +103,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
                 showJD()
             }
             R.id.tvGoLogin -> {
-                CommonUtil.startActivity(mContext, RecognizeIdCardActivity::class.java)
+                CommonUtil.startActivity(mContext, LoginActivity::class.java)
             }
 
 

@@ -25,6 +25,7 @@ class OrderListActivity : BaseTitleActivity() {
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
+        titleBar?.setTitleMainText("我的订单")
     }
 
     override fun initView(savedInstanceState: Bundle?) {

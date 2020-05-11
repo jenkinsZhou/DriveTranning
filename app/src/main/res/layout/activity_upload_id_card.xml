@@ -48,7 +48,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_50"
+                android:layout_marginStart="@dimen/dp_60"
                 android:orientation="vertical">
 
                 <ImageView
@@ -94,7 +94,7 @@
         android:paddingTop="@dimen/dp_7"
         android:paddingEnd="@dimen/dp_38"
         android:paddingBottom="@dimen/dp_7"
-        android:text="确认"
+        android:text="下一步"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_15" />
 </LinearLayout>

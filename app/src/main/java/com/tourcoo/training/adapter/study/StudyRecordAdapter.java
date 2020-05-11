@@ -61,8 +61,20 @@ public class StudyRecordAdapter extends BaseMultiItemQuickAdapter<StudyRecord, B
                 date += "—" + CommonUtil.getNotNullValue(item.getTrainingPlanEndTime());
                 helper.setText(R.id.tvTrainDate, date);
                 helper.addOnClickListener(R.id.llLookMore);
+//                "TrainingPlanStatus":  学习状态(0 未开始, 1 进行时,2 已结束, 3 待考试),
                 switch (item.getTrainingPlanStatus()) {
-                    //todo
+                    case 0:
+                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_no_start);
+                        break;
+                    case 1:
+                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_doing);
+                        break;
+                    case 2:
+                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_end);
+                        break;
+                    case 3:
+                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_wait_exam);
+                        break;
                     default:
                         break;
                 }
@@ -77,6 +89,7 @@ public class StudyRecordAdapter extends BaseMultiItemQuickAdapter<StudyRecord, B
                     helper.setGone(R.id.llTrainDate, false);
                     //显示查看更多
                     helper.setGone(R.id.llLookMore, true);
+                    helper.setGone(R.id.ivStudyTag, false);
                 } else {
                     //显示考试成绩
                     helper.setGone(R.id.llExamScore, true);
@@ -84,6 +97,7 @@ public class StudyRecordAdapter extends BaseMultiItemQuickAdapter<StudyRecord, B
                     helper.setGone(R.id.llTrainDate, true);
                     //隐藏查看更多
                     helper.setGone(R.id.llLookMore, false);
+                    helper.setGone(R.id.ivStudyTag, true);
                 }
                 break;
         }

@@ -85,10 +85,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/dp_10"
-            android:src="@mipmap/ic_comment_small" />
+            android:src="@mipmap/ic_news_read_blue" />
 
         <TextView
-            android:id="@+id/tvCommentCount"
+            android:id="@+id/tvReadCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

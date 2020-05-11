@@ -75,7 +75,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     private TextView tvNewsLikeCount;
     private TextView tvNewsShareCount;
     private CheckBox cBoxLike;
-    private LinearLayout llLike;
+    private int totalLike;
 
 
     @Override
@@ -85,7 +85,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         api = WXAPIFactory.createWXAPI(mContext, APP_ID);
@@ -117,6 +117,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         }
         showNewsDetail();
         initWebView();
+        totalLike = mNewsEntity.getLikeTotal();
         requestNewsDetail(mNewsEntity.getID());
     }
 
@@ -181,7 +182,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     private void showWebDetail(NewsDetailEntity detailEntity) {
         adapter.setNewData(detailEntity.getRecommendList());
-        TourCooLogUtil.d("富文本:"+detailEntity.getContent());
+        TourCooLogUtil.d("富文本:" + detailEntity.getContent());
         webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
     }
 
@@ -207,10 +208,12 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tvNewsLikeCount:
-                break;
             case R.id.llShare:
                 showShareDialog();
+                break;
+            case R.id.llLike:
+                //直接点赞
+                requestNewsLike(mNewsEntity.getID(), cBoxLike.isChecked());
                 break;
             default:
                 break;
@@ -249,7 +252,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                     return;
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    showLikeCountCallBack(isLike);
+                    showLikeCountCallBack();
                 } else {
                     ToastUtil.show(entity.getMsg());
                 }
@@ -257,18 +260,21 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         });
     }
 
-    private void showLikeCountCallBack(boolean like) {
+    private void showLikeCountCallBack() {
         String finalLikeCount;
-        if (like) {
-            finalLikeCount = mNewsEntity.getLikeTotal() + 1 + "";
-        } else {
+        if (cBoxLike.isChecked()) {
             if (mNewsEntity.getLikeTotal() <= 0) {
                 finalLikeCount = "0";
             } else {
-                finalLikeCount = mNewsEntity.getLikeTotal() - 1 + "";
+                totalLike --;
+                finalLikeCount = totalLike - 1 + "";
             }
+        } else {
+            totalLike ++;
+            finalLikeCount = totalLike + 1 + "";
         }
-        tvNewsLookCount.setText(finalLikeCount);
+        cBoxLike.setChecked(!cBoxLike.isChecked());
+        tvNewsLikeCount.setText(finalLikeCount);
     }
 
 
@@ -325,7 +331,6 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     }
 
 
-
     /**
      * 收到消息
      *
@@ -345,6 +350,8 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         ApiRepository.getInstance().requestShareSuccess(newsId + "").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
             @Override
             public void onSuccessNext(BaseResult entity) {
+                //分享成功由于微信SDK已经处理过回调 因此此处不做任何处理
+                //do nothing
             }
         });
     }

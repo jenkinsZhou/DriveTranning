@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue5E8FEB"
+        android:background="@mipmap/ic_bg_medal"
         android:minHeight="@dimen/dp_130">
 
         <ImageView

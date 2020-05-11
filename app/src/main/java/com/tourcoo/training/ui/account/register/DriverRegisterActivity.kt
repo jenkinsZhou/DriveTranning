@@ -15,6 +15,7 @@ import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.account.register.CompanyInfo
 import com.tourcoo.training.ui.MainTabActivity
+import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.register.SelectCompanyActivity.Companion.EXTRA_KEY_COMPANY
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.widget.keyboard.KingKeyboard
@@ -55,8 +56,7 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tvGoLogin -> {
-//                CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
-                CommonUtil.startActivity(mContext, StudyMedalRecordActivity::class.java)
+                CommonUtil.startActivity(mContext, LoginActivity::class.java)
             }
             R.id.tvCompany -> {
 //                CommonUtil.starAc(mContext, SelectCompanyActivity::class.java)

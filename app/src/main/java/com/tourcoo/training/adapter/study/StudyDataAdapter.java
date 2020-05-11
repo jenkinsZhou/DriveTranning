@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.TimeUtil;
 import com.tourcoo.training.entity.study.StudyDataEntity;
 import com.tourcoo.training.entity.study.StudyDataInfo;
 
@@ -30,6 +31,7 @@ public class StudyDataAdapter extends BaseQuickAdapter<StudyDataInfo, BaseViewHo
             return;
         }
         helper.setText(R.id.tvStudyDate, CommonUtil.getNotNullValue(item.getTime()));
-        helper.setText(R.id.tvStudyLength, CommonUtil.getNotNullValue(item.getStudyHour() + "小时"));
+        String length = TimeUtil.secondToTimeNoSecond(item.getStudyHour()) ;
+        helper.setText(R.id.tvStudyLength, length);
     }
 }

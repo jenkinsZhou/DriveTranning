@@ -160,11 +160,11 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
     @Override
     protected void onDestroy() {
-        if (api != null) {
-            api.detach();
-        }
         if (smartVideoPlayer != null) {
             smartVideoPlayer.release();
+        }
+        if (api != null) {
+            api.detach();
         }
         if (webView != null) {
             webView.setWebChromeClient(null);
@@ -175,7 +175,6 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             webView.destroy();
             webView = null;
         }
-
         EventBus.getDefault().unregister(this);
         super.onDestroy();
 
@@ -438,4 +437,6 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             }
         });
     }
+
+
 }

@@ -161,6 +161,7 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
         boolean isActivity = Activity.class.isAssignableFrom(cls);
         Activity activity = StackUtil.getInstance().getActivity(cls);
         //设置TitleBarView 所有TextView颜色
+        titleBar.setLeftTextDrawablePadding(SizeUtil.dp2px(10));
         titleBar.setStatusBarLightMode(isSupport)
                 //不支持黑字的设置白透明
                 .setStatusAlpha(isSupport ? 0 : 102)

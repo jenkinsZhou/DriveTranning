@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class StudyDataInfo implements Serializable {
     private String Time;
-    private double StudyHour;
+    private long StudyHour;
     private ArrayList<StudyDataInfo> Day;
 
     public String getTime() {
@@ -24,11 +24,11 @@ public class StudyDataInfo implements Serializable {
         Time = time;
     }
 
-    public double getStudyHour() {
+    public long getStudyHour() {
         return StudyHour;
     }
 
-    public void setStudyHour(double studyHour) {
+    public void setStudyHour(long studyHour) {
         StudyHour = studyHour;
     }
 

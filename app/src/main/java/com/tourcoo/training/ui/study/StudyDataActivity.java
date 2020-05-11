@@ -177,7 +177,6 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
         mStudyDataEntity.setTotalHour(TimeUtil.secondToHour(detail.getTotalHour()));
         loadChart(detail);
         tvSelectDateShow.setText(mStudyDataEntity.getMonths().get(currentPosition).getTime());
-
         tvTotalStudyLength.setText(CommonUtil.doubleTransStringZhen(detail.getTotalHour()) + "小时");
         List<Fragment> fragmentList = new ArrayList<>();
         for (StudyDataInfo month : detail.getMonths()) {
@@ -187,6 +186,11 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
         wrapViewpager.setAdapter(pagerAdapter);
         wrapViewpager.setSlidingEnable(false);
         wrapViewpager.setOffscreenPageLimit(fragmentList.size() + 1);
+        Calendar calendar = Calendar.getInstance();
+        //默认显示当前月份数据
+        int currentMonth = calendar.get(Calendar.MONTH);
+        tvSelectDateShow.setText(mStudyDataEntity.getMonths().get(currentMonth).getTime());
+        wrapViewpager.setCurrentItem(currentMonth);
     }
 
     private void doSkipNext() {
@@ -221,6 +225,6 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
             list.add(CommonUtil.getNotNullValue(count + ""));
             floatList.add((float) TimeUtil.secondToHour(month.getStudyHour()));
         }
-        oilLineChartManager.showLineChart(list,floatList,"小时", ResourceUtil.getColor(R.color.blue5087FF));
+        oilLineChartManager.showLineChart(list,floatList,"时长", ResourceUtil.getColor(R.color.blue5087FF));
     }
 }

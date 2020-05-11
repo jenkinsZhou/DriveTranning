@@ -29,6 +29,7 @@
 
     <View
         android:layout_width="match_parent"
+        android:alpha="0.1"
         android:layout_height="@dimen/dp_0_5"
         android:layout_marginTop="@dimen/dp_17"
         android:background="@color/white" />
