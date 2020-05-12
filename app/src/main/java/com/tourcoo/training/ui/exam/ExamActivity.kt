@@ -104,6 +104,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     STATE_DRAGGING->{
+                        //不做任何处理
                     }
                     STATE_COLLAPSED -> {
                         //折叠了

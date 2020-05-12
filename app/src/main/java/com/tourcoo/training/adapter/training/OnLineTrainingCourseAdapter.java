@@ -3,6 +3,7 @@ package com.tourcoo.training.adapter.training;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +12,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.manager.GlideManager;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.ResourceUtil;
 import com.tourcoo.training.entity.course.CourseInfo;
 import com.tourcoo.training.widget.aliplayer.utils.Common;
 
@@ -60,13 +62,16 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
                 break;
         }
 
-
+        TextView tvCourseTitle = helper.getView(R.id.tvCourseTitle);
         ImageView ivCourseStatus = helper.getView(R.id.ivCourseStatus);
+        TextView tvCourseTimeRange = helper.getView(R.id.tvCourseTimeRange);
         helper.setText(R.id.tvStudyProgress,"学习进度"+ CommonUtil.doubleTransStringZhen(item.getProgress())+"%");
         switch (item.getStatus()) {
             case COURSE_STATUS_FINISHED:
                 progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_finish);
+                tvCourseTitle.setTextColor(ResourceUtil.getColor(R.color.gray999999));
+                tvCourseTimeRange.setTextColor(ResourceUtil.getColor(R.color.grayB6B6B6));
                 helper.setGone(R.id.llStudyProgress,false);
                 helper.setGone(R.id.tvCourseTimeRange, true);
                 break;
@@ -76,18 +81,24 @@ public class OnLineTrainingCourseAdapter extends BaseQuickAdapter<CourseInfo, Ba
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_continue);
                 helper.setGone(R.id.llStudyProgress,true);
                 helper.setGone(R.id.tvCourseTimeRange,false);
+                tvCourseTitle.setTextColor(ResourceUtil.getColor(R.color.black333333));
+                tvCourseTimeRange.setTextColor(ResourceUtil.getColor(R.color.gray999999));
                 break;
             case COURSE_STATUS_NEED_PAY:
                 progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_need_pay);
                 helper.setGone(R.id.llStudyProgress,false);
                 helper.setGone(R.id.tvCourseTimeRange, true);
+                tvCourseTitle.setTextColor(ResourceUtil.getColor(R.color.black333333));
+                tvCourseTimeRange.setTextColor(ResourceUtil.getColor(R.color.gray999999));
                 break;
             case COURSE_STATUS_WAIT_EXAM:
                 progressBarOnLine.setVisibility(View.GONE);
                 ivCourseStatus.setImageResource(R.mipmap.ic_course_status_wait_exam);
                 helper.setGone(R.id.llStudyProgress,false);
                 helper.setGone(R.id.tvCourseTimeRange, true);
+                tvCourseTitle.setTextColor(ResourceUtil.getColor(R.color.black333333));
+                tvCourseTimeRange.setTextColor(ResourceUtil.getColor(R.color.gray999999));
                 break;
         }
     }
