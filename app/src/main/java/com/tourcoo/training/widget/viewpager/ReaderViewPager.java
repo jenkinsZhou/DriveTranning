@@ -18,7 +18,7 @@ import java.lang.reflect.Field;
  * @date 2020年03月09日21:45
  * @Email: 971613168@qq.com
  */
-public class ReaderViewPager extends ViewPager {
+public class ReaderViewPager extends WrapContentHeightViewPager {
 
     // 是否禁止 viewpager 左右滑动
     private boolean noScroll = false;

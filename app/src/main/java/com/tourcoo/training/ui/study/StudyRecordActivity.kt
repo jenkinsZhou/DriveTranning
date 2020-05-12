@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +16,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.tourcoo.training.R
-import com.tourcoo.training.adapter.certificate.CertificateInfoAdapter
 import com.tourcoo.training.adapter.study.StudyRecordAdapter
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
@@ -29,10 +27,8 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.certificate.CertificateInfo
 import com.tourcoo.training.entity.study.StudyRecord
 import com.trello.rxlifecycle3.android.ActivityEvent
-import kotlinx.android.synthetic.main.activity_register_industrial.*
 import kotlinx.android.synthetic.main.frame_layout_recycler.*
 import kotlinx.android.synthetic.main.frame_layout_refresh_recycler.*
 import java.text.SimpleDateFormat
@@ -119,6 +115,7 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
         try {
             for (record in list) {
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
+                sdf.timeZone = TimeZone.getTimeZone("GMT+00:00")
                 if (!TextUtils.isEmpty(record.trainingPlanStartTime)) {
                     val date = sdf.parse(record.trainingPlanStartTime)
                     if (date != null) {
@@ -126,6 +123,7 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
                     }
                 }
             }
+            CommonUtil.listSortByDate(list)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -134,11 +132,14 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
         val mapSize = maps.size
         for (map in maps) {
             val values = map.value
+            CommonUtil.listSortByDate(values)
             val record = StudyRecord()
             record.title = map.key
             record.isHeader = true
+            TourCooLogUtil.d("排序后的数据",values)
             values.add(0, record)
-            result.addAll(values.asReversed())
+            values.reverse()
+            result.addAll(values)
             count++
             if(count == mapSize-1){
                 for (value in result) {
@@ -146,8 +147,8 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
                 }
             }
         }
-
-        return result.asReversed()
+        result.reverse()
+        return result
     }
 
 
@@ -185,7 +186,7 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
     private fun initPicker() {
         val calendar = Calendar.getInstance()
         val currentYear = calendar[Calendar.YEAR]
-        for (year in currentYear downTo currentYear - 3) {
+        for (year in currentYear downTo currentYear - 2) {
             options1Items.add(year)
         }
         pvCustomOptions = OptionsPickerBuilder(mContext, OnOptionsSelectListener { options1, options2, options3, v ->

@@ -97,7 +97,7 @@
                 style="@style/Text15spBlack333333"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_5"
-                android:text="2020-02-21 15:30" />
+                />
         </LinearLayout>
 
 
@@ -135,7 +135,7 @@
                 style="@style/Text15spBlack333333"
                 android:layout_gravity="top"
                 android:layout_marginStart="@dimen/dp_5"
-                android:text="安徽省合肥市蜀山区呼叫中心安徽省合肥市蜀山区呼叫中心" />
+               />
         </LinearLayout>
 
         <!--安全员姓名-->
@@ -344,7 +344,7 @@
                         style="@style/Text15spBlack333333"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_5"
-                        android:text="2020-02-21 15:30" />
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -380,7 +380,7 @@
                         style="@style/Text15spBlack333333"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_5"
-                        android:text="2020-02-21 15:30" />
+                   />
                 </LinearLayout>
 
             </LinearLayout>

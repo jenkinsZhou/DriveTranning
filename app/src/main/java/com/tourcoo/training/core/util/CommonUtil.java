@@ -37,13 +37,17 @@ import com.tourcoo.training.entity.study.StudyRecord;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -593,9 +597,9 @@ public class CommonUtil {
 
 
     public static Map<String, ArrayList<StudyRecord>> sortStudyRecord(List<StudyRecord> list) {
-        TreeMap tm = new TreeMap();
+        TreeMap<String ,ArrayList<StudyRecord>> tm = new TreeMap<>();
         for (int i = 0; i < list.size(); i++) {
-            StudyRecord record = (StudyRecord) list.get(i);
+            StudyRecord record = list.get(i);
             if (record == null || record.getTrainDate() == null) {
                 continue;
             }
@@ -616,7 +620,6 @@ public class CommonUtil {
     }
 
     /**
-     *
      * 利用HashMap key唯一，value可以重复的特点，把list中各种元素放到hashMap中
      */
     public static boolean checkDifferent(List<String> list, List<String> list1) {
@@ -636,6 +639,39 @@ public class CommonUtil {
         }
         return true;
     }
+
+
+    //按日期排序（降序）
+    public static void listSortByDate(List<StudyRecord> list) {
+        //Collections的sort方法默认是升序排列，如果需要降序排列时就需要重写compare方法
+        Collections.sort(list, new Comparator<StudyRecord>() {
+            @Override
+            public int compare(StudyRecord o1, StudyRecord o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                format.setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
+                try {
+                    //获取体检日期，并把其类型由String转成Date，便于比较。
+                    Date dt1 = format.parse(o1.getTrainingPlanStartTime());
+                    Date dt2 = format.parse(o2.getTrainingPlanStartTime());
+
+                    //以下代码决定按日期降序排序，若将return“-1”与“1”互换，即可实现升序。
+                    //getTime 方法返回一个整数值，这个整数代表了从 1970 年 1 月 1 日开始计算到 Date 对象中的时间之间的毫秒数。
+                    if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+
+                } catch (Exception e) {
+                    TourCooLogUtil.e("日期排序出错："+e);
+                }
+                return 0;
+            }
+        });
+    }
+
 
 
 }

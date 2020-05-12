@@ -97,6 +97,7 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
 
     override fun registerSuccess(userInfo: UserInfo?) {
         if (userInfo == null) {
+            ToastUtil.show("用户信息为空")
             return
         } else {
             /*  val s = "12345"
@@ -106,9 +107,10 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
             if (!TextUtils.isEmpty(userInfo.idCard) && userInfo.idCard.length >= 18) {
                 val pass = userInfo.idCard.substring(userInfo.idCard.length - 6, userInfo.idCard.length)
                 presenter.doLogin(userInfo.idCard, pass)
+                ToastUtil.showSuccess("注册成功")
             } else {
                 finish()
-                ToastUtil.show("注册成功")
+                ToastUtil.showSuccess("注册成功")
             }
 
         }
