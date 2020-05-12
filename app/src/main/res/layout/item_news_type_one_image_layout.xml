@@ -18,6 +18,7 @@
         <TextView
             android:id="@+id/tvNewsTitle"
             android:layout_width="0dp"
+            android:maxLines="2"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:text="又出新法规 货车司机的你 需要知道的新规定！"
