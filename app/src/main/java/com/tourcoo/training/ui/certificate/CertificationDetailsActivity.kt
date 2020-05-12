@@ -86,7 +86,7 @@ class CertificationDetailsActivity : BaseTitleActivity() {
         GlideManager.loadImg(CommonUtil.getUrl(detail.certificateImage), ivImage)
 
         val contentEtString = TrainingConstant.STUDY_SHARE_URL + "?TraineeID=${SPUtils.getInstance().getString("TraineeID")}&trainingPlanID=${detail.trainingPlanID}"
-        val bitmap = CodeCreator.createQRCode(contentEtString, SizeUtils.dp2px(100f), SizeUtils.dp2px(100f), null)
+        val bitmap = CodeCreator.createQRCode(contentEtString,500, 500, null)
         ivCode.setImageBitmap(bitmap)
 
         btnSave.setOnClickListener {
