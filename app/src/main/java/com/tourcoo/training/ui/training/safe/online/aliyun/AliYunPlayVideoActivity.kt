@@ -146,6 +146,12 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private var hasRequireExam = true
 
+
+    /**
+     * 是否是考试状态
+     */
+    private var mExamEnable =  false
+
     private val PERMISSIONS_STORAGE = arrayOf(
             "android.permission.READ_EXTERNAL_STORAGE",
             "android.permission.WRITE_EXTERNAL_STORAGE"
@@ -270,8 +276,9 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (detail.requireExam == 1) {
             tvExam.visibility = View.VISIBLE
         }
-
-        if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
+        mExamEnable = detail.finishedCourses == 1 && detail.finishedExam == 0
+        if (mExamEnable) {
+            //如果允许考试则将考试按钮置为蓝色 并允许点击 否则置灰
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
             //延时弹出是否考试弹窗

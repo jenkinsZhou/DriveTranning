@@ -442,7 +442,9 @@ public class TCVodControllerLarge extends TCVodControllerBase
             releaseTXImageSprite();
         }
         // 有缩略图的时候不显示进度
-        mGestureVideoProgressLayout.setProgressVisibility(info == null || info.imageUrls == null || info.imageUrls.size() == 0);
+        if(mGestureVideoProgressLayout != null){
+            mGestureVideoProgressLayout.setProgressVisibility(info == null || info.imageUrls == null || info.imageUrls.size() == 0);
+        }
         if (mPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
             mTXImageSprite = new TXImageSprite(getContext());
             if (info != null) {

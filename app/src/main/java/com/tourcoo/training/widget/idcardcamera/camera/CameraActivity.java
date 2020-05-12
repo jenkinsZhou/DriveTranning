@@ -64,6 +64,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         /*动态请求需要的权限*/
         boolean checkPermissionFirst = PermissionUtils.checkPermissionFirst(this, IDCardCamera.PERMISSION_CODE_FIRST,
@@ -106,7 +107,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
     }
 
     private void init() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_camera);
         mType = getIntent().getIntExtra(IDCardCamera.TAKE_TYPE, 0);

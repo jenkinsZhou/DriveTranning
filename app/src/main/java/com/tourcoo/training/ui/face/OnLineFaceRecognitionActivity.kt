@@ -43,7 +43,7 @@ import pub.devrel.easypermissions.EasyPermissions
 import java.io.*
 
 /**
- *@description :
+ *@description :线上培训人脸验证
  *@company :途酷科技
  * @author :JenkinsZhou
  * @date 2020年04月21日21:19

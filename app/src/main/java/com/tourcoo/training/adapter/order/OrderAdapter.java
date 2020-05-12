@@ -33,12 +33,13 @@ public class OrderAdapter extends BaseQuickAdapter<OrderEntity, BaseViewHolder> 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, OrderEntity item) {
         TextView tvOrderStatus = helper.getView(R.id.tvOrderStatus);
-        double yuanPrice = (item.getUnitPrice() / 100);
-        helper.setText(R.id.tvPrice, CommonUtil.doubleTransStringZhen(yuanPrice));
-        helper.setText(R.id.tvTotalMoney, "支付金额：" + CommonUtil.doubleTransStringZhen(item.getAmount()/100));
-        helper.setText(R.id.tvCount, "x" + item.getNumber());
-        helper.setText(R.id.tvTotalDesc, "共" + item.getNumber() + "件商品 合计：¥" + CommonUtil.doubleTransStringZhen((item.getAmount() / 100)));
+        String amount = CommonUtil.doubleTransStringZhen(item.getAmount()/100);
+        helper.setText(R.id.tvPrice, amount);
+        helper.setText(R.id.tvTotalMoney, "支付金额：" + amount+"元");
+        helper.setText(R.id.tvCount, "x" + 1);
+        helper.setText(R.id.tvTotalDesc, "共1件商品 合计：¥" +amount);
         helper.addOnClickListener(R.id.btnOne);
+        helper.setText(R.id.tvOrderTypeLabel,CommonUtil.getNotNullValue(item.getTitle()));
         switch (item.getOrderType()) {
             case ORDER_TYPE_RECHARGE:
                 //充值
@@ -47,7 +48,8 @@ public class OrderAdapter extends BaseQuickAdapter<OrderEntity, BaseViewHolder> 
                 } else {
                     tvOrderStatus.setText("充值失败");
                 }
-                helper.setGone(R.id.btnOne, true);
+                helper.setGone(R.id.llBtn, true);
+
                 break;
             case ORDER_TYPE_COST:
                 //花费
@@ -56,7 +58,7 @@ public class OrderAdapter extends BaseQuickAdapter<OrderEntity, BaseViewHolder> 
                 } else {
                     tvOrderStatus.setText("支付失败");
                 }
-                helper.setGone(R.id.btnOne, false);
+                helper.setGone(R.id.llBtn, false);
                 break;
             default:
                 break;

@@ -85,6 +85,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private var countNode = 0
 
+    /**
+     * 是否是考试状态
+     */
+    private var mExamEnable =  false
+
 
     companion object {
         const val TRANSITION = "TRANSITION"
@@ -280,8 +285,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (detail.requireExam == 1) {
             tvExam.visibility = View.VISIBLE
         }
-
-        if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
+        mExamEnable = detail.finishedCourses == 1 && detail.finishedExam == 0
+        if (mExamEnable) {
+            //如果允许考试则将考试按钮置为蓝色 并允许点击 否则置灰
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
             //延时弹出是否考试弹窗
@@ -482,10 +488,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     ToastUtil.show("当前课件不是视频课件")
                     return
                 }
+                if(mExamEnable){
+                    //如果是考试状态 就不用播放视频了 因此直接拦截播放操作
+                    return
+                }
                 //从上次播放进度开始播放
                 currentCourseId = "" + course.id
                 loadPlayerSetting(course.progress)
-
                 if (course.streams[0].encryptType != null && course.streams[0].encryptType == "DriveDu-DRM") {
                     requestVideoEncryptParamsCurrentCourse(course)
                 } else {

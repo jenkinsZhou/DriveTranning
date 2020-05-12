@@ -420,7 +420,6 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess("答题进度已保存")
                 } else {
                     ToastUtil.show(entity.msg)
                 }

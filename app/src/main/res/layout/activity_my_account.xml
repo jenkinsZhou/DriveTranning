@@ -76,6 +76,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvRecharge"
                         android:layout_width="match_parent"
+                        android:minHeight="@dimen/dp_200"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_10" />
 

@@ -88,37 +88,38 @@
             <View
                 android:id="@+id/viewBottom"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_100"
+                android:layout_height="@dimen/dp_120"
                 android:layout_alignParentBottom="true"
                 android:background="@color/transparent" />
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/nnScrollView"
-                android:layout_above="@id/viewBottom"
-                android:layout_alignParentTop="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.tourcoo.training.widget.viewpager.ReaderViewPager
-                    android:id="@+id/vpExamOnline"
+            <!--    <androidx.core.widget.NestedScrollView
+                    android:id="@+id/nnScrollView"
+                    android:layout_above="@id/viewBottom"
+                    android:layout_alignParentTop="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-            </androidx.core.widget.NestedScrollView>
+                    android:layout_height="wrap_content">-->
+            <com.tourcoo.training.widget.viewpager.ReaderViewPager
+                android:id="@+id/vpExamOnline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/viewBottom"
+                android:layout_alignParentTop="true" />
+            <!--            </androidx.core.widget.NestedScrollView>-->
 
 
             <RelativeLayout
                 android:id="@+id/rlBottomLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/nnScrollView"
+                android:layout_below="@id/vpExamOnline"
                 android:layout_alignParentBottom="true"
                 android:background="@color/white"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:minHeight="@dimen/dp_40"
+                    android:minHeight="@dimen/dp_70"
                     android:orientation="horizontal">
 
                     <TextView

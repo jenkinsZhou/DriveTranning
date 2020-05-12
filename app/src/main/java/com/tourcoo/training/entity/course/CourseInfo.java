@@ -34,15 +34,8 @@ public class CourseInfo {
     private String address;
     private int Role;
     private int type;
-    private String examId;
 
-    public String getExamId() {
-        return examId;
-    }
 
-    public void setExamId(String examId) {
-        this.examId = examId;
-    }
 
     public int getType() {
         return type;
@@ -146,5 +139,15 @@ public class CourseInfo {
 
     public void setRole(int role) {
         Role = role;
+    }
+
+    private String examId;
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
     }
 }

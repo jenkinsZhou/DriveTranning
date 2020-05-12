@@ -67,7 +67,9 @@ public class TCVideoProgressLayout extends RelativeLayout {
     }
 
     public void setProgressVisibility(boolean enable) {
-        mProgressBar.setVisibility(enable ? VISIBLE : GONE);
+        if(mProgressBar != null){
+            mProgressBar.setVisibility(enable ? VISIBLE : GONE);
+        }
     }
 
     //隐藏自己的Runnable

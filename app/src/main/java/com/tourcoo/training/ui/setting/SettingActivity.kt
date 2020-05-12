@@ -25,6 +25,7 @@ import com.tourcoo.training.utils.DataCleanUtil
 import com.tourcoo.training.utils.DataCleanUtil.EMPTY_CACHE
 import com.tourcoo.training.utils.DataCleanUtil.clearAllCache
 import com.tourcoo.training.widget.dialog.BottomSheetDialog
+import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_setting_system.*
 
@@ -36,6 +37,7 @@ import kotlinx.android.synthetic.main.activity_setting_system.*
  * @Email: 971613168@qq.com
  */
 class SettingActivity : BaseTitleActivity(), View.OnClickListener {
+    private  var dialog : IosAlertDialog ? = null
     override fun getContentLayout(): Int {
         return R.layout.activity_setting_system
     }
@@ -64,7 +66,7 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
                 CommonUtil.startActivity(mContext, EditPassActivity::class.java)
             }
             R.id.llClearCache -> {
-                doClearCache()
+                showClearDialog()
             }
             R.id.llAboutUs -> {
                 CommonUtil.startActivity(mContext, AboutUsActivity::class.java)
@@ -160,6 +162,22 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
+
+    private fun showClearDialog() {
+        dialog =      IosAlertDialog(mContext)
+                .init()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(false)
+                .setTitle("清除缓存")
+                .setMsg("是否要清除缓存")
+                .setPositiveButton("确定", View.OnClickListener {
+                    doClearCache()
+                })
+                .setNegativeButton("取消", View.OnClickListener {
+                    dialog!!.dismiss()
+                })
+        dialog!!.show()
+    }
 }
 
 

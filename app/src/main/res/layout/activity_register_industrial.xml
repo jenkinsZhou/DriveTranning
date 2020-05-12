@@ -61,7 +61,7 @@
                             android:background="@null"
                             android:hint="请输入户主姓名"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/grayBFBFBF"
+                            android:textColor="@color/black333333"
                             android:textColorHint="@color/grayBFBFBF"
                             android:textSize="@dimen/sp_14" />
                     </LinearLayout>
@@ -103,7 +103,7 @@
                             android:background="@null"
                             android:hint="请输入户主联系电话"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/grayBFBFBF"
+                            android:textColor="@color/black333333"
                             android:textColorHint="@color/grayBFBFBF"
                             android:textSize="@dimen/sp_14" />
                     </LinearLayout>
@@ -144,7 +144,7 @@
                             android:background="@null"
                             android:hint="请输入户主身份证号码"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/grayBFBFBF"
+                            android:textColor="@color/black333333"
                             android:textColorHint="@color/grayBFBFBF"
                             android:textSize="@dimen/sp_14" />
                     </LinearLayout>
@@ -185,7 +185,7 @@
                             android:background="@null"
                             android:hint="请填写驾驶员车牌"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/grayBFBFBF"
+                            android:textColor="@color/black333333"
                             android:textColorHint="@color/grayBFBFBF"
                             android:textSize="@dimen/sp_14" />
                     </LinearLayout>
@@ -225,7 +225,7 @@
                             android:background="@null"
                             android:hint="请选择所属区域"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/grayBFBFBF"
+                            android:textColor="@color/black333333"
                             android:textColorHint="@color/grayBFBFBF"
                             android:textSize="@dimen/sp_14" />
                     </LinearLayout>
@@ -267,7 +267,7 @@
                             android:background="@null"
                             android:hint="请选择行业类型"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/grayBFBFBF"
+                            android:textColor="@color/black333333"
                             android:textColorHint="@color/grayBFBFBF"
                             android:textSize="@dimen/sp_14" />
 

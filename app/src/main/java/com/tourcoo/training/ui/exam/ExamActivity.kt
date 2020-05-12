@@ -24,6 +24,7 @@ import com.tourcoo.training.constant.ExamConstant.*
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
@@ -47,17 +48,18 @@ import java.text.SimpleDateFormat
  * @date 2020年03月09日17:14
  * @Email: 971613168@qq.com
  */
-class ExamActivity : BaseTitleActivity(), View.OnClickListener {
+class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickListener {
     private val mTag = "OnlineExamActivity"
     private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
     private var questionNumAdapter: QuestionNumberAdapter? = null
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
-    private val delayTime = 500L
+    private val delayTime = 800L
     private val answerHandler = Handler()
     private var behavior: BottomSheetBehavior<NestedScrollView>? = null
     private var examId = ""
     private var trainPlanId = ""
+    private var lastQuestionIndex = -1
     /**
      * 用来计数是否答完所有试题 (没回答完不让提交答案)
      */
@@ -109,7 +111,9 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         list?.clear()
         val questions = examEntity.questions
         for (i in 0 until questions.size) {
-            list?.add(ExamFragment.newInstance(questions[i]))
+            val currentFragment = ExamFragment.newInstance(questions[i])
+            currentFragment.setOnQuestionListener(this)
+            list?.add(currentFragment)
         }
         vpExamOnline.adapter = fragmentCommonAdapter
     }
@@ -168,6 +172,11 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         showButtonByCurrentPage()
         val fragment = list!![currentPosition] as ExamFragment
         val selectCount = fragment.getSelectCount()
+        if (selectCount <= 0) {
+            //说明用户还没回答题目 不让进入下一题 所以直接拦截
+            ToastUtil.show("请先回答当前题目")
+            return
+        }
         if (fragment.isMultipleAnswer() && selectCount == 1) {
             ToastUtil.show("这道题是多选哦")
             return
@@ -186,20 +195,41 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun setQuestionNumber(questions: MutableList<Question>): MutableList<Question> {
         for (i in 0 until questions.size) {
-            questions[i].questionNumber = (i + 1).toString()
+            val currentQuestion = questions[i]
+            currentQuestion.questionNumber = (i + 1).toString()
         }
+        loadNumberStatus(questions)
         return questions
     }
 
+    private fun loadNumberStatus(questions: MutableList<Question>) {
+        for (i in 0 until questions.size) {
+            val currentQuestion = questions[i]
+            if (currentQuestion.answerStatus == STATUS_NO_ANSWER) {
+                if (i > 1) {
+                    TourCooLogUtil.i("执行了")
+                    //需要判断上一题是否已回答过 若上一题已经回答过则 单独设置个状态
+                    val lastQuestion = questions[i - 1]
+                    val hasAnswer = lastQuestion.answerStatus == STATUS_ANSWER_WRONG || lastQuestion.answerStatus == STATUS_ANSWER_RIGHT
+                    if (hasAnswer) {
+                        //说明上一题已经回答过
+                        currentQuestion.answerStatus = STATUS_NO_ANSWER_FIRST
+                        lastQuestionIndex = i
+                    } else {
+                        //否则 还是置为未回答状态
+                        currentQuestion.answerStatus = STATUS_NO_ANSWER
+                    }
+                }
+            }
+        }
+    }
 
     private fun loadBottomSheetBar(questions: MutableList<Question>?) {
         if (questions == null) {
             return
         }
         questionNumAdapter?.setNewData(setQuestionNumber(questions))
-        baseHandler.postDelayed(Runnable {
-            showBottomBarInfo()
-        }, 500)
+        showBottomBarInfo()
     }
 
     private fun handleBottomBarBehavior() {
@@ -244,6 +274,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         questionNumAdapter?.bindToRecyclerView(questionNumRv)
         //处理底部题目弹窗
         questionNumAdapter?.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+
             //如果这道题用户没有回答则 不让跳转
             val fragment = list!![position] as ExamFragment
             if (fragment.getQuestionStatus() == STATUS_NO_ANSWER) {
@@ -273,6 +304,9 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
             }
         })
         loadBottomSheetBar(examEntity.questions)
+        if (lastQuestionIndex >= 0) {
+            vpExamOnline.setCurrentItem(lastQuestionIndex,false)
+        }
     }
 
     /**
@@ -434,7 +468,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess("答题进度已保存")
                 } else {
                     ToastUtil.show(entity.msg)
                 }
@@ -502,6 +535,8 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         val current = vpExamOnline.currentItem + 1
         val info = "" + current + "/" + list!!.size
         tvCurrentAnswerResult.text = info
+        //关键点：蓝色圆圈
+        loadNumberStatus(questionNumAdapter!!.data)
         questionNumAdapter!!.notifyDataSetChanged()
     }
 
@@ -524,11 +559,26 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener {
         baseHandler.postDelayed({
             val dialog = ExamCommonDialog(mContext)
             dialog.create().setContent("是否退出考试 ？").setPositiveButtonListener(View.OnClickListener {
-                isSubmit = true
-                saveExam(getAllQuestions())
                 dialog.dismiss()
+                isSubmit = true
+                getAllQuestions()
+                if (answerCount == 0) {
+                    //说明用户没有回答题目 也不用保存题目了 直接返回
+                    finish()
+                    return@OnClickListener
+                }
+                saveExam(getAllQuestions())
+
             }).show()
         }, 100)
     }
+
+    override fun onQuestionClick() {
+        //如果是展开状态 就关闭
+        if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
+            behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
 
 }

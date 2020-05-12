@@ -178,7 +178,15 @@ dependencies {
 
     implementation "com.google.android.material:material:1.2.0-alpha06"
 
+    implementation 'com.qianwen:update-app-kotlin:1.2.3'
+}
+repositories {
+    mavenCentral()
+    google()
+
     implementation 'com.github.yuzhiqiang1993:zxing:2.1.4'
 
 }
 
+
+}

@@ -1,20 +1,23 @@
 package com.tourcoo.training.ui.account
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.manager.GlideManager
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
-import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
-import com.tourcoo.training.entity.account.TradeType
 import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.account.register.IndustryCategory
 import com.tourcoo.training.widget.citypicker.OnCityItemClickListener
@@ -23,9 +26,7 @@ import com.tourcoo.training.widget.citypicker.bean.DistrictBean
 import com.tourcoo.training.widget.citypicker.bean.ProvinceBean
 import com.tourcoo.training.widget.citypicker.cityjd.JDCityConfig
 import com.tourcoo.training.widget.citypicker.cityjd.JDCityPicker
-import com.tourcoo.training.widget.dialog.BottomSheetDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
-import com.trello.rxlifecycle3.android.FragmentEvent
 import kotlinx.android.synthetic.main.activity_personal_info.*
 
 /**
@@ -101,6 +102,17 @@ class PersonalInfoActivity : BaseTitleActivity() {
             val intent = Intent(this, ChangePhoneActivity::class.java)
             startActivityForResult(intent, 2015)
         }
+
+        llContentIdCard.setOnLongClickListener(object : View.OnLongClickListener {
+            override fun onLongClick(v: View?): Boolean {
+                if (AppConfig.DEBUG_MODE) {
+                    setClipboard(getTextValue(tvIdCard))
+                    ToastUtil.show("复制成功")
+                }
+                return false
+            }
+
+        })
 
     }
 
@@ -179,8 +191,19 @@ class PersonalInfoActivity : BaseTitleActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
             requestUserInfo()
         }
     }
+
+
+    fun setClipboard(text: String) {
+        //获取剪贴板管理器：
+        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        // 创建普通字符型ClipData
+        val mClipData = ClipData.newPlainText("Label", text)
+        // 将ClipData内容放到系统剪贴板里。
+        cm.setPrimaryClip(mClipData)
+    }
+
 }

@@ -186,7 +186,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 }
 
                 else -> {
-                    ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
+//                    ToastUtil.show(AppConfig.TEXT_NO_FINISH_TIP)
                 }
             }
         }
@@ -389,6 +389,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         if (userInfoEvent.userInfo == null) {
             showUnLogin()
         } else {
+            ToastUtil.show("刷新了用户信息："+userInfoEvent.userInfo.coinsRemain)
             showUserInfo(userInfoEvent.userInfo)
         }
     }

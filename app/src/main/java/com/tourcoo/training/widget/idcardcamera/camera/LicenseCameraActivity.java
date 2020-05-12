@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.gyf.immersionbar.ImmersionBar;
 import com.tourcoo.training.R;
 
@@ -96,17 +98,17 @@ public class LicenseCameraActivity extends Activity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_camera_license);
         type = getIntent().getIntExtra("type", 0);
         if (type == TYPE_COMPANY_PORTRAIT || type==TYPE_DRIVE_LICENCE || type==TYPE_VIN_IDENTIFY) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_camera_license);
         licenseCameraPreview = (LicenseCameraPreview) findViewById(R.id.camera_surface);
         //获取屏幕最小边，设置为cameraPreview较窄的一边
         float screenMinSize = Math.min(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);

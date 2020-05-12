@@ -29,8 +29,6 @@ import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.entity.pay.PayResultEvent
-import com.tourcoo.training.entity.pay.WxPayEvent
-import com.tourcoo.training.entity.study.StudyRecord
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.LoginActivity.Companion.EXTRA_TYPE_RECOGNIZE_COMPARE
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
@@ -42,7 +40,6 @@ import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonBellAlert
-import com.tourcoo.training.widget.dialog.CommonBellDialog
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
 import com.tourcoo.training.widget.dialog.training.InputPayNumAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
@@ -79,8 +76,6 @@ class OnlineTrainFragment : BaseFragment() {
         refreshLayout?.setOnRefreshListener {
             requestCourseOnLine()
         }
-
-
         recyclerView = mContentView.findViewById(R.id.rvCommon)
         recyclerView?.layoutManager = LinearLayoutManager(mContext)
         recyclerView?.addItemDecoration(RecycleViewDivider(context, LinearLayout.VERTICAL, ConvertUtils.dp2px(10f), resources.getColor(R.color.grayFBF8FB), true))
@@ -121,6 +116,8 @@ class OnlineTrainFragment : BaseFragment() {
         const val REQUEST_CODE_FACE_VERIFY = 203
 
         const val REQUEST_CODE_AUTH = 204
+
+        const val REQUEST_CODE_REFRESH_ALL = 205
     }
 
 
@@ -314,6 +311,12 @@ class OnlineTrainFragment : BaseFragment() {
                 closeFaceDialog()
             }, 500)
         }
+        //以下是刷新列表逻辑
+        if(requestCode ==REQUEST_CODE_REFRESH_ALL){
+            refreshDataList()
+        }
+
+
     }
 
 
@@ -369,7 +372,7 @@ class OnlineTrainFragment : BaseFragment() {
 
         }
         intent?.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
-        startActivity(intent)
+        startActivityForResult(intent,REQUEST_CODE_REFRESH_ALL)
     }
 
 
@@ -458,6 +461,12 @@ class OnlineTrainFragment : BaseFragment() {
     private fun skipStudyDetailActivity(trainingId: String?){
         val intent = Intent(mContext, StudyDetailActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
-        startActivity(intent)
+        startActivityForResult(intent,REQUEST_CODE_REFRESH_ALL)
     }
+
+    private fun refreshDataList(){
+        requestCourseOnLine()
+    }
+
+
 }

@@ -25,4 +25,7 @@ public class ExamConstant {
     public static final int STATUS_ANSWER_RIGHT = 2;
 
 
+    public static final int STATUS_NO_ANSWER_FIRST = 4;
+
+
 }

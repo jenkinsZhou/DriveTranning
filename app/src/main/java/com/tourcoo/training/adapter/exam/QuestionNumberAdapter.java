@@ -33,25 +33,31 @@ public class QuestionNumberAdapter extends BaseQuickAdapter<Question, BaseViewHo
         }
         TextView tvQuestionNum = helper.getView(R.id.tvQuestionNum);
         tvQuestionNum.setText(item.getQuestionNumber());
-        if(item.isCurrentShow()){
-            tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_blue_5087ff_hollow));
-            tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.blue5087FF));
-        }else {
-            switch (item.getAnswerStatus()) {
-                case ExamConstant.STATUS_ANSWER_RIGHT:
-                    tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_green_67c23a));
-                    tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.white));
-                    break;
-                case ExamConstant.STATUS_ANSWER_WRONG:
-                    tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_red_d8e106));
-                    tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.white));
-                    break;
-                case ExamConstant.STATUS_NO_ANSWER:
-                    tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_gray_a2a2a2_hollow));
-                    tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.grayA2A2A2));
-                    break;
-            }
+//        if(item.isCurrentShow()){
+//            tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_blue_5087ff_hollow));
+//            tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.blue5087FF));
+//        }else {
+
+        switch (item.getAnswerStatus()) {
+            case ExamConstant.STATUS_ANSWER_RIGHT:
+                tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_green_67c23a));
+                tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.white));
+                break;
+            case ExamConstant.STATUS_ANSWER_WRONG:
+                tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_red_d8e106));
+                tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.white));
+                break;
+            case ExamConstant.STATUS_NO_ANSWER:
+                tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_gray_a2a2a2_hollow));
+                tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.grayA2A2A2));
+                break;
+            case ExamConstant.STATUS_NO_ANSWER_FIRST:
+                //显示蓝色圆圈
+                tvQuestionNum.setBackground(ResourceUtil.getDrawable(R.drawable.shape_circle_blue_5087ff_hollow));
+                tvQuestionNum.setTextColor(CommonUtil.getColor(R.color.blue5087FF));
+                break;
         }
+//        }
 
     }
 }

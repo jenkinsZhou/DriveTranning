@@ -81,7 +81,9 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".ui.face.FaceRecognitionActivity" />
+        <activity android:name=".ui.face.FaceRecognitionActivity"
+            android:launchMode="singleTask"
+            />
         <activity android:name=".ui.face.DialogFaceRecognitionActivity" />
         <activity android:name=".ui.account.register.IndustryRegisterActivity" />
         <activity android:name=".ui.account.register.DriverRegisterActivity" />
@@ -114,7 +116,9 @@
             android:exported="true"
             android:launchMode="singleTop" />
         <activity android:name=".core.base.activity.WebViewActivity" />
-        <activity android:name=".ui.face.OnLineFaceRecognitionActivity" />
+        <activity android:name=".ui.face.OnLineFaceRecognitionActivity"
+            android:launchMode="singleTask"
+            />
         <activity android:name=".ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity" />
         <activity android:name=".ui.training.safe.online.TrainFaceCertifyActivity" />
         <activity android:name=".ui.training.safe.online.detail.common.CommonPlanDetailActivity" />
@@ -142,6 +146,7 @@
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
         <activity android:name=".ui.feedback.FeedbackActivity"
+            android:windowSoftInputMode="stateHidden"
             />
         <activity android:name=".ui.EditPassActivity" />
         <activity android:name=".ui.setting.AboutUsActivity" />

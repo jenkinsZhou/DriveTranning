@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -165,14 +166,19 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
         titleBar.setStatusBarLightMode(isSupport);
         //不支持黑字的设置白透明
         titleBar.setLeftText("        ");
-        titleBar.setLeftTextDrawablePadding(SizeUtil.dp2px(10));
         titleBar.setStatusAlpha(isSupport ? 0 : 102)
                 .setLeftTextDrawable(isActivity ? mDrawable : null)
                 .setDividerHeight(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? SizeUtil.dp2px(0.5f) : 0);
         if (activity != null) {
             titleBar.setTitleMainText(activity.getTitle())
-                    .setOnLeftTextClickListener(v -> activity.finish());
+                    .setOnLeftTextClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.finish();
+                        }
+                    });
         }
+
       /*  if (activity instanceof BaseW) {
             return false;
         }*/

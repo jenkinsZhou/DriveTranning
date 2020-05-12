@@ -41,7 +41,6 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.PayInfo
 import com.tourcoo.training.entity.account.PayResult
 import com.tourcoo.training.entity.account.RechargeEntity
-import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.pay.WxPayEvent
 import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.recharge.CoinInfo
@@ -70,7 +69,8 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     private var payDialog: BottomPayDialog? = null
     private val mRechargeEntityList: MutableList<RechargeEntity> = ArrayList()
     private var mCoinList: MutableList<CoinInfo>? = null
-    private var wxApi: IWXAPI ? = null
+    private var wxApi: IWXAPI? = null
+
     override fun getContentLayout(): Int {
         return R.layout.activity_my_account
     }
@@ -83,23 +83,32 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-
         rvRecharge.layoutManager = GridLayoutManager(mContext, 3)
+        mRechargeAmountAdapter = RechargeAmountAdapter(mRechargeEntityList)
+        mRechargeAmountAdapter?.bindToRecyclerView(rvRecharge)
+        val emptyView = LayoutInflater.from(mContext).inflate(R.layout.empty_view_layout, null)
+        mRechargeAmountAdapter?.emptyView = emptyView
         tvConfirmPay.setOnClickListener(this)
-        wxApi= WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
+        wxApi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
         requestCoinPackage()
     }
 
 
     private fun loadPackageData(list: MutableList<CoinInfo>) {
         mRechargeEntityList.clear()
+        if (list.isEmpty()) {
+            mRechargeAmountAdapter?.notifyDataSetChanged()
+            tvConfirmPay.isEnabled = false
+            tvConfirmPay.setBackgroundResource(R.drawable.bg_radius_25_gray_d2d2d2)
+            return
+        }
+        tvConfirmPay.isEnabled = true
+        tvConfirmPay.setBackgroundResource(R.drawable.selector_gradient_radius_25_blue)
         mRechargeEntityList.addAll(transform(list))
-        mRechargeAmountAdapter = RechargeAmountAdapter(mRechargeEntityList)
-        mRechargeAmountAdapter?.bindToRecyclerView(rvRecharge)
         mRechargeAmountAdapter?.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             setSelect(position)
         })
-
+        mRechargeAmountAdapter?.notifyDataSetChanged()
     }
 
 
@@ -123,9 +132,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             coin = mCoinList!![i]
             rechargeEntity.selected = i == position
             coin.isSelected = i == position
-
         }
-        mRechargeAmountAdapter?.notifyDataSetChanged()
     }
 
 

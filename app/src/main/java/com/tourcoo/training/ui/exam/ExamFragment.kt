@@ -26,14 +26,15 @@ import com.tourcoo.training.entity.exam.Question.*
  * @Email: 971613168@qq.com
  */
 class ExamFragment : BaseFragment(), View.OnClickListener {
-
+    private var mQuestionListener: QuestionClickListener? = null
     private var adapter: QuestionAdapter? = null
     private var questionRecyclerView: RecyclerView? = null
     private var tvCurrentQuestion: TextView? = null
     private var tvQuestionType: TextView? = null
     private var tvAnswerAnalysis: TextView? = null
     private var question: Question? = null
-    private var llQuestionAnalysis : LinearLayout?=null
+    private var llQuestionAnalysis: LinearLayout? = null
+    private var llLinFragmentRoot: LinearLayout? = null
     override fun getContentLayout(): Int {
         return R.layout.fragment_exam_content_online
     }
@@ -41,6 +42,8 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     override fun initView(savedInstanceState: Bundle?) {
         question = arguments?.getParcelable("question")
         questionRecyclerView = mContentView.findViewById(R.id.questionRecyclerView)
+        llLinFragmentRoot = mContentView.findViewById(R.id.llLinFragmentRoot)
+        llLinFragmentRoot!!.setOnClickListener(this)
         llQuestionAnalysis = mContentView.findViewById(R.id.llQuestionAnalysis)
         tvCurrentQuestion = mContentView.findViewById(R.id.tvCurrentQuestion)
         tvQuestionType = mContentView.findViewById(R.id.tvQuestionType)
@@ -75,10 +78,11 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            /* R.id.tvNextQuestion -> {
-             }
-             else -> {
-             }*/
+            R.id.llLinFragmentRoot -> {
+                if (mQuestionListener != null) {
+                    mQuestionListener!!.onQuestionClick()
+                }
+            }
         }
     }
 
@@ -88,6 +92,10 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
             return
         }
         adapter!!.setOnItemClickListener { adapter, view, position ->
+            if (mQuestionListener != null) {
+                mQuestionListener!!.onQuestionClick()
+            }
+
             if (question.isHasAnswered) {
                 return@setOnItemClickListener
             }
@@ -131,7 +139,7 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
         tvCurrentQuestion?.text = question.question
         tvAnswerAnalysis!!.text = getNotNullValue(question.analysis)
         //如果用户没回答过题目就不显示题解
-        setViewGone(llQuestionAnalysis, !(question.answer==null ||question.answer.isEmpty()) )
+        setViewGone(llQuestionAnalysis, !(question.answer == null || question.answer.isEmpty()))
     }
 
 
@@ -186,16 +194,17 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
         }
         question!!.answerStatus = getQuestionStatus()
         //如果用户没回答过题目就不显示题解
-        setViewGone(llQuestionAnalysis, true )
+        setViewGone(llQuestionAnalysis, true)
         adapter?.notifyDataSetChanged()
         return true
     }
 
-  private  fun getNotNullValue(number: String?): String? {
+    private fun getNotNullValue(number: String?): String? {
         return if (TextUtils.isEmpty(number)) {
             "略"
         } else number
     }
+
     /**
      * 判断题目是否选中
      */
@@ -278,7 +287,6 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
 
     fun getQuestionStatus(): Int {
         if (question == null || question!!.answer == null || question!!.answer.isEmpty() || question!!.answerItems == null || question!!.correctAnswer == null) {
-            //未回答
             return STATUS_NO_ANSWER
         }
         //然后判断这个回答是否正确
@@ -293,4 +301,9 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     fun showQuestionAnalysis(visible: Boolean) {
         setViewVisible(llQuestionAnalysis, visible)
     }
+
+    fun setOnQuestionListener(questionListener: QuestionClickListener?) {
+        this.mQuestionListener = questionListener
+    }
+
 }
