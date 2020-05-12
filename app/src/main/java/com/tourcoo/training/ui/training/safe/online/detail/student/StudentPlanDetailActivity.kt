@@ -32,6 +32,7 @@ import com.tourcoo.training.widget.websocket.WebSocketHandler
 import com.tourcoo.training.widget.websocket.WebSocketSetting
 import com.tourcoo.training.widget.websocket.response.ErrorResponse
 import kotlinx.android.synthetic.main.activity_training_detail_student.*
+import kotlinx.android.synthetic.main.alivc_dialog_error.*
 import org.java_websocket.framing.Framedata
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
@@ -141,7 +142,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
 
         tvPhone.text = CommonUtil.getNotNullValue(planDetail.saftyManagerTel)
         tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
-        tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManager)
+        tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManagerName)
 
         LogUtils.e(planDetail.traineeStatus, planDetail.safetyManagerStatus)
 
@@ -387,7 +388,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     }
 
     override fun <T : Any?> onMessage(message: String?, data: T) {
-        ToastUtil.show("webSocket:onMessage---" + data + "message =" + message)
+//        ToastUtil.show("webSocket:onMessage---" + data + "message =" + message)
         TourCooLogUtil.i(mTag, "webSocket:onMessage---" + data + "message =" + message)
         presenter.getTrainDetail(trainingPlanId)
     }
@@ -516,6 +517,11 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     private fun handleScanSignCallback(result: String, scene: Int) {
         try {
             val scanResult = JSON.parseObject(result, QrScanResult::class.java)
+
+            if(scanResult.trainingPlanID  != trainingPlanId){
+                ToastUtil.show("课程不匹配")
+                return
+            }
 
             when (scene) {
                 TrainingConstant.SCENE_STUDENT_SIGN_IN -> {

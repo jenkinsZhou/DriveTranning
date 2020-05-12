@@ -191,6 +191,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
                     return;
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+
                     showWebDetail(entity.getData());
                 } else {
                     ToastUtil.show(entity.getMsg());

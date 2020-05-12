@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SPUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
@@ -17,10 +18,7 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
-import com.tourcoo.training.core.util.CommonUtil
-import com.tourcoo.training.core.util.ResourceUtil
-import com.tourcoo.training.core.util.StackUtil
-import com.tourcoo.training.core.util.ToastUtil
+import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.*
 import com.tourcoo.training.entity.setting.SettingEntity
@@ -155,6 +153,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
                 if (entity != null) {
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                        SPUtils.getInstance().put("TraineeID",entity.data.traineeID)
                         handleLoginCallback(entity.data)
                     } else {
                         ToastUtil.show(entity.msg)

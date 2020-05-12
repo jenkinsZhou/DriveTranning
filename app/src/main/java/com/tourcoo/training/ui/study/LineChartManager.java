@@ -72,12 +72,12 @@ public class LineChartManager {
         //是否显示边界
         lineChart.setDrawBorders(true);
         //是否可以拖动
-        lineChart.setDragEnabled(true);
+        lineChart.setDragEnabled(false);
         //是否有触摸事件
-        lineChart.setTouchEnabled(true);
+        lineChart.setTouchEnabled(false);
         //设置XY轴动画效果
-        lineChart.animateY(2500);
-        lineChart.animateX(1500);
+//        lineChart.animateY(2500);
+//        lineChart.animateX(1500);
 
         /***XY轴的设置***/
         xAxis = lineChart.getXAxis();
@@ -103,7 +103,7 @@ public class LineChartManager {
         legend.setDrawInside(false);
 
         lineChart.setBackgroundColor(Color.WHITE);
-//是否显示边界
+        //是否显示边界
         lineChart.setDrawBorders(false);
         //是否展示网格线
         lineChart.setDrawGridBackground(false);
@@ -131,7 +131,7 @@ public class LineChartManager {
     private void initLineDataSet(LineDataSet lineDataSet, int color) {
         lineDataSet.setColor(color);
         lineDataSet.setCircleColor(color);
-        lineDataSet.setLineWidth(1f);
+        lineDataSet.setLineWidth(2f);
         lineDataSet.setCircleRadius(3f);
         //设置曲线值的圆点是实心还是空心
         lineDataSet.setDrawCircleHole(false);
@@ -166,7 +166,7 @@ public class LineChartManager {
         LineDataSet lineDataSet = new LineDataSet(entries, name);
         initLineDataSet(lineDataSet, color);
         LineData lineData = new LineData(lineDataSet);
-        lineChart.animateX(1000); // 立即执行的动画,x轴
+        lineChart.animateX(0); // 立即执行的动画,x轴
         lineChart.setData(lineData);
     }
 
@@ -179,13 +179,13 @@ public class LineChartManager {
         IndexAxisValueFormatter xAxisFormatter = new IndexAxisValueFormatter(xValues);
         xAxis.setValueFormatter(xAxisFormatter);
         showChart(dataList, name, color);
-        setChartFillDrawable(TourCooUtil.getDrawable(R.drawable.fade_yellow));
+        setChartFillDrawable(TourCooUtil.getDrawable(R.color.white));
         Description description = new Description();
         description.setText("");
         lineChart.setDescription(description);
         Matrix m = new Matrix();
         lineChart.getViewPortHandler().refresh(m, lineChart, false);//将图表动画显示之前进行缩放
-        lineChart.animateX(1000); // 立即执行的动画,x轴
+        lineChart.animateX(0); // 立即执行的动画,x轴
         lineChart.notifyDataSetChanged();
         //设置x轴间距
         xAxis.setGranularity(1f);

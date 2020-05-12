@@ -6,7 +6,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import androidx.core.content.ContextCompat;
 
 
 import com.blankj.utilcode.util.SPUtils;
+import com.google.gson.Gson;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
 import com.tourcoo.training.core.manager.RxJavaManager;
@@ -24,12 +27,20 @@ import com.tourcoo.training.core.util.DrawableUtil;
 import com.tourcoo.training.core.util.SPUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
+import com.tourcoo.training.core.util.ToastUtil;
+import com.tourcoo.training.core.util.ToastUtils;
 import com.tourcoo.training.core.widget.navigation.NavigationBarUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.account.AccountHelper;
+import com.tourcoo.training.entity.news.NewsDetail;
+import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.ui.account.LoginActivity;
 import com.tourcoo.training.ui.guide.GuideActivity;
+import com.tourcoo.training.ui.home.news.NewsDetailHtmlActivity;
+import com.tourcoo.training.ui.home.news.NewsDetailVideoActivity;
 import com.trello.rxlifecycle3.android.ActivityEvent;
+
+import static com.tourcoo.training.ui.home.news.NewsTabFragment.EXTRA_NEWS_BEAN;
 
 
 public class SplashActivity extends BaseTitleActivity {
@@ -69,6 +80,7 @@ public class SplashActivity extends BaseTitleActivity {
             //隐藏状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
+
         tvApp = findViewById(R.id.tv_appSplash);
         tvCopyRight = findViewById(R.id.tv_copyRightSplash);
         tvVersion = findViewById(R.id.tv_versionSplash);
@@ -80,6 +92,28 @@ public class SplashActivity extends BaseTitleActivity {
         tvVersion.setTextColor(Color.WHITE);*/
         tvCopyRight.setTextColor(Color.WHITE);
         startAnimator();
+    }
+
+    private boolean isSchemeIntentData() {
+        Uri uri = getIntent().getData();
+        if (uri != null) {
+            String path = uri.getPath();
+            String module = uri.getQueryParameter("json");
+
+            ToastUtil.show(path + "     " + module);
+
+            NewsEntity bean = new Gson().fromJson(module, NewsEntity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(EXTRA_NEWS_BEAN, bean);
+            if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(bean.getVideoUrl()))) {
+                CommonUtil.startActivity(mContext, NewsDetailVideoActivity.class, bundle);
+            } else {
+                CommonUtil.startActivity(mContext, NewsDetailHtmlActivity.class, bundle);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -139,6 +173,11 @@ public class SplashActivity extends BaseTitleActivity {
                             return;
                         }
                         if (AccountHelper.getInstance().isLogin()) {
+
+                            if (isSchemeIntentData()) {
+                                return;
+                            }
+
                             CommonUtil.startActivity(mContext, MainTabActivity.class);
                         } else {
                             CommonUtil.startActivity(mContext, LoginActivity.class);
@@ -165,8 +204,6 @@ public class SplashActivity extends BaseTitleActivity {
     public void onBackPressed() {
         //do nothing
     }
-
-
 
 
 }

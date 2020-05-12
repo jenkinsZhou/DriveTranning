@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import com.blankj.utilcode.util.SPUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
@@ -171,6 +172,7 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
             ToastUtil.show("登录失败")
             return
         }
+        SPUtils.getInstance().put("TraineeID",userInfo.traineeID)
         AccountHelper.getInstance().userInfo = userInfo
         EventBus.getDefault().post(UserInfoEvent(userInfo))
         val intent = Intent(this, MainTabActivity::class.java)

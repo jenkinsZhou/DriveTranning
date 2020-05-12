@@ -7,6 +7,7 @@ import android.view.View
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.view.OptionsPickerView
+import com.blankj.utilcode.util.SPUtils
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
@@ -411,6 +412,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             ToastUtil.show("登录失败")
             return
         }
+        SPUtils.getInstance().put("TraineeID",userInfo.traineeID)
         AccountHelper.getInstance().userInfo = userInfo
         EventBus.getDefault().post(UserInfoEvent(userInfo))
         val intent = Intent(this, MainTabActivity::class.java)

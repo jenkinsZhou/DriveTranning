@@ -3,6 +3,7 @@ package com.tourcoo.training.core.retrofit.repository;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.tourcoo.training.core.base.entity.BaseMovieEntity;
 import com.tourcoo.training.core.base.entity.BasePageResult;
 import com.tourcoo.training.core.base.entity.BaseResult;
@@ -455,6 +456,7 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult<NewsDetail>> requestNewsDetail(String newsId) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("id", newsId);
+        params.put("TraineeID", SPUtils.getInstance().getString("TraineeID"));
         return CommonTransformer.switchSchedulers(getApiService().requestNewsDetail(params).retryWhen(new RetryWhen()));
     }
 
@@ -479,6 +481,7 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult<StudyDetail>> requestStudyDetail(String trainingPlanID) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("trainingPlanID", trainingPlanID);
+        params.put("TraineeID", SPUtils.getInstance().getString("TraineeID"));
         return CommonTransformer.switchSchedulers(getApiService().requestStudyDetail(params).retryWhen(new RetryWhen()));
     }
 

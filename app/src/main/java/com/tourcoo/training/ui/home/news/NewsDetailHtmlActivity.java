@@ -115,7 +115,6 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
             return;
         }
         initWebView();
-        totalLike = mNewsEntity.getLikeTotal();
         requestNewsDetail(mNewsEntity.getID());
     }
 
@@ -177,6 +176,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                     return;
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    totalLike = entity.getData().getLikeNum();
                     showWebDetail(entity.getData());
                 } else {
                     ToastUtil.show(entity.getMsg());
@@ -271,22 +271,22 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         });
     }
 
-    private void showLikeCountCallBack() {
-        String finalLikeCount;
-        if (cBoxLike.isChecked()) {
-            if (mNewsEntity.getLikeTotal() <= 0) {
-                finalLikeCount = "0";
-            } else {
-                totalLike--;
-                finalLikeCount = totalLike - 1 + "";
-            }
-        } else {
-            totalLike++;
-            finalLikeCount = totalLike + 1 + "";
-        }
-        cBoxLike.setChecked(!cBoxLike.isChecked());
-        tvNewsLikeCount.setText(finalLikeCount);
-    }
+//    private void showLikeCountCallBack() {
+//        String finalLikeCount;
+//        if (cBoxLike.isChecked()) {
+//            if (mNewsEntity.getLikeTotal() <= 0) {
+//                finalLikeCount = "0";
+//            } else {
+//                totalLike--;
+//                finalLikeCount = totalLike - 1 + "";
+//            }
+//        } else {
+//            totalLike++;
+//            finalLikeCount = totalLike + 1 + "";
+//        }
+//        cBoxLike.setChecked(!cBoxLike.isChecked());
+//        tvNewsLikeCount.setText(finalLikeCount);
+//    }
 
 
     public void wxSharePic(boolean isSession) {

@@ -61,6 +61,7 @@ public class TrainingPlanDetail {
     private String Score;
     private int PassingScore;
     private int SaftyManager;
+    private String SaftyManagerName;
     private String Examiner;
     private String Teacher;
     private String ClassroomName;
@@ -80,6 +81,14 @@ public class TrainingPlanDetail {
     private String SaftyManagerSignIn;
 
     private String SaftyManagerSignOut;
+
+    public String getSaftyManagerName() {
+        return SaftyManagerName;
+    }
+
+    public void setSaftyManagerName(String saftyManagerName) {
+        SaftyManagerName = saftyManagerName;
+    }
 
     public String getSaftyManagerSignIn() {
         return SaftyManagerSignIn;

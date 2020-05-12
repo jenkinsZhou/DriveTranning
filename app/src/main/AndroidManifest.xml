@@ -65,6 +65,21 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+
+                <!-- 下面这几个必须要设置 -->
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 协议部分 -->
+                <data
+                    android:host="zhoufeng"
+                    android:path="/news"
+                    android:scheme="zfapp" />
+            </intent-filter>
+
         </activity>
         <activity android:name=".ui.face.FaceRecognitionActivity" />
         <activity android:name=".ui.face.DialogFaceRecognitionActivity" />

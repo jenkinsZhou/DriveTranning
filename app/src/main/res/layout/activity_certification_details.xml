@@ -29,7 +29,7 @@
         <ImageView
             android:id="@+id/ivImage"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_280"
+            android:layout_height="@dimen/dp_260"
             android:layout_marginTop="@dimen/dp_5" />
 
 

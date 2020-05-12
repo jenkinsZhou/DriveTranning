@@ -225,6 +225,6 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
             list.add(CommonUtil.getNotNullValue(count + ""));
             floatList.add((float) TimeUtil.secondToHour(month.getStudyHour()));
         }
-        oilLineChartManager.showLineChart(list,floatList,"时长", ResourceUtil.getColor(R.color.blue5087FF));
+        oilLineChartManager.showLineChart(list,floatList,"学习时长", ResourceUtil.getColor(R.color.blue5087FF));
     }
 }

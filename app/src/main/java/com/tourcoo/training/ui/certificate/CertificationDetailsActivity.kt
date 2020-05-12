@@ -67,7 +67,7 @@ class CertificationDetailsActivity : BaseTitleActivity() {
             ToastUtil.show("证书信息获取失败")
             return
         }
-        GlideManager.loadImg(CommonUtil.getUrl(detail.avatar), ivAvatar)
+        GlideManager.loadCircleImg(CommonUtil.getUrl(detail.avatar), ivAvatar)
         GlideManager.loadImg(CommonUtil.getUrl(detail.certificateImage), ivImage)
 
 

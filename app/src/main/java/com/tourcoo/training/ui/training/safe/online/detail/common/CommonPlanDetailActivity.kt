@@ -139,7 +139,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
 
         tvPhone.text = CommonUtil.getNotNullValue(planDetail.saftyManagerTel)
         tvCourseTime.text = CommonUtil.getNotNullValue("" + planDetail.courseTime + "课时")
-        tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManager)
+        tvTeacherName.text = CommonUtil.getNotNullValue("" + planDetail.saftyManagerName)
 
         if (planDetail.traineeStatus == TrainingConstant.TRAIN_STATUS_CHECK_STATUS) {
             showCheckAlert()
@@ -718,12 +718,13 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     }
 
     override fun <T : Any?> onMessage(message: String?, data: T) {
-        ToastUtil.showFailed("webSocket:onMessage---" + data + "message =" + message)
+//        ToastUtil.showFailed("webSocket:onMessage---" + data + "message =" + message)
         TourCooLogUtil.i(mTag, "webSocket:onMessage---" + data + "message =" + message)
+        presenter.getTrainDetail(trainingPlanId)
     }
 
     override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {
-        presenter.getTrainDetail(trainingPlanId)
+
     }
 
     override fun onDisconnect() {
@@ -875,6 +876,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     private fun handleScanSignCallback(result: String, scene: Int) {
         try {
             val scanResult = JSON.parseObject(result, QrScanResult::class.java)
+
+            if(scanResult.trainingPlanID  != trainingPlanId){
+                ToastUtil.show("课程不匹配")
+                return
+            }
+
             when (scene) {
                 TrainingConstant.SCENE_STUDENT_SIGN_IN -> {
                     if (scanResult.scene.toInt() != TrainingConstant.SCENE_STUDENT_SIGN_IN) {

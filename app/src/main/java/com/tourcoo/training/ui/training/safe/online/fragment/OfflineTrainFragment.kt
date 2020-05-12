@@ -127,27 +127,27 @@ class OfflineTrainFragment : BaseFragment() {
 
     }
 
-    private fun skipTrainingDetail(position :Int){
-        val courseInfo =  (adapter as OffLineTrainingAdapter).data[position]
+    private fun skipTrainingDetail(position: Int) {
+        val courseInfo = (adapter as OffLineTrainingAdapter).data[position]
         when (courseInfo.role) {
-            TRAIN_ROLE_STUDENT  -> {
+            TRAIN_ROLE_STUDENT -> {
                 val intent = Intent(mContext, StudentPlanDetailActivity::class.java)
-                intent.putExtra(EXTRA_TRAINING_PLAN_ID,courseInfo.trainingPlanID)
+                intent.putExtra(EXTRA_TRAINING_PLAN_ID, if (courseInfo.trainingPlanID.isNullOrEmpty()) "" else courseInfo.trainingPlanID)
                 startActivity(intent)
             }
-            TRAIN_ROLE_TEACHER->{
+            TRAIN_ROLE_TEACHER -> {
                 val intent = Intent(mContext, TeacherPlanDetailActivity::class.java)
-                intent.putExtra(EXTRA_TRAINING_PLAN_ID,courseInfo.trainingPlanID)
+                intent.putExtra(EXTRA_TRAINING_PLAN_ID, if (courseInfo.trainingPlanID.isNullOrEmpty()) "" else courseInfo.trainingPlanID)
                 startActivity(intent)
             }
-            TRAIN_ROLE_TEACHER_AND_STUDENT->{
+            TRAIN_ROLE_TEACHER_AND_STUDENT -> {
                 //安全员+学员
                 val intent = Intent(mContext, CommonPlanDetailActivity::class.java)
-                intent.putExtra(EXTRA_TRAINING_PLAN_ID,courseInfo.trainingPlanID)
+                intent.putExtra(EXTRA_TRAINING_PLAN_ID, if (courseInfo.trainingPlanID.isNullOrEmpty()) "" else courseInfo.trainingPlanID)
                 startActivity(intent)
             }
             else -> {
-                ToastUtil.show("当前身份未知,Role为"+courseInfo.role)
+                ToastUtil.show("当前身份未知,Role为" + courseInfo.role)
             }
         }
 
@@ -155,7 +155,7 @@ class OfflineTrainFragment : BaseFragment() {
     }
 
 
-    private fun removeData(){
+    private fun removeData() {
         adapter?.data?.clear()
         adapter?.notifyDataSetChanged()
         refreshLayout?.finishRefresh()
@@ -179,7 +179,7 @@ class OfflineTrainFragment : BaseFragment() {
         }
         if (userInfoEvent.userInfo == null) {
             removeData()
-        } else{
+        } else {
             requestCourseOffLine()
         }
 
