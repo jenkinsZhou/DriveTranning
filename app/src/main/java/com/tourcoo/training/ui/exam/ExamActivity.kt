@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.view.View
+import android.widget.LinearLayout
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,6 +16,7 @@ import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.exam.QuestionNumberAdapter
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
@@ -92,8 +94,31 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
         tvCommitExam.setOnClickListener(this)
+        llBgGray.setOnClickListener(this)
         questionNumRv.layoutManager = GridLayoutManager(mContext, 6)
         behavior = BottomSheetBehavior.from(nsvBottom)
+        behavior!!.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    STATE_DRAGGING->{
+                    }
+                    STATE_COLLAPSED -> {
+                        //折叠了
+                        setViewGone(llBgGray,false)
+                    }
+                    STATE_EXPANDED->{
+                        //展开了
+                        setViewGone(llBgGray,true)
+                    } else -> {
+                }
+
+                }
+            }
+
+        })
         nsvBottom.isNestedScrollingEnabled = false
         llQuestionBar.setOnClickListener(this)
     }
@@ -129,7 +154,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
             }
             R.id.llQuestionBar -> {
                 handleBottomBarBehavior()
-
             }
             R.id.tvCommitExam -> {
                 //交卷之前 先把最后一道题回答了
@@ -139,6 +163,9 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                     //交卷
                     doCommitExam()
                 }, 500)
+            }
+            R.id.llBgGray->{
+                behaviorClose()
             }
             else -> {
             }
@@ -235,8 +262,10 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
     private fun handleBottomBarBehavior() {
         if (behavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
             behavior!!.setState(BottomSheetBehavior.STATE_EXPANDED)
+            setViewGone(llBgGray,true)
         } else if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
             behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
+            setViewGone(llBgGray,false)
         }
     }
 
@@ -285,7 +314,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
             //响应底部题目列表点击事件
             showBottomBarInfo()
             handleBottomBarBehavior()
-
         })
         loadQuestion(examEntity)
         vpExamOnline.offscreenPageLimit = list!!.size
@@ -575,10 +603,15 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
 
     override fun onQuestionClick() {
         //如果是展开状态 就关闭
-        if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
-            behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+        behaviorClose()
     }
 
+
+    private fun behaviorClose(){
+        //如果是展开状态 就关闭
+        if (behavior!!.state == STATE_EXPANDED) {
+            behavior!!.state = STATE_COLLAPSED
+        }
+    }
 
 }
