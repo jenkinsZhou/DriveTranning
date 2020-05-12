@@ -26,6 +26,18 @@ public class TrainingConstant {
     public static final String APP_ID = "wx3210e68d7d514a48";
 
     /**
+     * 培训记录详情分享页面
+     */
+    public static final String STUDY_SHARE_URL = "https://cdn-runtime.ggjtaq.com/web-other/jtap200509/page/train_detail/train_detail.html";
+
+
+    /**
+     * 新闻详情分享页面
+     */
+    public static final String NEWS_SHARE_URL = "https://cdn-runtime.ggjtaq.com/web-other/jtap200509/page/news_detail/news_detail.html";
+
+
+    /**
      * 学员
      */
     public static final int TRAIN_ROLE_STUDENT = 1;

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coolindicator.sdk.CoolIndicator;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
@@ -21,6 +22,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter;
 import com.tourcoo.training.config.RequestConfig;
+import com.tourcoo.training.constant.TrainingConstant;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.log.TourCooLogUtil;
@@ -292,7 +294,8 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     public void wxSharePic(boolean isSession) {
         //初始化WXImageObject和WXMediaMessage对象
         WXWebpageObject webPage = new WXWebpageObject();
-        webPage.webpageUrl = mNewsEntity.getUrl();
+        webPage.webpageUrl = TrainingConstant.NEWS_SHARE_URL + "?id=" + mNewsEntity.getID() +
+                "&TraineeID=" + SPUtils.getInstance().getString("TraineeID");
         WXMediaMessage msg = new WXMediaMessage(webPage);
         msg.title = mNewsEntity.getTitle();
         msg.description = mNewsEntity.getTitle();

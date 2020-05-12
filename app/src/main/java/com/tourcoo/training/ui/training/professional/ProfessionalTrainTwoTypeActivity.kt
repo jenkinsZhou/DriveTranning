@@ -70,7 +70,7 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
                         val dialog = CommonBellDialog(mContext)
                         dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
                             override fun onClick(v: View?) {
-                                requestPayInfo(info.specialId,info.childModuleId,info.coins)
+                                requestPayInfo(info.specialId, info.childModuleId, info.coins)
                                 dialog.dismiss()
                             }
                         })
@@ -79,7 +79,6 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
                 }
             }
         }
-
 
     }
 
@@ -94,6 +93,7 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
             startActivity(intent)
 
         } else {//直接跳转到考试分类列表
+
             val intent = Intent(this, ProfessionalExamSelectActivity::class.java)
             intent.putExtra("id", info.specialId)
             intent.putExtra("childModuleId", info.childModuleId)
@@ -119,7 +119,7 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
     }
 
 
-    private fun requestPayInfo(id:String,childModuleId:String,coins:String) {
+    private fun requestPayInfo(id: String, childModuleId: String, coins: String) {
         ApiRepository.getInstance().requestTwoPayInfo(id, childModuleId, coins).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any?>>() {
             override fun onSuccessNext(entity: BaseResult<Any?>?) {
                 if (entity == null) {
@@ -134,7 +134,6 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
             }
         })
     }
-
 
 
 }

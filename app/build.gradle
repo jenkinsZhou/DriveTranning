@@ -111,7 +111,9 @@ dependencies {
     implementation 'com.github.Bakumon:StatusLayoutManager:1.0.4'
     implementation 'com.google.android.material:material:1.2.0-alpha03'
     //哆啦A梦
-    implementation 'com.didichuxing.doraemonkit:doraemonkit:1.2.1'
+    implementation('com.didichuxing.doraemonkit:doraemonkit:1.2.1') {
+        exclude group: 'com.google.zxing'
+    }
     //    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:1.2.1'
     //    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:1.2.1'
     //Multidex 5.0以下
@@ -175,13 +177,8 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     implementation "com.google.android.material:material:1.2.0-alpha06"
-}
-repositories {
-    mavenCentral()
-    google()
 
-    maven() {
-        url 'https://maven.aliyun.com/repository/releases'
-    }
+    implementation 'com.github.yuzhiqiang1993:zxing:2.1.4'
 
 }
+

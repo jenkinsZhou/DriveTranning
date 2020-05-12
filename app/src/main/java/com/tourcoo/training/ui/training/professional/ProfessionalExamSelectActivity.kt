@@ -53,7 +53,7 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
 
 
     override fun loadData(page: Int) {
-        requestData()
+
     }
 
     override fun getContentLayout(): Int {
@@ -106,6 +106,10 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        requestData()
+    }
 
     private fun requestData() {
         ApiRepository.getInstance().requestTwoTypeDetailsList(id, childModuleId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<TwoTypeModel>>(iHttpRequestControl) {
@@ -113,6 +117,7 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
                 if (entity == null) {
                     return
                 }
+
                 needBuy = entity.data.status == 0
                 if (entity.data.status == 1) { //已购买
                     llHeaderBar.visibility = View.GONE

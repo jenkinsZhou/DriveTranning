@@ -130,24 +130,24 @@ class OfflineTrainFragment : BaseFragment() {
     private fun skipTrainingDetail(position: Int) {
         val courseInfo = (adapter as OffLineTrainingAdapter).data[position]
         when (courseInfo.role) {
-            TRAIN_ROLE_STUDENT -> {
+            TRAIN_ROLE_STUDENT, 5 -> {
                 val intent = Intent(mContext, StudentPlanDetailActivity::class.java)
                 intent.putExtra(EXTRA_TRAINING_PLAN_ID, if (courseInfo.trainingPlanID.isNullOrEmpty()) "" else courseInfo.trainingPlanID)
                 startActivity(intent)
             }
-            TRAIN_ROLE_TEACHER -> {
+            TRAIN_ROLE_TEACHER, 6 -> {
                 val intent = Intent(mContext, TeacherPlanDetailActivity::class.java)
                 intent.putExtra(EXTRA_TRAINING_PLAN_ID, if (courseInfo.trainingPlanID.isNullOrEmpty()) "" else courseInfo.trainingPlanID)
                 startActivity(intent)
             }
-            TRAIN_ROLE_TEACHER_AND_STUDENT -> {
+            TRAIN_ROLE_TEACHER_AND_STUDENT, 7 -> {
                 //安全员+学员
                 val intent = Intent(mContext, CommonPlanDetailActivity::class.java)
                 intent.putExtra(EXTRA_TRAINING_PLAN_ID, if (courseInfo.trainingPlanID.isNullOrEmpty()) "" else courseInfo.trainingPlanID)
                 startActivity(intent)
             }
             else -> {
-                ToastUtil.show("当前身份未知,Role为" + courseInfo.role)
+                ToastUtil.show("暂不支持考核人，敬请期待")
             }
         }
 

@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.certificate
 
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,12 +25,24 @@ import com.tencent.liteav.muxer.R.id.image
 import androidx.core.app.ComponentActivity.ExtraData
 import com.trello.rxlifecycle3.RxLifecycle.bindUntilEvent
 import androidx.core.content.ContextCompat.getSystemService
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SizeUtils
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
+import com.tencent.mm.opensdk.modelmsg.WXImageObject
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
+import com.tencent.mm.opensdk.openapi.IWXAPI
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.utils.TourImageUtils
+import com.tourcoo.training.widget.dialog.share.BottomShareDialog
+import com.tourcoo.training.widget.dialog.share.ShareEntity
+import com.yzq.zxinglibrary.encode.CodeCreator
 
 
 class CertificationDetailsActivity : BaseTitleActivity() {
 
     private var mCertifyId: String = ""
+    private var api: IWXAPI? = null
 
     override fun getContentLayout(): Int {
         return R.layout.activity_certification_details
@@ -42,6 +55,8 @@ class CertificationDetailsActivity : BaseTitleActivity() {
     override fun initView(savedInstanceState: Bundle?) {
         mCertifyId = intent.getStringExtra("id")
         TourCooLogUtil.d("证书id=" + mCertifyId)
+        api = WXAPIFactory.createWXAPI(mContext, TrainingConstant.APP_ID)
+
         requestCertificate()
     }
 
@@ -70,18 +85,69 @@ class CertificationDetailsActivity : BaseTitleActivity() {
         GlideManager.loadCircleImg(CommonUtil.getUrl(detail.avatar), ivAvatar)
         GlideManager.loadImg(CommonUtil.getUrl(detail.certificateImage), ivImage)
 
+        val contentEtString = TrainingConstant.STUDY_SHARE_URL + "?TraineeID=${SPUtils.getInstance().getString("TraineeID")}&trainingPlanID=${detail.trainingPlanID}"
+        val bitmap = CodeCreator.createQRCode(contentEtString, SizeUtils.dp2px(100f), SizeUtils.dp2px(100f), null)
+        ivCode.setImageBitmap(bitmap)
 
         btnSave.setOnClickListener {
             val bitmap = (ivImage.drawable as BitmapDrawable).bitmap
-            TourImageUtils.saveBitmap2Gallery(this,bitmap)
+            TourImageUtils.saveBitmap2Gallery(this, bitmap)
         }
 
         btnShare.setOnClickListener {
-            //todo: 微信仅分享图片
             val bitmap = ImageUtils.view2Bitmap(llShare)
-            TourImageUtils.saveBitmap2Gallery(this,bitmap)
+            share(bitmap)
         }
 
     }
 
+
+    private fun share(bmp: Bitmap) {
+        if (!api!!.isWXAppInstalled) {
+            ToastUtil.show("您尚未安装微信客户端")
+            return
+        }
+
+        val wx = ShareEntity("微信", R.mipmap.ic_share_type_wx)
+        val pyq = ShareEntity("朋友圈", R.mipmap.ic_share_type_friend)
+        val dialog = BottomShareDialog(mContext).create().addData(wx).addData(pyq)
+        dialog.setItemClickListener { adapter, view, position ->
+            dialog.dismiss()
+            when (position) {
+                0 -> shareImageToWx(api!!, bmp, true)
+                1 ->  //朋友圈
+                    shareImageToWx(api!!, bmp, false)
+            }
+        }
+        dialog.show()
+
+
+    }
+
+    /**
+     * 分享图片到微信
+     */
+
+    private fun shareImageToWx(api: IWXAPI, bmp: Bitmap, isSession: Boolean) {
+        //初始化 WXImageObject 和 WXMediaMessage 对象
+        val imgObj = WXImageObject(bmp)
+        val msg = WXMediaMessage()
+        msg.mediaObject = imgObj
+
+        //设置缩略图
+        val thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true)
+        bmp.recycle()
+        msg.thumbData = ImageUtils.bitmap2Bytes(thumbBmp, Bitmap.CompressFormat.JPEG)
+
+        val req = SendMessageToWX.Req()
+        req.transaction = buildTransaction("img")
+        req.message = msg
+        //表示发送给朋友圈  WXSceneTimeline  表示发送给朋友  WXSceneSession
+        req.scene = if (isSession) SendMessageToWX.Req.WXSceneSession else SendMessageToWX.Req.WXSceneTimeline
+        api.sendReq(req)
+    }
+
+    private fun buildTransaction(type: String?): String {
+        return if (type == null) System.currentTimeMillis().toString() else type + System.currentTimeMillis()
+    }
 }

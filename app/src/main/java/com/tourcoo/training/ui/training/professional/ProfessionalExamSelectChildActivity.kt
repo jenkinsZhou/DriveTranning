@@ -8,12 +8,14 @@ import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_KEY_EXAM_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
+import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.ui.exam.ProfessionalExamActivity
 import com.tourcoo.training.ui.face.ProfessionalFaceRecognitionActivity
 import kotlinx.android.synthetic.main.activity_professional_exam_select_child.*
 
 class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
+
     /**
      * 是否是正式考试
      */
@@ -57,18 +59,27 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
         val intent = Intent(this, ProfessionalExamActivity::class.java)
         intent.putExtra("trainingPlanId", CommonUtil.getNotNullValue(trainingPlanId))
         intent.putExtra("examId", CommonUtil.getNotNullValue(examId))
-        if (formal) {
+
+        if (formal) {//正式考试
+
+            if (CommonUtil.getNotNullValue(examId).isEmpty() || examId == "0") {
+                ToastUtil.show("请先完成模拟测试")
+                return
+            }
+
             intent.putExtra("type", 0)
+            startActivity(intent)
         } else {
             intent.putExtra("type", 1)
+            startActivity(intent)
         }
-        startActivity(intent)
+
     }
 
 
     private fun skipFaceCertify() {
         val intent = Intent(this, ProfessionalFaceRecognitionActivity::class.java)
-        intent.putExtra(EXTRA_KEY_EXAM_ID,mExamId)
+        intent.putExtra(EXTRA_KEY_EXAM_ID, mExamId)
         startActivityForResult(intent, 2017)
     }
 

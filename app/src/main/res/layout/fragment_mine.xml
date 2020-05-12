@@ -8,5 +8,5 @@
         android:id="@+id/ivContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/dk_more_icon"/>
+        android:src="@drawable/img_avatar_default"/>
 </FrameLayout>
