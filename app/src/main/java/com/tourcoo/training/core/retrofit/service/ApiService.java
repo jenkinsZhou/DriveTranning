@@ -40,6 +40,7 @@ import com.tourcoo.training.entity.training.ProfessionalTwoTypeModel;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 import com.tourcoo.training.entity.training.TwoTypeModel;
 import com.tourcoo.training.entity.uploads.UploadResultEntity;
+import com.tourcoo.training.ui.update.AppUpdateInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -478,5 +479,15 @@ public interface ApiService {
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
     @POST("v1.0/user/get-medal-info")
     Observable<BaseResult<MedalDictionary>> requestMedalDictionary();
+
+
+    /**
+     * 版本更新
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
+    @POST("v1.0/app/app-version-update")
+    Observable<BaseResult<AppUpdateInfo>> requestAppVersionInfo(@Body Map<String, Object> map);
+
 
 }

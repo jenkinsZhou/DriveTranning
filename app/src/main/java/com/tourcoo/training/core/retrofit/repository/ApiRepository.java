@@ -46,6 +46,7 @@ import com.tourcoo.training.entity.training.ProfessionTrainingEntity;
 import com.tourcoo.training.entity.training.ProfessionalTwoTypeModel;
 import com.tourcoo.training.entity.training.TrainingPlanDetail;
 import com.tourcoo.training.entity.training.TwoTypeModel;
+import com.tourcoo.training.ui.update.AppUpdateInfo;
 import com.tourcoo.training.utils.MapUtil;
 
 import java.util.HashMap;
@@ -588,6 +589,15 @@ public class ApiRepository extends BaseRepository {
         return CommonTransformer.switchSchedulers(getApiService().requestMedalDictionary().retryWhen(new RetryWhen()));
     }
 
+
+    public Observable<BaseResult<AppUpdateInfo>> requestAppVersionInfo() {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("appType", "Android");
+        params.put("appVersion", AppUtils.getAppVersionName());
+        params.put("deviceID", getUniquePsuedoID());
+        params.put("deviceOS", android.os.Build.VERSION.RELEASE);
+        return CommonTransformer.switchSchedulers(getApiService().requestAppVersionInfo(params).retryWhen(new RetryWhen()));
+    }
 
 
 }

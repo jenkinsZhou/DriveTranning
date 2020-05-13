@@ -96,7 +96,6 @@
             android:drawableEnd="@drawable/icon_arrow_right"
             android:drawablePadding="@dimen/dp_10"
             android:gravity="end"
-            android:text="好赞，当前已是最新版本"
             android:textColor="@color/gray999999"
             android:textSize="@dimen/sp_15" />
     </LinearLayout>

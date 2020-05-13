@@ -1,6 +1,7 @@
 package com.tourcoo.training.ui.setting
 
 import android.os.Bundle
+import android.os.Environment
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -12,9 +13,13 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.setting.SettingEntity
+import com.tourcoo.training.ui.update.AppUpdateInfo
 import com.trello.rxlifecycle3.android.ActivityEvent
-import com.trello.rxlifecycle3.android.FragmentEvent
+import com.vector.update_app_kotlin.check
+import com.vector.update_app_kotlin.updateApp
 import kotlinx.android.synthetic.main.activity_about_us.*
+import org.json.JSONObject
+import java.util.HashMap
 
 /**
  *@description :
@@ -38,6 +43,7 @@ class AboutUsActivity : BaseTitleActivity() {
     override fun initView(savedInstanceState: Bundle?) {
         tvAppVersion.text = "V " + CommonUtil.getVersionName(mContext)
         requestSystemConfig()
+        requestAppVersionInfo()
     }
 
     private fun requestSystemConfig() {
@@ -62,4 +68,36 @@ class AboutUsActivity : BaseTitleActivity() {
 //        tvVersionInfo.text = CommonUtil.getNotNullValue(settingEntity.v)
         TourCooLogUtil.i(mTag, "settingEntity=" + settingEntity.version)
     }
+
+
+    private fun requestAppVersionInfo() {
+        ApiRepository.getInstance().requestAppVersionInfo().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<AppUpdateInfo>>() {
+            override fun onSuccessNext(entity: BaseResult<AppUpdateInfo>?) {
+                if (entity != null) {
+                    if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                        showAppInfo(entity.data)
+                    } else {
+                        ToastUtil.show(entity.msg)
+                    }
+                }
+            }
+        })
+    }
+
+
+    private fun showAppInfo(appInfo: AppUpdateInfo?) {
+        if (appInfo == null) {
+            return
+        }
+        if (appInfo.isUpdate == 1) {
+            // todo 需要更新
+
+        } else {
+            //不需要更新
+            tvVersionInfo.text = "好赞，当前已是最新版本"
+        }
+    }
+
+
+
 }
