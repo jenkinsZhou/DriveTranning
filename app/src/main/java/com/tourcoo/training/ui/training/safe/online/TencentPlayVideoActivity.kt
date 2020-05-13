@@ -41,6 +41,7 @@ import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity
 import com.tourcoo.training.ui.training.safe.online.web.WebCourseTempHelper
+import com.tourcoo.training.utils.TourCooUtil
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
@@ -485,7 +486,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (course == null) {
             return
         }
-        LogUtils.e("==================" + course.mediaType)
         when (course.mediaType) {
             //视频
             MEDIA_TYPE_VIDEO -> {
@@ -507,7 +507,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     superPlayerModel.multiURLs = ArrayList()
                     superPlayerModel.title = course.name
                     course.streams.forEach {
-                        superPlayerModel.multiURLs.add(SuperPlayerModel.SuperPlayerURL(it.url, it.definition))
+                        superPlayerModel.multiURLs.add(SuperPlayerModel.SuperPlayerURL(it.url, TourCooUtil.getDefinitionName(it.definition)))
                     }
                     superPlayerModel.playDefaultIndex = 0
 

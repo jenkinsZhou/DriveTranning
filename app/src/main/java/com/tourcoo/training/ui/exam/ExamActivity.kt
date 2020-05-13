@@ -381,7 +381,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     if (entity.data.status == 0) { //合格
 
-                        tvCertificateId.text = "证书编号：NO.${entity.data.data.certificateId}"
+                        tvCertificateId.text = "证书编号：${entity.data.data.certificateId}"
                         tvCreateTime.text = entity.data.data.createTime
 
 

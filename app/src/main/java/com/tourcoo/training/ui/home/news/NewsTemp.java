@@ -18,5 +18,4 @@ public class NewsTemp {
     public static int newsShareCount = 0;
 
 
-
 }

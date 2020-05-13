@@ -36,7 +36,6 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
         mTrainingPlanId = intent.getStringExtra("trainingPlanId") as String
         mExamId = intent.getStringExtra("examId")
 
-        LogUtils.e(mExamId)
 
         rlExamSimulation.setOnClickListener {
             //模拟考试
@@ -48,9 +47,13 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
         }
         //正式测试
         rlExamFormal.setOnClickListener {
-            formal = true
-            //考试都要先人脸认证
-            skipFaceCertify()
+            if (CommonUtil.getNotNullValue(mExamId).isEmpty() || mExamId == "0") {
+                ToastUtil.show("请先完成模拟测试")
+            } else {
+                formal = true
+                //考试都要先人脸认证
+                skipFaceCertify()
+            }
         }
 
     }
@@ -63,17 +66,11 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
         intent.putExtra("examId", CommonUtil.getNotNullValue(examId))
 
         if (formal) {//正式考试
-
-            if (CommonUtil.getNotNullValue(examId).isEmpty() || examId == "0") {
-                ToastUtil.show("请先完成模拟测试")
-                return
-            }
-
             intent.putExtra("type", 0)
-            startActivity(intent)
+            startActivityForResult(intent,300)
         } else {
             intent.putExtra("type", 1)
-            startActivityForResult(intent,300)
+            startActivityForResult(intent, 300)
         }
 
     }
@@ -88,12 +85,12 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            when(requestCode){
-                300 ->{
+            when (requestCode) {
+                300 -> {
                     finish()
                 }
 
-                2017 ->{
+                2017 -> {
                     //人脸认证成功 则开始考试
                     skipExamByType(mTrainingPlanId, mExamId, formal)
                 }

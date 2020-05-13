@@ -53,9 +53,19 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
     }
 
 
-    override fun loadData(page: Int) {
-
+    private var isFirst = false
+    override fun onResume() {
+        super.onResume()
+        if (isFirst) {
+            requestData()
+        }
     }
+
+    override fun loadData(page: Int) {
+        isFirst = true
+        requestData()
+    }
+
 
     override fun getContentLayout(): Int {
         return R.layout.activity_professional_exam_select
@@ -107,10 +117,6 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        requestData()
-    }
 
     private fun requestData() {
         ApiRepository.getInstance().requestTwoTypeDetailsList(id, childModuleId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<TwoTypeModel>>(iHttpRequestControl) {
@@ -118,6 +124,7 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
                 if (entity == null) {
                     return
                 }
+                mRefreshLayout.finishRefresh()
 
                 needBuy = entity.data.status == 0
                 if (entity.data.status == 1) { //已购买
@@ -127,6 +134,11 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
                 }
 
                 UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity.data == null) ArrayList<CourseInfo>() else entity.data.planData, null)
+            }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                mRefreshLayout.finishRefresh()
             }
         })
     }

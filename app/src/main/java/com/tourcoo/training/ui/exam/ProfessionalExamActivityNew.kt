@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -88,11 +89,18 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
         trainPlanId = intent.getStringExtra("trainingPlanId")
         type = intent.getIntExtra("type", 0)
         examId = intent.getStringExtra("examId")
-        if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
-            ToastUtil.show("未获取到考试题数据")
-            finish()
-            return
+
+        if (type == 1) {
+            examId = ""
+        } else {
+            if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
+                ToastUtil.show("未获取到考试题数据")
+                finish()
+                return
+            }
         }
+
+
         list = ArrayList()
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
@@ -411,6 +419,7 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
                                 .setTips(entity.data.tips)
                                 .setPositiveButtonListener {
                                     dialog.dismiss()
+                                    setResult(Activity.RESULT_OK)
                                     finish()
                                 }
                                 .show()
@@ -456,7 +465,7 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
 
 
     private fun uploadCertificate(id: String, base64Image: String, tips: String) {
-        ApiRepository.getInstance().uploadCertificate(id, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
+        ApiRepository.getInstance().uploadCertificate(id, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在生成证书") {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity == null) {
                     return
@@ -467,12 +476,14 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
                             .setTips(tips)
                             .setPositiveButtonListener {
                                 dialog.dismiss()
-                                startActivity(Intent(this@ProfessionalExamActivityNew, MainTabActivity::class.java))
-                                ActivityUtils.finishOtherActivities(MainTabActivity::class.java)
+                                //继续学习
+                                setResult(Activity.RESULT_OK)
+                                finish()
                             }
                             .setNegativeButtonListener {
                                 dialog.dismiss()
                                 startActivity(Intent(this@ProfessionalExamActivityNew, MyCertificationActivity::class.java))
+                                setResult(Activity.RESULT_OK)
                                 finish()
                             }
                             .show()

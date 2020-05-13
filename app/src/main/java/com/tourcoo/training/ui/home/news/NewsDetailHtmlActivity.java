@@ -56,6 +56,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import static com.tourcoo.training.constant.CommonConstant.EXTRA_KEY_POSITION;
+import static com.tourcoo.training.constant.CommonConstant.EXTRA_KEY_READ_NUMBER;
+import static com.tourcoo.training.constant.CommonConstant.EXTRA_KEY_SHARE_NUMBER;
 import static com.tourcoo.training.constant.TrainingConstant.APP_ID;
 import static com.tourcoo.training.ui.home.news.NewsTabFragment.EXTRA_NEWS_BEAN;
 
@@ -398,18 +400,12 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         tvNewsShareCount.setText(share + "");
     }
 
-    /**
-     * 将数据更新到静态变量上
-     */
-    private void assignmentCount() {
-        NewsTemp.newsShareCount = mShareCount;
-        NewsTemp.newsReadCount = mReadCount;
-    }
 
     private void setSuccessCallback() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_KEY_POSITION, itemPosition);
-        assignmentCount();
+        intent.putExtra(EXTRA_KEY_READ_NUMBER,mReadCount);
+        intent.putExtra(EXTRA_KEY_SHARE_NUMBER,mShareCount);
         setResult(Activity.RESULT_OK, intent);
     }
 }

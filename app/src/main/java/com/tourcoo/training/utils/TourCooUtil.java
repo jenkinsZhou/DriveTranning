@@ -99,4 +99,43 @@ public class TourCooUtil {
     }
 
 
+    /**
+     * 获取清晰度
+     *
+     * @return
+     */
+    public static String getDefinitionName(String arg) {
+        String definition;
+        switch (arg) {
+            case "FD":
+                definition = "流畅";
+                break;
+            case "LD":
+                definition = "标清";
+                break;
+            case "SD":
+                definition = "高清";
+                break;
+            case "HD":
+                definition = "超清";
+                break;
+            case "OD":
+                definition = "原画";
+                break;
+            case "2K":
+                definition = "2K";
+                break;
+            case "4K":
+                definition = "4K";
+                break;
+            case "AUTO":
+            default:
+                definition = "自适应码流";
+                break;
+        }
+
+        return definition;
+    }
+
+
 }

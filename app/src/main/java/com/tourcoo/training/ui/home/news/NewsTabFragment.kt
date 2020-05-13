@@ -17,7 +17,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter
 import com.tourcoo.training.constant.CommonConstant
-import com.tourcoo.training.constant.CommonConstant.EXTRA_KEY_POSITION
+import com.tourcoo.training.constant.CommonConstant.*
 import com.tourcoo.training.constant.NewsConstant.REQUEST_CODE_NEWS_DETAIL
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -236,9 +236,12 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
                             TourCooLogUtil.e("未找到对应位置")
                             return
                         }
+                        val readNumber = data.getIntExtra(EXTRA_KEY_READ_NUMBER, -1)
+                        val shareNumber = data.getIntExtra(EXTRA_KEY_SHARE_NUMBER, -1)
+
                         val news = adapter?.getItem(position)
-                        news?.readTotal = NewsTemp.newsReadCount
-                        news?.sharedNum = NewsTemp.newsShareCount
+                        news?.readTotal = readNumber
+                        news?.sharedNum = shareNumber
                         baseHandler.postDelayed(Runnable {
                             adapter?.notifyItemChanged(position)
                         }, 500)

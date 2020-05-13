@@ -66,7 +66,16 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
         return adapter!!
     }
 
+    private var isFirst = false
+    override fun onResume() {
+        super.onResume()
+        if (isFirst) {
+            requestData()
+        }
+    }
+
     override fun loadData(page: Int) {
+        isFirst = true
         requestData()
     }
 
@@ -117,7 +126,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
             }
 
 
-            if(AccountHelper.getInstance().userInfo.isAuthenticated == 1 || AccountHelper.getInstance().userInfo.isAuthenticated == 3){
+            if (AccountHelper.getInstance().userInfo.isAuthenticated == 1 || AccountHelper.getInstance().userInfo.isAuthenticated == 3) {
                 val dialog = CommonBellAlert(mContext)
                 dialog.create().setContent("驾驶员自主注册，需等待企业管理员审核。").setPositiveButton("知道了", object : View.OnClickListener {
                     override fun onClick(v: View?) {
@@ -260,6 +269,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
                 if (entity == null) {
                     return
                 }
+                mRefreshLayout.finishRefresh()
 
                 needBuy = entity.data.status == 0
                 if (entity.data.status == 1) { //已购买
@@ -270,6 +280,12 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
 
                 UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity.data == null) ArrayList<CourseInfo>() else entity.data.planData, null)
             }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                mRefreshLayout.finishRefresh()
+            }
+
         })
     }
 

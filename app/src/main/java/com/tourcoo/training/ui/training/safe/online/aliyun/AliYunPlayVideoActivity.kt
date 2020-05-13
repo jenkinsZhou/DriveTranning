@@ -1586,16 +1586,22 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 hd.definition = "超清"
             } else if (QualityValue.QUALITY_2K == quality.definition) { //                k2 = QualityValue.QUALITY_2K;
                 k2 = quality
+                k2.definition = "2K"
             } else if (QualityValue.QUALITY_4K == quality.definition) { //                k4 = QualityValue.QUALITY_4K;
                 k4 = quality
+                k4.definition = "4K"
             } else if (QualityValue.QUALITY_ORIGINAL == quality.definition) { //                od = QualityValue.QUALITY_ORIGINAL;
                 od = quality
+                od.definition = "原画"
             } else if (QualityValue.QUALITY_SQ == quality.definition) {
                 sq = quality
+                sq.definition = "默认"
             } else if (QualityValue.QUALITY_HQ == quality.definition) {
                 hq = quality
+                hq.definition = "默认"
             } else if (QualityValue.QUALITY_AUTO == quality.definition) {
                 auto = quality
+                auto.definition = "自适应码流"
             } else {
                 sortedQuality.add(quality)
             }
