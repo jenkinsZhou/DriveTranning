@@ -167,6 +167,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     @Override
     protected void onDestroy() {
         if (smartVideoPlayer != null) {
+            smartVideoPlayer.onPause();
             smartVideoPlayer.release();
         }
         if (api != null) {

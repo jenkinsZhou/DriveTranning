@@ -26,7 +26,7 @@ public class OrderEntity {
     private double Amount;
     private int Number;
     private String Title;
-    private double UnitPrice;
+    private String UnitPrice;
     private String Channel;
     private int orderType;
 
@@ -78,11 +78,11 @@ public class OrderEntity {
         this.Title = Title;
     }
 
-    public double getUnitPrice() {
+    public String getUnitPrice() {
         return UnitPrice;
     }
 
-    public void setUnitPrice(double UnitPrice) {
+    public void setUnitPrice(String UnitPrice) {
         this.UnitPrice = UnitPrice;
     }
 

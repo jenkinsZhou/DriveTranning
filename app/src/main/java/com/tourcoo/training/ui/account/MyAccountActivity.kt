@@ -105,6 +105,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         mRechargeEntityList.addAll(transform(list))
         mRechargeAmountAdapter?.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             setSelect(position)
+            mRechargeAmountAdapter?.notifyDataSetChanged()
         })
         mRechargeAmountAdapter?.notifyDataSetChanged()
     }

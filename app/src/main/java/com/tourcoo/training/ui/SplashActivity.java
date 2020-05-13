@@ -32,7 +32,6 @@ import com.tourcoo.training.core.util.ToastUtils;
 import com.tourcoo.training.core.widget.navigation.NavigationBarUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.account.AccountHelper;
-import com.tourcoo.training.entity.news.NewsDetail;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.ui.account.LoginActivity;
 import com.tourcoo.training.ui.guide.GuideActivity;

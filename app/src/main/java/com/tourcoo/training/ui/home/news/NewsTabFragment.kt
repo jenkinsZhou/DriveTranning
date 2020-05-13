@@ -23,6 +23,7 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.SizeUtil
+import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.news.NewsEntity
 import com.tourcoo.training.entity.pay.WxShareEvent
@@ -76,12 +77,13 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_NEWS_BEAN, news)
             if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(news.videoUrl))) {
-//                CommonUtil.startActivity(mContext, NewsDetailVideoActivity::class.java, bundle)
                 val intent = Intent(mContext, NewsDetailVideoActivity::class.java)
+                intent.putExtras(bundle)
                 startActivityForResult(intent, 2018)
             } else {
-//                CommonUtil.startActivity(mContext, NewsDetailHtmlActivity::class.java, bundle)
-                val intent = Intent(mContext, NewsDetailVideoActivity::class.java)
+                //网页
+                val intent = Intent(mContext, NewsDetailHtmlActivity::class.java)
+                intent.putExtras(bundle)
                 startActivityForResult(intent, 2018)
             }
         }
@@ -206,6 +208,9 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
     private fun requestShareSuccess(newsId: String) {
         ApiRepository.getInstance().requestShareSuccess(newsId + "").compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>() {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
+                baseHandler.postDelayed(Runnable {
+                    mRefreshLayout.autoRefresh()
+                }, 200)
             }
         })
     }
@@ -213,7 +218,7 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
             presenter.getNewsList(1)
         }
     }

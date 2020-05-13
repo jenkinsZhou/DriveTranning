@@ -7,8 +7,13 @@ import androidx.annotation.NonNull;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.entity.order.OrderEntity;
+import com.tourcoo.training.entity.training.Course;
+import com.tourcoo.training.widget.aliplayer.utils.Common;
+
+import org.jsoup.helper.StringUtil;
 
 /**
  * @author :JenkinsZhou
@@ -33,17 +38,26 @@ public class OrderAdapter extends BaseQuickAdapter<OrderEntity, BaseViewHolder> 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, OrderEntity item) {
         TextView tvOrderStatus = helper.getView(R.id.tvOrderStatus);
-        String amount = CommonUtil.doubleTransStringZhen(item.getAmount()/100);
-        helper.setText(R.id.tvPrice, amount);
-        helper.setText(R.id.tvTotalMoney, "支付金额：" + amount+"元");
-        helper.setText(R.id.tvCount, "x" + 1);
-        helper.setText(R.id.tvTotalDesc, "共1件商品 合计：¥" +amount);
+        String singlePriceStr = CommonUtil.getNotNullValue(item.getUnitPrice());
+        String regex = ",";
+        singlePriceStr = singlePriceStr.replaceAll(regex, "");
+        double singlePrice = 0;
+        try {
+            singlePrice = Double.parseDouble(singlePriceStr);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        //单价
+        helper.setText(R.id.tvPrice, "¥" + CommonUtil.doubleTransStringZhen(singlePrice));
+        helper.setText(R.id.tvTotalMoney, "支付金额：" + CommonUtil.doubleTransStringZhen(item.getAmount()) + "元");
+        helper.setText(R.id.tvCount, "x" + item.getNumber());
+        helper.setText(R.id.tvTotalDesc, "共" + item.getNumber() + "件商品 合计：¥" + CommonUtil.doubleTransStringZhen(item.getAmount()));
         helper.addOnClickListener(R.id.btnOne);
-        helper.setText(R.id.tvOrderTypeLabel,CommonUtil.getNotNullValue(item.getTitle()));
+        helper.setText(R.id.tvOrderTypeLabel, CommonUtil.getNotNullValue(item.getTitle()));
         switch (item.getOrderType()) {
             case ORDER_TYPE_RECHARGE:
                 //充值
-                if (item.getStatus() == 0) {
+                if (item.getStatus() == 1) {
                     tvOrderStatus.setText("充值成功");
                 } else {
                     tvOrderStatus.setText("充值失败");
