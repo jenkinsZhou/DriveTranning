@@ -84,7 +84,7 @@ class PersonalInfoActivity : BaseTitleActivity() {
 
         GlideManager.loadCircleImg(userInfo.avatar, civAvatar, R.mipmap.ic_avatar_default)
 
-        GlideManager.loadImg(userInfo.idCardUrl, ivIdCardUrl, R.drawable.img_front)
+        GlideManager.loadImageByXml(userInfo.idCardUrl, ivIdCardUrl, R.drawable.img_front)
 
         tvName.text = userInfo.name
         tvPhone.text = userInfo.phone
@@ -187,7 +187,8 @@ class PersonalInfoActivity : BaseTitleActivity() {
 
     private fun showSelectTradeType(tradeTypeName: String) {
         tvIndustryCategoryNames.text = tradeTypeName
-    }
+        ToastUtil.show("设置行业类型成功")
+            }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

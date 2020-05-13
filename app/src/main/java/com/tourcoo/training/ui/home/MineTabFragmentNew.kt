@@ -93,7 +93,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
             R.id.llUserInfo -> {
                 skipPersonalInfo()
             }
-            R.id.llFedBack->{
+            R.id.llFedBack -> {
                 CommonUtil.startActivity(mContext, FeedbackActivity::class.java)
             }
             else -> {
@@ -153,7 +153,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 0, 1 -> {
                     CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
                 }
-                2 ->{
+                2 -> {
                     //订单列表
                     CommonUtil.startActivity(mContext, OrderListActivity::class.java)
                 }
@@ -389,8 +389,13 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         if (userInfoEvent.userInfo == null) {
             showUnLogin()
         } else {
-            ToastUtil.show("刷新了用户信息："+userInfoEvent.userInfo.coinsRemain)
-            showUserInfo(userInfoEvent.userInfo)
+            if (AccountHelper.getInstance().isLogin) {
+                //直接重新请求个人信息数据
+                refreshUserInfo()
+            } else {
+                showUserInfo(userInfoEvent.userInfo)
+            }
+
         }
     }
 

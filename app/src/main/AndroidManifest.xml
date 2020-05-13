@@ -142,7 +142,7 @@
         <activity android:name=".ui.home.news.NewsTabFragment" />
         <activity android:name=".ui.training.professional.ProfessionalSelectActivity" />
         <activity android:name=".ui.training.professional.ProfessionalExamSelectActivity" />
-        <activity android:name=".ui.exam.ProfessionalExamActivity" />
+        <activity android:name=".ui.exam.ProfessionalExamActivityOld" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
         <activity android:name=".ui.feedback.FeedbackActivity"
@@ -170,6 +170,7 @@
             />
         <activity android:name=".ui.training.safe.online.web.PlayHtmlWebActivity" />
         <activity android:name=".ui.face.ProfessionalFaceRecognitionActivity" />
+        <activity android:name=".ui.exam.ProfessionalExamActivityNew" />
     </application>
 
 </manifest>

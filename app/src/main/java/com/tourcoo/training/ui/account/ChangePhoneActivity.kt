@@ -54,6 +54,10 @@ class ChangePhoneActivity : BaseTitleActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.tvGetVCode -> {
                 val phone = etPhone.text.toString().trim()
+                if(TextUtils.isEmpty(phone)){
+                    ToastUtil.show("请输入手机号")
+                    return
+                }
                 if (!phone.startsWith("1") || phone.length != 11) {
                     ToastUtil.show("手机号格式有误")
                     return

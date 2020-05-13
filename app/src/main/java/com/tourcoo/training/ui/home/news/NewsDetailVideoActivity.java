@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.home.news;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -209,6 +210,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         TourCooLogUtil.d("富文本:" + detailEntity.getContent());
         webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
         showNewsDetail(detailEntity);
+        setResult(Activity.RESULT_OK);
     }
 
     private void initItemClick() {

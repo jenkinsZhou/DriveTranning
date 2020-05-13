@@ -10,7 +10,8 @@ import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.ui.exam.ProfessionalExamActivity
+import com.tourcoo.training.ui.exam.ProfessionalExamActivityNew
+import com.tourcoo.training.ui.exam.ProfessionalExamActivityOld
 import com.tourcoo.training.ui.face.ProfessionalFaceRecognitionActivity
 import kotlinx.android.synthetic.main.activity_professional_exam_select_child.*
 
@@ -56,7 +57,8 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
 
 
     private fun skipExamByType(trainingPlanId: String?, examId: String?, formal: Boolean) {
-        val intent = Intent(this, ProfessionalExamActivity::class.java)
+//        val intent = Intent(this, ProfessionalExamActivityOld::class.java)
+        val intent = Intent(this, ProfessionalExamActivityNew::class.java)
         intent.putExtra("trainingPlanId", CommonUtil.getNotNullValue(trainingPlanId))
         intent.putExtra("examId", CommonUtil.getNotNullValue(examId))
 

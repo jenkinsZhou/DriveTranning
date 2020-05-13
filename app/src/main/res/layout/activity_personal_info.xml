@@ -320,7 +320,7 @@
                             android:id="@+id/ivIdCardUrl"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scaleType="fitXY"
+                            android:scaleType="centerInside"
                             android:src="@drawable/img_front" />
 
                         <ImageView

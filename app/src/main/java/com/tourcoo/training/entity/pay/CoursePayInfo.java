@@ -9,16 +9,16 @@ public class CoursePayInfo {
      * CompanyCoinRemain : 8069
      */
 
-    private int Price;
+    private double Price;
     private int Coins;
     private int CoinRemain;
     private int CompanyCoinRemain;
 
-    public int getPrice() {
+    public double getPrice() {
         return Price;
     }
 
-    public void setPrice(int Price) {
+    public void setPrice(double Price) {
         this.Price = Price;
     }
 

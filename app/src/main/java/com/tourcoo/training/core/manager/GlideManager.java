@@ -316,4 +316,26 @@ public class GlideManager {
 
         }
     }
+
+
+    public static void loadImageByXml(Object obj, ImageView iv, int placeholderResource) {
+        Drawable drawable = getDrawable(iv.getContext(), placeholderResource);
+        loadImgXml(obj, iv, drawable != null ? drawable : sCirclePlaceholderDrawable);
+    }
+
+    /**
+     * 更加xml scanType显示
+     *
+     * @param obj
+     * @param iv
+     * @param placeholder
+     */
+    public static void loadImgXml(Object obj, ImageView iv, Drawable placeholder) {
+        Glide.with(iv.getContext()).load(obj).apply(getRequestOptionsAuto()
+                .placeholder(placeholder)
+                .fallback(placeholder)
+                .dontAnimate()
+                .error(placeholder)
+        ).into(iv);
+    }
 }

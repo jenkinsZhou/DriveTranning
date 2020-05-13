@@ -60,7 +60,7 @@
                 android:progress="0"
                 android:progressDrawable="@drawable/online_bg_progress_line" />
 
-            <TextView
+          <!--  <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/viewLineHorizon"
@@ -69,7 +69,7 @@
                 android:layout_marginEnd="@dimen/dp_12"
                 android:text="01:19"
                 android:textColor="@color/redE8403E"
-                android:textSize="@dimen/sp_10" />
+                android:textSize="@dimen/sp_10" />-->
         </RelativeLayout>
 
         <LinearLayout

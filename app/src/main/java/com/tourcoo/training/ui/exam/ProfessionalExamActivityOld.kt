@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.text.TextUtils
 import android.view.View
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -12,20 +11,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.exam.QuestionNumberAdapter
 import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.ExamConstant.*
-import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
-import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
@@ -40,7 +37,6 @@ import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_exam_online.*
 import org.apache.commons.lang.StringUtils
-import java.text.SimpleDateFormat
 
 /**
  *@description :线上考试
@@ -49,23 +45,22 @@ import java.text.SimpleDateFormat
  * @date 2020年03月09日17:14
  * @Email: 971613168@qq.com
  */
-class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickListener {
-    private val mTag = "OnlineExamActivity"
+class ProfessionalExamActivityOld : BaseTitleActivity(), View.OnClickListener {
+    private val mTag = "ProfessionalExamActivity"
     private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
     private var questionNumAdapter: QuestionNumberAdapter? = null
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
-    private val delayTime = 800L
+    private val delayTime = 500L
     private val answerHandler = Handler()
     private var behavior: BottomSheetBehavior<NestedScrollView>? = null
-    private var examId = ""
+    private var type = 0
     private var trainPlanId = ""
-    private var lastQuestionIndex = -1
+    private var examId = ""
     /**
      * 用来计数是否答完所有试题 (没回答完不让提交答案)
      */
     private var answerCount = 0
-
     companion object {
         const val EXTRA_EXAM_ID = "EXTRA_EXAM_ID"
     }
@@ -75,51 +70,23 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
-        titleBar?.setTitleMainText("线上考试")
+        titleBar?.setTitleMainText("专项考试")
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        if (intent != null) {
-            val bundle = intent!!.extras
-            trainPlanId = bundle!!.getString(EXTRA_TRAINING_PLAN_ID)!!
-            examId = bundle.getString(EXTRA_EXAM_ID)!!
-        }
-        if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
-            ToastUtil.show("未获取到考试题数据")
-            finish()
-            return
-        }
+        trainPlanId = intent.getStringExtra("trainingPlanId")
+        type = intent.getIntExtra("type", 0)
+        examId = intent.getStringExtra("examId")
+
+
+        LogUtils.e(examId)
+
         list = ArrayList()
         tvNextQuestion.setOnClickListener(this)
         tvLastQuestion.setOnClickListener(this)
         tvCommitExam.setOnClickListener(this)
-        llBgGray.setOnClickListener(this)
         questionNumRv.layoutManager = GridLayoutManager(mContext, 6)
         behavior = BottomSheetBehavior.from(nsvBottom)
-        behavior!!.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    STATE_DRAGGING->{
-                        //不做任何处理
-                    }
-                    STATE_COLLAPSED -> {
-                        //折叠了
-                        setViewGone(llBgGray,false)
-                    }
-                    STATE_EXPANDED->{
-                        //展开了
-                        setViewGone(llBgGray,true)
-                    } else -> {
-                }
-
-                }
-            }
-
-        })
         nsvBottom.isNestedScrollingEnabled = false
         llQuestionBar.setOnClickListener(this)
     }
@@ -127,22 +94,18 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
     override fun loadData() {
         super.loadData()
         //获取考试类型
-        requestExamQuestions(trainPlanId, examId)
+        requestExamQuestions(trainPlanId, type)
     }
 
     private fun loadQuestion(examEntity: ExamEntity?) {
         if (examEntity == null) {
             return
         }
-
+        list?.clear()
         val questions = examEntity.questions
-
         for (i in 0 until questions.size) {
-            val currentFragment = ExamFragment.newInstance(questions[i])
-            currentFragment.setOnQuestionListener(this)
-            list?.add(currentFragment)
+            list?.add(ExamFragment.newInstance(questions[i]))
         }
-
         vpExamOnline.adapter = fragmentCommonAdapter
     }
 
@@ -157,6 +120,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
             }
             R.id.llQuestionBar -> {
                 handleBottomBarBehavior()
+
             }
             R.id.tvCommitExam -> {
                 //交卷之前 先把最后一道题回答了
@@ -166,9 +130,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                     //交卷
                     doCommitExam()
                 }, 500)
-            }
-            R.id.llBgGray->{
-                behaviorClose()
             }
             else -> {
             }
@@ -202,11 +163,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         showButtonByCurrentPage()
         val fragment = list!![currentPosition] as ExamFragment
         val selectCount = fragment.getSelectCount()
-        if (selectCount <= 0) {
-            //说明用户还没回答题目 不让进入下一题 所以直接拦截
-            ToastUtil.show("请先回答当前题目")
-            return
-        }
         if (fragment.isMultipleAnswer() && selectCount == 1) {
             ToastUtil.show("这道题是多选哦")
             return
@@ -225,60 +181,38 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
 
     private fun setQuestionNumber(questions: MutableList<Question>): MutableList<Question> {
         for (i in 0 until questions.size) {
-            val currentQuestion = questions[i]
-            currentQuestion.questionNumber = (i + 1).toString()
+            questions[i].questionNumber = (i + 1).toString()
         }
-        loadNumberStatus(questions)
         return questions
     }
 
-    private fun loadNumberStatus(questions: MutableList<Question>) {
-        for (i in 0 until questions.size) {
-            val currentQuestion = questions[i]
-            if (currentQuestion.answerStatus == STATUS_NO_ANSWER) {
-                if (i > 1) {
-                    TourCooLogUtil.i("执行了")
-                    //需要判断上一题是否已回答过 若上一题已经回答过则 单独设置个状态
-                    val lastQuestion = questions[i - 1]
-                    val hasAnswer = lastQuestion.answerStatus == STATUS_ANSWER_WRONG || lastQuestion.answerStatus == STATUS_ANSWER_RIGHT
-                    if (hasAnswer) {
-                        //说明上一题已经回答过
-                        currentQuestion.answerStatus = STATUS_NO_ANSWER_FIRST
-                        lastQuestionIndex = i
-                    } else {
-                        //否则 还是置为未回答状态
-                        currentQuestion.answerStatus = STATUS_NO_ANSWER
-                    }
-                }
-            }
-        }
-    }
 
     private fun loadBottomSheetBar(questions: MutableList<Question>?) {
         if (questions == null) {
             return
         }
         questionNumAdapter?.setNewData(setQuestionNumber(questions))
-        showBottomBarInfo()
+        baseHandler.postDelayed(Runnable {
+            showBottomBarInfo()
+        }, 500)
     }
 
     private fun handleBottomBarBehavior() {
         if (behavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
             behavior!!.setState(BottomSheetBehavior.STATE_EXPANDED)
-            setViewGone(llBgGray,true)
         } else if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
             behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
-            setViewGone(llBgGray,false)
         }
     }
 
 
-    private fun requestExamQuestions(trainId: String, examId: String) {
-        ApiRepository.getInstance().requestExam(trainId, examId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamEntity>?>() {
+    private fun requestExamQuestions(trainId: String, type: Int) {
+        ApiRepository.getInstance().requestProfessionalExamInfo(trainId, type, examId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamEntity>?>() {
             override fun onSuccessNext(entity: BaseResult<ExamEntity>?) {
                 if (entity == null) {
                     return
                 }
+
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     rlBottomLayout.visibility = View.VISIBLE
                     handleExamResult(entity.data)
@@ -300,13 +234,13 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         if (examEntity == null || examEntity.questions == null) {
             return
         }
+
         ExamTempHelper.getInstance().examInfo = examEntity
         fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
         questionNumAdapter = QuestionNumberAdapter()
         questionNumAdapter?.bindToRecyclerView(questionNumRv)
         //处理底部题目弹窗
         questionNumAdapter?.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-
             //如果这道题用户没有回答则 不让跳转
             val fragment = list!![position] as ExamFragment
             if (fragment.getQuestionStatus() == STATUS_NO_ANSWER) {
@@ -317,6 +251,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
             //响应底部题目列表点击事件
             showBottomBarInfo()
             handleBottomBarBehavior()
+
         })
         loadQuestion(examEntity)
         vpExamOnline.offscreenPageLimit = list!!.size
@@ -335,32 +270,8 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
             }
         })
         loadBottomSheetBar(examEntity.questions)
-        if (lastQuestionIndex >= 0) {
-            vpExamOnline.setCurrentItem(lastQuestionIndex,false)
-        }
     }
 
-    /**
-     * 交卷
-     */
-    private fun doCommitExam() {
-        //先获取一下已答题数量
-        val userAnswerList = getAllQuestions()
-        if (answerCount < list!!.size) {
-            ToastUtil.show("您还有题目没有答完哦")
-            return
-        }
-        //显示交卷确认弹窗
-        val dialog = ExamCommonDialog(mContext)
-        dialog.create().show()
-        dialog.setPositiveButtonListener(View.OnClickListener {
-            isSubmit = true
-            commitExam(userAnswerList)
-            dialog.dismiss()
-        })
-
-
-    }
 
     /**
      *真正的卷逻辑
@@ -373,7 +284,8 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
             commit.answer = StringUtils.join(question.answer, "")
             commitList.add(commit)
         }
-        ApiRepository.getInstance().requestFinishExam(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamResultEntity>?>() {
+
+        ApiRepository.getInstance().requestProfessionalFinishExam(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamResultEntity>?>() {
             override fun onSuccessNext(entity: BaseResult<ExamResultEntity>?) {
                 if (entity == null) {
                     return
@@ -381,34 +293,19 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     if (entity.data.status == 0) { //合格
 
-                        tvCertificateId.text = "证书编号：NO.${entity.data.data.certificateId}"
-                        tvCreateTime.text = entity.data.data.createTime
-
-
-                        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
-                        val startTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.startTime))
-                        val endTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.endTime))
-
-                        tvDetail.text = SpanUtils()
-                                .append("学员 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(entity.data.data.name).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(" 身份证号 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(entity.data.data.idCard).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(" 于 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(startTime + " - " + endTime).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(" 完整学习了交通安培课程 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(entity.data.data.trainingPlanName).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(" 成绩合格，特授此证书。 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .create()
-
-
-
-                        baseHandler.postDelayed({
-                            val bitmap = ImageUtils.view2Bitmap(flCertificate)
-                            val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
-
-                            uploadCertificate(entity.data.data.certificateId, base64Image, entity.data.tips)
-                        }, 150)
+                        if (type == 0) { //正式考试
+                            createCertificate(entity)
+                        } else {
+                            val dialog = ExamPassDialog(mContext)
+                            dialog.create()
+                                    .setTips(entity.data.tips)
+                                    .setPositiveButtonListener {
+                                        dialog.dismiss()
+                                        finish()
+                                    }
+                                    .setNegativeGone(false)
+                                    .show()
+                        }
 
                     } else { //不合格
                         val dialog = ExamNotPassDialog(mContext)
@@ -416,8 +313,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                                 .setTips(entity.data.tips)
                                 .setPositiveButtonListener {
                                     dialog.dismiss()
-                                    startActivity(Intent(this@ExamActivity, MainTabActivity::class.java))
-                                    ActivityUtils.finishOtherActivities(MainTabActivity::class.java)
+                                    finish()
                                 }
                                 .show()
                     }
@@ -427,6 +323,30 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                 }
             }
         })
+    }
+
+    /**
+     * 创建证书，提交到后台
+     */
+    private fun createCertificate(entity: BaseResult<ExamResultEntity>) {
+        tvCertificateId.text = "证书编号：" + entity.data.data.certificateId
+        tvCreateTime.text = entity.data.data.createTime
+        tvDetail.text = SpanUtils()
+                .append("学员 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                .append(entity.data.data.name).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                .append(" 身份证号 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                .append(entity.data.data.idCard).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                .append(" 于 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                .append(entity.data.data.startTime + " - " + entity.data.data.endTime).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                .append(" 完整学习了交通安培课程 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                .append(entity.data.data.trainingPlanName).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline()
+                .append(" 成绩合格，特授此证书。 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)
+                .create()
+
+        val bitmap = ImageUtils.view2Bitmap(flCertificate)
+        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+
+        uploadCertificate(entity.data.data.certificateId, base64Image, entity.data.tips)
     }
 
     private fun uploadCertificate(id: String, base64Image: String, tips: String) {
@@ -441,12 +361,12 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                             .setTips(tips)
                             .setPositiveButtonListener {
                                 dialog.dismiss()
-                                startActivity(Intent(this@ExamActivity, MainTabActivity::class.java))
+                                startActivity(Intent(this@ProfessionalExamActivityOld, MainTabActivity::class.java))
                                 ActivityUtils.finishOtherActivities(MainTabActivity::class.java)
                             }
                             .setNegativeButtonListener {
                                 dialog.dismiss()
-                                startActivity(Intent(this@ExamActivity, MyCertificationActivity::class.java))
+                                startActivity(Intent(this@ProfessionalExamActivityOld, MyCertificationActivity::class.java))
                                 finish()
                             }
                             .show()
@@ -493,7 +413,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         if (commitList.isEmpty()) {
             return
         }
-        ApiRepository.getInstance().requestSaveAnswer(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
+        ApiRepository.getInstance().requestProfessionalSaveAnswer(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity == null) {
                     return
@@ -502,12 +422,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                 } else {
                     ToastUtil.show(entity.msg)
                 }
-                finish()
-            }
-
-            override fun onError(e: Throwable) {
-                super.onError(e)
-                finish()
             }
         })
     }
@@ -566,8 +480,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         val current = vpExamOnline.currentItem + 1
         val info = "" + current + "/" + list!!.size
         tvCurrentAnswerResult.text = info
-        //关键点：蓝色圆圈
-        loadNumberStatus(questionNumAdapter!!.data)
         questionNumAdapter!!.notifyDataSetChanged()
     }
 
@@ -582,6 +494,26 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         }
     }
 
+    /**
+     * 交卷
+     */
+    private fun doCommitExam() {
+        //先获取一下已答题数量
+        val userAnswerList = getAllQuestions()
+        if (answerCount < list!!.size) {
+            ToastUtil.show("您还有题目没有答完哦")
+            return
+        }
+        //显示交卷确认弹窗
+        val dialog = ExamCommonDialog(mContext)
+        dialog.create().show()
+        dialog.setPositiveButtonListener(View.OnClickListener {
+            isSubmit = true
+            commitExam(userAnswerList)
+            dialog.dismiss()
+        })
+    }
+
 
     /**
      * 显示是否退出考试
@@ -590,31 +522,10 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         baseHandler.postDelayed({
             val dialog = ExamCommonDialog(mContext)
             dialog.create().setContent("是否退出考试 ？").setPositiveButtonListener(View.OnClickListener {
-                dialog.dismiss()
                 isSubmit = true
-                getAllQuestions()
-                if (answerCount == 0) {
-                    //说明用户没有回答题目 也不用保存题目了 直接返回
-                    finish()
-                    return@OnClickListener
-                }
                 saveExam(getAllQuestions())
-
+                dialog.dismiss()
             }).show()
         }, 100)
     }
-
-    override fun onQuestionClick() {
-        //如果是展开状态 就关闭
-        behaviorClose()
-    }
-
-
-    private fun behaviorClose(){
-        //如果是展开状态 就关闭
-        if (behavior!!.state == STATE_EXPANDED) {
-            behavior!!.state = STATE_COLLAPSED
-        }
-    }
-
 }

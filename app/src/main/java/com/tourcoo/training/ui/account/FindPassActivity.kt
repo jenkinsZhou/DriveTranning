@@ -63,9 +63,9 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
         val bundle = intent.extras
         val isLogin = bundle?.getBoolean("isLogin")
 
-        if(isLogin == null || isLogin == false){
+        if (isLogin == null || isLogin == false) {
             etPhone.isEnabled = true
-        }else{
+        } else {
             etPhone.isEnabled = false
             etPhone.setText(AccountHelper.getInstance().userInfo.phone)
             etPhone.setTextColor(resources.getColor(R.color.colorAccent))
@@ -92,7 +92,12 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
             }
             R.id.tvConfirmPass -> {
                 val phone = etPhone.text.toString().trim()
-                if(!phone.startsWith("1") || phone.length != 11){
+                if (TextUtils.isEmpty(phone)) {
+                    ToastUtil.show("请输入手机号")
+                    return
+                }
+
+                if (!phone.startsWith("1") || phone.length != 11) {
                     ToastUtil.show("手机号格式有误")
                     return
                 }
@@ -100,7 +105,7 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
             }
             R.id.tvGetVCode -> {
                 val phone = etPhone.text.toString().trim()
-                if(!phone.startsWith("1") || phone.length != 11){
+                if (!phone.startsWith("1") || phone.length != 11) {
                     ToastUtil.show("手机号格式有误")
                     return
                 }
@@ -294,7 +299,7 @@ class FindPassActivity : BaseTitleActivity(), View.OnClickListener {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess(entity.msg)
+                    ToastUtil.showSuccess("修改密码成功")
                     finish()
                 } else {
                     ToastUtil.showFailed(entity.msg)

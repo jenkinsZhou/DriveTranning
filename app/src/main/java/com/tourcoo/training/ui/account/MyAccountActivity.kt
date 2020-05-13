@@ -38,9 +38,7 @@ import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
-import com.tourcoo.training.entity.account.PayInfo
-import com.tourcoo.training.entity.account.PayResult
-import com.tourcoo.training.entity.account.RechargeEntity
+import com.tourcoo.training.entity.account.*
 import com.tourcoo.training.entity.pay.WxPayEvent
 import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.recharge.CoinInfo
@@ -234,7 +232,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS && entity.data.coinPackages != null) {
                     mCoinList = entity.data.coinPackages
                     loadPackageData(entity.data.coinPackages)
-                    tvCurrentCoin.text = entity.data.coinsTotal.toString()
+                    tvCurrentCoin.text = entity.data.coinsRemain.toString()
                 } else {
                     ToastUtil.show(entity.msg)
                 }
@@ -324,6 +322,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                         ToastUtil.showSuccess("支付成功")
                         //刷新学币
                         requestCoinPackage()
+                        notifyUserInfo()
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         ToastUtil.show(payResult.memo)
@@ -414,8 +413,17 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         if (payEvent.paySuccess) {
             ToastUtil.showSuccess("支付成功")
             requestCoinPackage()
+            notifyUserInfo()
         } else {
             ToastUtil.show("支付未完成")
         }
+    }
+
+
+    private fun notifyUserInfo(){
+        val refreshEvent = UserInfoEvent()
+        val user = UserInfo()
+        refreshEvent.userInfo = user
+        EventBus.getDefault().post(refreshEvent)
     }
 }

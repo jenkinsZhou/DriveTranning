@@ -1,5 +1,7 @@
 package com.tourcoo.training.ui.home.news
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -74,9 +76,13 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_NEWS_BEAN, news)
             if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(news.videoUrl))) {
-                CommonUtil.startActivity(mContext, NewsDetailVideoActivity::class.java, bundle)
+//                CommonUtil.startActivity(mContext, NewsDetailVideoActivity::class.java, bundle)
+                val intent = Intent(mContext, NewsDetailVideoActivity::class.java)
+                startActivityForResult(intent, 2018)
             } else {
-                CommonUtil.startActivity(mContext, NewsDetailHtmlActivity::class.java, bundle)
+//                CommonUtil.startActivity(mContext, NewsDetailHtmlActivity::class.java, bundle)
+                val intent = Intent(mContext, NewsDetailVideoActivity::class.java)
+                startActivityForResult(intent, 2018)
             }
         }
         adapter!!.setOnItemChildClickListener { adapter, view, position ->
@@ -202,6 +208,14 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
             override fun onSuccessNext(entity: BaseResult<Any>?) {
             }
         })
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK){
+            presenter.getNewsList(1)
+        }
     }
 }
 

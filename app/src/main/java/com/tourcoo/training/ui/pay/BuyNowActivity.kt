@@ -16,6 +16,7 @@ import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
 import com.tourcoo.training.core.log.TourCooLogUtil
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.PayInfo
@@ -96,8 +97,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                     tvTitle.text = "支付金额"
                     tvTagYuan.visibility = View.VISIBLE
                     tvTagUnit.visibility = View.GONE
-                    tvAmount.text = "" + payInfo.price
-
+                    tvAmount.text = "" + CommonUtil.doubleTransStringZhen(payInfo.price)
                     btnBuy.isEnabled = true
                 }
             }

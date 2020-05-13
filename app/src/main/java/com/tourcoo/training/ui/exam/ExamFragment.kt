@@ -40,6 +40,7 @@ class ExamFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        //todo 暂时怀疑这个地方数据过大
         question = arguments?.getParcelable("question")
         questionRecyclerView = mContentView.findViewById(R.id.questionRecyclerView)
         llLinFragmentRoot = mContentView.findViewById(R.id.llLinFragmentRoot)
