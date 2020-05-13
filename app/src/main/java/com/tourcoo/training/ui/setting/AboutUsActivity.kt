@@ -1,7 +1,10 @@
 package com.tourcoo.training.ui.setting
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
+import android.text.Html
+import com.blankj.utilcode.util.AppUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -15,6 +18,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.setting.SettingEntity
 import com.tourcoo.training.ui.update.AppUpdateInfo
 import com.trello.rxlifecycle3.android.ActivityEvent
+import com.vector.update_app.UpdateAppManager
 import com.vector.update_app_kotlin.check
 import com.vector.update_app_kotlin.updateApp
 import kotlinx.android.synthetic.main.activity_about_us.*
@@ -44,6 +48,11 @@ class AboutUsActivity : BaseTitleActivity() {
         tvAppVersion.text = "V " + CommonUtil.getVersionName(mContext)
         requestSystemConfig()
         requestAppVersionInfo()
+
+        llUpdate.setOnClickListener {
+            requestAppVersionInfo()
+        }
+
     }
 
     private fun requestSystemConfig() {
@@ -89,15 +98,20 @@ class AboutUsActivity : BaseTitleActivity() {
         if (appInfo == null) {
             return
         }
-        if (appInfo.isUpdate == 1) {
-            // todo 需要更新
 
-        } else {
-            //不需要更新
+        updateApp {
+            topPic = R.mipmap.app_update_top_bg
+            themeColor = Color.parseColor("#3CC2E9")
+        }.update(appInfo.isUpdate == 1, appInfo.versionName,   appInfo.link, appInfo.content, appInfo.isMandatoryUpdate == 1)
+
+
+        if (appInfo.isUpdate != 1) {
             tvVersionInfo.text = "好赞，当前已是最新版本"
+        } else {
+            //需要更新
+            tvVersionInfo.text = "最新版本号：" + appInfo.versionName
         }
     }
-
 
 
 }
