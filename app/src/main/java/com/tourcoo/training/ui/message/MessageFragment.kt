@@ -54,7 +54,7 @@ class MessageFragment : BaseRefreshLoadFragment<MessageEntity>() {
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity.data == null) ArrayList() else (entity.data.rows), null)
+                    UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity.data == null) ArrayList()  else (entity.data.rows), null)
                 } else {
                     ToastUtil.show(entity.msg)
                 }

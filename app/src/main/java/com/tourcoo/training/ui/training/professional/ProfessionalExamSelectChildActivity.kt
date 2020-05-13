@@ -33,7 +33,7 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        mTrainingPlanId = intent.getStringExtra("trainingPlanId")
+        mTrainingPlanId = intent.getStringExtra("trainingPlanId") as String
         mExamId = intent.getStringExtra("examId")
 
         LogUtils.e(mExamId)

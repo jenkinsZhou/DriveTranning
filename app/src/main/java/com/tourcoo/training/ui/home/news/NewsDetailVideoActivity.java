@@ -59,6 +59,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import static com.tourcoo.training.constant.CommonConstant.EXTRA_KEY_POSITION;
 import static com.tourcoo.training.constant.TrainingConstant.APP_ID;
 import static com.tourcoo.training.ui.home.news.NewsTabFragment.EXTRA_NEWS_BEAN;
 
@@ -86,12 +87,17 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     private TextView tvNewsLikeCount;
     private TextView tvNewsShareCount;
     private CheckBox cBoxLike;
+    private int itemPosition;
+    private int mTotalLike;
+    private int mShareCount;
+    private int mReadCount;
 
     private void initWebView() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         api = WXAPIFactory.createWXAPI(mContext, APP_ID);
+        itemPosition = getIntent().getIntExtra(EXTRA_KEY_POSITION, -1);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new NewsMultipleAdapter(new ArrayList<>());
         adapter.bindToRecyclerView(recyclerView);
@@ -195,8 +201,13 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
                     return;
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    if (entity.getData() != null) {
+                        mTotalLike = entity.getData().getLikeNum();
+                        mShareCount = entity.getData().getSharedNum();
+                        mReadCount = entity.getData().getSeeNum();
+                        showWebDetail(entity.getData());
+                    }
 
-                    showWebDetail(entity.getData());
                 } else {
                     ToastUtil.show(entity.getMsg());
                 }
@@ -207,11 +218,14 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     }
 
     private void showWebDetail(NewsDetail detailEntity) {
+        if (detailEntity == null) {
+            return;
+        }
         adapter.setNewData(detailEntity.getRecommendList());
-        TourCooLogUtil.d("富文本:" + detailEntity.getContent());
-        webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
+        String content = HtmlUtils.getHtmlString(CommonUtil.getNotNullValue(detailEntity.getTitle()), CommonUtil.getNotNullValue(detailEntity.getTime()), "", HtmlUtils.imageFillWidth(CommonUtil.getNotNullValue(detailEntity.getContent())));
+        webView.setShow(content);
         showNewsDetail(detailEntity);
-        setResult(Activity.RESULT_OK);
+        setSuccessCallback();
     }
 
     private void initItemClick() {
@@ -451,10 +465,17 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         }
     }
 
+    /**
+     * 分享回调
+     * @param newsId
+     */
     private void requestShareSuccess(String newsId) {
         ApiRepository.getInstance().requestShareSuccess(newsId + "").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
             @Override
             public void onSuccessNext(BaseResult entity) {
+                //分享成功 说明用户既阅读了 又分享了 因此需要通知列表更新数据
+                showShare(++mShareCount);
+                setSuccessCallback();
             }
         });
     }
@@ -467,14 +488,38 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
                     return;
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
-//                    showLikeCountCallBack();
-                    //直接刷新
                     ToastUtil.show("点赞成功");
-                    requestNewsDetail(mNewsEntity.getID());
+                    showLike(++mTotalLike);
+                    setSuccessCallback();
                 } else {
                     ToastUtil.show(entity.getMsg());
                 }
             }
         });
     }
+
+
+    private void showLike(int count) {
+        tvNewsLikeCount.setText(count + "");
+    }
+
+    private void showShare(int share) {
+        tvNewsShareCount.setText(share + "");
+    }
+
+    /**
+     * 将数据更新到静态变量上
+     */
+    private void assignmentCount() {
+        NewsTemp.newsShareCount = mShareCount;
+        NewsTemp.newsReadCount = mReadCount;
+    }
+
+    private void setSuccessCallback() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_KEY_POSITION, itemPosition);
+        assignmentCount();
+        setResult(Activity.RESULT_OK, intent);
+    }
+
 }

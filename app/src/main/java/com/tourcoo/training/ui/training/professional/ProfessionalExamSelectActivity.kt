@@ -16,6 +16,7 @@ import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.course.CourseInfo
@@ -96,8 +97,8 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
             }
 
             val intent = Intent(this, ProfessionalExamSelectChildActivity::class.java)
-            intent.putExtra("trainingPlanId", info.trainingPlanID)
-            intent.putExtra("examId", info.examId)
+            intent.putExtra("trainingPlanId", CommonUtil.getNotNullValue(info.trainingPlanID))
+            intent.putExtra("examId", CommonUtil.getNotNullValue(info.examId))
             startActivity(intent)
         }
 

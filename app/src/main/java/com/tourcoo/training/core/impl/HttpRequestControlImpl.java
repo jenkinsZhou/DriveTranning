@@ -61,7 +61,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
         adapter.loadMoreComplete();
         if (list == null || list.size() == 0) {
             //第一页没有
-            if (page == START_PAGE) {
+            if (page == START_PAGE || page == 0) {
                 adapter.setNewData(new ArrayList());
                 statusLayoutManager.showEmptyLayout();
                 if (listener != null) {

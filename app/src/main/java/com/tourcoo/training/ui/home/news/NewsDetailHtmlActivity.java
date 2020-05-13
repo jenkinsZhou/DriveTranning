@@ -51,6 +51,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import static com.tourcoo.training.constant.CommonConstant.EXTRA_KEY_POSITION;
 import static com.tourcoo.training.constant.TrainingConstant.APP_ID;
 import static com.tourcoo.training.ui.home.news.NewsTabFragment.EXTRA_NEWS_BEAN;
 
@@ -77,7 +78,11 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     private TextView tvNewsLikeCount;
     private TextView tvNewsShareCount;
     private CheckBox cBoxLike;
-    private int totalLike;
+    private int mTotalLike;
+    private int itemPosition;
+
+    private int mShareCount;
+    private int mReadCount;
 
 
     @Override
@@ -91,6 +96,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
             EventBus.getDefault().register(this);
         }
         api = WXAPIFactory.createWXAPI(mContext, APP_ID);
+        itemPosition = getIntent().getIntExtra(EXTRA_KEY_POSITION, -1);
         tvNewsLookCount = findViewById(R.id.tvNewsLookCount);
         tvNewsLikeCount = findViewById(R.id.tvNewsLikeCount);
         tvNewsShareCount = findViewById(R.id.tvNewsShareCount);
@@ -179,8 +185,12 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                     return;
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    totalLike = entity.getData().getLikeNum();
-                    showWebDetail(entity.getData());
+                    if (entity.getData() != null) {
+                        mTotalLike = entity.getData().getLikeNum();
+                        mShareCount = entity.getData().getSharedNum();
+                        mReadCount = entity.getData().getSeeNum();
+                        showWebDetail(entity.getData());
+                    }
                 } else {
                     ToastUtil.show(entity.getMsg());
                 }
@@ -192,10 +202,9 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     private void showWebDetail(NewsDetail detailEntity) {
         adapter.setNewData(detailEntity.getRecommendList());
-        TourCooLogUtil.d("富文本:" + detailEntity.getContent());
         webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
         showNewsDetail(detailEntity);
-        setResult(Activity.RESULT_OK);
+        setSuccessCallback();
     }
 
     private void initItemClick() {
@@ -205,6 +214,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                 NewsEntity newsEntity = (NewsEntity) adapter.getData().get(position);
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_NEWS_BEAN, newsEntity);
+                intent.putExtra(EXTRA_KEY_POSITION, position);
                 intent.setClass(mContext, NewsDetailHtmlActivity.class);
                 startActivity(intent);
             }
@@ -216,6 +226,9 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         tvNewsLikeCount.setText(newsDetail.getLikeNum() + "");
         tvNewsShareCount.setText(newsDetail.getSharedNum() + "");
     }
+
+
+
 
     @Override
     public void onClick(View v) {
@@ -264,10 +277,9 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                     return;
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
-//                    showLikeCountCallBack();
-                    //直接刷新
                     ToastUtil.show("点赞成功");
-                    requestNewsDetail(mNewsEntity.getID());
+                    showLike(++mTotalLike);
+                    setSuccessCallback();
                 } else {
                     ToastUtil.show(entity.getMsg());
                 }
@@ -275,22 +287,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         });
     }
 
-//    private void showLikeCountCallBack() {
-//        String finalLikeCount;
-//        if (cBoxLike.isChecked()) {
-//            if (mNewsEntity.getLikeTotal() <= 0) {
-//                finalLikeCount = "0";
-//            } else {
-//                totalLike--;
-//                finalLikeCount = totalLike - 1 + "";
-//            }
-//        } else {
-//            totalLike++;
-//            finalLikeCount = totalLike + 1 + "";
-//        }
-//        cBoxLike.setChecked(!cBoxLike.isChecked());
-//        tvNewsLikeCount.setText(finalLikeCount);
-//    }
+
 
 
     public void wxSharePic(boolean isSession) {
@@ -366,9 +363,36 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         ApiRepository.getInstance().requestShareSuccess(newsId + "").compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult>() {
             @Override
             public void onSuccessNext(BaseResult entity) {
-                //分享成功由于微信SDK已经处理过回调 因此此处不做任何处理
-                //do nothing
+                //分享成功 说明用户既阅读了 又分享了 因此需要通知列表更新数据
+                showShare(++mShareCount);
+                setSuccessCallback();
             }
         });
+    }
+
+
+
+
+    private void showLike(int count) {
+        tvNewsLikeCount.setText(count + "");
+    }
+
+    private void showShare(int share) {
+        tvNewsShareCount.setText(share + "");
+    }
+
+    /**
+     * 将数据更新到静态变量上
+     */
+    private void assignmentCount() {
+        NewsTemp.newsShareCount = mShareCount;
+        NewsTemp.newsReadCount = mReadCount;
+    }
+
+    private void setSuccessCallback() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_KEY_POSITION, itemPosition);
+        assignmentCount();
+        setResult(Activity.RESULT_OK, intent);
     }
 }

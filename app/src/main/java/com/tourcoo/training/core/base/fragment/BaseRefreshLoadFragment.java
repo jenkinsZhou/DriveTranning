@@ -28,7 +28,7 @@ public abstract class BaseRefreshLoadFragment<T>
     protected SmartRefreshLayout mRefreshLayout;
     protected RecyclerView mRecyclerView;
     protected StatusLayoutManager mStatusManager;
-    protected int mDefaultPage = 0;
+    protected int mDefaultPage = 1;
     protected int mDefaultPageSize = 10;
     private BaseQuickAdapter mQuickAdapter;
     private Class<?> mClass;

@@ -16,14 +16,17 @@ import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.R
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter
+import com.tourcoo.training.constant.CommonConstant
+import com.tourcoo.training.constant.CommonConstant.EXTRA_KEY_POSITION
+import com.tourcoo.training.constant.NewsConstant.REQUEST_CODE_NEWS_DETAIL
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseTitleMvpRefreshLoadFragment
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.SizeUtil
-import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.news.NewsEntity
 import com.tourcoo.training.entity.pay.WxShareEvent
@@ -74,17 +77,21 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
         api = WXAPIFactory.createWXAPI(mContext, TrainingConstant.APP_ID)
         adapter!!.setOnItemClickListener { adapter, view, position ->
             val news = adapter.data[position] as NewsEntity
+            //必须赋值
+            mNewsEntity = news
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_NEWS_BEAN, news)
             if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(news.videoUrl))) {
                 val intent = Intent(mContext, NewsDetailVideoActivity::class.java)
                 intent.putExtras(bundle)
-                startActivityForResult(intent, 2018)
+                intent.putExtra(CommonConstant.EXTRA_KEY_POSITION, position)
+                startActivityForResult(intent, REQUEST_CODE_NEWS_DETAIL)
             } else {
                 //网页
                 val intent = Intent(mContext, NewsDetailHtmlActivity::class.java)
                 intent.putExtras(bundle)
-                startActivityForResult(intent, 2018)
+                intent.putExtra(CommonConstant.EXTRA_KEY_POSITION, position)
+                startActivityForResult(intent, REQUEST_CODE_NEWS_DETAIL)
             }
         }
         adapter!!.setOnItemChildClickListener { adapter, view, position ->
@@ -200,8 +207,10 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
         if (event == null) {
             return
         }
+        TourCooLogUtil.i(TAG, "执行了" + mNewsEntity)
         if (event.isShareSuccess && mNewsEntity != null) {
             requestShareSuccess(mNewsEntity!!.getID())
+            TourCooLogUtil.i(TAG, "执行了1")
         }
     }
 
@@ -218,9 +227,31 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            presenter.getNewsList(1)
+        when (requestCode) {
+            REQUEST_CODE_NEWS_DETAIL -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data != null) {
+                        val position = data.getIntExtra(EXTRA_KEY_POSITION, -1)
+                        if (position < 0) {
+                            TourCooLogUtil.e("未找到对应位置")
+                            return
+                        }
+                        val news = adapter?.getItem(position)
+                        news?.readTotal = NewsTemp.newsReadCount
+                        news?.sharedNum = NewsTemp.newsShareCount
+                        baseHandler.postDelayed(Runnable {
+                            adapter?.notifyItemChanged(position)
+                        }, 500)
+                    }
+                } else {
+
+                }
+            }
+            else -> {
+            }
         }
+
+
     }
 }
 
