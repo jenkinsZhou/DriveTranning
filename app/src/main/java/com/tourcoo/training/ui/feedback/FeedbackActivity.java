@@ -299,19 +299,26 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
                     ToastUtil.show("请选择问题类型");
                     return;
                 }
-                showLoading("正在上传...");
-                baseHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeLoading();
-                        uploadImage(imagePathList);
+                String phone = getTextValue(etPhone);
+                if (!TextUtils.isEmpty(phone)) {
+                    if (!CommonUtil.isMobileNumber(phone)) {
+                        ToastUtil.show("请输入正确的手机号");
+                        return;
                     }
-                }, 1000);
-                /*if (selectList.isEmpty()) {
+                }
+                if (selectList.isEmpty()) {
                     requestFeedback();
                 } else {
-                    uploadImageSingle(imagePathList);
-                }*/
+                    showLoading("正在上传...");
+                    baseHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            closeLoading();
+                            uploadImage(imagePathList);
+                        }
+                    }, 1000);
+                }
+
                 break;
             default:
                 break;
@@ -428,25 +435,12 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
             ToastUtil.showSuccess("请选择问题类型");
             return;
         }
-        //todo
-        ToastUtil.showSuccess("执行提交");
-        String detail = etDetail.getText().toString();
-        String type = getTextValue(tvQuestionType);
-        /*ApiRepository.getInstance().requestFeedback(detail, mImages, type).compose(bindUntilEvent(ActivityEvent.DESTROY)).
-                subscribe(new BaseLoadingObserver<BaseEntity>() {
-                    @Override
-                    public void onRequestNext(BaseEntity entity) {
-                        if (entity != null) {
-                            if (entity.code == CODE_REQUEST_SUCCESS) {
-                                setResult(RESULT_OK);
-                                ToastUtil.showSuccess("问题已提交,感谢您的反馈");
-                                finish();
-                            } else {
-                                ToastUtil.showFailed(entity.msg);
-                            }
-                        }
-                    }
-                });*/
+        FeedbackCommitEntity feedbackCommitEntity = new FeedbackCommitEntity();
+        feedbackCommitEntity.setPhone(CommonUtil.getNotNullValue(getTextValue(etPhone)));
+        feedbackCommitEntity.setPhoto(new ArrayList<>());
+        feedbackCommitEntity.setId(selectReason.getID());
+        feedbackCommitEntity.setContent(getTextValue(etDetail));
+        requestSubmit(feedbackCommitEntity);
     }
 
 

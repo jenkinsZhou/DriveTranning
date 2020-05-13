@@ -77,7 +77,7 @@ public class MessageDetailActivity extends BaseTitleActivity {
 
     @Override
     public void setTitleBar(TitleBarView titleBar) {
-        titleBar.setTitleMainText("资讯");
+        titleBar.setTitleMainText("信息详情");
     }
 
 

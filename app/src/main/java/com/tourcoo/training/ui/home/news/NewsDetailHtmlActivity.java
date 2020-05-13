@@ -224,7 +224,8 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     private void showWebDetail(NewsDetail detailEntity) {
         adapter.setNewData(detailEntity.getRecommendList());
-        webView.setShow(CommonUtil.getNotNullValue(detailEntity.getContent()));
+        String content = HtmlUtils.getHtmlString(CommonUtil.getNotNullValue(detailEntity.getTitle()), CommonUtil.getNotNullValue(detailEntity.getTime()), "", HtmlUtils.imageFillWidth(CommonUtil.getNotNullValue(detailEntity.getContent())));
+        webView.setShow(content);
         showNewsDetail(detailEntity);
         setSuccessCallback();
     }
