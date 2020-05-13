@@ -473,10 +473,11 @@ public class RetrofitHelper {
                     boolean isJson = message.startsWith("[") || message.startsWith("{");
                     isJson = isJson && mLogJsonEnable;
                     if (isJson) {
-                        LogUtils.json(message);
+//                        LogUtils.json(message);
+                        TourCooLogUtil.d(message);
                         return;
                     }
-                    TourCooLogUtil.d(message);
+//                    TourCooLogUtil.d(message);
                 });
             }
             mLoggingInterceptor.setLevel(level);

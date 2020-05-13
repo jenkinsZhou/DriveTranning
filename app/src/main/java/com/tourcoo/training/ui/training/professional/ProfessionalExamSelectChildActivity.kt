@@ -41,9 +41,9 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
         rlExamSimulation.setOnClickListener {
             //模拟考试
             formal = false
-            //考试都要先人脸认证
-            skipFaceCertify()
 
+            //人脸认证成功 则开始考试
+            skipExamByType(mTrainingPlanId, mExamId, formal)
 
         }
         //正式测试
@@ -73,7 +73,7 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
             startActivity(intent)
         } else {
             intent.putExtra("type", 1)
-            startActivity(intent)
+            startActivityForResult(intent,300)
         }
 
     }
@@ -88,8 +88,18 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            //人脸认证成功 则开始考试
-            skipExamByType(mTrainingPlanId, mExamId, formal)
+            when(requestCode){
+                300 ->{
+                    finish()
+                }
+
+                2017 ->{
+                    //人脸认证成功 则开始考试
+                    skipExamByType(mTrainingPlanId, mExamId, formal)
+                }
+
+            }
+
         }
     }
 }

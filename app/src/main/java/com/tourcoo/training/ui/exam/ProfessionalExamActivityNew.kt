@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.exam
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -48,7 +49,7 @@ import java.text.SimpleDateFormat
  * @date 2020年05月13日10:46
  * @Email: 971613168@qq.com
  */
-class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, QuestionClickListener  {
+class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, QuestionClickListener {
 
     private val mTag = "OnlineExamActivity"
     private var fragmentCommonAdapter: CommonFragmentPagerAdapter? = null
@@ -77,14 +78,13 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
 
     override fun setTitleBar(titleBar: TitleBarView?) {
         titleBar?.setTitleMainText("线上考试")
+        titleBar?.setOnLeftTextClickListener {
+            onBackPressed()
+        }
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-       /* if (intent != null) {
-            val bundle = intent!!.extras
-            trainPlanId = bundle!!.getString(TrainingConstant.EXTRA_TRAINING_PLAN_ID)!!
-            examId = bundle.getString(EXTRA_EXAM_ID)!!
-        }*/
+
         trainPlanId = intent.getStringExtra("trainingPlanId")
         type = intent.getIntExtra("type", 0)
         examId = intent.getStringExtra("examId")
@@ -100,25 +100,26 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
         llBgGray.setOnClickListener(this)
         questionNumRv.layoutManager = GridLayoutManager(mContext, 6)
         behavior = BottomSheetBehavior.from(nsvBottom)
-        behavior!!.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+        behavior!!.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_DRAGGING ->{
+                    BottomSheetBehavior.STATE_DRAGGING -> {
                         //不做任何处理
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         //折叠了
-                        setViewGone(llBgGray,false)
+                        setViewGone(llBgGray, false)
                     }
-                    BottomSheetBehavior.STATE_EXPANDED ->{
+                    BottomSheetBehavior.STATE_EXPANDED -> {
                         //展开了
-                        setViewGone(llBgGray,true)
-                    } else -> {
-                }
+                        setViewGone(llBgGray, true)
+                    }
+                    else -> {
+                    }
 
                 }
             }
@@ -127,6 +128,7 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
         nsvBottom.isNestedScrollingEnabled = false
         llQuestionBar.setOnClickListener(this)
     }
+
 
     override fun loadData() {
         super.loadData()
@@ -149,7 +151,7 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
         }
         vpExamOnline.adapter = fragmentCommonAdapter
         val endTime = System.currentTimeMillis()
-        TourCooLogUtil.i(mTag, "加载试题耗时="+(endTime-startTime))
+        TourCooLogUtil.i(mTag, "加载试题耗时=" + (endTime - startTime))
     }
 
     override fun onClick(v: View?) {
@@ -173,7 +175,7 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
                     doCommitExam()
                 }, 500)
             }
-            R.id.llBgGray->{
+            R.id.llBgGray -> {
                 behaviorClose()
             }
             else -> {
@@ -271,10 +273,10 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
     private fun handleBottomBarBehavior() {
         if (behavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
             behavior!!.setState(BottomSheetBehavior.STATE_EXPANDED)
-            setViewGone(llBgGray,true)
+            setViewGone(llBgGray, true)
         } else if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
             behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
-            setViewGone(llBgGray,false)
+            setViewGone(llBgGray, false)
         }
     }
 
@@ -343,7 +345,7 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
         })
         loadBottomSheetBar(examEntity.questions)
         if (lastQuestionIndex >= 0) {
-            vpExamOnline.setCurrentItem(lastQuestionIndex,false)
+            vpExamOnline.setCurrentItem(lastQuestionIndex, false)
         }
     }
 
@@ -385,37 +387,23 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
                 if (entity == null) {
                     return
                 }
+
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     if (entity.data.status == 0) { //合格
 
-                        tvCertificateId.text = "证书编号：NO.${entity.data.data.certificateId}"
-                        tvCreateTime.text = entity.data.data.createTime
-
-
-                        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
-                        val startTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.startTime))
-                        val endTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.endTime))
-
-                        tvDetail.text = SpanUtils()
-                                .append("学员 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(entity.data.data.name).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(" 身份证号 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(entity.data.data.idCard).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(" 于 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(startTime + " - " + endTime).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(" 完整学习了交通安培课程 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(entity.data.data.trainingPlanName).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .append(" 成绩合格，特授此证书。 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
-                                .create()
-
-
-
-                        baseHandler.postDelayed({
-                            val bitmap = ImageUtils.view2Bitmap(flCertificate)
-                            val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
-
-                            uploadCertificate(entity.data.data.certificateId, base64Image, entity.data.tips)
-                        }, 150)
+                        if (type == 0) { //正式考试
+                            createCertificate(entity)
+                        } else {
+                            val dialog = ExamPassDialog(mContext)
+                            dialog.create()
+                                    .setTips(entity.data.tips)
+                                    .setPositiveButtonListener {
+                                        dialog.dismiss()
+                                        finish()
+                                    }
+                                    .setNegativeGone(false)
+                                    .show()
+                        }
 
                     } else { //不合格
                         val dialog = ExamNotPassDialog(mContext)
@@ -423,8 +411,7 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
                                 .setTips(entity.data.tips)
                                 .setPositiveButtonListener {
                                     dialog.dismiss()
-                                    startActivity(Intent(this@ProfessionalExamActivityNew, MainTabActivity::class.java))
-                                    ActivityUtils.finishOtherActivities(MainTabActivity::class.java)
+                                    finish()
                                 }
                                 .show()
                     }
@@ -432,9 +419,41 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
                 } else {
                     ToastUtil.show(entity.msg)
                 }
+
             }
         })
     }
+
+
+    /**
+     * 创建证书，提交到后台
+     */
+    private fun createCertificate(entity: BaseResult<ExamResultEntity>) {
+
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val startTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.startTime))
+        val endTime = simpleDateFormat.format(simpleDateFormat.parse(entity.data.data.endTime))
+
+        tvDetail.text = SpanUtils()
+                .append("学员 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .append(entity.data.data.name).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .append(" 身份证号 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .append(entity.data.data.idCard).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .append(" 于 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .append(startTime + " - " + endTime).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .append(" 完整学习了交通安培课程 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .append(entity.data.data.trainingPlanName).setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true).setUnderline().setBold().setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .append(" 成绩合格，特授此证书。 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true).setLineHeight((1.5 * 15).toInt(), SpanUtils.ALIGN_CENTER)
+                .create()
+
+        baseHandler.postDelayed({
+            val bitmap = ImageUtils.view2Bitmap(flCertificate)
+            val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+
+            uploadCertificate(entity.data.data.certificateId, base64Image, entity.data.tips)
+        }, 150)
+    }
+
 
     private fun uploadCertificate(id: String, base64Image: String, tips: String) {
         ApiRepository.getInstance().uploadCertificate(id, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
@@ -524,13 +543,18 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
     private var isSubmit = false
 
     override fun onBackPressed() {
-        getAllQuestions()
-        if (!isSubmit && answerCount < list!!.size) {
-            //说明还没交卷并且还有题目没有答完 需要保存答题进度
-            showExitExamAnswerDialog()
-        } else {
-            //不保存 直接退出
+        if (type == 1) {//模拟考试
+            setResult(Activity.RESULT_OK)
             super.onBackPressed()
+        } else {
+            getAllQuestions()
+            if (!isSubmit && answerCount < list!!.size) {
+                //说明还没交卷并且还有题目没有答完 需要保存答题进度
+                showExitExamAnswerDialog()
+            } else {
+                //不保存 直接退出
+                super.onBackPressed()
+            }
         }
     }
 
@@ -617,7 +641,7 @@ class ProfessionalExamActivityNew  : BaseTitleActivity(), View.OnClickListener, 
     }
 
 
-    private fun behaviorClose(){
+    private fun behaviorClose() {
         //如果是展开状态 就关闭
         if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
             behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
