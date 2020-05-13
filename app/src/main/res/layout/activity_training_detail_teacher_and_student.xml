@@ -137,7 +137,7 @@
                         style="@style/Text15spGray999999"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_5"
-                        android:text=" 安全员   ：" />
+                        android:text="安全员    ：" />
 
                     <TextView
                         android:id="@+id/tvTeacherName"
@@ -174,7 +174,7 @@
                         style="@style/Text15spGray999999"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/dp_5"
-                        android:text=" 电话       ：" />
+                        android:text="电话        ：" />
 
                     <TextView
                         android:id="@+id/tvPhone"

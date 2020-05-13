@@ -135,7 +135,7 @@ class CertificationDetailsActivity : BaseTitleActivity() {
         msg.mediaObject = imgObj
 
         //设置缩略图
-        val thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true)
+        val thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 350, true)
         bmp.recycle()
         msg.thumbData = ImageUtils.bitmap2Bytes(thumbBmp, Bitmap.CompressFormat.JPEG)
 

@@ -92,7 +92,7 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     showRecord(entity.data)
-                }else{
+                } else {
                     ToastUtil.show(entity.msg)
                 }
             }
@@ -115,7 +115,7 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
         try {
             for (record in list) {
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
-                sdf.timeZone = TimeZone.getTimeZone("GMT+00:00")
+//                sdf.timeZone = TimeZone.getTimeZone("GMT+00:00")
                 if (!TextUtils.isEmpty(record.trainingPlanStartTime)) {
                     val date = sdf.parse(record.trainingPlanStartTime)
                     if (date != null) {
@@ -123,31 +123,33 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
                     }
                 }
             }
+
             CommonUtil.listSortByDate(list)
         } catch (e: Exception) {
             e.printStackTrace()
         }
         val maps = CommonUtil.sortStudyRecord(list)
+        TourCooLogUtil.e(maps)
         var count = 0
-        val mapSize = maps.size
         for (map in maps) {
             val values = map.value
-            CommonUtil.listSortByDate(values)
             val record = StudyRecord()
             record.title = map.key
             record.isHeader = true
-            TourCooLogUtil.d("排序后的数据",values)
             values.add(0, record)
-            values.reverse()
             result.addAll(values)
-            count++
-            if(count == mapSize-1){
-                for (value in result) {
+            if (count == 0) {
+                for (value in values) {
+                    value.isFolding = false
+                }
+            } else {
+                for (value in values) {
                     value.isFolding = true
                 }
             }
+            count++
         }
-        result.reverse()
+
         return result
     }
 

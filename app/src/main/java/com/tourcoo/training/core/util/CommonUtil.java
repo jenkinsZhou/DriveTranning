@@ -27,6 +27,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.app.MyApplication;
@@ -36,7 +37,9 @@ import com.tourcoo.training.entity.certificate.CertificateInfo;
 import com.tourcoo.training.entity.study.StudyRecord;
 
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -573,7 +577,8 @@ public class CommonUtil {
     }
 
     public static Map<String, ArrayList<CertificateInfo>> sort(List<CertificateInfo> list) {
-        TreeMap tm = new TreeMap();
+        TreeMap tm = new TreeMap<String, ArrayList<CertificateInfo>>();
+
         for (int i = 0; i < list.size(); i++) {
             CertificateInfo certificateInfo = (CertificateInfo) list.get(i);
             if (certificateInfo == null || certificateInfo.getDate() == null) {
@@ -581,42 +586,157 @@ public class CommonUtil {
             }
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(certificateInfo.getDate());
-            if (tm.containsKey("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1))) {//
-                ArrayList<CertificateInfo> l11 = (ArrayList) tm.get("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1));
+
+            String key;
+            String month = "" + (calendar.get(Calendar.MONTH) + 1);
+            if (month.length() == 1) {
+                key = "" + calendar.get(Calendar.YEAR) + "-0" + month;
+            } else {
+                key = "" + calendar.get(Calendar.YEAR) + "-" + month;
+            }
+            boolean containsKey = tm.get(key) != null;
+            if (containsKey) {
+                List<CertificateInfo> l11 = (List<CertificateInfo>) tm.get(key);
                 l11.add(certificateInfo);
             } else {
                 ArrayList<CertificateInfo> tem = new ArrayList<>();
                 if (certificateInfo.getDate() != null) {
                     tem.add(certificateInfo);
-                    tm.put("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1), tem);
+                    tm.put(key, tem);
                 }
             }
         }
-        return tm;
+
+        List<Map.Entry<String, ArrayList<CertificateInfo>>> infoIds = new ArrayList<Map.Entry<String, ArrayList<CertificateInfo>>>(tm.entrySet());
+        // 对HashMap中的key 进行排序
+        Collections.sort(infoIds, new Comparator<Map.Entry<String, ArrayList<CertificateInfo>>>() {
+            @Override
+            public int compare(Map.Entry<String, ArrayList<CertificateInfo>> o11, Map.Entry<String, ArrayList<CertificateInfo>> o21) {
+                //key排序
+                ArrayList<CertificateInfo> o1List = o11.getValue();
+                ArrayList<CertificateInfo> o2List = o21.getValue();
+
+                Collections.sort(o1List, new Comparator<CertificateInfo>() {
+                    @Override
+                    public int compare(CertificateInfo o1, CertificateInfo o2) {
+                        Date d1 = o1.getDate();
+                        Date d2 = o2.getDate();
+
+                        if (d1 == d2) {
+                            return 0;
+                        } else if (d1.before(d2)) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    }
+                });
+
+                Collections.sort(o2List, new Comparator<CertificateInfo>() {
+                    @Override
+                    public int compare(CertificateInfo o1, CertificateInfo o2) {
+                        Date d1 = o1.getDate();
+                        Date d2 = o2.getDate();
+
+                        if (d1 == d2) {
+                            return 0;
+                        } else if (d1.before(d2)) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    }
+                });
+
+                return 0;
+            }
+        });
+
+        return tm.descendingMap();
     }
 
 
     public static Map<String, ArrayList<StudyRecord>> sortStudyRecord(List<StudyRecord> list) {
-        TreeMap<String ,ArrayList<StudyRecord>> tm = new TreeMap<>();
+        TreeMap tm = new TreeMap<String, ArrayList<StudyRecord>>();
+
         for (int i = 0; i < list.size(); i++) {
             StudyRecord record = list.get(i);
+            TourCooLogUtil.e(record);
             if (record == null || record.getTrainDate() == null) {
                 continue;
             }
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(record.getTrainDate());
-            if (tm.containsKey("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1))) {//
-                ArrayList<StudyRecord> l11 = (ArrayList) tm.get("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1));
+
+            String key;
+            String month = "" + (calendar.get(Calendar.MONTH) + 1);
+            if (month.length() == 1) {
+                key = "" + calendar.get(Calendar.YEAR) + "-0" + month;
+            } else {
+                key = "" + calendar.get(Calendar.YEAR) + "-" + month;
+            }
+            boolean containsKey = tm.get(key) != null;
+
+            if (containsKey) {
+                List<StudyRecord> l11 = (List<StudyRecord>) tm.get(key);
                 l11.add(record);
             } else {
                 ArrayList<StudyRecord> tem = new ArrayList<>();
                 if (record.getTrainDate() != null) {
                     tem.add(record);
-                    tm.put("" + calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1), tem);
+                    tm.put(key, tem);
                 }
             }
         }
-        return tm;
+
+        TourCooLogUtil.e(tm.entrySet());
+        List<Map.Entry<String, ArrayList<StudyRecord>>> infoIds = new ArrayList<Map.Entry<String, ArrayList<StudyRecord>>>(tm.entrySet());
+        // 对HashMap中的key 进行排序
+        Collections.sort(infoIds, new Comparator<Map.Entry<String, ArrayList<StudyRecord>>>() {
+            @Override
+            public int compare(Map.Entry<String, ArrayList<StudyRecord>> o11, Map.Entry<String, ArrayList<StudyRecord>> o21) {
+                //key排序
+                ArrayList<StudyRecord> o1List = o11.getValue();
+                ArrayList<StudyRecord> o2List = o21.getValue();
+
+                Collections.sort(o1List, new Comparator<StudyRecord>() {
+                    @Override
+                    public int compare(StudyRecord o1, StudyRecord o2) {
+                        Date d1 = o1.getTrainDate();
+                        Date d2 = o2.getTrainDate();
+
+                        if (d1 == d2) {
+                            return 0;
+                        } else if (d1.before(d2)) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    }
+                });
+
+                Collections.sort(o2List, new Comparator<StudyRecord>() {
+                    @Override
+                    public int compare(StudyRecord o1, StudyRecord o2) {
+                        Date d1 = o1.getTrainDate();
+                        Date d2 = o2.getTrainDate();
+
+                        if (d1 == d2) {
+                            return 0;
+                        } else if (d1.before(d2)) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    }
+                });
+
+                return 0;
+
+            }
+        });
+
+        return tm.descendingMap();
     }
 
     /**
@@ -643,35 +763,50 @@ public class CommonUtil {
 
     //按日期排序（降序）
     public static void listSortByDate(List<StudyRecord> list) {
-        //Collections的sort方法默认是升序排列，如果需要降序排列时就需要重写compare方法
         Collections.sort(list, new Comparator<StudyRecord>() {
             @Override
             public int compare(StudyRecord o1, StudyRecord o2) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                format.setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
-                try {
-                    //获取体检日期，并把其类型由String转成Date，便于比较。
-                    Date dt1 = format.parse(o1.getTrainingPlanStartTime());
-                    Date dt2 = format.parse(o2.getTrainingPlanStartTime());
+                Date d1 = o1.getTrainDate();
+                Date d2 = o2.getTrainDate();
 
-                    //以下代码决定按日期降序排序，若将return“-1”与“1”互换，即可实现升序。
-                    //getTime 方法返回一个整数值，这个整数代表了从 1970 年 1 月 1 日开始计算到 Date 对象中的时间之间的毫秒数。
-                    if (dt1.getTime() > dt2.getTime()) {
-                        return -1;
-                    } else if (dt1.getTime() < dt2.getTime()) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-
-                } catch (Exception e) {
-                    TourCooLogUtil.e("日期排序出错："+e);
+                if (d1 == d2) {
+                    return 0;
+                } else if (d1.before(d2)) {
+                    return 1;
+                } else {
+                    return -1;
                 }
-                return 0;
             }
         });
-    }
 
+//        //Collections的sort方法默认是升序排列，如果需要降序排列时就需要重写compare方法
+//        Collections.sort(list, new Comparator<StudyRecord>() {
+//            @Override
+//            public int compare(StudyRecord o1, StudyRecord o2) {
+//                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//                format.setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
+//                try {
+//                    //获取体检日期，并把其类型由String转成Date，便于比较。
+//                    Date dt1 = format.parse(o1.getTrainingPlanStartTime());
+//                    Date dt2 = format.parse(o2.getTrainingPlanStartTime());
+//
+//                    //以下代码决定按日期降序排序，若将return“-1”与“1”互换，即可实现升序。
+//                    //getTime 方法返回一个整数值，这个整数代表了从 1970 年 1 月 1 日开始计算到 Date 对象中的时间之间的毫秒数。
+//                    if (dt1.getTime() > dt2.getTime()) {
+//                        return -1;
+//                    } else if (dt1.getTime() < dt2.getTime()) {
+//                        return 1;
+//                    } else {
+//                        return 0;
+//                    }
+//
+//                } catch (Exception e) {
+//                    TourCooLogUtil.e("日期排序出错：" + e);
+//                }
+//                return 0;
+//            }
+//        });
+    }
 
 
 }

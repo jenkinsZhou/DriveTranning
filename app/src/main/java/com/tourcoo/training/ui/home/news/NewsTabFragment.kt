@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.TextUtils
+import com.blankj.utilcode.util.SPUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
@@ -120,7 +121,8 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
 
     private fun wxSharePic(isSession: Boolean, mNewsEntity: NewsEntity) { //初始化WXImageObject和WXMediaMessage对象
         val webPage = WXWebpageObject()
-        webPage.webpageUrl = mNewsEntity.getUrl()
+        webPage.webpageUrl = TrainingConstant.NEWS_SHARE_URL + "?id=" + mNewsEntity.id +
+                "&TraineeID=" + SPUtils.getInstance().getString("TraineeID")
         val msg = WXMediaMessage(webPage)
         msg.title = mNewsEntity.getTitle()
         msg.description = mNewsEntity.getTitle()

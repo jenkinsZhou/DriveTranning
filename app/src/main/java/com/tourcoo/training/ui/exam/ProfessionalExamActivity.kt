@@ -330,7 +330,7 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener {
      * 创建证书，提交到后台
      */
     private fun createCertificate(entity: BaseResult<ExamResultEntity>) {
-        tvCertificateId.text = "证书编号：NO." + entity.data.data.certificateId
+        tvCertificateId.text = "证书编号：" + entity.data.data.certificateId
         tvCreateTime.text = entity.data.data.createTime
         tvDetail.text = SpanUtils()
                 .append("学员 ").setForegroundColor(Color.parseColor("#999999")).setFontSize(13, true)

@@ -56,7 +56,6 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
     override fun initView(savedInstanceState: Bundle?) {
 
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            //todo:添加证书详情页
             val info = adapter.data[position] as CertificateInfo
             val intent = Intent(this,CertificationDetailsActivity::class.java)
             intent.putExtra("id",info.id)
@@ -99,7 +98,6 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
         } catch (e: Exception) {
             TourCooLogUtil.e("MyCertificationActivity", "e:" + e.toString())
         }
-
 
         val maps = CommonUtil.sort(list)
         for (map in maps) {
