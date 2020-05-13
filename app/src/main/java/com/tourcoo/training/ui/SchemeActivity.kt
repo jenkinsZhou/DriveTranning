@@ -1,6 +1,7 @@
 package com.tourcoo.training.ui
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -36,18 +37,18 @@ class SchemeActivity : AppCompatActivity() {
             val path = uri.path
             val module = uri.getQueryParameter("json")
 
-            ToastUtil.show("$path     $module")
-
             val bean = Gson().fromJson(module, NewsEntity::class.java)
             bean.title = bean.tiTle
 
             val bundle = Bundle()
             bundle.putSerializable(EXTRA_NEWS_BEAN, bean)
+
             if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(bean.videoUrl))) {
                 CommonUtil.startActivity(mContext, NewsDetailVideoActivity::class.java, bundle)
             } else {
                 CommonUtil.startActivity(mContext, NewsDetailHtmlActivity::class.java, bundle)
             }
+
             return true
         } else {
             return false

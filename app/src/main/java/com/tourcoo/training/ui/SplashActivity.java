@@ -38,6 +38,7 @@ import com.tourcoo.training.ui.account.LoginActivity;
 import com.tourcoo.training.ui.guide.GuideActivity;
 import com.tourcoo.training.ui.home.news.NewsDetailHtmlActivity;
 import com.tourcoo.training.ui.home.news.NewsDetailVideoActivity;
+import com.tourcoo.training.widget.websocket.util.LogUtil;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import static com.tourcoo.training.ui.home.news.NewsTabFragment.EXTRA_NEWS_BEAN;

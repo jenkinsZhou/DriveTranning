@@ -229,6 +229,12 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
                 }
                 when {
                     entity.code == RequestConfig.CODE_REQUEST_SUCCESS -> {
+
+//                        if (AppConfig.DEBUG_MODE) {
+//                            entity.data!!.status = 1
+//                            entity.data!!.isAuthenticated = 0
+//                        }
+
                         AccountHelper.getInstance().userInfo = entity.data
                         showUserInfo(entity.data)
                     }
