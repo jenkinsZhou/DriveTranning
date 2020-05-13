@@ -300,6 +300,7 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
                     rlBottomLayout.visibility = View.VISIBLE
                     handleExamResult(entity.data)
                 } else {
+                    handleRequestError()
                     ToastUtil.show(entity.msg)
                 }
             }
@@ -317,6 +318,9 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
         if (examEntity == null || examEntity.questions == null) {
             return
         }
+        //显示题目布局
+        setViewGone(coordinatorLayoutContainer, true)
+        setViewGone(rlBottomLayout, true)
         ExamTempHelper.getInstance().examInfo = examEntity
         fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
         questionNumAdapter = QuestionNumberAdapter()
@@ -657,5 +661,11 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
         if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
             behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+    }
+
+    private fun handleRequestError() {
+        //隐藏布局
+        setViewGone(coordinatorLayoutContainer, false)
+        setViewGone(rlBottomLayout, false)
     }
 }

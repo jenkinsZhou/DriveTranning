@@ -96,25 +96,26 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         llBgGray.setOnClickListener(this)
         questionNumRv.layoutManager = GridLayoutManager(mContext, 6)
         behavior = BottomSheetBehavior.from(nsvBottom)
-        behavior!!.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
+        behavior!!.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    STATE_DRAGGING->{
+                    STATE_DRAGGING -> {
                         //不做任何处理
                     }
                     STATE_COLLAPSED -> {
                         //折叠了
-                        setViewGone(llBgGray,false)
+                        setViewGone(llBgGray, false)
                     }
-                    STATE_EXPANDED->{
+                    STATE_EXPANDED -> {
                         //展开了
-                        setViewGone(llBgGray,true)
-                    } else -> {
-                }
+                        setViewGone(llBgGray, true)
+                    }
+                    else -> {
+                    }
 
                 }
             }
@@ -167,7 +168,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                     doCommitExam()
                 }, 500)
             }
-            R.id.llBgGray->{
+            R.id.llBgGray -> {
                 behaviorClose()
             }
             else -> {
@@ -265,14 +266,16 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
     private fun handleBottomBarBehavior() {
         if (behavior!!.state == BottomSheetBehavior.STATE_COLLAPSED) {
             behavior!!.setState(BottomSheetBehavior.STATE_EXPANDED)
-            setViewGone(llBgGray,true)
+            setViewGone(llBgGray, true)
         } else if (behavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
             behavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
-            setViewGone(llBgGray,false)
+            setViewGone(llBgGray, false)
         }
     }
 
-
+    /**
+     * 获取考试题目列表
+     */
     private fun requestExamQuestions(trainId: String, examId: String) {
         ApiRepository.getInstance().requestExam(trainId, examId).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamEntity>?>() {
             override fun onSuccessNext(entity: BaseResult<ExamEntity>?) {
@@ -283,6 +286,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                     rlBottomLayout.visibility = View.VISIBLE
                     handleExamResult(entity.data)
                 } else {
+                    handleRequestError()
                     ToastUtil.show(entity.msg)
                 }
             }
@@ -300,6 +304,8 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         if (examEntity == null || examEntity.questions == null) {
             return
         }
+        setViewGone(rlBottomLayout, true)
+        setViewGone(coordinatorLayoutContainer, true)
         ExamTempHelper.getInstance().examInfo = examEntity
         fragmentCommonAdapter = CommonFragmentPagerAdapter(supportFragmentManager, list)
         questionNumAdapter = QuestionNumberAdapter()
@@ -336,7 +342,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         })
         loadBottomSheetBar(examEntity.questions)
         if (lastQuestionIndex >= 0) {
-            vpExamOnline.setCurrentItem(lastQuestionIndex,false)
+            vpExamOnline.setCurrentItem(lastQuestionIndex, false)
         }
     }
 
@@ -610,11 +616,16 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
     }
 
 
-    private fun behaviorClose(){
+    private fun behaviorClose() {
         //如果是展开状态 就关闭
         if (behavior!!.state == STATE_EXPANDED) {
             behavior!!.state = STATE_COLLAPSED
         }
     }
 
+
+    private fun handleRequestError() {
+        setViewGone(coordinatorLayoutContainer, false)
+        setViewGone(rlBottomLayout, false)
+    }
 }
