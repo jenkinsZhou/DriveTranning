@@ -47,6 +47,7 @@ public class NewsEntity implements MultiItemEntity , Serializable {
 
     private String ID;
     private String Title;
+    private String TiTle;
     private String Url;
     private String VideoCoverUrl;
     private String VideoUrl;
@@ -79,6 +80,15 @@ public class NewsEntity implements MultiItemEntity , Serializable {
     private String Time;
     private String CoverUrl;
     private List<NewsImage> Images;
+
+
+    public String getTiTle() {
+        return TiTle;
+    }
+
+    public void setTiTle(String tiTle) {
+        TiTle = tiTle;
+    }
 
     public String getID() {
         return ID;

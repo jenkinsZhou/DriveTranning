@@ -117,7 +117,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
             }
 
 
-            if(AccountHelper.getInstance().userInfo.status == 0){
+            if(AccountHelper.getInstance().userInfo.isAuthenticated == 1 || AccountHelper.getInstance().userInfo.isAuthenticated == 3){
                 val dialog = CommonBellAlert(mContext)
                 dialog.create().setContent("驾驶员自主注册，需等待企业管理员审核。").setPositiveButton("知道了", object : View.OnClickListener {
                     override fun onClick(v: View?) {
@@ -129,7 +129,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
             }
 
 
-            when (AccountHelper.getInstance().userInfo.isAuthenticated) {
+            when (AccountHelper.getInstance().userInfo.status) {
                 0 -> {  //未认证
                     showRecognize(currentCourseInfo!!.trainingPlanID)
                 }
@@ -325,7 +325,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
                     }
                 }
                 REQUEST_CODE_FACE_COMPARE -> {
-                    AccountHelper.getInstance().userInfo.isAuthenticated = 1
+                    AccountHelper.getInstance().userInfo.status = 1
                     ToastUtil.showSuccess("验证通过")
                     closeFaceDialog()
                     verifyByStatus(currentCourseInfo!!)

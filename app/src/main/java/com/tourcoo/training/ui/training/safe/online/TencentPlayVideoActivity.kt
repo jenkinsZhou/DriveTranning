@@ -3,6 +3,7 @@ package com.tourcoo.training.ui.training.safe.online
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -88,7 +89,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     /**
      * 是否是考试状态
      */
-    private var mExamEnable =  false
+    private var mExamEnable = false
 
 
     companion object {
@@ -98,6 +99,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     }
 
+    override fun beforeSetContentView() {
+        super.beforeSetContentView()
+
+    }
 
     override fun getContentLayout(): Int {
         return R.layout.activity_play_video_tencent
@@ -425,14 +430,14 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 //锁定状态 下的提示文字需要修改成 时长+未解锁
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 //显示未解锁提示
-                showUnlockTips(course,tvPlanDesc,tvPlanTitle)
+                showUnlockTips(course, tvPlanDesc, tvPlanTitle)
             }
             COURSE_PLAY_STATUS_COMPLETE -> {
                 //已完成 下的提示文字需要修改成 时长+已听完
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 imageView.setImageResource(R.mipmap.ic_play_finish)
                 //显示已听完
-                showPlayFinishTips(course,tvPlanDesc,tvPlanTitle)
+                showPlayFinishTips(course, tvPlanDesc, tvPlanTitle)
             }
             COURSE_PLAY_STATUS_PLAYING -> {
                 if (course.mediaType == MEDIA_TYPE_HTML) {
@@ -488,7 +493,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     ToastUtil.show("当前课件不是视频课件")
                     return
                 }
-                if(mExamEnable){
+                if (mExamEnable) {
                     //如果是考试状态 就不用播放视频了 因此直接拦截播放操作
                     return
                 }
@@ -859,7 +864,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun showUnlockTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+    private fun showUnlockTips(course: Course, tvPlanDesc: TextView, tvPlanTitle: TextView) {
         val tips = TimeUtil.getTime(course.duration) + " 未解锁"
         tvPlanDesc.text = tips
         tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.black333333))
@@ -868,7 +873,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         setViewGone(tvPlanDesc, true)
     }
 
-    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView, tvPlanTitle: TextView) {
         val tips = TimeUtil.getTime(course.duration) + " 已听完"
         tvPlanDesc.text = tips
         tvPlanDesc.textSize = 12f

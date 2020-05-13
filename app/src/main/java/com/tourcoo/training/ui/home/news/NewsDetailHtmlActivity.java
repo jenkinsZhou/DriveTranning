@@ -1,6 +1,7 @@
 package com.tourcoo.training.ui.home.news;
 
 import android.app.Activity;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coolindicator.sdk.CoolIndicator;
@@ -36,6 +38,8 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.news.NewsDetail;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.WxShareEvent;
+import com.tourcoo.training.ui.MainTabActivity;
+import com.tourcoo.training.ui.SplashActivity;
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
 import com.tourcoo.training.widget.dialog.share.ShareEntity;
 import com.tourcoo.training.widget.web.HeaderScrollHelper;
@@ -155,8 +159,26 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     @Override
     public void setTitleBar(TitleBarView titleBar) {
         titleBar.setTitleMainText("资讯");
+        titleBar.setOnLeftTextClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (ActivityUtils.isActivityExistsInStack(MainTabActivity.class)) {
+            super.onBackPressed();
+        } else {
+            Intent resultIntent = new Intent(this, SplashActivity.class);
+            TaskStackBuilder.create(this)
+                    .addParentStack(resultIntent.getComponent())
+                    .addNextIntent(resultIntent)
+                    .startActivities();
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -228,8 +250,6 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     }
 
 
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -286,8 +306,6 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
             }
         });
     }
-
-
 
 
     public void wxSharePic(boolean isSession) {
@@ -369,8 +387,6 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
             }
         });
     }
-
-
 
 
     private void showLike(int count) {

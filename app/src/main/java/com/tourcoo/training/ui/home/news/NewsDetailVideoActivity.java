@@ -1,10 +1,13 @@
 package com.tourcoo.training.ui.home.news;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coolindicator.sdk.CoolIndicator;
@@ -28,6 +32,7 @@ import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.rtmp.TXLiveConstants;
+import com.tourcoo.training.BuildConfig;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter;
 import com.tourcoo.training.config.RequestConfig;
@@ -44,6 +49,8 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.news.NewsDetail;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.WxShareEvent;
+import com.tourcoo.training.ui.MainTabActivity;
+import com.tourcoo.training.ui.SplashActivity;
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
 import com.tourcoo.training.widget.dialog.share.ShareEntity;
 import com.tourcoo.training.widget.web.HeaderScrollHelper;
@@ -167,6 +174,12 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     @Override
     public void setTitleBar(TitleBarView titleBar) {
         titleBar.setTitleMainText("资讯");
+        titleBar.setOnLeftTextClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
 
@@ -335,9 +348,18 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         if (smartVideoPlayer.getPlayMode() == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
             smartVideoPlayer.requestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW);
         } else {
-            super.onBackPressed();
+            if (ActivityUtils.isActivityExistsInStack(MainTabActivity.class)) {
+                super.onBackPressed();
+            } else {
+                Intent resultIntent = new Intent(this, SplashActivity.class);
+                TaskStackBuilder.create(this)
+                        .addParentStack(resultIntent.getComponent())
+                        .addNextIntent(resultIntent)
+                        .startActivities();
+            }
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -467,6 +489,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
     /**
      * 分享回调
+     *
      * @param newsId
      */
     private void requestShareSuccess(String newsId) {

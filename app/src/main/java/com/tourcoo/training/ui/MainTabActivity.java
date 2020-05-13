@@ -1,23 +1,32 @@
 package com.tourcoo.training.ui;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.base.activity.BaseMainActivity;
 import com.tourcoo.training.core.base.entity.FrameTabEntity;
+import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
+import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity;
 import com.tourcoo.training.ui.home.MineTabFragmentNew;
 import com.tourcoo.training.ui.home.StudyTabFragment;
+import com.tourcoo.training.ui.home.news.NewsDetailHtmlActivity;
+import com.tourcoo.training.ui.home.news.NewsDetailVideoActivity;
 import com.tourcoo.training.ui.home.news.NewsTabFragment;
 import com.tourcoo.training.widget.dialog.IosAlertDialog;
 
@@ -26,6 +35,8 @@ import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static com.tourcoo.training.ui.home.news.NewsTabFragment.EXTRA_NEWS_BEAN;
 
 /**
  * @author :JenkinsZhou
@@ -71,7 +82,6 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
         mTabLayout = findViewById(R.id.commonTabLayout);
         mTabLayout.setCurrentTab(1);
     }
-
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
@@ -201,4 +211,5 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
         super.onActivityResult(requestCode, resultCode, data);
         checkPermission();
     }
+
 }

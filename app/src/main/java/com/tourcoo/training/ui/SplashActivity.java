@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
 import com.tourcoo.training.R;
@@ -70,6 +71,7 @@ public class SplashActivity extends BaseTitleActivity {
         return R.layout.activity_splash;
     }
 
+
     @Override
     public void initView(Bundle savedInstanceState) {
         if (!isTaskRoot()) {
@@ -93,27 +95,6 @@ public class SplashActivity extends BaseTitleActivity {
         startAnimator();
     }
 
-    private boolean isSchemeIntentData() {
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            String path = uri.getPath();
-            String module = uri.getQueryParameter("json");
-
-            ToastUtil.show(path + "     " + module);
-
-            NewsEntity bean = new Gson().fromJson(module, NewsEntity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(EXTRA_NEWS_BEAN, bean);
-            if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(bean.getVideoUrl()))) {
-                CommonUtil.startActivity(mContext, NewsDetailVideoActivity.class, bundle);
-            } else {
-                CommonUtil.startActivity(mContext, NewsDetailHtmlActivity.class, bundle);
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     /**
      * 动画
@@ -172,11 +153,6 @@ public class SplashActivity extends BaseTitleActivity {
                             return;
                         }
                         if (AccountHelper.getInstance().isLogin()) {
-
-                            if (isSchemeIntentData()) {
-                                return;
-                            }
-
                             CommonUtil.startActivity(mContext, MainTabActivity.class);
                         } else {
                             CommonUtil.startActivity(mContext, LoginActivity.class);

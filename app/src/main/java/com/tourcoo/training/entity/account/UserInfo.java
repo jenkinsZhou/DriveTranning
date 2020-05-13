@@ -127,8 +127,9 @@ public class UserInfo implements Parcelable {
         this.UserType = UserType;
     }
 
+
     public int getIsAuthenticated() {
-        return IsAuthenticated;
+        return this.getStatus();
     }
 
     public void setIsAuthenticated(int IsAuthenticated) {

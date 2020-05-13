@@ -30,7 +30,22 @@
         android:roundIcon="@mipmap/ic_app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.training.professional.ProfessionalExamSelectChildActivity"></activity>
+        <activity android:name=".ui.SchemeActivity">
+            <intent-filter>
+
+                <!-- 下面这几个必须要设置 -->
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 协议部分 -->
+                <data
+                    android:host="zhoufeng"
+                    android:path="/news"
+                    android:scheme="zfapp" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.training.professional.ProfessionalExamSelectChildActivity" />
         <activity android:name=".ui.certificate.CertificationDetailsActivity" /> <!-- 设置key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
@@ -50,40 +65,18 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
 
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <intent-filter>
-
-                <!-- 下面这几个必须要设置 -->
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- 协议部分 -->
-                <data
-                    android:host="zhoufeng"
-                    android:path="/news"
-                    android:scheme="zfapp" />
-            </intent-filter>
-
         </activity>
-        <activity android:name=".ui.face.FaceRecognitionActivity"
-            android:launchMode="singleTask"
-            />
+        <activity
+            android:name=".ui.face.FaceRecognitionActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.face.DialogFaceRecognitionActivity" />
         <activity android:name=".ui.account.register.IndustryRegisterActivity" />
         <activity android:name=".ui.account.register.DriverRegisterActivity" />
@@ -116,9 +109,9 @@
             android:exported="true"
             android:launchMode="singleTop" />
         <activity android:name=".core.base.activity.WebViewActivity" />
-        <activity android:name=".ui.face.OnLineFaceRecognitionActivity"
-            android:launchMode="singleTask"
-            />
+        <activity
+            android:name=".ui.face.OnLineFaceRecognitionActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity" />
         <activity android:name=".ui.training.safe.online.TrainFaceCertifyActivity" />
         <activity android:name=".ui.training.safe.online.detail.common.CommonPlanDetailActivity" />
@@ -145,18 +138,30 @@
         <activity android:name=".ui.exam.ProfessionalExamActivityOld" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
-        <activity android:name=".ui.feedback.FeedbackActivity"
-            android:windowSoftInputMode="stateHidden"
-            />
+        <activity
+            android:name=".ui.feedback.FeedbackActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ui.EditPassActivity" />
         <activity android:name=".ui.setting.AboutUsActivity" />
-        <activity android:name=".ui.home.news.NewsDetailHtmlActivity" />
-        <activity android:name=".ui.home.news.NewsDetailVideoActivity"
+        <activity android:name=".ui.home.news.NewsDetailHtmlActivity" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tourcoo.training.ui.SplashActivity" />
+
+        </activity>
+        <activity
+            android:name=".ui.home.news.NewsDetailVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:windowSoftInputMode="stateHidden" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tourcoo.training.ui.SplashActivity" />
+
+        </activity>
         <activity android:name=".ui.study.StudyRecordActivity" />
         <activity android:name=".ui.study.StudyDetailActivity" />
         <activity android:name=".ui.study.StudyDataActivity" />
@@ -164,10 +169,10 @@
         <activity android:name=".ui.message.MessageListActivity" />
         <activity android:name=".ui.message.MessageDetailActivity" />
         <activity android:name=".ui.message.MessageWebViewActivityOld" />
-        <activity android:name=".wxapi.WXEntryActivity"
+        <activity
+            android:name=".wxapi.WXEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity android:name=".ui.training.safe.online.web.PlayHtmlWebActivity" />
         <activity android:name=".ui.face.ProfessionalFaceRecognitionActivity" />
         <activity android:name=".ui.exam.ProfessionalExamActivityNew" />
