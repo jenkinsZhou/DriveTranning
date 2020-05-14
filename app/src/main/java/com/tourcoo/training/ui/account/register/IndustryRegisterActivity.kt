@@ -278,8 +278,8 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             ToastUtil.show("请选择所属公司")
             return
         }
-        if (TextUtils.isEmpty(getTextValue(etName))) {
-            ToastUtil.show("请填写姓名")
+        if (AccountTempHelper.getInstance().businessLicenseInfo == null || TextUtils.isEmpty(CommonUtil.getNotNullValue(AccountTempHelper.getInstance().businessLicenseInfo.name))) {
+            ToastUtil.show("未获取到姓名")
             return
         }
         if (TextUtils.isEmpty(getTextValue(etPhone))) {
@@ -303,7 +303,8 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             return
         }
         val map = HashMap<String, Any>()
-        map["name"] = getTextValue(etName)
+        //个体工商户户主姓名不需要填写 直接赋值
+        map["name"] = AccountTempHelper.getInstance().businessLicenseInfo.name
         map["idCard"] = getTextValue(etIdCard)
         map["plateNumber"] = getTextValue(etDriverPlantNum)
         map["phone"] = getTextValue(etPhone)
@@ -388,7 +389,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             options1Items.add(sup.name)
         }
         pvCustomOptions = OptionsPickerBuilder(context, OnOptionsSelectListener { options1, options2, options3, v ->
-            if( businessLicenseInfo!!.supervisors == null || businessLicenseInfo!!.supervisors.isEmpty()){
+            if (businessLicenseInfo!!.supervisors == null || businessLicenseInfo!!.supervisors.isEmpty()) {
                 return@OnOptionsSelectListener
             }
             supervisor = businessLicenseInfo!!.supervisors[options1]
@@ -412,7 +413,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             ToastUtil.show("登录失败")
             return
         }
-        SPUtils.getInstance().put("TraineeID",userInfo.traineeID)
+        SPUtils.getInstance().put("TraineeID", userInfo.traineeID)
         AccountHelper.getInstance().userInfo = userInfo
         EventBus.getDefault().post(UserInfoEvent(userInfo))
         val intent = Intent(this, MainTabActivity::class.java)

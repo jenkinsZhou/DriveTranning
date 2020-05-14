@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.order
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseRefreshLoadFragment
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
+import com.tourcoo.training.core.util.StackUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.exam.Question
 import com.tourcoo.training.entity.order.OrderEntity
@@ -32,6 +34,8 @@ import com.trello.rxlifecycle3.android.FragmentEvent
 class OrderListFragment : BaseRefreshLoadFragment<OrderEntity>() {
     private var mType = 0
     private var adapter: OrderAdapter? = null
+    private var hostActivity: Activity? = null
+
     override fun getAdapter(): BaseQuickAdapter<OrderEntity, BaseViewHolder> {
         adapter = OrderAdapter()
         return adapter as OrderAdapter
@@ -110,7 +114,11 @@ class OrderListFragment : BaseRefreshLoadFragment<OrderEntity>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
-            mRefreshLayout.autoRefresh()
+//            mRefreshLayout.autoRefresh()
+            hostActivity = StackUtil.getInstance().getActivity(OrderListActivity::class.java)
+            if (hostActivity != null) {
+                hostActivity!!.finish()
+            }
         }
     }
 

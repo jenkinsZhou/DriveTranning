@@ -41,7 +41,7 @@ class StudyDetailActivity : BaseTitleActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         trainingPlanID = intent.getStringExtra(EXTRA_TRAINING_PLAN_ID)
-        trainingPlanID =CommonUtil.getNotNullValue(trainingPlanID)
+        trainingPlanID = CommonUtil.getNotNullValue(trainingPlanID)
         requestDetail(trainingPlanID)
     }
 
@@ -109,7 +109,7 @@ class StudyDetailActivity : BaseTitleActivity() {
             //课时
             val length = detail.onLine.classDuration / 60
             tvCourseTime.text = CommonUtil.getNotNullValue(length.toString() + "分钟")
-            tvStudyProgress.text = CommonUtil.getNotNullValue(detail.onLine.progress.toString())
+            tvStudyProgress.text = CommonUtil.getNotNullValue(detail.onLine.progress.toString()) + "%"
             setLineHeight(llOnLineRight, lineViewOnline)
         }
 

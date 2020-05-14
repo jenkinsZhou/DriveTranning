@@ -57,9 +57,13 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
 
         adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             val info = adapter.data[position] as CertificateInfo
-            val intent = Intent(this,CertificationDetailsActivity::class.java)
-            intent.putExtra("id",info.id)
-            startActivity(intent)
+            if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(info.id))) {
+                //非标题item才响应点击事件
+                val intent = Intent(this, CertificationDetailsActivity::class.java)
+                intent.putExtra("id",CommonUtil.getNotNullValue(info.id))
+                startActivity(intent)
+            }
+
         }
 
     }

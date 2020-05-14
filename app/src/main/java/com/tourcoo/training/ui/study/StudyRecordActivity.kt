@@ -164,10 +164,15 @@ class StudyRecordActivity : BaseTitleActivity(), OnRefreshListener, View.OnClick
 
     private fun initItemAndChildClick() {
         adapter!!.setOnItemClickListener { adapter, view, position ->
-            val intent = Intent(this, StudyDetailActivity::class.java)
+
             val current = adapter.data[position] as StudyRecord
-            intent.putExtra(EXTRA_TRAINING_PLAN_ID, current.trainingPlanID.toString())
-            startActivity(intent)
+            if(!current.isHeader){
+                //只影响非标题点击事件
+                val intent = Intent(this, StudyDetailActivity::class.java)
+                intent.putExtra(EXTRA_TRAINING_PLAN_ID, current.trainingPlanID.toString())
+                startActivity(intent)
+            }
+
 
         }
         adapter!!.setOnItemChildClickListener { adapter, view, position ->

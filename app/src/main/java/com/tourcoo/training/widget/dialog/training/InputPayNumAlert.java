@@ -50,7 +50,7 @@ public class InputPayNumAlert {
         // 获取Dialog布局
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_buy_course_industroy, null);
         addSubtractView = view.findViewById(R.id.asView);
-        addSubtractView.setLimit(0, 12, 1);
+        addSubtractView.setLimit(1, 12, 1);
         addSubtractView.setListener(new AddSubtractView.OnAddSubtractListener() {
             @Override
             public void onMoreMax() {
