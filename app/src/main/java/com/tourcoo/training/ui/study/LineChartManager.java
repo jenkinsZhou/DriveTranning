@@ -20,6 +20,7 @@ import com.tourcoo.training.R;
 import com.tourcoo.training.utils.TourCooUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,6 +76,8 @@ public class LineChartManager {
         lineChart.setDragEnabled(false);
         //是否有触摸事件
         lineChart.setTouchEnabled(false);
+
+
         //设置XY轴动画效果
 //        lineChart.animateY(2500);
 //        lineChart.animateX(1500);
@@ -94,6 +97,7 @@ public class LineChartManager {
         legend = lineChart.getLegend();
         //设置显示类型，LINE CIRCLE SQUARE EMPTY 等等 多种方式，查看LegendForm 即可
         legend.setForm(Legend.LegendForm.LINE);
+//        legend.setFormSize(0.1f);
         legend.setTextSize(12f);
         //显示位置 左下方
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -108,15 +112,17 @@ public class LineChartManager {
         //是否展示网格线
         lineChart.setDrawGridBackground(false);
         xAxis.setDrawGridLines(false);
+        leftYAxis.setDrawAxisLine(false);
         rightYaxis.setDrawGridLines(false);
-        leftYAxis.setDrawGridLines(false);
+        leftYAxis.setDrawGridLines(true);
+        leftYAxis.setGridColor(Color.parseColor("#F3F3F3"));
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
                 return (int) value + "";
             }
         });
-        leftYAxis.setDrawAxisLine(false);
+
         rightYaxis.setEnabled(false);
         xAxis.setEnabled(true);
     }
@@ -137,7 +143,7 @@ public class LineChartManager {
         lineDataSet.setDrawCircleHole(false);
         lineDataSet.setValueTextSize(10f);
         //设置折线图填充
-        lineDataSet.setDrawFilled(true);
+        lineDataSet.setDrawFilled(false);
         lineDataSet.setFormLineWidth(1.2f);
         lineDataSet.setFormSize(15.f);
         //设置折线
@@ -178,6 +184,7 @@ public class LineChartManager {
         xAxis.setTextColor(Color.parseColor("#999999"));//设置X轴字体颜色
         IndexAxisValueFormatter xAxisFormatter = new IndexAxisValueFormatter(xValues);
         xAxis.setValueFormatter(xAxisFormatter);
+        leftYAxis.setAxisMaximum(Collections.max(dataList) + 2);
         showChart(dataList, name, color);
         setChartFillDrawable(TourCooUtil.getDrawable(R.color.white));
         Description description = new Description();
@@ -189,11 +196,11 @@ public class LineChartManager {
         lineChart.notifyDataSetChanged();
         //设置x轴间距
         xAxis.setGranularity(1f);
-        xAxis.setLabelCount(dataList.size(),true);
+        xAxis.setLabelCount(dataList.size(), true);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return  (int)value+1+"";
+                return (int) value + 1 + "";
             }
         });
     }
@@ -208,7 +215,7 @@ public class LineChartManager {
         if (lineChart.getData() != null && lineChart.getData().getDataSetCount() > 0) {
             LineDataSet lineDataSet = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
             //避免在 initLineDataSet()方法中 设置了 lineDataSet.setDrawFilled(false); 而无法实现效果
-            lineDataSet.setDrawFilled(true);
+            lineDataSet.setDrawFilled(false);
             lineDataSet.setFillDrawable(drawable);
             lineChart.invalidate();
         }

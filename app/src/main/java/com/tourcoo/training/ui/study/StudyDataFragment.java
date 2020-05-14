@@ -41,6 +41,7 @@ public class StudyDataFragment extends BaseFragment {
         studyDataInfoList = (List<StudyDataInfo>) getArguments().getSerializable(EXTRA_STUDY_DATA_LIST_KEY);
         rvCommon = mContentView.findViewById(R.id.rvCommon);
         rvCommon.setLayoutManager(new LinearLayoutManager(mContext));
+        rvCommon.setOverScrollMode(View.OVER_SCROLL_NEVER);
         adapter = new StudyDataAdapter();
         View emptyView = LayoutInflater.from(mContext).inflate(R.layout.empty_view_layout,null);
         adapter.setEmptyView(emptyView);

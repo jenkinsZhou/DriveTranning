@@ -93,6 +93,15 @@ public class WrapContentHeightViewPager extends ViewPager {
         }
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (!slidingEnable) {
+            return false;
+        } else {
+            return super.onInterceptTouchEvent(ev);
+        }
+    }
+
     public boolean isSlidingEnable() {
         return slidingEnable;
     }

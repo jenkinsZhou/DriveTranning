@@ -71,6 +71,7 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
         findViewById(R.id.ivArrowRight).setOnClickListener(this);
         findViewById(R.id.ivArrowLeft).setOnClickListener(this);
         wrapViewpager = findViewById(R.id.wrapViewpager);
+        wrapViewpager.setSlidingEnable(false);
         wrapViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -184,7 +185,6 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
         }
         pagerAdapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         wrapViewpager.setAdapter(pagerAdapter);
-        wrapViewpager.setSlidingEnable(false);
         wrapViewpager.setOffscreenPageLimit(fragmentList.size() + 1);
         Calendar calendar = Calendar.getInstance();
         //默认显示当前月份数据
