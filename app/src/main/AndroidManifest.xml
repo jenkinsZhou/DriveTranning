@@ -63,6 +63,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateHidden">
 
         </activity>
@@ -143,7 +144,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ui.EditPassActivity" />
         <activity android:name=".ui.setting.AboutUsActivity" />
-        <activity android:name=".ui.home.news.NewsDetailHtmlActivity" >
+        <activity android:name=".ui.home.news.NewsDetailHtmlActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -155,7 +156,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

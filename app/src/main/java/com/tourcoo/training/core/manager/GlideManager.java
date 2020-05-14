@@ -7,6 +7,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -17,6 +18,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.ImageUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -26,6 +28,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.tourcoo.training.R;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 
 import java.security.MessageDigest;
@@ -141,6 +144,15 @@ public class GlideManager {
         loadImg(obj, iv, drawable != null ? drawable : sCommonPlaceholderDrawable);
     }
 
+
+    public static void loadGrayImg(Object obj, ImageView iv, int placeholderResource) {
+        Drawable drawable = getDrawable(iv.getContext(), placeholderResource);
+        drawable = drawable != null ? drawable : sCommonPlaceholderDrawable;
+        drawable.setColorFilter(Color.parseColor("#D2D2D2"), PorterDuff.Mode.MULTIPLY);
+        loadImg(obj, iv, drawable);
+    }
+
+
     public static void loadImg(Object obj, ImageView iv) {
         loadImg(obj, iv, sCommonPlaceholder);
     }
@@ -169,6 +181,7 @@ public class GlideManager {
     public static void loadImageAuto(Object obj, ImageView iv) {
         loadImageAuto(obj, iv, sCirclePlaceholder);
     }
+
     public static void loadImageAuto(Object obj, ImageView iv, Drawable placeholder) {
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptionsAuto()
                 .error(placeholder)
@@ -177,7 +190,7 @@ public class GlideManager {
                 .dontAnimate()).into(new ImageViewTarget<Drawable>(iv) {
             @Override
             protected void setResource(@Nullable Drawable resource) {
-                if(resource == null){
+                if (resource == null) {
                     return;
                 }
                 view.setImageDrawable(resource);
@@ -189,13 +202,13 @@ public class GlideManager {
                 //获取imageView的宽
                 int imageViewWidth = iv.getWidth();
                 //计算缩放比例
-                float sy = (float) (imageViewWidth ) / (float) (width );
+                float sy = (float) (imageViewWidth) / (float) (width);
                 //计算图片等比例放大后的高
                 int imageViewHeight = (int) (height * sy);
                 ViewGroup.LayoutParams params = iv.getLayoutParams();
                 params.height = imageViewHeight;
                 iv.setLayoutParams(params);
-              TourCooLogUtil.i("GlideManager","比例:"+sy+"width="+width+""+"height="+height+"放大后的高:"+imageViewHeight);
+                TourCooLogUtil.i("GlideManager", "比例:" + sy + "width=" + width + "" + "height=" + height + "放大后的高:" + imageViewHeight);
             }
         });
 
@@ -260,6 +273,7 @@ public class GlideManager {
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
         return requestOptions;
     }
+
     private static RequestOptions getRequestOptionsAuto() {
         RequestOptions requestOptions = new RequestOptions()
                 //优先级
@@ -268,6 +282,7 @@ public class GlideManager {
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
         return requestOptions;
     }
+
     private static int dp2px(float dipValue) {
         final float scale = Resources.getSystem().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);

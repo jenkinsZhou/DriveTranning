@@ -368,6 +368,7 @@ class OnlineTrainFragment : BaseFragment() {
             TYPE_COURSE_OTHER -> {
                 //混合非加密 使用腾讯播放器
                 intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+//                intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
             }
 
         }

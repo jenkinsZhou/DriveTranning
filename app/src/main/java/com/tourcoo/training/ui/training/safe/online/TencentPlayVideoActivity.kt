@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.blankj.utilcode.util.LogUtils
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
@@ -43,6 +45,7 @@ import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity
 import com.tourcoo.training.ui.training.safe.online.web.WebCourseTempHelper
 import com.tourcoo.training.utils.TourCooUtil
+import com.tourcoo.training.widget.aliplayer.utils.ScreenUtils
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
@@ -178,6 +181,24 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         smartVideoPlayer.setPlayerViewCallback(object : SuperPlayerView.OnSuperPlayerViewCallback {
             override fun onStartFullScreenPlay() {
                 window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+                if (!isStrangePhone) {
+                    window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                    smartVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+                }
+                //设置view的布局，宽高
+                val aliVcVideoViewLayoutParams = smartVideoPlayer
+                        .getLayoutParams() as LinearLayout.LayoutParams
+                aliVcVideoViewLayoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+                aliVcVideoViewLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+
+
                 if (mTitleBar.visibility != View.GONE) {
                     mTitleBar.visibility = View.GONE
                 }
@@ -185,6 +206,12 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
             override fun onStopFullScreenPlay() {
                 window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+                smartVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE)
+                //设置view的布局，宽高之类
+                val aliVcVideoViewLayoutParams = smartVideoPlayer
+                        .getLayoutParams() as LinearLayout.LayoutParams
+                aliVcVideoViewLayoutParams.height = (ScreenUtils.getWidth(this@TencentPlayVideoActivity) * 9.0f / 16).toInt()
+                aliVcVideoViewLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
                 if (mTitleBar.visibility != View.VISIBLE) {
                     mTitleBar.visibility = View.VISIBLE
                 }
