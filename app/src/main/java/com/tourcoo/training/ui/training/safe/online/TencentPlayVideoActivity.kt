@@ -725,6 +725,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun cancelTimer() {
         if (mTimerTask != null) {
             mTimerTask!!.stop()
+            TourCooLogUtil.i(mTag, "")
         }
     }
 
@@ -740,6 +741,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun timerPause() {
         if (mTimerTask != null) {
             //暂停
+            TourCooLogUtil.d(mTag, "计时器暂停")
             mTimerTask!!.pause()
         }
     }
@@ -747,6 +749,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun timerResume() {
         if (mTimerTask != null) {
             //恢复
+            TourCooLogUtil.d(mTag, "计时器恢复")
             mTimerTask!!.resume()
         }
     }
@@ -886,4 +889,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.gray999999))
         setViewGone(tvPlanDesc, true)
     }
+
+
 }

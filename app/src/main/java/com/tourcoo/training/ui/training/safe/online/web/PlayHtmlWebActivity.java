@@ -219,24 +219,6 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     /**
      * 保存当前观看进度
      */
-    /*private fun requestSaveProgress(courseId: String, second: String) {
-        ApiRepository.getInstance().requestSaveProgress(trainingPlanID, courseId, second).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>() {
-            override fun onSuccessNext(entity: BaseResult<Any>?) {
-                if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    //todo
-                    ToastUtil.showSuccess("进度保存成功")
-                } else {
-                    ToastUtil.show(entity?.msg)
-                }
-                finish()
-            }
-
-            override fun onError(e: Throwable) {
-                super.onError(e)
-                finish()
-            }
-        })
-    }*/
 
 
     /**
@@ -329,8 +311,8 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
                         //说明学习结束
                         requestComplete();
                     } else {
-//                        requestSaveProgress(progress + "");
-                        requestComplete();
+                        //保存进度
+                        requestSaveProgress(progress + "");
                     }
 
                 })

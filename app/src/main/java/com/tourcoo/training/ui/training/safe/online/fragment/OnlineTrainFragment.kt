@@ -341,6 +341,7 @@ class OnlineTrainFragment : BaseFragment() {
         val intent = Intent(mContext, RecognizeIdCardActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
         intent.putExtras(bundle)
+        //身份证识别比对
         startActivityForResult(intent, REQUEST_CODE_FACE_COMPARE)
     }
 

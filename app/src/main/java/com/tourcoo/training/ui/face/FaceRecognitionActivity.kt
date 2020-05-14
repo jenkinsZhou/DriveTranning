@@ -330,6 +330,13 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
         finish()
     }
 
+    private fun handleRecognizeFailedCallback() {
+//        val intent = Intent()
+//        intent.putExtra(EXTRA_FACE_IMAGE_PATH,faceImagePath)
+//        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
 
     private fun uploadFaceImage(trainId: String, bitmap: Bitmap?) {
         if (bitmap == null) {
@@ -348,12 +355,10 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                         return
                     }
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                        ToastUtil.showSuccess("" + entity.data.confidence)
                         handleRecognizeSuccessCallback()
                     } else {
                         ToastUtil.show(entity.msg)
-                        //todo 暂时模拟成功
-                        handleRecognizeSuccessCallback()
+                        handleRecognizeFailedCallback()
                     }
                 }
             })
