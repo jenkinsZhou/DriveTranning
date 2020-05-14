@@ -88,6 +88,12 @@ public class TCVodControllerSmall extends TCVodControllerSmallBase implements Vi
         }
     }
 
+
+
+    public void enableClick(boolean enable){
+        mLockScreen = !enable;
+    }
+
     /**
      * 进度定时器
      */

@@ -1846,6 +1846,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     public interface OnPlayStatusListener {
         //支持seek
         void enableSeek();
+        //开始播放
+        void onAutoPlayStart();
 
         //视频是否播放完成
         void onAutoPlayComplete();
@@ -1866,6 +1868,10 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         }
 
         if (event == TXLiveConstants.PLAY_EVT_VOD_PLAY_PREPARED) { //视频播放开始
+            if (onPlayStatusListener != null) {
+                onPlayStatusListener.onAutoPlayStart();
+            }
+
             mVodControllerSmall.dismissBackground();
 
             mVodControllerSmall.updateLiveLoadingState(false);
@@ -1927,7 +1933,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             mVodControllerSmall.updateReplay(true);
             mVodControllerLarge.updateReplay(true);
         } else if (event == TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {
-            Toast.makeText(mContext, "进度同步中...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "进度同步中...", Toast.LENGTH_SHORT).show();
 
             int progress = param.getInt(TXLiveConstants.EVT_PLAY_PROGRESS_MS);
             int duration = param.getInt(TXLiveConstants.EVT_PLAY_DURATION_MS);

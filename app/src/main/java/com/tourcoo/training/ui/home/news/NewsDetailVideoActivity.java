@@ -269,6 +269,11 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             }
 
             @Override
+            public void onAutoPlayStart() {
+
+            }
+
+            @Override
             public void onAutoPlayComplete() {
 
             }

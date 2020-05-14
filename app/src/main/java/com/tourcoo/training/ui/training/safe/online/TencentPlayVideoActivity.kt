@@ -153,9 +153,12 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //进度条拖动开关
         smartVideoPlayer.setSeekEnable(true)
         smartVideoPlayer.setOnPlayStatusListener(object : SuperPlayerView.OnPlayStatusListener {
+            override fun onAutoPlayStart() {
+                ivCoverView.visibility = View.GONE
+                smartVideoPlayer.mVodControllerSmall.enableClick(true)
+            }
 
             override fun enableSeek() {
-                ivCoverView.visibility = View.GONE
                 smartVideoPlayer.seekTo(currentProgress)
             }
 
@@ -484,6 +487,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
 
+                smartVideoPlayer.mVodControllerSmall.enableClick(false)
                 GlideManager.loadGrayImg(CommonUtil.getNotNullValue(course.coverURL), ivCoverView, R.drawable.ic_rect_default)
 
                 //只有当前正在浏览的课件 并且是html课件才允许点击

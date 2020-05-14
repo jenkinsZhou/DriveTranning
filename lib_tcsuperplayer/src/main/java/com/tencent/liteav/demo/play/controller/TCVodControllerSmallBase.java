@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.liteav.demo.play.R;
 import com.tencent.liteav.demo.play.SuperPlayerConst;
@@ -40,7 +41,7 @@ public abstract class TCVodControllerSmallBase extends RelativeLayout implements
     protected VodController mVodController;
     protected GestureDetector mGestureDetector;
     private boolean isShowing;
-    protected boolean mLockScreen;
+    protected boolean mLockScreen = true;
     private static final double RADIUS_SLOP = Math.PI * 1 / 4;
     protected TCVideoQulity mDefaultVideoQuality;
     protected ArrayList<TCVideoQulity> mVideoQualityList;
