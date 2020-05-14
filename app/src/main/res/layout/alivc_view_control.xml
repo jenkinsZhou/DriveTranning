@@ -10,9 +10,9 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:background="@color/alivc_common_bg_black"
+        android:gravity="center"
         android:orientation="vertical"
-        android:visibility="invisible"
-        android:gravity="center">
+        android:visibility="invisible">
 
         <FrameLayout
             android:id="@+id/fl"
@@ -24,19 +24,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/alivc_screen_costing_background"/>
+                android:src="@drawable/alivc_screen_costing_background" />
 
             <TextView
                 android:id="@+id/tv_screen_cost_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/alivc_common_font_14"
-                android:gravity="center_vertical"
                 android:layout_gravity="center"
                 android:drawableLeft="@drawable/alivc_screen_cost_pointer_red_shape"
                 android:drawablePadding="@dimen/alivc_common_padding_10"
+                android:gravity="center_vertical"
+                android:text="@string/alivc_screen_costting"
                 android:textColor="@color/alivc_common_font_gray_light"
-                android:text="@string/alivc_screen_costting" />
+                android:textSize="@dimen/alivc_common_font_14" />
 
         </FrameLayout>
 
@@ -66,8 +66,10 @@
         <ImageView
             android:id="@+id/alivc_title_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_back" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:src="@drawable/btn_back_play" />
 
         <TextView
             android:id="@+id/alivc_title_title"
@@ -88,8 +90,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/alivc_common_padding_16"
-            android:visibility="gone"
-            android:src="@drawable/icon_donwload" />
+            android:src="@drawable/icon_donwload"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/alivc_title_more"
@@ -107,9 +109,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/alivc_common_margin_10"
-        android:layout_marginLeft="@dimen/alivc_common_margin_10"
-        android:src="@drawable/alivc_screen_unlock" />
+        android:layout_marginLeft="20dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_player_unlock" />
 
     <LinearLayout
         android:id="@+id/controlbar"
@@ -120,8 +122,8 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/alivc_infobar_bg"
         android:gravity="center_vertical"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
 
         <ImageView
@@ -156,8 +158,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/alivc_common_font_white_light"
                     android:layout_toRightOf="@id/alivc_info_large_position"
+                    android:textColor="@color/alivc_common_font_white_light"
                     android:textSize="@dimen/alivc_common_font_12" />
 
                 <TextView
@@ -165,37 +167,41 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/alivc_player_font_info_duration"
                     android:layout_toRightOf="@id/tv_divider"
+                    android:textColor="@color/alivc_player_font_info_duration"
                     android:textSize="@dimen/alivc_common_font_12" />
 
                 <Button
                     android:id="@+id/alivc_info_large_rate_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_5"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/alivc_rate_btn_nomal"
                     android:textColor="@color/alivc_common_font_white_light"
-                    android:textSize="@dimen/alivc_common_font_14" />
+                    android:textSize="@dimen/sp_12" />
 
                 <SeekBar
                     android:id="@+id/alivc_info_large_seekbar"
                     style="@style/alivc_info_seekbar_blue"
-                    android:layout_toRightOf="@id/alivc_info_large_duration"
-                    android:layout_toLeftOf="@id/alivc_info_large_rate_btn"
-                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/alivc_info_large_rate_btn"
+                    android:layout_toRightOf="@id/alivc_info_large_duration" />
 
                 <com.tourcoo.training.widget.aliplayer.view.function.MutiSeekBarView
                     android:id="@+id/alivc_info_large_mutiseekbar"
                     android:layout_width="match_parent"
+                    android:layout_height="@dimen/alivc_common_height_group_15"
                     android:layout_above="@+id/alivc_info_large_seekbar"
-                    android:layout_toRightOf="@id/alivc_info_large_duration"
-                    android:layout_toLeftOf="@id/alivc_info_large_rate_btn"
                     android:layout_centerVertical="true"
-                    android:layout_height="@dimen/alivc_common_height_group_15"/>
+                    android:layout_toLeftOf="@id/alivc_info_large_rate_btn"
+                    android:layout_toRightOf="@id/alivc_info_large_duration" />
             </RelativeLayout>
 
             <LinearLayout
@@ -243,8 +249,7 @@
             android:id="@+id/alivc_screen_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/alivc_common_padding_8"
-            android:paddingRight="@dimen/alivc_common_padding_8" />
+            android:padding="@dimen/dp_10" />
 
     </LinearLayout>
 
@@ -263,8 +268,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:visibility="gone"
-            android:src="@drawable/alivc_input_danmaku_icon"/>
+            android:src="@drawable/alivc_input_danmaku_icon"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/alivc_screen_shot"

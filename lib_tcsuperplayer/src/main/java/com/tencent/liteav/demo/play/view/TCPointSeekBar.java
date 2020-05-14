@@ -110,7 +110,8 @@ public class TCPointSeekBar extends RelativeLayout {
         int backgroundColor = Color.parseColor("#BBBBBB");
         if (attrs != null) {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.TCPointSeekBar);
-            mThumbDrawable = a.getDrawable(R.styleable.TCPointSeekBar_psb_thumbBackground);
+//            mThumbDrawable = a.getDrawable(R.styleable.TCPointSeekBar_psb_thumbBackground);
+            mThumbDrawable = getContext().getResources().getDrawable(R.mipmap.ic_bg_video_seek_bar);
             mHalfDrawableWidth = mThumbDrawable.getIntrinsicWidth() / 2;
             progressColor = a.getColor(R.styleable.TCPointSeekBar_psb_progressColor,
                     Color.parseColor("#FF4081"));

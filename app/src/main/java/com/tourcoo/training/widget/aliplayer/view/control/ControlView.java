@@ -368,7 +368,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
                 }*/
                 //todo
                 if (mOnDefinitionButtonClickListener != null && mCourseInfo != null && mCourseInfo.getStreams() != null) {
-                    mOnDefinitionButtonClickListener.onDefinitionButtonClick(v, mCourseInfo.getStreams(),mCurrentDefinition);
+                    mOnDefinitionButtonClickListener.onDefinitionButtonClick(v, mCourseInfo.getStreams(), mCurrentDefinition);
                 }
             }
         });
@@ -403,7 +403,6 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         updateLargeInfoBar();
         updateChangeQualityBtn();
     }
-
 
 
     /**
@@ -503,11 +502,12 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
      */
     private void updateShowMoreBtn() {
         if (mAliyunScreenMode == AliyunScreenMode.Full) {
-            mTitleMore.setVisibility(VISIBLE);
+//            mTitleMore.setVisibility(VISIBLE);
+            mTitleMore.setVisibility(GONE);
             mTitleDownload.setVisibility(GONE);
         } else {
             mTitleMore.setVisibility(GONE);
-            mTitleDownload.setVisibility(VISIBLE);
+            mTitleDownload.setVisibility(GONE);
         }
     }
 
@@ -544,6 +544,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         updateChangeQualityBtn();
         updateTitleView();
     }
+
     public void setCourseInfo(Course courseInfo, String currentDefinition) {
         mCourseInfo = courseInfo;
         mCurrentDefinition = currentDefinition;
@@ -554,7 +555,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     }
 
     public void showMoreButton() {
-        mTitleMore.setVisibility(VISIBLE);
+        mTitleMore.setVisibility(GONE);
     }
 
     public void hideMoreButton() {
@@ -570,20 +571,23 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     private void updateSeekBarTheme(AliYunVodPlayerView.Theme theme) {
         //获取不同主题的图片
         int progressDrawableResId = R.drawable.alivc_info_seekbar_bg_blue;
-        int thumbResId = R.drawable.alivc_info_seekbar_thumb_blue;
-        if (theme == AliYunVodPlayerView.Theme.Blue) {
-            progressDrawableResId = (R.drawable.alivc_info_seekbar_bg_blue);
-            thumbResId = (R.drawable.alivc_seekbar_thumb_blue);
-        } else if (theme == AliYunVodPlayerView.Theme.Green) {
-            progressDrawableResId = (R.drawable.alivc_info_seekbar_bg_green);
-            thumbResId = (R.drawable.alivc_info_seekbar_thumb_green);
-        } else if (theme == AliYunVodPlayerView.Theme.Orange) {
-            progressDrawableResId = (R.drawable.alivc_info_seekbar_bg_orange);
-            thumbResId = (R.drawable.alivc_info_seekbar_thumb_orange);
-        } else if (theme == AliYunVodPlayerView.Theme.Red) {
-            progressDrawableResId = (R.drawable.alivc_info_seekbar_bg_red);
-            thumbResId = (R.drawable.alivc_info_seekbar_thumb_red);
-        }
+        int thumbResId = R.mipmap.ic_video_seek_bar;
+
+//        int progressDrawableResId = R.drawable.alivc_info_seekbar_bg_blue;
+//        int thumbResId = R.drawable.alivc_info_seekbar_thumb_blue;
+//        if (theme == AliYunVodPlayerView.Theme.Blue) {
+//            progressDrawableResId = (R.drawable.alivc_info_seekbar_bg_blue);
+//            thumbResId = (R.drawable.alivc_seekbar_thumb_blue);
+//        } else if (theme == AliYunVodPlayerView.Theme.Green) {
+//            progressDrawableResId = (R.drawable.alivc_info_seekbar_bg_green);
+//            thumbResId = (R.drawable.alivc_info_seekbar_thumb_green);
+//        } else if (theme == AliYunVodPlayerView.Theme.Orange) {
+//            progressDrawableResId = (R.drawable.alivc_info_seekbar_bg_orange);
+//            thumbResId = (R.drawable.alivc_info_seekbar_thumb_orange);
+//        } else if (theme == AliYunVodPlayerView.Theme.Red) {
+//            progressDrawableResId = (R.drawable.alivc_info_seekbar_bg_red);
+//            thumbResId = (R.drawable.alivc_info_seekbar_thumb_red);
+//        }
 
 
         //这个很有意思。。哈哈。不同的seekbar不能用同一个drawable，不然会出问题。
@@ -686,9 +690,10 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
     private void updateChangeDefinitionBtn() {
         if (mLargeChangeQualityBtn != null) {
             mLargeChangeQualityBtn.setText(mCurrentDefinition);
-            mLargeChangeQualityBtn.setVisibility( VISIBLE);
+            mLargeChangeQualityBtn.setVisibility(VISIBLE);
         }
     }
+
     /**
      * 更新控制条的显示
      */
@@ -788,7 +793,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         if (mAliyunScreenMode == AliyunScreenMode.Full) {
             mScreenModeBtn.setImageResource(R.drawable.alivc_screen_mode_small);
         } else {
-            mScreenModeBtn.setImageResource(R.drawable.alivc_screen_mode_large);
+            mScreenModeBtn.setImageResource(R.drawable.ic_vod_fullscreen);
         }
     }
 
@@ -797,16 +802,16 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
      */
     private void updateScreenLockBtn() {
         if (mScreenLocked) {
-            mScreenLockBtn.setImageResource(R.drawable.alivc_screen_lock);
+            mScreenLockBtn.setImageResource(R.drawable.ic_player_lock);
         } else {
-            mScreenLockBtn.setImageResource(R.drawable.alivc_screen_unlock);
+            mScreenLockBtn.setImageResource(R.drawable.ic_player_unlock);
         }
 
         if (mAliyunScreenMode == AliyunScreenMode.Full) {
             mScreenLockBtn.setVisibility(VISIBLE);
 //            mScreenRecorder.setVisibility(VISIBLE);
 //            mScreenShot.setVisibility(VISIBLE);
-            mTitleMore.setVisibility(VISIBLE);
+            mTitleMore.setVisibility(GONE);
         } else {
             mScreenLockBtn.setVisibility(GONE);
 //            mScreenRecorder.setVisibility(GONE);
@@ -935,6 +940,7 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
             mOnDefinitionButtonClickListener.onHideQualityView();
         }
     }
+
     /**
      * 设置当前缓存的进度，给seekbar显示
      *

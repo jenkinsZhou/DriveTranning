@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!--标题-->
@@ -9,8 +9,8 @@
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/media_controller_view_height"
-        android:gravity="left"
         android:background="@drawable/player_top_shadow"
+        android:gravity="left"
         android:orientation="horizontal">
 
         <ImageView
@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
             android:src="@drawable/btn_back_play" />
 
         <TextView
@@ -35,8 +36,8 @@
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/player_bottom_shadow"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/player_bottom_shadow"
         android:orientation="horizontal">
 
         <!--播放/暂停-->
@@ -54,9 +55,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="00:00"
+            android:paddingRight="5dp"
             android:textColor="@android:color/white"
             android:textSize="11.0sp" />
-
 
 
         <!--biz_audio_progress_second-->
@@ -70,10 +71,10 @@
             android:layout_weight="1.0"
             app:psb_backgroundColor="@color/white"
             app:psb_max="100"
-            app:psb_thumbBackground="@mipmap/ic_bg_video_seek_bar"
             app:psb_progress="0"
+            app:psb_progressColor="#5087FF"
             app:psb_progressHeight="2dp"
-            app:psb_progressColor="#5087FF"/>
+            app:psb_thumbBackground="@mipmap/ic_bg_video_seek_bar" />
 
         <!--总时长-->
         <TextView
@@ -82,10 +83,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="00:00"
+            android:paddingLeft="5dp"
             android:textColor="@android:color/white"
             android:textSize="11.0sp" />
 
         <ImageView
+            android:padding="10dp"
             android:id="@+id/iv_fullscreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -138,23 +141,22 @@
         android:layout_centerInParent="true" />
 
 
-
     <com.tencent.liteav.demo.play.view.TCVideoProgressLayout
         android:id="@+id/video_progress_layout"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:gravity="center"
-        android:layout_height="wrap_content" />
+        android:gravity="center" />
 
     <ImageView
-        android:visibility="gone"
         android:id="@+id/small_iv_water_mark"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <ImageView
-        android:visibility="gone"
         android:id="@+id/small_iv_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </RelativeLayout>
