@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 一个带有打点的，模仿seekbar的view
  */
-public class TCPointSeekBar extends RelativeLayout {
+public class TCPointSmallSeekBar extends RelativeLayout {
     private static final String TAG = "TCPointSeekBar";
     private int mWidth;
     private int mHeight;
@@ -63,17 +63,17 @@ public class TCPointSeekBar extends RelativeLayout {
     private OnSeekBarPointClickListener mPointClickListener;
     private boolean mIsChangePointViews;
 
-    public TCPointSeekBar(Context context) {
+    public TCPointSmallSeekBar(Context context) {
         super(context);
         init(null);
     }
 
-    public TCPointSeekBar(Context context,AttributeSet attrs) {
+    public TCPointSmallSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public TCPointSeekBar(Context context,AttributeSet attrs, int defStyleAttr) {
+    public TCPointSmallSeekBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
@@ -185,7 +185,7 @@ public class TCPointSeekBar extends RelativeLayout {
             @Override
             public void run() {
                 if (mIsChangePointViews) {
-                    TCPointSeekBar.this.removeAllViews();
+                    TCPointSmallSeekBar.this.removeAllViews();
                     if (mPointList != null) {
                         for (int i = 0; i < mPointList.size(); i++) {
                             PointParams params = mPointList.get(i);
@@ -375,11 +375,11 @@ public class TCPointSeekBar extends RelativeLayout {
 
     public interface OnSeekBarChangeListener {
 
-        void onProgressChanged(TCPointSeekBar seekBar, int progress, boolean fromUser);
+        void onProgressChanged(TCPointSmallSeekBar seekBar, int progress, boolean fromUser);
 
-        void onStartTrackingTouch(TCPointSeekBar seekBar);
+        void onStartTrackingTouch(TCPointSmallSeekBar seekBar);
 
-        void onStopTrackingTouch(TCPointSeekBar seekBar);
+        void onStopTrackingTouch(TCPointSmallSeekBar seekBar);
     }
 
     public void setOnPointClickListener(OnSeekBarPointClickListener listener) {

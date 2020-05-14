@@ -17,6 +17,7 @@ import com.tencent.liteav.basic.log.TXCLog;
 import com.tencent.liteav.demo.play.R;
 import com.tencent.liteav.demo.play.SuperPlayerConst;
 import com.tencent.liteav.demo.play.view.TCPointSeekBar;
+import com.tencent.liteav.demo.play.view.TCPointSmallSeekBar;
 import com.tencent.liteav.demo.play.view.TCVideoProgressLayout;
 import com.tencent.liteav.demo.play.view.TCVolumeBrightnessProgressLayout;
 
@@ -25,7 +26,7 @@ import com.tencent.liteav.demo.play.view.TCVolumeBrightnessProgressLayout;
  * <p>
  * 超级播放器小窗口控制界面
  */
-public class TCVodControllerSmall extends TCVodControllerBase implements View.OnClickListener {
+public class TCVodControllerSmall extends TCVodControllerSmallBase implements View.OnClickListener {
     private static final String TAG = "TCVodControllerSmall";
     private LinearLayout mLayoutTop;
     private LinearLayout mLayoutBottom;
@@ -117,7 +118,7 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
         mTvCurrent = (TextView) findViewById(R.id.tv_current);
         mTvDuration = (TextView) findViewById(R.id.tv_duration);
         //小seekBar
-        mSeekBarProgress = (TCPointSeekBar) findViewById(R.id.seekBarSmall);
+        mSeekBarProgress = (TCPointSmallSeekBar) findViewById(R.id.seekBarSmall);
         //禁用滑动切换视频进度
         mSeekBarProgress.setEnabled(false);
         mSeekBarProgress.setProgress(0);

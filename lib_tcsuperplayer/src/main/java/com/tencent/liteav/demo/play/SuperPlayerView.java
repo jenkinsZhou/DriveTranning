@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.tencent.liteav.basic.log.TXCLog;
 import com.tencent.liteav.demo.play.bean.TCPlayInfoStream;
+import com.tencent.liteav.demo.play.controller.TCVodControllerSmallBase;
 import com.tencent.liteav.demo.play.v3.SuperPlayerModelWrapper;
 import com.tencent.liteav.demo.play.common.TCPlayerConstants;
 import com.tencent.liteav.demo.play.controller.TCVodControllerBase;
@@ -169,7 +170,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         mVodControllerLargeParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         mVodControllerLarge.setVodController(mVodController);
-        mVodControllerSmall.setVodController(mVodController);
+        mVodControllerSmall.setVodController(mVodControllerSmall1);
         mVodControllerFloat.setVodController(mVodController);
 
         mVodControllerLarge.setWaterMarkBmp(mWaterMarkBmp, mWaterMarkBmpX, mWaterMarkBmpY);
@@ -799,6 +800,467 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
 
         }
     }
+
+    /**
+     * 小播放器控制
+     */
+    private TCVodControllerSmallBase.VodController mVodControllerSmall1 = new TCVodControllerSmallBase.VodController() {
+        /**
+         * 请求播放模式：窗口/全屏/悬浮窗
+         * @param requestPlayMode
+         */
+        @Override
+        public void onRequestPlayMode(int requestPlayMode) {
+            if (mPlayMode == requestPlayMode)
+                return;
+
+            if (mLockScreen) //锁屏
+                return;
+
+            if (requestPlayMode == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
+                fullScreen(true);
+            } else {
+                fullScreen(false);
+            }
+            mVodControllerFloat.hide();
+            mVodControllerSmall.hide();
+            mVodControllerLarge.hide();
+            //请求全屏模式
+            if (requestPlayMode == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
+                TXCLog.i(TAG, "requestPlayMode FullScreen");
+
+                if (mLayoutParamFullScreenMode == null)
+                    return;
+
+                removeView(mVodControllerSmall);
+                addView(mVodControllerLarge, mVodControllerLargeParams);
+                setLayoutParams(mLayoutParamFullScreenMode);
+                rotateScreenOrientation(SuperPlayerConst.ORIENTATION_LANDSCAPE);
+
+                if (mPlayerViewCallback != null) {
+                    mPlayerViewCallback.onStartFullScreenPlay();
+                }
+            }
+            // 请求窗口模式
+            else if (requestPlayMode == SuperPlayerConst.PLAYMODE_WINDOW) {
+                TXCLog.i(TAG, "requestPlayMode Window");
+
+                // 当前是悬浮窗
+                if (mPlayMode == SuperPlayerConst.PLAYMODE_FLOAT) {
+                    try {
+
+                        Context viewContext = SuperPlayerView.this.getContext();
+                        Intent intent = null;
+
+                        if (viewContext instanceof Activity) {
+                            intent = new Intent(SuperPlayerView.this.getContext(), viewContext.getClass());
+                        } else {
+                            Toast.makeText(viewContext, "悬浮播放失败", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        mContext.startActivity(intent);
+
+                        float currentTime = mVodPlayer.getCurrentPlaybackTime();// 记录给恢复的时候使用的
+                        pause();
+                        if (mLayoutParamWindowMode == null)
+                            return;
+                        mWindowManager.removeView(mVodControllerFloat);
+
+                        if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                            mVodPlayer.setPlayerView(mTXCloudVideoView);
+                        } else {
+                            mLivePlayer.setPlayerView(mTXCloudVideoView);
+                        }
+                        resume();
+                        // 解决Widevine有声音画面不动问题
+                        if (mCurrentModelWrapper != null && mCurrentModelWrapper.currentPlayingType == SuperPlayerModelWrapper.URL_DASH_WIDE_VINE) {
+                            mVodPlayer.seek(currentTime);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 当前是全屏模式
+                else if (mPlayMode == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
+                    if (mLayoutParamWindowMode == null)
+                        return;
+
+                    removeView(mVodControllerLarge);
+                    addView(mVodControllerSmall, mVodControllerSmallParams);
+                    setLayoutParams(mLayoutParamWindowMode);
+                    rotateScreenOrientation(SuperPlayerConst.ORIENTATION_PORTRAIT);
+
+                    if (mPlayerViewCallback != null) {
+                        mPlayerViewCallback.onStopFullScreenPlay();
+                    }
+                }
+            }
+            //请求悬浮窗模式
+            else if (requestPlayMode == SuperPlayerConst.PLAYMODE_FLOAT) {
+                TXCLog.i(TAG, "requestPlayMode Float :" + Build.MANUFACTURER);
+
+                SuperPlayerGlobalConfig prefs = SuperPlayerGlobalConfig.getInstance();
+                if (!prefs.enableFloatWindow) {
+                    return;
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // 6.0动态申请悬浮窗权限
+                    if (!Settings.canDrawOverlays(mContext)) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                        intent.setData(Uri.parse("package:" + mContext.getPackageName()));
+                        mContext.startActivity(intent);
+                        return;
+                    }
+                } else {
+                    if (!checkOp(mContext, OP_SYSTEM_ALERT_WINDOW)) {
+                        Toast.makeText(mContext, "进入设置页面失败,请手动开启悬浮窗权限", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                float currentTime = mVodPlayer.getCurrentPlaybackTime();// 记录给恢复的时候使用的
+                pause();
+
+                mWindowManager = (WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+                mWindowParams = new WindowManager.LayoutParams();
+//                mWindowParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    mWindowParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                } else {
+                    mWindowParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+                }
+                mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                mWindowParams.format = PixelFormat.TRANSLUCENT;
+                mWindowParams.gravity = Gravity.LEFT | Gravity.TOP;
+
+                SuperPlayerGlobalConfig.TXRect rect = prefs.floatViewRect;
+                mWindowParams.x = rect.x;
+                mWindowParams.y = rect.y;
+                mWindowParams.width = rect.width;
+                mWindowParams.height = rect.height;
+                try {
+                    mWindowManager.addView(mVodControllerFloat, mWindowParams);
+                } catch (Exception e) {
+                    Toast.makeText(SuperPlayerView.this.getContext(), "悬浮播放失败", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                TXCloudVideoView videoView = mVodControllerFloat.getFloatVideoView();
+                if (videoView != null) {
+                    if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                        mVodPlayer.setPlayerView(videoView);
+                    } else {
+                        mLivePlayer.setPlayerView(videoView);
+                    }
+                    resume();
+                    // 解决Widevine有声音画面不动问题
+                    if (mCurrentModelWrapper != null && mCurrentModelWrapper.currentPlayingType == SuperPlayerModelWrapper.URL_DASH_WIDE_VINE) {
+                        mVodPlayer.seek(currentTime);
+                    }
+                }
+                // 悬浮窗上报
+                LogReport.getInstance().uploadLogs(TCPlayerConstants.ELK_ACTION_FLOATMOE, 0, 0);
+            }
+            mPlayMode = requestPlayMode;
+        }
+
+        /**
+         * 返回
+         * @param playMode
+         */
+        @Override
+        public void onBackPress(int playMode) {
+            // 当前是全屏模式，返回切换成窗口模式
+            if (playMode == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
+                onRequestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW);
+            }
+            // 当前是窗口模式，返回退出播放器
+            else if (playMode == SuperPlayerConst.PLAYMODE_WINDOW) {
+                if (mPlayerViewCallback != null) {
+                    mPlayerViewCallback.onClickSmallReturnBtn();
+                }
+                if (mCurrentPlayState == SuperPlayerConst.PLAYSTATE_PLAY) {
+                    onRequestPlayMode(SuperPlayerConst.PLAYMODE_FLOAT);
+                }
+            }
+            // 当前是悬浮窗，退出
+            else if (playMode == SuperPlayerConst.PLAYMODE_FLOAT) {
+                mWindowManager.removeView(mVodControllerFloat);
+                if (mPlayerViewCallback != null) {
+                    mPlayerViewCallback.onClickFloatCloseBtn();
+                }
+            }
+        }
+
+        @Override
+        public void resume() {
+            if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                if (mVodPlayer != null) {
+                    mVodPlayer.resume();
+                    // 解决Widevine有声音画面不动问题
+                    if (mCurrentModelWrapper != null && mCurrentModelWrapper.currentPlayingType == SuperPlayerModelWrapper.URL_DASH_WIDE_VINE && mCurrentTimeWhenPause != 0) {
+                        mVodPlayer.seek(mCurrentTimeWhenPause);
+                        mCurrentTimeWhenPause = 0;
+                    }
+                }
+            } else {
+                if (mLivePlayer != null) {
+                    mLivePlayer.resume();
+                }
+            }
+            mCurrentPlayState = SuperPlayerConst.PLAYSTATE_PLAY;
+            mVodControllerSmall.updatePlayState(true);
+            mVodControllerLarge.updatePlayState(true);
+
+            mVodControllerLarge.updateReplay(false);
+            mVodControllerSmall.updateReplay(false);
+        }
+
+        @Override
+        public void pause() {
+            if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                if (mVodPlayer != null) {
+                    mVodPlayer.pause();
+                }
+            } else {
+                if (mLivePlayer != null) {
+                    mLivePlayer.pause();
+                }
+                if (mWatcher != null) {
+                    mWatcher.stop();
+                }
+            }
+            mCurrentPlayState = SuperPlayerConst.PLAYSTATE_PAUSE;
+            TXCLog.e("lyj", "pause mCurrentPlayState:" + mCurrentPlayState);
+            mVodControllerSmall.updatePlayState(false);
+            mVodControllerLarge.updatePlayState(false);
+        }
+
+        @Override
+        public float getDuration() {
+            return mVodPlayer.getDuration();
+        }
+
+        @Override
+        public float getCurrentPlaybackTime() {
+            return mVodPlayer.getCurrentPlaybackTime();
+        }
+
+        @Override
+        public void seekTo(int position) {
+            if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                if (mVodPlayer != null) {
+                    mVodPlayer.seek(position);
+                }
+            } else {
+                mCurrentPlayType = SuperPlayerConst.PLAYTYPE_LIVE_SHIFT;
+                mVodControllerSmall.updatePlayType(SuperPlayerConst.PLAYTYPE_LIVE_SHIFT);
+                mVodControllerLarge.updatePlayType(SuperPlayerConst.PLAYTYPE_LIVE_SHIFT);
+                LogReport.getInstance().uploadLogs(TCPlayerConstants.ELK_ACTION_TIMESHIFT, 0, 0);
+                if (mLivePlayer != null) {
+                    mLivePlayer.seek(position);
+                }
+                if (mWatcher != null) {
+                    mWatcher.stop();
+                }
+            }
+
+        }
+
+        @Override
+        public boolean isPlaying() {
+            if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                return mVodPlayer.isPlaying();
+            } else {
+                return mCurrentPlayState == SuperPlayerConst.PLAYSTATE_PLAY;
+            }
+        }
+
+        /**
+         * 切换弹幕开关
+         * @param on
+         */
+        @Override
+        public void onDanmuku(boolean on) {
+            if (mDanmuView != null) {
+                mDanmuView.toggle(on);
+            }
+        }
+
+        /**
+         * 截屏
+         */
+        @Override
+        public void onSnapshot() {
+            if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                if (mVodPlayer != null) {
+                    mVodPlayer.snapshot(new TXLivePlayer.ITXSnapshotListener() {
+                        @Override
+                        public void onSnapshot(Bitmap bmp) {
+                            showSnapshotWindow(bmp);
+                        }
+                    });
+                }
+            } else {
+                if (mLivePlayer != null) {
+                    mLivePlayer.snapshot(new TXLivePlayer.ITXSnapshotListener() {
+                        @Override
+                        public void onSnapshot(Bitmap bmp) {
+                            showSnapshotWindow(bmp);
+                        }
+                    });
+                }
+            }
+
+        }
+
+        /**
+         * 清晰度选择
+         * @param quality
+         */
+        @Override
+        public void onQualitySelect(TCVideoQulity quality) {
+            mVodControllerLarge.updateVideoQulity(quality);
+            if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                if (mVodPlayer != null) {
+                    if (quality.index == -1) {
+                        // 说明是非多bitrate的m3u8子流，需要手动seek
+                        float currentTime = mVodPlayer.getCurrentPlaybackTime();
+                        mVodPlayer.stopPlay(true);
+                        TXCLog.i(TAG, "onQualitySelect quality.url:" + quality.url);
+                        mVodPlayer.setStartTime(currentTime);
+                        mVodPlayer.startPlay(quality.url);
+                    } else {
+                        TXCLog.i(TAG, "setBitrateIndex quality.index:" + quality.index);
+                        // 说明是多bitrate的m3u8子流，会自动无缝seek
+                        mVodPlayer.setBitrateIndex(quality.index);
+                    }
+                }
+            } else {
+                if (mLivePlayer != null && !TextUtils.isEmpty(quality.url)) {
+                    int result = mLivePlayer.switchStream(quality.url);
+                    if (result < 0) {
+                        Toast.makeText(getContext(), "切换" + quality.title + "清晰度失败，请稍候重试", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "正在切换到" + quality.title + "...", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+
+            //清晰度上报
+            LogReport.getInstance().uploadLogs(TCPlayerConstants.ELK_ACTION_CHANGE_RESOLUTION, 0, 0);
+        }
+
+        /**
+         * 速度改变
+         * @param speedLevel
+         */
+        @Override
+        public void onSpeedChange(float speedLevel) {
+            if (mVodPlayer != null) {
+                mVodPlayer.setRate(speedLevel);
+            }
+
+            //速度改变上报
+            LogReport.getInstance().uploadLogs(TCPlayerConstants.ELK_ACTION_CHANGE_SPEED, 0, 0);
+        }
+
+        /**
+         * 是否镜像
+         * @param isMirror
+         */
+        @Override
+        public void onMirrorChange(boolean isMirror) {
+            if (mVodPlayer != null) {
+                mVodPlayer.setMirror(isMirror);
+            }
+
+            if (isMirror) {
+                //镜像上报
+                LogReport.getInstance().uploadLogs(TCPlayerConstants.ELK_ACTION_MIRROR, 0, 0);
+            }
+        }
+
+        /**
+         * 是否启用硬件加速
+         * @param isAccelerate
+         */
+        @Override
+        public void onHWAcceleration(boolean isAccelerate) {
+            if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+                mChangeHWAcceleration = true;
+                if (mVodPlayer != null) {
+                    mVodPlayer.enableHardwareDecode(isAccelerate);
+
+                    mSeekPos = (int) mVodPlayer.getCurrentPlaybackTime();
+                    TXCLog.i(TAG, "save pos:" + mSeekPos);
+
+                    stopPlay();
+                    playVodURL(mCurrentPlayVideoURL);
+                }
+            } else {
+                if (mLivePlayer != null) {
+                    mLivePlayer.enableHardwareDecode(isAccelerate);
+
+                    stopPlay();
+                    playLiveURL(mCurrentPlayVideoURL, isRTMPPlay(mCurrentPlayVideoURL) ? TXLivePlayer.PLAY_TYPE_LIVE_RTMP : TXLivePlayer.PLAY_TYPE_LIVE_FLV);
+//                    playWithMode(mCurrentSuperPlayerModel);
+                }
+            }
+            // 硬件加速上报
+            if (isAccelerate) {
+                LogReport.getInstance().uploadLogs(TCPlayerConstants.ELK_ACTION_HW_DECODE, 0, 0);
+            } else {
+                LogReport.getInstance().uploadLogs(TCPlayerConstants.ELK_ACTION_SOFT_DECODE, 0, 0);
+            }
+        }
+
+        /**
+         * 悬浮窗位置更新
+         * @param x
+         * @param y
+         */
+        @Override
+        public void onFloatUpdate(int x, int y) {
+            mWindowParams.x = x;
+            mWindowParams.y = y;
+            mWindowManager.updateViewLayout(mVodControllerFloat, mWindowParams);
+        }
+
+        /**
+         * 重新播放
+         */
+        @Override
+        public void onReplay() {
+            if (!TextUtils.isEmpty(mCurrentPlayVideoURL)) {
+                if (isRTMPPlay(mCurrentPlayVideoURL)) {
+                    playLiveURL(mCurrentPlayVideoURL, TXLivePlayer.PLAY_TYPE_LIVE_RTMP);
+                } else if (isFLVPlay(mCurrentPlayVideoURL)) {
+                    playLiveURL(mCurrentPlayVideoURL, TXLivePlayer.PLAY_TYPE_LIVE_FLV);
+                } else {
+                    playVodURL(mCurrentPlayVideoURL);
+                }
+            }
+
+            if (mVodControllerLarge != null) {
+                mVodControllerLarge.updateReplay(false);
+            }
+            if (mVodControllerSmall != null) {
+                mVodControllerSmall.updateReplay(false);
+            }
+        }
+
+        @Override
+        public void resumeLive() {
+            if (mLivePlayer != null) {
+                mLivePlayer.resumeLive();
+            }
+            mVodControllerSmall.updatePlayType(SuperPlayerConst.PLAYTYPE_LIVE);
+            mVodControllerLarge.updatePlayType(SuperPlayerConst.PLAYTYPE_LIVE);
+        }
+
+    };
+
 
     /**
      * 播放器控制
