@@ -106,7 +106,7 @@
 
 
         <com.tencent.liteav.demo.play.view.TCPointSeekBar
-            android:id="@+id/seekbar_progress"
+            android:id="@+id/seekBarLarge"
             android:layout_width="0.0dip"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

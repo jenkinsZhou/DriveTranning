@@ -189,8 +189,9 @@ public class TCVodControllerLarge extends TCVodControllerBase
         mTvCurrent = (TextView) findViewById(R.id.tv_current);
         mTvDuration = (TextView) findViewById(R.id.tv_duration);
 
-        mSeekBarProgress = (TCPointSeekBar) findViewById(R.id.seekbar_progress);
+        mSeekBarProgress = (TCPointSeekBar) findViewById(R.id.seekBarLarge);
         mSeekBarProgress.setProgress(0);
+        //禁用滑动切换视频进度
         mSeekBarProgress.setEnabled(false);
         mSeekBarProgress.setOnPointClickListener(this);
         mSeekBarProgress.setOnSeekBarChangeListener(this);

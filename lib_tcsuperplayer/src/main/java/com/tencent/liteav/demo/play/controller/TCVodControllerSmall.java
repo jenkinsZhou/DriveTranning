@@ -116,7 +116,8 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
         mIvPause = (ImageView) findViewById(R.id.iv_pause);
         mTvCurrent = (TextView) findViewById(R.id.tv_current);
         mTvDuration = (TextView) findViewById(R.id.tv_duration);
-        mSeekBarProgress = (TCPointSeekBar) findViewById(R.id.seekbar_progress);
+        //小seekBar
+        mSeekBarProgress = (TCPointSeekBar) findViewById(R.id.seekBarSmall);
         //禁用滑动切换视频进度
         mSeekBarProgress.setEnabled(false);
         mSeekBarProgress.setProgress(0);
