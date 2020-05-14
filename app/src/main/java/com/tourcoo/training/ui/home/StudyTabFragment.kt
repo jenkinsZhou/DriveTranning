@@ -104,6 +104,9 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
 
                         })
 
+                        learnBanner.isAutoLoop(true)
+                        learnBanner.start()
+
                     } else {
                         ToastUtil.show(entity.msg)
                     }
