@@ -35,6 +35,7 @@ import com.tourcoo.training.ui.training.safe.online.fragment.SafeTrainingFragmen
 import com.tourcoo.training.ui.training.workpro.WorkProTrainingFragment
 import com.tourcoo.training.widget.banner.BannerEntity
 import com.tourcoo.training.widget.banner.ImageBannerAdapter
+import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.viewpager.SwitchScrollViewPager
 import com.trello.rxlifecycle3.android.FragmentEvent
 import com.youth.banner.indicator.CircleIndicator
@@ -279,7 +280,7 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
         tvContent.text = "客服"
         imageView.setImageResource(R.drawable.icon_kf_nol)
         rootView.setOnClickListener(View.OnClickListener {
-            requestSystemConfigAndSkip()
+            showCallPhoneDialog()
         })
         val rootViewMsg = LayoutInflater.from(mContext).inflate(R.layout.view_image, linearLayout, false)
         val imageViewMsg = rootViewMsg.findViewById(R.id.ivContent) as ImageView
@@ -288,12 +289,28 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
         imageViewMsg.setImageResource(R.drawable.icon_xx_nol)
         rootViewMsg.setOnClickListener(View.OnClickListener {
             //todo
-             val intent = Intent(mContext, MessageListActivity::class.java )
-                     startActivityForResult(intent,2013)
+            val intent = Intent(mContext, MessageListActivity::class.java)
+            startActivityForResult(intent, 2013)
         })
         linearLayout!!.addView(rootView)
         linearLayout.addView(rootViewMsg)
         setViewGone(leftView, false)
+    }
+
+
+    private fun showCallPhoneDialog() {
+        val dialog = IosAlertDialog(mContext).init()
+        dialog.setCancelable(false)
+                .setCanceledOnTouchOutside(false)
+                .setTitle("联系客服")
+                .setMsg("是否拨打客服电话")
+                .setPositiveButton("取消", View.OnClickListener {
+                    dialog!!.dismiss()
+                })
+                .setNegativeButton("拨打", View.OnClickListener {
+                    requestSystemConfigAndSkip()
+                })
+        dialog!!.show()
     }
 }
 

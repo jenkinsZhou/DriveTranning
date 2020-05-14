@@ -126,7 +126,7 @@
         <!--查看更多-->
         <LinearLayout
             android:id="@+id/llLookMore"
-            android:layout_marginTop="@dimen/dp_60"
+            android:layout_marginTop="@dimen/dp_75"
             android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

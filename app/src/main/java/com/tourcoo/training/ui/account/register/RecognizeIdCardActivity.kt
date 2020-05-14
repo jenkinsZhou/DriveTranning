@@ -360,7 +360,6 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
                     return
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess("" + entity.data.confidence)
                     handleRecognizeSuccessCallback()
                 } else {
                     ToastUtil.show(entity.msg)
