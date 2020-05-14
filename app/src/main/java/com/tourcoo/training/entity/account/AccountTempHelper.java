@@ -1,6 +1,7 @@
 package com.tourcoo.training.entity.account;
 
 import com.tourcoo.training.entity.account.register.BusinessLicenseInfo;
+import com.tourcoo.training.entity.medal.StudyMedalEntity;
 
 /**
  * @author :JenkinsZhou
@@ -36,6 +37,16 @@ public class AccountTempHelper {
     private int recognizeType;
 
     private IdCardInfo idCardInfo;
+
+    private StudyMedalEntity studyMedalEntity;
+
+    public StudyMedalEntity getStudyMedalEntity() {
+        return studyMedalEntity;
+    }
+
+    public void setStudyMedalEntity(StudyMedalEntity studyMedalEntity) {
+        this.studyMedalEntity = studyMedalEntity;
+    }
 
     private boolean isRecognizeIdCard;
 

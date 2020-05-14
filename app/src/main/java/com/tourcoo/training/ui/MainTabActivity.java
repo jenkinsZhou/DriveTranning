@@ -27,7 +27,11 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
+import com.tourcoo.training.entity.account.AccountHelper;
+import com.tourcoo.training.entity.account.AccountTempHelper;
+import com.tourcoo.training.entity.medal.StudyMedalEntity;
 import com.tourcoo.training.entity.news.NewsEntity;
+import com.tourcoo.training.entity.study.StudyMedal;
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity;
 import com.tourcoo.training.ui.home.MineTabFragmentNew;
 import com.tourcoo.training.ui.home.StudyTabFragment;
@@ -236,6 +240,22 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
         );
     }
 
+    private void requestMedalRecord() {
+
+        ApiRepository.getInstance().requestStudyMedalList().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(
+                new BaseObserver<BaseResult<StudyMedalEntity>>() {
+                    @Override
+                    public void onSuccessNext(BaseResult<StudyMedalEntity> entity) {
+                        if (entity != null && entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+                            AccountTempHelper.getInstance().setStudyMedalEntity(entity.data);
+                        }
+                    }
+                }
+
+        );
+    }
+
+
     private void handleCheckUpdateCallback(AppUpdateInfo appInfo) {
         if (appInfo == null) {
             return;
@@ -243,7 +263,7 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
         //当前是最新版本 什么都不处理
         new UpdateAppManager.Builder().setActivity(this)
                 .setThemeColor(Color.parseColor("#3CC2E9")).
-                setTopPic(R.mipmap.app_update_top_bg).build().update(appInfo.getIsUpdate() == 1,CommonUtil.getNotNullValue( appInfo.getVersionName()),
+                setTopPic(R.mipmap.app_update_top_bg).build().update(appInfo.getIsUpdate() == 1, CommonUtil.getNotNullValue(appInfo.getVersionName()),
                 CommonUtil.getNotNullValue(appInfo.getLink()),
                 CommonUtil.getNotNullValue(appInfo.getContent()), appInfo.getIsMandatoryUpdate() == 1);
     }
@@ -253,6 +273,9 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
         baseHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if (AccountHelper.getInstance().isLogin()) {
+                    requestMedalRecord();
+                }
                 requestCheckUpdate();
             }
         }, 200);

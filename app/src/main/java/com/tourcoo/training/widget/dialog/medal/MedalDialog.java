@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.entity.account.AccountTempHelper;
+import com.tourcoo.training.entity.medal.StudyMedalEntity;
 
 
 /**
@@ -77,6 +79,91 @@ public class MedalDialog {
             p.width = (int) (width * 0.85);
             window.setAttributes(p);
         }
+        return this;
+    }
+
+
+    /**
+     * @param type   类型  1：学习   2：证书   3：消费
+     * @param number 与类型匹配的规则数值
+     * @return
+     */
+    public MedalDialog setMedal(int type, int number, StudyMedalEntity studyMedalEntity) {
+        int id = 0; // 勋章ID
+
+
+        switch (type) {
+            case 1:
+                switch (id) {
+                    case 1001:
+                        ivMedalIcon.setImageResource(R.drawable.img_01);
+                        break;
+                    case 1002:
+                        ivMedalIcon.setImageResource(R.drawable.img_02);
+                        break;
+                    case 1003:
+                        ivMedalIcon.setImageResource(R.drawable.img_03);
+                        break;
+                    case 1004:
+                        ivMedalIcon.setImageResource(R.drawable.img_04);
+                        break;
+                    case 1005:
+                        ivMedalIcon.setImageResource(R.drawable.img_05);
+                        break;
+                    default:
+                        ivMedalIcon.setImageResource(R.drawable.img_05);
+                        break;
+                }
+
+                break;
+            case 2:
+                switch (id) {
+                    case 2001:
+                        ivMedalIcon.setImageResource(R.drawable.img_06);
+                        break;
+                    case 2002:
+                        ivMedalIcon.setImageResource(R.drawable.img_07);
+                        break;
+                    case 2003:
+                        ivMedalIcon.setImageResource(R.drawable.img_08);
+                        break;
+                    case 2004:
+                        ivMedalIcon.setImageResource(R.drawable.img_09);
+                        break;
+                    case 2005:
+                        ivMedalIcon.setImageResource(R.drawable.img_10);
+                        break;
+                    default:
+                        ivMedalIcon.setImageResource(R.drawable.img_10);
+                        break;
+                }
+                break;
+            case 3:
+                switch (id) {
+                    case 3001:
+                        ivMedalIcon.setImageResource(R.drawable.img_11);
+                        break;
+                    case 3002:
+                        ivMedalIcon.setImageResource(R.drawable.img_12);
+                        break;
+                    case 3003:
+                        ivMedalIcon.setImageResource(R.drawable.img_13);
+                        break;
+                    case 3004:
+                        ivMedalIcon.setImageResource(R.drawable.img_14);
+                        break;
+                    case 3005:
+                        ivMedalIcon.setImageResource(R.drawable.img_15);
+                        break;
+                    default:
+                        ivMedalIcon.setImageResource(R.drawable.img_15);
+                        break;
+                }
+
+                break;
+        }
+
+
         return this;
     }
 

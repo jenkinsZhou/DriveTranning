@@ -2,6 +2,7 @@ package com.tourcoo.training.ui.account
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -39,10 +40,13 @@ import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.*
+import com.tourcoo.training.entity.medal.MedalDictionary
 import com.tourcoo.training.entity.pay.WxPayEvent
 import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.recharge.CoinInfo
 import com.tourcoo.training.entity.recharge.CoinPackageEntity
+import com.tourcoo.training.ui.training.StudyMedalRecordActivity
+import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.pay.BottomPayDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_my_account.*
@@ -419,6 +423,34 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("支付未完成")
         }
     }
+
+
+    /**
+     * 获取勋章领取条件接口
+     */
+    private fun requestMedalDictionary() {
+        ApiRepository.getInstance().requestMedalDictionary().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MedalDictionary>>() {
+            override fun onSuccessNext(entity: BaseResult<MedalDictionary>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
+                    //显示勋章
+                    showMedalDialog()
+                }
+            }
+        })
+    }
+
+    private fun showMedalDialog() {
+        val dialog = MedalDialog(mContext)
+        dialog.create().setPositiveButtonListener {
+            dialog.dismiss()
+            val intent = Intent(this, StudyMedalRecordActivity::class.java)
+            startActivityForResult(intent, 2017)
+        }.show()
+    }
+
 
 
     private fun notifyUserInfo(){
