@@ -410,8 +410,11 @@ public abstract class TCVodControllerSmallBase extends RelativeLayout implements
         onHide();
     }
 
-    public void release() {
 
+    public void release() {
+        if (mHideViewRunnable != null && this.getHandler() != null) {
+            this.getHandler().removeCallbacks(mHideViewRunnable);
+        }
     }
 
 

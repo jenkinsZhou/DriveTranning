@@ -10,8 +10,10 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +53,7 @@ import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.WxShareEvent;
 import com.tourcoo.training.ui.MainTabActivity;
 import com.tourcoo.training.ui.SplashActivity;
+import com.tourcoo.training.widget.aliplayer.utils.ScreenUtils;
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog;
 import com.tourcoo.training.widget.dialog.share.ShareEntity;
 import com.tourcoo.training.widget.web.HeaderScrollHelper;
@@ -265,7 +268,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         smartVideoPlayer.setOnPlayStatusListener(new SuperPlayerView.OnPlayStatusListener() {
             @Override
             public void enableSeek() {
-
+                smartVideoPlayer.mVodControllerSmall.enableClick(true);
             }
 
             @Override
@@ -292,6 +295,24 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             @Override
             public void onStartFullScreenPlay() {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+                if (!isStrangePhone()) {
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    smartVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                }
+                //设置view的布局，宽高
+                LinearLayout.LayoutParams aliVcVideoViewLayoutParams = (LinearLayout.LayoutParams) smartVideoPlayer
+                        .getLayoutParams();
+                aliVcVideoViewLayoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                aliVcVideoViewLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+
+
                 if (mTitleBar.getVisibility() != View.GONE) {
                     mTitleBar.setVisibility(View.GONE);
                 }
@@ -299,10 +320,23 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
             @Override
             public void onStopFullScreenPlay() {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                if (mTitleBar.getVisibility() != View.VISIBLE) {
-                    mTitleBar.setVisibility(View.VISIBLE);
-                }
+
+                baseHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                        smartVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                        //设置view的布局，宽高之类
+                        LinearLayout.LayoutParams aliVcVideoViewLayoutParams = (LinearLayout.LayoutParams) smartVideoPlayer
+                                .getLayoutParams();
+                        aliVcVideoViewLayoutParams.height = (int) (ScreenUtils.getWidth(NewsDetailVideoActivity.this) * 9.0f / 16);
+                        aliVcVideoViewLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                        if (mTitleBar.getVisibility() != View.VISIBLE) {
+                            mTitleBar.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }, 200);
+
             }
 
             @Override
@@ -541,8 +575,8 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     private void setSuccessCallback() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_KEY_POSITION, itemPosition);
-        intent.putExtra(EXTRA_KEY_READ_NUMBER,mReadCount);
-        intent.putExtra(EXTRA_KEY_SHARE_NUMBER,mShareCount);
+        intent.putExtra(EXTRA_KEY_READ_NUMBER, mReadCount);
+        intent.putExtra(EXTRA_KEY_SHARE_NUMBER, mShareCount);
         setResult(Activity.RESULT_OK, intent);
     }
 

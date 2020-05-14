@@ -412,7 +412,9 @@ public abstract class TCVodControllerBase extends RelativeLayout implements TCPo
     }
 
     public void release() {
-
+        if (mHideViewRunnable != null && this.getHandler() != null) {
+            this.getHandler().removeCallbacks(mHideViewRunnable);
+        }
     }
 
 
