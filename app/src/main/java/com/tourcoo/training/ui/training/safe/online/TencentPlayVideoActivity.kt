@@ -104,10 +104,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     }
 
-    override fun beforeSetContentView() {
-        super.beforeSetContentView()
 
-    }
 
     override fun getContentLayout(): Int {
         return R.layout.activity_play_video_tencent
@@ -874,6 +871,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         countCatalog = 0
     }
 
+    /**
+     * 勋章接口
+     */
     private fun requestMedalDictionary() {
         ApiRepository.getInstance().requestMedalDictionary().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MedalDictionary>>() {
             override fun onSuccessNext(entity: BaseResult<MedalDictionary>?) {

@@ -51,7 +51,7 @@ public class OrderAdapter extends BaseQuickAdapter<OrderEntity, BaseViewHolder> 
         helper.setText(R.id.tvPrice,  CommonUtil.doubleTransStringZhen(singlePrice/100));
         helper.setText(R.id.tvTotalMoney, "支付金额：" + CommonUtil.doubleTransStringZhen(item.getAmount()/100) + "元");
         helper.setText(R.id.tvCount, "x" + item.getNumber());
-        helper.setText(R.id.tvTotalDesc, "共" + item.getNumber() + "件商品 合计：¥" + CommonUtil.doubleTransStringZhen(item.getAmount()));
+        helper.setText(R.id.tvTotalDesc, "共" + item.getNumber() + "件商品 合计：¥" + CommonUtil.doubleTransStringZhen(item.getAmount()/100));
         helper.addOnClickListener(R.id.btnOne);
         helper.setText(R.id.tvOrderTypeLabel, CommonUtil.getNotNullValue(item.getTitle()));
         switch (item.getOrderType()) {

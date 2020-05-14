@@ -22,6 +22,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
+import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
 import com.tourcoo.training.ui.training.safe.online.detail.common.CommonPlanDetailActivity
 import com.tourcoo.training.widget.dialog.CommonBellAlert
@@ -50,6 +51,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     private val mTag = "StudentPlanDetailActivity"
     private var confirmDialog: LocalTrainingConfirmDialog? = null
     private var currentAction = ""
+    private var mTrainingPlanDetail: TrainingPlanDetail? = null
 
     companion object {
         const val REQUEST_CODE_SCAN = 1007
@@ -125,6 +127,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
             ToastUtil.show("未获取到计划详情")
             return
         }
+        mTrainingPlanDetail = planDetail
         showTrainPlan(planDetail)
     }
 
@@ -146,7 +149,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
 
         LogUtils.e(planDetail.traineeStatus, planDetail.safetyManagerStatus)
 
-        if(planDetail.traineeStatus == TRAIN_STATUS_CHECK_STATUS){
+        if (planDetail.traineeStatus == TRAIN_STATUS_CHECK_STATUS) {
             showCheckAlert()
         }
 
@@ -329,6 +332,10 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
             R.id.ivSignStudent -> {
                 //学生签到
                 studentSign()
+            }
+            R.id.ivWaitExam -> {
+                //跳转到考试页面
+                skipExamActivity()
             }
 
             else -> {
@@ -518,7 +525,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         try {
             val scanResult = JSON.parseObject(result, QrScanResult::class.java)
 
-            if(scanResult.trainingPlanID  != trainingPlanId){
+            if (scanResult.trainingPlanID != trainingPlanId) {
                 ToastUtil.show("课程不匹配")
                 return
             }
@@ -569,7 +576,6 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     }
 
 
-
     private fun showCheckAlert() {
         val dialog = CommonBellAlert(mContext)
         dialog.create().setContent(SpanUtils().append("系统抽检到你了，快去点击").setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true)
@@ -614,6 +620,25 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
         dialog.setContent(timeNow).show()
     }
 
-    /*  //初始化WebSocket连接
-      initWebSocket(socketUrl)*/
+    private fun skipExamActivity(trainingPlanDetail: TrainingPlanDetail?) {
+        if (trainingPlanDetail == null) {
+            ToastUtil.show("未获取到考试信息")
+            return
+        }
+        val intent = Intent(mContext, ExamActivity::class.java)
+        //培训计划id
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanId))
+        //考试题id
+        intent.putExtra(ExamActivity.EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
+        startActivity(intent)
+    }
+
+    private fun skipExamActivity() {
+        val intent = Intent(mContext, ExamActivity::class.java)
+        //培训计划id
+        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanId))
+        //考试题id
+        intent.putExtra(ExamActivity.EXTRA_EXAM_ID, CommonUtil.getNotNullValue(latestExamID))
+        startActivity(intent)
+    }
 }

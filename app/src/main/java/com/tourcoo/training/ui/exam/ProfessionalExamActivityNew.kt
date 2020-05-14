@@ -252,6 +252,16 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
         for (i in 0 until questions.size) {
             val currentQuestion = questions[i]
             if (currentQuestion.answerStatus == ExamConstant.STATUS_NO_ANSWER) {
+                //先判断第一道题有没有回答过
+                val first = questions[0]
+                val isFirstQuestionAnswered = first.answerStatus == ExamConstant.STATUS_ANSWER_WRONG || first.answerStatus == ExamConstant.STATUS_ANSWER_RIGHT
+                if (isFirstQuestionAnswered) {
+                    //说明第一题回答过了 不做任何处理
+                } else {
+                    //否则 说明第一题都没回答
+                    currentQuestion.answerStatus = ExamConstant.STATUS_NO_ANSWER_FIRST
+                    lastQuestionIndex = 0
+                }
                 if (i > 1) {
                     TourCooLogUtil.i("执行了")
                     //需要判断上一题是否已回答过 若上一题已经回答过则 单独设置个状态

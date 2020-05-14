@@ -234,11 +234,24 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         return questions
     }
 
+    /**
+     * 加载底部题目状态（很关键）
+     */
     private fun loadNumberStatus(questions: MutableList<Question>) {
         for (i in 0 until questions.size) {
             val currentQuestion = questions[i]
             if (currentQuestion.answerStatus == STATUS_NO_ANSWER) {
-                if (i > 1) {
+                //先判断第一道题有没有回答过
+                val first = questions[0]
+                val isFirstQuestionAnswered = first.answerStatus == STATUS_ANSWER_WRONG || first.answerStatus == STATUS_ANSWER_RIGHT
+                if (isFirstQuestionAnswered) {
+                    //说明第一题回答过了 不做任何处理
+                } else {
+                    //否则 说明第一题都没回答
+                    currentQuestion.answerStatus = STATUS_NO_ANSWER_FIRST
+                    lastQuestionIndex = 0
+                }
+                if (i >= 1) {
                     TourCooLogUtil.i("执行了")
                     //需要判断上一题是否已回答过 若上一题已经回答过则 单独设置个状态
                     val lastQuestion = questions[i - 1]
@@ -252,6 +265,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                         currentQuestion.answerStatus = STATUS_NO_ANSWER
                     }
                 }
+
             }
         }
     }

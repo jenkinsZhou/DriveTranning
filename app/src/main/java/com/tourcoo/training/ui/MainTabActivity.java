@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,8 +17,13 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.base.activity.BaseMainActivity;
+import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.base.entity.FrameTabEntity;
+import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
+import com.tourcoo.training.core.retrofit.BaseObserver;
+import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
@@ -28,7 +34,10 @@ import com.tourcoo.training.ui.home.StudyTabFragment;
 import com.tourcoo.training.ui.home.news.NewsDetailHtmlActivity;
 import com.tourcoo.training.ui.home.news.NewsDetailVideoActivity;
 import com.tourcoo.training.ui.home.news.NewsTabFragment;
+import com.tourcoo.training.ui.update.AppUpdateInfo;
 import com.tourcoo.training.widget.dialog.IosAlertDialog;
+import com.trello.rxlifecycle3.android.ActivityEvent;
+import com.vector.update_app.UpdateAppManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,4 +221,40 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
         checkPermission();
     }
 
+
+    private void requestCheckUpdate() {
+        ApiRepository.getInstance().requestAppVersionInfo().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(
+                new BaseObserver<BaseResult<AppUpdateInfo>>() {
+                    @Override
+                    public void onSuccessNext(BaseResult<AppUpdateInfo> entity) {
+                        if (entity != null && entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+                            handleCheckUpdateCallback(entity.data);
+                        }
+                    }
+                }
+
+        );
+    }
+
+    private void handleCheckUpdateCallback(AppUpdateInfo appInfo) {
+        if (appInfo == null) {
+            return;
+        }
+        //当前是最新版本 什么都不处理
+        new UpdateAppManager.Builder().setActivity(this)
+                .setThemeColor(Color.parseColor("#3CC2E9")).
+                setTopPic(R.mipmap.app_update_top_bg).build().update(appInfo.getIsUpdate() == 1,CommonUtil.getNotNullValue( appInfo.getVersionName()),
+                CommonUtil.getNotNullValue(appInfo.getLink()),
+                CommonUtil.getNotNullValue(appInfo.getContent()), appInfo.getIsMandatoryUpdate() == 1);
+    }
+
+    @Override
+    public void loadData() {
+        baseHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                requestCheckUpdate();
+            }
+        }, 200);
+    }
 }

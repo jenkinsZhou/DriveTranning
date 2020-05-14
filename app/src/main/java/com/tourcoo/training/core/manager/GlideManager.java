@@ -130,6 +130,9 @@ public class GlideManager {
      * @param placeholder
      */
     public static void loadImg(Object obj, ImageView iv, Drawable placeholder) {
+        if (iv == null|| iv.getContext() == null) {
+            return;
+        }
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptions()
                 .placeholder(placeholder)
                 .fallback(placeholder)
@@ -165,6 +168,9 @@ public class GlideManager {
      * @param placeholder 占位图
      */
     public static void loadCircleImg(Object obj, ImageView iv, Drawable placeholder) {
+        if (iv == null|| iv.getContext() == null) {
+            return;
+        }
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptions()
                 .error(placeholder)
                 .placeholder(placeholder)
@@ -183,6 +189,9 @@ public class GlideManager {
     }
 
     public static void loadImageAuto(Object obj, ImageView iv, Drawable placeholder) {
+        if (iv == null|| iv.getContext() == null) {
+            return;
+        }
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptionsAuto()
                 .error(placeholder)
                 .placeholder(placeholder)
@@ -234,7 +243,11 @@ public class GlideManager {
      * @param isOfficial-是否官方模式圆角
      */
     public static void loadRoundImg(Object obj, ImageView iv, float dp, Drawable placeholder, boolean isOfficial) {
-        Glide.with(iv.getContext()).load(obj).apply(getRequestOptions()
+        Context context = iv.getContext();
+        if (context == null) {
+            return;
+        }
+        Glide.with(context).load(obj).apply(getRequestOptions()
                 .error(placeholder)
                 .placeholder(placeholder)
                 .fallback(placeholder)
@@ -346,6 +359,9 @@ public class GlideManager {
      * @param placeholder
      */
     public static void loadImgXml(Object obj, ImageView iv, Drawable placeholder) {
+        if (iv == null|| iv.getContext() == null) {
+            return;
+        }
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptionsAuto()
                 .placeholder(placeholder)
                 .fallback(placeholder)

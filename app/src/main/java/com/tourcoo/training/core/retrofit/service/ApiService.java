@@ -476,6 +476,10 @@ public interface ApiService {
     Observable<BaseResult<FaceRecognizeResult>> requestFaceVerifySpecial(@Body Map<String, Object> map);
 
 
+    /**
+     * 勋章弹窗
+     * @return
+     */
     @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN, HEADER_NOT_SKIP_LOGIN})
     @POST("v1.0/user/get-medal-info")
     Observable<BaseResult<MedalDictionary>> requestMedalDictionary();

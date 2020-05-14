@@ -83,8 +83,8 @@ public class CommonBellDialog {
             Point size = new Point();
             display.getSize(size);
             int width = size.x;
-            // 宽度设置为屏幕的0.75
-            p.width = (int) (width * 0.75);
+            // 宽度设置为屏幕的0.8
+            p.width = (int) (width * 0.8);
             window.setAttributes(p);
         }
         return this;

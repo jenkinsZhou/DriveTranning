@@ -174,7 +174,8 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
                     .setOnLeftTextClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            activity.finish();
+                            activity.onBackPressed();
+//                            activity.finish();
                         }
                     });
         }
