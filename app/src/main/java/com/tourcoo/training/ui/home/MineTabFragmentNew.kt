@@ -378,7 +378,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         tvCarPlantNum.text = "车牌号：" + CommonUtil.getNotNullValue(vehicleInfo.plateNumber)
         tvCarModule.text = " 车型：" + CommonUtil.getNotNullValue(vehicleInfo.model)
         tvCarBrand.text = "品牌：" + CommonUtil.getNotNullValue(vehicleInfo.brand)
-        tvCarExpire.text = "年审到期 " + CommonUtil.getNotNullValue(vehicleInfo.expiredTime)
+        tvCarExpire.text = CommonUtil.getNotNullValue(vehicleInfo.expiredTime)
     }
 
 

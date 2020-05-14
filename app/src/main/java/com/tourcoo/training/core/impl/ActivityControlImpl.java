@@ -113,7 +113,7 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
     @Override
     public boolean onKeyDown(Activity activity, int keyCode, KeyEvent event) {
         //演示拦截系统音量键控制--类似抖音
-        switch (keyCode) {
+      /*  switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 volume(1, false);
                TourCooLogUtil.i(  "volumeDown-activity:" + activity.getClass().getSimpleName());
@@ -122,7 +122,7 @@ public  class ActivityControlImpl implements ActivityFragmentControl, ActivityKe
                 volume(1, true);
                TourCooLogUtil.i( "volumeUp-activity:" + activity.getClass().getSimpleName());
                 return true;
-        }
+        }*/
         return false;
     }
 

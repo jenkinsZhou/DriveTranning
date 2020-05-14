@@ -94,9 +94,9 @@
                         android:layout_marginStart="@dimen/dp_11"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:maxLines="1"
-                        android:inputType="phone"
                         android:hint="请输入身份证号码"
+                        android:inputType="phone"
+                        android:maxLines="1"
                         android:padding="@dimen/dp_5"
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/gray999999"
@@ -112,11 +112,11 @@
                         android:src="@mipmap/ic_closed" />
 
                     <ImageView
-                        android:layout_marginStart="@dimen/dp_15"
                         android:id="@+id/ivAccountCheck"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/dp_15"
                         android:layout_marginEnd="@dimen/dp_15"
                         android:src="@drawable/icon_check"
                         android:visibility="gone" />
@@ -154,12 +154,13 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="请输入登录密码"
-                        android:maxLines="1"
                         android:inputType="textPassword"
-                        android:textColorHint="@color/gray999999"
+                        android:maxLines="1"
                         android:padding="@dimen/dp_5"
                         android:textColor="@color/gray999999"
+                        android:textColorHint="@color/gray999999"
                         android:textSize="@dimen/sp_13" />
+
                     <ImageView
                         android:id="@+id/ivClearInputPass"
                         android:layout_width="wrap_content"
@@ -167,13 +168,12 @@
                         android:layout_gravity="center_vertical"
                         android:padding="@dimen/dp_5"
                         android:src="@mipmap/ic_closed" />
-
                     <ImageView
                         android:id="@+id/ivPassCheck"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/dp_10"
+                        android:layout_marginStart="@dimen/dp_15"
                         android:layout_marginEnd="@dimen/dp_15"
                         android:src="@drawable/icon_check"
                         android:visibility="gone" />

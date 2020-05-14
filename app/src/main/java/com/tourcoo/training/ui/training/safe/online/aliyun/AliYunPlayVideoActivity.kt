@@ -22,6 +22,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.constant.TrainingConstant.*
@@ -658,7 +659,10 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     //人脸认证成功 不做任何处理
                 } else {
                     //人脸识别失败 处理人脸识别逻辑
-                    handleRecognizeFailedCallback()
+                    if(!AppConfig.DEBUG_MODE){
+                        //如果是正式包 则必须执行认证失败的处理
+                        handleRecognizeFailedCallback()
+                    }
                 }
             }
             TencentPlayVideoActivity.REQUEST_CODE_WEB -> {

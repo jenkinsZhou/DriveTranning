@@ -50,7 +50,7 @@ class AboutUsActivity : BaseTitleActivity() {
         requestAppVersionInfo()
 
         llUpdate.setOnClickListener {
-            requestAppVersionInfo()
+            requestCheckUpdate()
         }
 
     }
@@ -98,20 +98,50 @@ class AboutUsActivity : BaseTitleActivity() {
         if (appInfo == null) {
             return
         }
-
-        updateApp {
-            topPic = R.mipmap.app_update_top_bg
-            themeColor = Color.parseColor("#3CC2E9")
-        }.update(appInfo.isUpdate == 1, appInfo.versionName,   appInfo.link, appInfo.content, appInfo.isMandatoryUpdate == 1)
-
-
         if (appInfo.isUpdate != 1) {
             tvVersionInfo.text = "好赞，当前已是最新版本"
+            setViewVisible(ivRedDot, false)
         } else {
             //需要更新
             tvVersionInfo.text = "最新版本号：" + appInfo.versionName
+            setViewVisible(ivRedDot, true)
         }
+
     }
 
 
+    private fun requestCheckUpdate() {
+        ApiRepository.getInstance().requestAppVersionInfo().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<AppUpdateInfo>>() {
+            override fun onSuccessNext(entity: BaseResult<AppUpdateInfo>?) {
+                if (entity != null) {
+                    if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                        handleCheckUpdateCallback(entity.data)
+                    } else {
+                        ToastUtil.show(entity.msg)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun handleCheckUpdateCallback(appInfo: AppUpdateInfo?) {
+        if (appInfo == null) {
+            return
+        }
+        if (appInfo.isUpdate != 1) {
+            tvVersionInfo.text = "好赞，当前已是最新版本"
+            setViewVisible(ivRedDot, false)
+            ToastUtil.show("当前已是最新版本")
+        } else {
+            //需要更新
+            tvVersionInfo.text = "最新版本号：" + appInfo.versionName
+            setViewVisible(ivRedDot, true)
+        }
+        updateApp {
+            topPic = R.mipmap.app_update_top_bg
+            themeColor = Color.parseColor("#3CC2E9")
+        }.update(appInfo.isUpdate == 1, appInfo.versionName, appInfo.link, appInfo.content, appInfo.isMandatoryUpdate == 1)
+
+
+    }
 }

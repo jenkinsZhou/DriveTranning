@@ -593,7 +593,7 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult<AppUpdateInfo>> requestAppVersionInfo() {
         Map<String, Object> params = new HashMap<>(4);
         params.put("appType", "Android");
-        params.put("appVersion", AppUtils.getAppVersionName());
+        params.put("appVersion", "v"+AppUtils.getAppVersionName());
         params.put("deviceID", getUniquePsuedoID());
         params.put("deviceOS", android.os.Build.VERSION.RELEASE);
         return CommonTransformer.switchSchedulers(getApiService().requestAppVersionInfo(params).retryWhen(new RetryWhen()));

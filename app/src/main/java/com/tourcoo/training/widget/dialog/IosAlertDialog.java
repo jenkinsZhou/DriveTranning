@@ -63,7 +63,7 @@ public class IosAlertDialog {
         // 调整dialog背景大小
         container.setLayoutParams(
                 new FrameLayout.LayoutParams(
-                        (int) (display.getWidth() * 0.85),
+                        (int) (display.getWidth() * 0.7),
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
         return this;

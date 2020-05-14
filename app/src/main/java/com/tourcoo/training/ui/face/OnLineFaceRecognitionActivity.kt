@@ -19,6 +19,7 @@ import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -343,9 +344,13 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                     handleRecognizeSuccessCallback()
                 } else {
                     ToastUtil.show(entity.msg)
-                    //todo 暂时模拟成功
-//                    handleRecognizeSuccessCallback()
-                    handleRecognizeFailedCallback()
+                    if (AppConfig.DEBUG_MODE) {
+                        //如果是测试包 则当成功处理 不做拦截
+                        handleRecognizeSuccessCallback()
+                    } else {
+                        //如果是正式包 则必须执行认证失败的处理
+                        handleRecognizeFailedCallback()
+                    }
                 }
             }
         })

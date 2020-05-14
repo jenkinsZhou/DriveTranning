@@ -19,6 +19,7 @@ import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -49,7 +50,7 @@ import java.io.*
  * @date 2020年05月11日9:29
  * @Email: 971613168@qq.com
  */
-class ProfessionalFaceRecognitionActivity  : BaseTitleActivity(), CameraListener, View.OnClickListener, EasyPermissions.PermissionCallbacks  {
+class ProfessionalFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClickListener, EasyPermissions.PermissionCallbacks {
 
     companion object {
         const val tag = "FaceRecognitionActivity"
@@ -342,9 +343,15 @@ class ProfessionalFaceRecognitionActivity  : BaseTitleActivity(), CameraListener
                     handleRecognizeSuccessCallback()
                 } else {
                     ToastUtil.show(entity.msg)
-                    //todo 暂时模拟成功
-                    handleRecognizeSuccessCallback()
-//                    handleRecognizeFailedCallback()
+                    if (AppConfig.DEBUG_MODE) {
+                        //如果是测试包 则当成功处理 不做拦截
+                        handleRecognizeSuccessCallback()
+                    } else {
+                        //如果是正式包 则必须执行认证失败的处理
+                        handleRecognizeFailedCallback()
+                    }
+
+//
                 }
             }
         })
@@ -353,7 +360,7 @@ class ProfessionalFaceRecognitionActivity  : BaseTitleActivity(), CameraListener
 
     private fun handleRecognizeFailedCallback() {
         val alert = CommonWaringAlert(mContext)
-        alert.create().setTitle("验证失败").setContent("本次验证未通过～").setPositiveButtonClick("我知道了",object : View.OnClickListener{
+        alert.create().setTitle("验证失败").setContent("本次验证未通过～").setPositiveButtonClick("我知道了", object : View.OnClickListener {
             override fun onClick(v: View?) {
                 //验证失败直接关闭页面
                 finish()

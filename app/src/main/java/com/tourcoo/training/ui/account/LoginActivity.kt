@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.EventBus
 class LoginActivity : BaseTitleActivity(), View.OnClickListener {
     private val mTag = "LoginActivity"
     private var checkInputList: MutableList<InputStatus>? = null
+
     companion object {
         const val EXTRA_KEY_REGISTER_TYPE = "EXTRA_KEY_REGISTER_TYPE"
         const val EXTRA_REGISTER_TYPE_INDUSTRY = 1
@@ -63,25 +64,26 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
         tvLogin.setOnClickListener(this)
         btnForgetPassword.setOnClickListener(this)
         btnContent.setOnClickListener(this)
-        listenInputClear(etPass,ivClearInputPass)
+        listenInputClear(etPass, ivClearInputPass)
         listenInputLegal(etIdCard, ivAccountCheck)
+        listenInputLegalPass(etPass, ivPassCheck, 6)
         showButtonByInput(hasInputAll())
         listenInputFocus(etIdCard, viewLineAccount, OnFocusListener {
-            if(it){
+            if (it) {
                 ivUser.setImageResource(R.drawable.icon_identity_card_selected)
-            }else{
+            } else {
                 ivUser.setImageResource(R.drawable.icon_identity_card_normal)
             }
         })
         listenInputFocus(etPass, viewLinePass, OnFocusListener {
-            if(it){
+            if (it) {
                 ivPass.setImageResource(R.drawable.icon_password_selected)
-            }else{
+            } else {
                 ivPass.setImageResource(R.drawable.icon_password_normal)
             }
         })
-        listenInputClear(etIdCard,ivClearInputId)
-        listenInputClear(etPass,ivClearInputPass)
+        listenInputClear(etIdCard, ivClearInputId)
+        listenInputClear(etPass, ivClearInputPass)
 
         initTestInput()
     }
@@ -153,7 +155,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onSuccessNext(entity: BaseResult<UserInfo>?) {
                 if (entity != null) {
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                        SPUtils.getInstance().put("TraineeID",entity.data.traineeID)
+                        SPUtils.getInstance().put("TraineeID", entity.data.traineeID)
                         handleLoginCallback(entity.data)
                     } else {
                         ToastUtil.show(entity.msg)
@@ -214,7 +216,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
                 inputStatus.isHasInput = s.isNotEmpty()
-                setViewGone(imageView, s.isNotEmpty())
+                setViewVisible(imageView, s.isNotEmpty())
                 LogUtils.iTag(mTag, "hasInputAll=" + hasInputAll())
                 showButtonByInput(hasInputAll())
             }
@@ -231,13 +233,27 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
                 inputStatus.isHasInput = s.isNotEmpty()
-                setViewGone(imageView, s.toString().length == 18)
+                setViewVisible(imageView, s.toString().length == 18 || s.toString().length == 11)
                 LogUtils.iTag(mTag, "hasInputAll=" + hasInputAll())
                 showButtonByInput(hasInputAll())
             }
         })
     }
 
+    private fun listenInputLegalPass(editText: EditText, imageView: ImageView?, correctLength: Int) {
+        var inputStatus = InputStatus()
+        checkInputList?.add(inputStatus)
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                inputStatus.isHasInput = s.isNotEmpty()
+                setViewVisible(imageView, s.toString().length >= correctLength)
+                LogUtils.iTag(mTag, "hasInputAll=" + hasInputAll())
+                showButtonByInput(hasInputAll())
+            }
+        })
+    }
 
     private fun listenInputClear(editText: EditText, imageView: ImageView?) {
         imageView?.setOnClickListener { editText.setText("") }
@@ -245,7 +261,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                setViewGone(imageView, !TextUtils.isEmpty(editText.text.toString()))
+                setViewVisible(imageView, !TextUtils.isEmpty(editText.text.toString()))
             }
         })
     }
@@ -263,7 +279,7 @@ class LoginActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun listenInputFocus(editText: EditText, lineView: View,focusListener: OnFocusListener  ) {
+    private fun listenInputFocus(editText: EditText, lineView: View, focusListener: OnFocusListener) {
         editText.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
             focusListener.onFocus(hasFocus)
             if (hasFocus) {
