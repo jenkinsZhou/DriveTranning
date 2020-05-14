@@ -78,6 +78,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLength="12"
+                            android:maxEms="10"
                             android:maxLines="1"
                             android:text="--"
                             android:textColor="@color/white"

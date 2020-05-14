@@ -128,6 +128,9 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         initItemClick()
         loadMineAccount()
         loadAchievement()
+        llNoCar.setOnClickListener {
+            ToastUtil.show("该功能暂未开放")
+        }
         if (AccountHelper.getInstance().isLogin) {
             showUserInfo(AccountHelper.getInstance().userInfo)
         } else {
@@ -376,7 +379,8 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
             return
         }
         tvCarPlantNum.text = "车牌号：" + CommonUtil.getNotNullValue(vehicleInfo.plateNumber)
-        tvCarModule.text = " 车型：" + CommonUtil.getNotNullValue(vehicleInfo.model)
+//        tvCarModule.text = " 车型：" + CommonUtil.getNotNullValue(vehicleInfo.model)
+        tvCarModule.text = CommonUtil.getNotNullValue(vehicleInfo.model)
         tvCarBrand.text = "品牌：" + CommonUtil.getNotNullValue(vehicleInfo.brand)
         tvCarExpire.text = CommonUtil.getNotNullValue(vehicleInfo.expiredTime)
     }

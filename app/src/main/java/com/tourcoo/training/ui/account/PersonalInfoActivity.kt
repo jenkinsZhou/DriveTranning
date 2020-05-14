@@ -105,10 +105,8 @@ class PersonalInfoActivity : BaseTitleActivity() {
 
         llContentIdCard.setOnLongClickListener(object : View.OnLongClickListener {
             override fun onLongClick(v: View?): Boolean {
-                if (AppConfig.DEBUG_MODE) {
                     setClipboard(getTextValue(tvIdCard))
                     ToastUtil.show("复制成功")
-                }
                 return false
             }
 

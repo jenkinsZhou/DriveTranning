@@ -90,7 +90,10 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
                             list.add(BannerEntity(it.imageUrl, it.url, 1))
                         }
                         learnBanner?.adapter = ImageBannerAdapter(list)
-                        learnBanner?.indicator = CircleIndicator(mContext)
+                        val indicator = CircleIndicator(mContext)
+                        learnBanner?.indicator = indicator
+                        learnBanner.setIndicatorNormalColor(ResourceUtil.getColor(R.color.white))
+                        learnBanner.setIndicatorSelectedColor(Color.parseColor("#858DFF"))
                         learnBanner?.setOnBannerListener(object : OnBannerListener<Any> {
                             override fun onBannerChanged(position: Int) {
                             }

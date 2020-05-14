@@ -145,6 +145,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         }
 
         vpExamOnline.adapter = fragmentCommonAdapter
+        vpExamOnline.setScrollEnable(false)
     }
 
     override fun onClick(v: View?) {
