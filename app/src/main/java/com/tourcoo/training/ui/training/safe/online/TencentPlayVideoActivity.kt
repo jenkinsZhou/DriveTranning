@@ -283,14 +283,14 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         cancelTimer()
         //清除常亮设置
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        super.onDestroy()
         if (smartVideoPlayer != null) {
-            // 释放
-            smartVideoPlayer.release()
             if (smartVideoPlayer.getPlayMode() != SuperPlayerConst.PLAYMODE_FLOAT) {
                 smartVideoPlayer.resetPlayer()
             }
+            // 释放
+            smartVideoPlayer.release()
         }
+        super.onDestroy()
 
     }
 
@@ -417,7 +417,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
         for (course in courses) {
-            TourCooLogUtil.i(mTag, "已执行")
             val contentView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_content, null)
             val tvPlanTitle = contentView.findViewById<TextView>(R.id.tvPlanTitle)
             tvPlanTitle.text = getNotNullValue(course.name)
@@ -755,7 +754,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-
+                TourCooLogUtil.i(mTag,"计时中...")
             }
 
         })
@@ -766,7 +765,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun cancelTimer() {
         if (mTimerTask != null) {
             mTimerTask!!.stop()
-            TourCooLogUtil.i(mTag, "")
+            mTimerTask = null
+            TourCooLogUtil.w(mTag, "计时器销毁")
         }
     }
 
@@ -775,6 +775,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (mTimerTask != null) {
             //先重置 在启动
             mTimerTask!!.reset()
+            TourCooLogUtil.i(mTag, "计时器启动")
             mTimerTask!!.start()
         }
     }
@@ -810,7 +811,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //暂停视频
         baseHandler.postDelayed(Runnable {
             smartVideoPlayer?.onPause()
-        }, 1000)
+        }, 300)
 
         ToastUtil.show("人脸识别失败")
         baseHandler.postDelayed(Runnable {

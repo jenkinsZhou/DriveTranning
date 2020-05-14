@@ -24,6 +24,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter;
+import com.tourcoo.training.adapter.news.NewsRecommendedMultipleAdapter;
 import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.constant.TrainingConstant;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
@@ -77,7 +78,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
     //进度条
     private CoolIndicator indicator;
 
-    private NewsMultipleAdapter adapter;
+    private NewsRecommendedMultipleAdapter adapter;
 
     private NewsEntity mNewsEntity;
     private TextView tvNewsLookCount;
@@ -135,7 +136,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
     private void initWebView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NewsMultipleAdapter(new ArrayList<>());
+        adapter = new NewsRecommendedMultipleAdapter(new ArrayList<>());
         adapter.bindToRecyclerView(recyclerView);
         initItemClick();
         //滚动绑定

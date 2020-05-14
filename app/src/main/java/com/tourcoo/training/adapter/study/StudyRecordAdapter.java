@@ -70,10 +70,10 @@ public class StudyRecordAdapter extends BaseMultiItemQuickAdapter<StudyRecord, B
                         ivStudyTag.setImageResource(R.mipmap.ic_training_state_doing);
                         break;
                     case 2:
-                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_end);
+                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_wait_exam);
                         break;
                     case 3:
-                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_wait_exam);
+                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_end);
                         break;
                     default:
                         break;

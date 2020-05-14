@@ -44,8 +44,6 @@ public class NewsRecommendedMultipleAdapter extends BaseMultiItemQuickAdapter<Ne
         switch (helper.getItemViewType()) {
             case NEWS_TYPE_IMAGE_ONE:
                 helper.setText(R.id.tvTime,CommonUtil.getNotNullValue(item.getPublishTime()));
-                //推荐不显示置顶
-                helper.setGone(R.id.ivFlagTop,item.getMountainTop() == 1);
                 helper.setText(R.id.tvShareCount,item.getSharedNum()+"");
                 helper.setText(R.id.tvReadCount,item.getReadTotal()+"");
                 helper.setText(R.id.tvNewsTitle, CommonUtil.getNotNullValue(item.getTitle()));
@@ -86,5 +84,7 @@ public class NewsRecommendedMultipleAdapter extends BaseMultiItemQuickAdapter<Ne
                 GlideManager.loadImg(CommonUtil.getUrl(item.getCoverUrl()), ivVideoCover);
                 break;
         }
+        //推荐列表不显示置顶
+        helper.setGone(R.id.ivFlagTop,false);
     }
 }

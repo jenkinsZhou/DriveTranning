@@ -37,6 +37,7 @@ import com.tencent.rtmp.TXLiveConstants;
 import com.tourcoo.training.BuildConfig;
 import com.tourcoo.training.R;
 import com.tourcoo.training.adapter.news.NewsMultipleAdapter;
+import com.tourcoo.training.adapter.news.NewsRecommendedMultipleAdapter;
 import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.constant.TrainingConstant;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
@@ -93,7 +94,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     private CoolIndicator indicator;
     private SuperPlayerView smartVideoPlayer;
 
-    private NewsMultipleAdapter adapter;
+    private NewsRecommendedMultipleAdapter adapter;
     private NewsEntity mNewsEntity;
     private TextView tvNewsLookCount;
     private TextView tvNewsLikeCount;
@@ -111,7 +112,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         api = WXAPIFactory.createWXAPI(mContext, APP_ID);
         itemPosition = getIntent().getIntExtra(EXTRA_KEY_POSITION, -1);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NewsMultipleAdapter(new ArrayList<>());
+        adapter = new NewsRecommendedMultipleAdapter(new ArrayList<>());
         adapter.bindToRecyclerView(recyclerView);
         initItemClick();
         //滚动绑定

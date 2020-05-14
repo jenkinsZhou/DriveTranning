@@ -151,7 +151,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     /**
      * 是否是考试状态
      */
-    private var mExamEnable =  false
+    private var mExamEnable = false
 
     private val PERMISSIONS_STORAGE = arrayOf(
             "android.permission.READ_EXTERNAL_STORAGE",
@@ -367,7 +367,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             return
         }
         for (course in courses) {
-            TourCooLogUtil.i(mTag, "已执行")
             val contentView = LayoutInflater.from(mContext).inflate(R.layout.item_training_plan_detail_content, null)
             val tvPlanTitle = contentView.findViewById<TextView>(R.id.tvPlanTitle)
             tvPlanTitle.text = getNotNullValue(course.name)
@@ -415,14 +414,14 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 //锁定状态 下的提示文字需要修改成 时长+未解锁
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 //显示未解锁提示
-                showUnlockTips(course,tvPlanDesc,tvPlanTitle)
+                showUnlockTips(course, tvPlanDesc, tvPlanTitle)
             }
             COURSE_PLAY_STATUS_COMPLETE -> {
                 //已完成 下的提示文字需要修改成 时长+已听完
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 imageView.setImageResource(R.mipmap.ic_play_finish)
                 //显示已听完
-                showPlayFinishTips(course,tvPlanDesc,tvPlanTitle)
+                showPlayFinishTips(course, tvPlanDesc, tvPlanTitle)
             }
             COURSE_PLAY_STATUS_PLAYING -> {
                 if (course.mediaType == MEDIA_TYPE_HTML) {
@@ -659,7 +658,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     //人脸认证成功 不做任何处理
                 } else {
                     //人脸识别失败 处理人脸识别逻辑
-                    if(!AppConfig.DEBUG_MODE){
+                    if (!AppConfig.DEBUG_MODE) {
                         //如果是正式包 则必须执行认证失败的处理
                         handleRecognizeFailedCallback()
                     }
@@ -689,7 +688,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         mTimerTask = CountDownTimerSupport(faceVerifyInterval.toLong() * 1000, 1000L)
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
             override fun onFinish() {
-                ToastUtil.show("时间到")
                 //时间到 开始下一个计时
                 startTimer()
                 //todo 处理认证逻辑
@@ -697,7 +695,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-
+            TourCooLogUtil.d("计时中...")
             }
 
         })
@@ -708,6 +706,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun cancelTimer() {
         if (mTimerTask != null) {
             mTimerTask!!.stop()
+            TourCooLogUtil.w(mTag, "计时器已取消")
         }
     }
 
@@ -717,6 +716,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             //先重置 在启动
             mTimerTask!!.reset()
             mTimerTask!!.start()
+            TourCooLogUtil.i(mTag, "计时器开始")
         }
     }
 
@@ -724,6 +724,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (mTimerTask != null) {
             //暂停
             mTimerTask!!.pause()
+            TourCooLogUtil.d(mTag, "计时器暂停")
         }
     }
 
@@ -731,6 +732,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         if (mTimerTask != null) {
             //恢复
             mTimerTask!!.resume()
+            TourCooLogUtil.d(mTag, "计时器恢复")
+
         }
     }
 
@@ -1544,9 +1547,14 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         loadPlayerSettingDefinitionAndSeek(finalSteam!!.url, lastSeek)
     }
 
+    /**
+     * 关键核心 控制布局显示监听
+     */
     private fun onTipViewShow() {
         //播放器层的提示框已经显示了 就没必要显示loading框了 因此 关闭
         closeLoading()
+        //todo 暂停计时
+        timerPause()
     }
 
     /**
@@ -1726,7 +1734,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //暂停视频
         baseHandler.postDelayed(Runnable {
             smartVideoPlayer?.onPause()
-        }, 1000)
+        }, 300)
 
         ToastUtil.show("人脸识别失败")
         baseHandler.postDelayed(Runnable {
@@ -1753,7 +1761,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }, 500)
     }
 
-    private fun showUnlockTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+    private fun showUnlockTips(course: Course, tvPlanDesc: TextView, tvPlanTitle: TextView) {
         val tips = TimeUtil.getTime(course.duration) + " 未解锁"
         tvPlanDesc.text = tips
         tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.black333333))
@@ -1762,7 +1770,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         setViewGone(tvPlanDesc, true)
     }
 
-    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView, tvPlanTitle: TextView) {
         val tips = TimeUtil.getTime(course.duration) + " 已听完"
         tvPlanDesc.text = tips
         tvPlanDesc.textSize = 12f
