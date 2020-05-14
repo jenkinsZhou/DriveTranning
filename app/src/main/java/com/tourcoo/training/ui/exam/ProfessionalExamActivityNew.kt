@@ -90,16 +90,17 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
         type = intent.getIntExtra("type", 0)
         examId = intent.getStringExtra("examId")
 
-        if (type == 1) {
-            examId = ""
-        } else {
-            if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
-                ToastUtil.show("未获取到考试题数据")
-                finish()
-                return
-            }
-        }
+//        if (type == 1) {
+////            examId = ""
+//        } else {
+//
+//        }
 
+        if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
+            ToastUtil.show("未获取到考试题数据")
+            finish()
+            return
+        }
 
         list = ArrayList()
         tvNextQuestion.setOnClickListener(this)

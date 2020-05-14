@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -29,6 +30,7 @@ import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.log.TourCooLogUtil
+import com.tourcoo.training.core.manager.GlideManager
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.*
@@ -105,7 +107,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-
     override fun getContentLayout(): Int {
         return R.layout.activity_play_video_tencent
     }
@@ -154,11 +155,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         smartVideoPlayer.setOnPlayStatusListener(object : SuperPlayerView.OnPlayStatusListener {
 
             override fun enableSeek() {
+                ivCoverView.visibility = View.GONE
                 smartVideoPlayer.seekTo(currentProgress)
             }
 
             override fun onAutoPlayComplete() {
                 //通知后台当前课程播放结束
+                ivCoverView.visibility = View.VISIBLE
                 requestCompleteCurrentCourse(currentCourseId)
             }
 
@@ -191,7 +194,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 }
                 //设置view的布局，宽高
                 val aliVcVideoViewLayoutParams = smartVideoPlayer
-                        .getLayoutParams() as LinearLayout.LayoutParams
+                        .getLayoutParams() as FrameLayout.LayoutParams
                 aliVcVideoViewLayoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
                 aliVcVideoViewLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
 
@@ -202,16 +205,22 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
             override fun onStopFullScreenPlay() {
-                window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
-                smartVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE)
-                //设置view的布局，宽高之类
-                val aliVcVideoViewLayoutParams = smartVideoPlayer
-                        .getLayoutParams() as LinearLayout.LayoutParams
-                aliVcVideoViewLayoutParams.height = (ScreenUtils.getWidth(this@TencentPlayVideoActivity) * 9.0f / 16).toInt()
-                aliVcVideoViewLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                if (mTitleBar.visibility != View.VISIBLE) {
-                    mTitleBar.visibility = View.VISIBLE
-                }
+                baseHandler.postDelayed({
+                    window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+                    smartVideoPlayer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE)
+                    //设置view的布局，宽高之类
+                    val aliVcVideoViewLayoutParams = smartVideoPlayer
+                            .getLayoutParams() as FrameLayout.LayoutParams
+                    aliVcVideoViewLayoutParams.height = (ScreenUtils.getWidth(this@TencentPlayVideoActivity) * 9.0f / 16).toInt()
+                    aliVcVideoViewLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                    if (mTitleBar.visibility != View.VISIBLE) {
+                        mTitleBar.visibility = View.VISIBLE
+                    }
+                }, 200)
+
+                smartVideoPlayer.seekTo(smartVideoPlayer.currentProgress)
+
+
             }
 
             override fun onClickFloatCloseBtn() {
@@ -474,11 +483,15 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
+
+                GlideManager.loadGrayImg(CommonUtil.getNotNullValue(course.coverURL), ivCoverView, R.drawable.ic_rect_default)
+
                 //只有当前正在浏览的课件 并且是html课件才允许点击
                 if (course.mediaType == MEDIA_TYPE_HTML) {
                     ToastUtil.show("当前是网页课件,需要手动点击学习")
                     setCourseInfoClick(view, course)
                 }
+
                 playStreamUrlOrHtml(course)
             }
             else -> {

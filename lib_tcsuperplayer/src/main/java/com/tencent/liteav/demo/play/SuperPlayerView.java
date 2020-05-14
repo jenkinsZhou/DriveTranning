@@ -89,7 +89,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     private ViewGroup mRootView;
     private TXCloudVideoView mTXCloudVideoView;
     private TCVodControllerLarge mVodControllerLarge;
-    private TCVodControllerSmall mVodControllerSmall;
+    public TCVodControllerSmall mVodControllerSmall;
     private TCVodControllerFloat mVodControllerFloat;
 
     private TCDanmuView mDanmuView;
@@ -165,6 +165,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         mVodControllerSmall = (TCVodControllerSmall) mRootView.findViewById(R.id.controller_small);
         mVodControllerFloat = (TCVodControllerFloat) mRootView.findViewById(R.id.controller_float);
         mDanmuView = (TCDanmuView) mRootView.findViewById(R.id.danmaku_view);
+        mDanmuView = (TCDanmuView) mRootView.findViewById(R.id.danmaku_view);
 
         mVodControllerSmallParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mVodControllerLargeParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -184,6 +185,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         mRootView.removeView(mVodControllerFloat);
 
         addView(mTXCloudVideoView);
+
         if (mPlayMode == SuperPlayerConst.PLAYMODE_FULLSCREEN) {
             addView(mVodControllerLarge);
             mVodControllerLarge.hide();
@@ -285,6 +287,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         mLivePlayer.enableHardwareDecode(config.enableHWAcceleration);
     }
 
+    private String title;
+
     public void playWithModel(final SuperPlayerModel modelV3) {
         mCurrentTimeWhenPause = 0;
         SuperPlayerModelWrapper modelWrapper = new SuperPlayerModelWrapper(modelV3);
@@ -311,7 +315,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                     mVodControllerSmall.updatePlayType(SuperPlayerConst.PLAYTYPE_VOD);
                     mVodControllerLarge.updatePlayType(SuperPlayerConst.PLAYTYPE_VOD);
 
-                    String title = !TextUtils.isEmpty(modelV3.title) ? modelV3.title :
+                    title = !TextUtils.isEmpty(modelV3.title) ? modelV3.title :
                             (model.videoInfo != null && !TextUtils.isEmpty(model.videoInfo.videoName)) ? model.videoInfo.videoName : "";
                     mVodControllerSmall.updateTitle(title);
                     mVodControllerLarge.updateTitle(title);
@@ -1037,6 +1041,9 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
 
         @Override
         public float getDuration() {
+            if (mVodPlayer == null) {
+                return 0;
+            }
             return mVodPlayer.getDuration();
         }
 
@@ -1582,6 +1589,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         public void onQualitySelect(TCVideoQulity quality) {
             mVodControllerLarge.updateVideoQulity(quality);
             if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
+
                 if (mVodPlayer != null) {
                     if (quality.index == -1) {
                         // 说明是非多bitrate的m3u8子流，需要手动seek
@@ -1592,8 +1600,17 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                         mVodPlayer.startPlay(quality.url);
                     } else {
                         TXCLog.i(TAG, "setBitrateIndex quality.index:" + quality.index);
-                        // 说明是多bitrate的m3u8子流，会自动无缝seek
-                        mVodPlayer.setBitrateIndex(quality.index);
+
+                        if (quality.url.endsWith(".mp4")) {
+
+                            float currentTime = mVodPlayer.getCurrentPlaybackTime();
+                            mVodPlayer.setStartTime(currentTime);
+                            mVodPlayer.startPlay(quality.url);
+
+                        } else {
+                            // 说明是多bitrate的m3u8子流，会自动无缝seek
+                            mVodPlayer.setBitrateIndex(quality.index);
+                        }
                     }
                 }
             } else {
@@ -1910,6 +1927,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             mVodControllerSmall.updateReplay(true);
             mVodControllerLarge.updateReplay(true);
         } else if (event == TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {
+            Toast.makeText(mContext, "进度同步中...", Toast.LENGTH_SHORT).show();
+
             int progress = param.getInt(TXLiveConstants.EVT_PLAY_PROGRESS_MS);
             int duration = param.getInt(TXLiveConstants.EVT_PLAY_DURATION_MS);
             mVodControllerSmall.updateVideoProgress(progress / 1000, duration / 1000);
