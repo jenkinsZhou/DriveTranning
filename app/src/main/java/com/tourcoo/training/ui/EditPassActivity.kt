@@ -247,10 +247,10 @@ class EditPassActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.show("未获取到正确的手机号")
             return
         }
-        if (getTextValue(etNewPass).length < 6 || getTextValue(etNewPass).length > 18) {
-            ToastUtil.show("请密码长度不合法，请重新输入")
+      /*  if (getTextValue(etNewPass).length < 6 || getTextValue(etNewPass).length > 18) {
+            ToastUtil.show("密码长度不合法，请重新输入")
             return
-        }
+        }*/
         ApiRepository.getInstance().requestResetPass(phone, getTextValue(etNewPass), getTextValue(etVCode)).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<*>>() {
             override fun onSuccessNext(entity: BaseResult<*>?) {
                 if (entity == null) {
