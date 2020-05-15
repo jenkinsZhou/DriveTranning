@@ -364,6 +364,15 @@ public interface ApiService {
     Observable<BaseResult<StudyMedalEntity>> requestStudyMedalList();
 
     /**
+     * 领取勋章
+     *
+     * @return
+     */
+    @Headers({TokenInterceptor.HEADER_NO_NEED_TOKEN})
+    @POST("v1.0/user/receive-medal")
+    Observable<BaseResult> receiveMedal(@Body Map<String, Object> map);
+
+    /**
      * 点赞
      *
      * @return

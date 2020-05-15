@@ -328,6 +328,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                         //刷新学币
                         requestCoinPackage()
                         notifyUserInfo()
+                        requestMedalDictionary()
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         ToastUtil.show(payResult.memo)
@@ -419,6 +420,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             ToastUtil.showSuccess("支付成功")
             requestCoinPackage()
             notifyUserInfo()
+            requestMedalDictionary()
         } else {
             ToastUtil.show("支付未完成")
         }
@@ -436,24 +438,25 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     //显示勋章
-                    showMedalDialog()
+                    showMedalDialog(entity.data.consume.toInt())
                 }
             }
         })
     }
 
-    private fun showMedalDialog() {
+    private fun showMedalDialog(number: Int) {
         val dialog = MedalDialog(mContext)
-        dialog.create().setPositiveButtonListener {
-            dialog.dismiss()
-            val intent = Intent(this, StudyMedalRecordActivity::class.java)
-            startActivityForResult(intent, 2017)
-        }.show()
+        dialog.create()
+                .setMedal(3, number, AccountTempHelper.getInstance().studyMedalEntity)
+                .setPositiveButtonListener {
+                    dialog.dismiss()
+                    val intent = Intent(this, StudyMedalRecordActivity::class.java)
+                    startActivityForResult(intent, 2017)
+                }.show()
     }
 
 
-
-    private fun notifyUserInfo(){
+    private fun notifyUserInfo() {
         val refreshEvent = UserInfoEvent()
         val user = UserInfo()
         refreshEvent.userInfo = user

@@ -51,11 +51,11 @@ public class StudyRecordAdapter extends BaseMultiItemQuickAdapter<StudyRecord, B
                 ImageView ivStudyTag = helper.getView(R.id.ivStudyTag);
                 TextView tvExamScore = helper.getView(R.id.tvExamScore);
                 helper.setText(R.id.tvTrainName, CommonUtil.getNotNullValue(item.getTrainingPlanName()));
-                boolean isOnline = item.getIsOnlineLearning() == 1;
-                if (isOnline) {
-                    helper.setText(R.id.tvTrainType, "线上培训");
-                } else {
+                boolean isOffline = item.getIsOnlineLearning() == 0;
+                if (isOffline) {
                     helper.setText(R.id.tvTrainType, "现场培训");
+                } else {
+                    helper.setText(R.id.tvTrainType, "线上培训");
                 }
                 String date = CommonUtil.getNotNullValue(item.getTrainingPlanStartTime());
                 date += "—" + CommonUtil.getNotNullValue(item.getTrainingPlanEndTime());
@@ -70,10 +70,10 @@ public class StudyRecordAdapter extends BaseMultiItemQuickAdapter<StudyRecord, B
                         ivStudyTag.setImageResource(R.mipmap.ic_training_state_doing);
                         break;
                     case 2:
-                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_wait_exam);
+                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_end);
                         break;
                     case 3:
-                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_end);
+                        ivStudyTag.setImageResource(R.mipmap.ic_training_state_wait_exam);
                         break;
                     default:
                         break;

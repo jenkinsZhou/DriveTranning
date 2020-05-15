@@ -14,9 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.RequestConfig;
+import com.tourcoo.training.core.base.entity.BaseResult;
+import com.tourcoo.training.core.retrofit.BaseObserver;
+import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
+import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.entity.account.AccountTempHelper;
+import com.tourcoo.training.entity.medal.MedalInfo;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
+import com.tourcoo.training.entity.study.StudyMedal;
+import com.trello.rxlifecycle3.android.ActivityEvent;
+
+import java.util.List;
 
 
 /**
@@ -31,6 +41,7 @@ public class MedalDialog {
     private Dialog dialog;
     private TextView tvPositive;
     private TextView tvTitle;
+    private TextView tvContent;
     private ImageView ivMedalIcon;
 
     public MedalDialog(Context context) {
@@ -53,6 +64,7 @@ public class MedalDialog {
         dialog.setContentView(view);
         tvPositive = view.findViewById(R.id.tvPositive);
         tvTitle = view.findViewById(R.id.tvTitle);
+        tvContent = view.findViewById(R.id.tvContent);
         ivMedalIcon = view.findViewById(R.id.ivMedalIcon);
         view.findViewById(R.id.ivCloseRect).setOnClickListener(v -> dismiss());
         Window window = dialog.getWindow();
@@ -83,93 +95,302 @@ public class MedalDialog {
     }
 
 
+    private boolean isShow = false;
+    private int index = -1;
+    private int mType = -1;
+
     /**
      * @param type   类型  1：学习   2：证书   3：消费
      * @param number 与类型匹配的规则数值
      * @return
      */
+
     public MedalDialog setMedal(int type, int number, StudyMedalEntity studyMedalEntity) {
-        int id = 0; // 勋章ID
-
-
+        mType = type;
         switch (type) {
             case 1:
-                switch (id) {
-                    case 1001:
-                        ivMedalIcon.setImageResource(R.drawable.img_01);
-                        break;
-                    case 1002:
-                        ivMedalIcon.setImageResource(R.drawable.img_02);
-                        break;
-                    case 1003:
-                        ivMedalIcon.setImageResource(R.drawable.img_03);
-                        break;
-                    case 1004:
-                        ivMedalIcon.setImageResource(R.drawable.img_04);
-                        break;
-                    case 1005:
-                        ivMedalIcon.setImageResource(R.drawable.img_05);
-                        break;
-                    default:
-                        ivMedalIcon.setImageResource(R.drawable.img_05);
-                        break;
+                //number 小时
+                List<MedalInfo> list = studyMedalEntity.getStudyMedals();
+
+                if (number >= 3 && number < 6) {
+                    isShow = list.get(0).getStatus() == 0;
+                    if (isShow) {
+                        index = 0;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·安培新星勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计学习时长已达3个小时");
+                        }
+
+                        requestMedalRecord("1001");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_01);
+                } else if (number >= 6 && number < 10) {
+                    isShow = list.get(1).getStatus() == 0;
+                    if (isShow) {
+                        index = 1;
+
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·贵在坚持勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计学习时长已达6个小时");
+                        }
+
+
+                        requestMedalRecord("1002");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_02);
+                } else if (number >= 10 && number < 15) {
+                    isShow = list.get(2).getStatus() == 0;
+                    if (isShow) {
+                        index = 2;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·学习之星勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计学习时长已达10个小时");
+                        }
+
+                        requestMedalRecord("1003");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_03);
+                } else if (number >= 15 && number < 20) {
+                    isShow = list.get(3).getStatus() == 0;
+                    if (isShow) {
+                        index = 3;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·持之以恒勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计学习时长已达15个小时");
+                        }
+
+                        requestMedalRecord("1004");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_04);
+                } else if (number >= 20) {
+                    isShow = list.get(4).getStatus() == 0;
+                    if (isShow) {
+                        index = 4;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·安培代言人勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计学习时长已达20个小时");
+                        }
+
+                        requestMedalRecord("1005");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_05);
                 }
+
 
                 break;
             case 2:
-                switch (id) {
-                    case 2001:
-                        ivMedalIcon.setImageResource(R.drawable.img_06);
-                        break;
-                    case 2002:
-                        ivMedalIcon.setImageResource(R.drawable.img_07);
-                        break;
-                    case 2003:
-                        ivMedalIcon.setImageResource(R.drawable.img_08);
-                        break;
-                    case 2004:
-                        ivMedalIcon.setImageResource(R.drawable.img_09);
-                        break;
-                    case 2005:
-                        ivMedalIcon.setImageResource(R.drawable.img_10);
-                        break;
-                    default:
-                        ivMedalIcon.setImageResource(R.drawable.img_10);
-                        break;
+                //number
+                list = studyMedalEntity.getCertificateMedals();
+
+                if (number >= 2 && number < 4) {
+                    isShow = list.get(0).getStatus() == 0;
+                    if (isShow) {
+                        index = 0;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·牛刀小试勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计获得2个学习证书");
+                        }
+
+                        requestMedalRecord("2001");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_06);
+                } else if (number >= 4 && number < 6) {
+                    isShow = list.get(1).getStatus() == 0;
+                    if (isShow) {
+                        index = 1;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·小有成就勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计获得4个学习证书");
+                        }
+                        requestMedalRecord("2002");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_07);
+                } else if (number >= 6 && number < 8) {
+                    isShow = list.get(2).getStatus() == 0;
+                    if (isShow) {
+                        index = 2;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·登堂入室勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计获得6个学习证书");
+                        }
+                        requestMedalRecord("2003");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_08);
+                } else if (number >= 8 && number < 10) {
+                    isShow = list.get(3).getStatus() == 0;
+                    if (isShow) {
+                        index = 3;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·安全达人勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计获得8个学习证书");
+                        }
+                        requestMedalRecord("2004");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_09);
+                } else if (number >= 10) {
+                    isShow = list.get(4).getStatus() == 0;
+                    if (isShow) {
+                        index = 4;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·证书终结者勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计获得10个学习证书");
+                        }
+                        requestMedalRecord("2005");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_10);
                 }
+
                 break;
             case 3:
-                switch (id) {
-                    case 3001:
-                        ivMedalIcon.setImageResource(R.drawable.img_11);
-                        break;
-                    case 3002:
-                        ivMedalIcon.setImageResource(R.drawable.img_12);
-                        break;
-                    case 3003:
-                        ivMedalIcon.setImageResource(R.drawable.img_13);
-                        break;
-                    case 3004:
-                        ivMedalIcon.setImageResource(R.drawable.img_14);
-                        break;
-                    case 3005:
-                        ivMedalIcon.setImageResource(R.drawable.img_15);
-                        break;
-                    default:
-                        ivMedalIcon.setImageResource(R.drawable.img_15);
-                        break;
+                //number
+                list = studyMedalEntity.getConsumptionMedals();
+
+                if (number >= 1 && number < 50) {
+                    isShow = list.get(0).getStatus() == 0;
+                    if (isShow) {
+                        index = 0;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·安培萌新勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计消费已达1元");
+                        }
+                        requestMedalRecord("3001");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_11);
+                } else if (number >= 50 && number < 100) {
+                    isShow = list.get(1).getStatus() == 0;
+                    if (isShow) {
+                        index = 1;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·安培新贵勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计消费已达50元");
+                        }
+                        requestMedalRecord("3002");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_12);
+                } else if (number >= 100 && number < 150) {
+                    isShow = list.get(2).getStatus() == 0;
+                    if (isShow) {
+                        index = 2;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·安培豪杰勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计消费已达100元");
+                        }
+                        requestMedalRecord("3003");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_13);
+                } else if (number >= 150 && number < 200) {
+                    isShow = list.get(3).getStatus() == 0;
+                    if (isShow) {
+                        index = 3;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·安培大师勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计消费已达150元");
+                        }
+                        requestMedalRecord("3004");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_14);
+                } else if (number >= 200) {
+                    isShow = list.get(4).getStatus() == 0;
+                    if (isShow) {
+                        index = 4;
+                        if (tvTitle != null) {
+                            tvTitle.setText("恭喜您获得·土豪不差钱勋章");
+                        }
+
+                        if(tvContent != null){
+                            tvContent.setText("累计消费已达200元");
+                        }
+                        requestMedalRecord("3005");
+                    }
+                    ivMedalIcon.setImageResource(R.drawable.img_15);
                 }
 
                 break;
         }
 
-
         return this;
     }
 
 
+    private void requestMedalRecord(String id) {
+
+        ApiRepository.getInstance().receiveMedal(id).subscribe(
+                new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccessNext(BaseResult entity) {
+                        if (entity != null && entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+                            ToastUtil.show("领取勋章成功");
+                            if (mType == 1) {
+                                //number 小时
+                                List<MedalInfo> list = AccountTempHelper.getInstance().getStudyMedalEntity().getStudyMedals();
+                                if (index != -1) list.get(index).setStatus(1);
+
+                            } else if (mType == 2) {
+                                List<MedalInfo> list = AccountTempHelper.getInstance().getStudyMedalEntity().getCertificateMedals();
+                                if (index != -1) list.get(index).setStatus(1);
+
+                            } else if (mType == 3) {
+                                List<MedalInfo> list = AccountTempHelper.getInstance().getStudyMedalEntity().getConsumptionMedals();
+                                if (index != -1) list.get(index).setStatus(1);
+                            }
+
+                        } else {
+                            if (entity == null) {
+                                return;
+                            }
+                            ToastUtil.show(entity.msg);
+                        }
+                    }
+                }
+
+        );
+    }
+
+
     public void show() {
-        if (dialog != null) {
+        if (dialog != null && isShow) {
             dialog.show();
         }
     }
@@ -202,7 +423,4 @@ public class MedalDialog {
         return this;
     }
 
-    public void setMedalImage(int imageId) {
-        ivMedalIcon.setImageResource(imageId);
-    }
 }

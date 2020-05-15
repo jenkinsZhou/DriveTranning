@@ -1,5 +1,6 @@
 package com.tourcoo.training.ui.certificate
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +34,11 @@ import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import com.tourcoo.training.constant.TrainingConstant
+import com.tourcoo.training.entity.account.AccountTempHelper
+import com.tourcoo.training.entity.medal.MedalDictionary
+import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.utils.TourImageUtils
+import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog
 import com.tourcoo.training.widget.dialog.share.ShareEntity
 import com.yzq.zxinglibrary.encode.CodeCreator
@@ -58,6 +63,7 @@ class CertificationDetailsActivity : BaseTitleActivity() {
         api = WXAPIFactory.createWXAPI(mContext, TrainingConstant.APP_ID)
 
         requestCertificate()
+        requestMedalDictionary()
     }
 
 
@@ -86,7 +92,7 @@ class CertificationDetailsActivity : BaseTitleActivity() {
         GlideManager.loadImg(CommonUtil.getUrl(detail.certificateImage), ivImage)
 
         val contentEtString = TrainingConstant.STUDY_SHARE_URL + "?TraineeID=${SPUtils.getInstance().getString("TraineeID")}&trainingPlanID=${detail.trainingPlanID}"
-        val bitmap = CodeCreator.createQRCode(contentEtString,500, 500, null)
+        val bitmap = CodeCreator.createQRCode(contentEtString, 500, 500, null)
         ivCode.setImageBitmap(bitmap)
 
         btnSave.setOnClickListener {
@@ -150,4 +156,35 @@ class CertificationDetailsActivity : BaseTitleActivity() {
     private fun buildTransaction(type: String?): String {
         return if (type == null) System.currentTimeMillis().toString() else type + System.currentTimeMillis()
     }
+
+
+    /**
+     * 获取勋章领取条件接口
+     */
+    private fun requestMedalDictionary() {
+        ApiRepository.getInstance().requestMedalDictionary().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MedalDictionary>>() {
+            override fun onSuccessNext(entity: BaseResult<MedalDictionary>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
+                    //显示勋章
+                    showMedalDialog(entity.data.consume.toInt())
+                }
+            }
+        })
+    }
+
+    private fun showMedalDialog(number: Int) {
+        val dialog = MedalDialog(mContext)
+        dialog.create()
+                .setMedal(2, number, AccountTempHelper.getInstance().studyMedalEntity)
+                .setPositiveButtonListener {
+                    dialog.dismiss()
+                    val intent = Intent(this, StudyMedalRecordActivity::class.java)
+                    startActivityForResult(intent, 2017)
+                }.show()
+    }
+
+
 }

@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp_20"
-        android:text="恭喜您获得·安培新星勋章  "
+        android:text="恭喜您获得·安培新星勋章"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_17" />
 

@@ -49,6 +49,8 @@ import com.tourcoo.training.entity.training.TwoTypeModel;
 import com.tourcoo.training.ui.update.AppUpdateInfo;
 import com.tourcoo.training.utils.MapUtil;
 
+import org.jsoup.select.Evaluator;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -454,6 +456,13 @@ public class ApiRepository extends BaseRepository {
     }
 
 
+    public Observable<BaseResult> receiveMedal(String ID) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("medalID", ID);
+        return CommonTransformer.switchSchedulers(getApiService().receiveMedal(params).retryWhen(new RetryWhen()));
+    }
+
+
     public Observable<BaseResult<NewsDetail>> requestNewsDetail(String newsId) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("id", newsId);
@@ -593,7 +602,7 @@ public class ApiRepository extends BaseRepository {
     public Observable<BaseResult<AppUpdateInfo>> requestAppVersionInfo() {
         Map<String, Object> params = new HashMap<>(4);
         params.put("appType", "Android");
-        params.put("appVersion", "v"+AppUtils.getAppVersionName());
+        params.put("appVersion", "v" + AppUtils.getAppVersionName());
         params.put("deviceID", getUniquePsuedoID());
         params.put("deviceOS", android.os.Build.VERSION.RELEASE);
         return CommonTransformer.switchSchedulers(getApiService().requestAppVersionInfo(params).retryWhen(new RetryWhen()));
