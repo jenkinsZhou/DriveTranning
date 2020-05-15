@@ -1,5 +1,7 @@
 package com.tourcoo.training.ui.exam
 
+import android.app.Activity
+import android.app.Instrumentation
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -30,6 +32,7 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
 import com.tourcoo.training.core.util.CommonUtil
+import com.tourcoo.training.core.util.StackUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.exam.*
@@ -473,6 +476,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                                 //跳转到证书详情
                                 val intent = Intent(mContext, CertificationDetailsActivity::class.java)
                                 intent.putExtra("id", CommonUtil.getNotNullValue(id))
+                                setResult(Activity.RESULT_OK)
                                 startActivity(intent)
                                 finish()
                             }

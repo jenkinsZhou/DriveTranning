@@ -32,6 +32,7 @@ public interface BuyNowContract {
     interface View extends IBaseView {
         void getPayInfoSuccess(CoursePayInfo payInfo);
         void setPayInfo(int payType, PayInfo payInfo);
+        void payFailed(String message);
     }
 
     interface Presenter {

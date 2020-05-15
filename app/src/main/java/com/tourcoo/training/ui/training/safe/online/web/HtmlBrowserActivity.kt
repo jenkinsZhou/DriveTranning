@@ -13,6 +13,7 @@ import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tencent.liteav.demo.play.SuperPlayerConst
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.ExamConstant.EXTRA_CODE_REQUEST_EXAM
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -310,14 +311,14 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
                 //锁定状态 下的提示文字需要修改成 时长+未解锁
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 //显示未解锁提示
-                showUnlockTips(course,tvPlanDesc,tvPlanTitle)
+                showUnlockTips(course, tvPlanDesc, tvPlanTitle)
             }
             COURSE_PLAY_STATUS_COMPLETE -> {
                 //已完成 下的提示文字需要修改成 时长+已听完
                 imageView.setImageResource(R.mipmap.ic_play_no_complete)
                 imageView.setImageResource(R.mipmap.ic_play_finish)
                 //显示已听完
-                showPlayFinishTips(course,tvPlanDesc,tvPlanTitle)
+                showPlayFinishTips(course, tvPlanDesc, tvPlanTitle)
             }
             COURSE_PLAY_STATUS_PLAYING -> {
                 imageView.setImageResource(R.mipmap.ic_eyes)
@@ -433,8 +434,17 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             //刷新课件
-            requestPlanDetail()
+            when (requestCode) {
+                EXTRA_CODE_REQUEST_EXAM -> {
+                    finish()
+                }
+                else -> {
+                    requestPlanDetail()
+                }
+            }
+
         }
+
     }
 
     override fun onDestroy() {
@@ -488,7 +498,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         //考试题id
         intent.putExtra(ExamActivity.EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
-        startActivity(intent)
+        startActivityForResult(intent, EXTRA_CODE_REQUEST_EXAM)
     }
 
     private fun clearCount() {
@@ -523,14 +533,14 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
                     startActivityForResult(intent, 2017)
                 }.show()
 
-        if(!isShow){
+        if (!isShow) {
             //延时弹出是否考试弹窗
             showAcceptExamDialog()
         }
 
     }
 
-    private fun showUnlockTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+    private fun showUnlockTips(course: Course, tvPlanDesc: TextView, tvPlanTitle: TextView) {
         val tips = TimeUtil.getTime(course.duration) + " 未解锁"
         tvPlanDesc.text = tips
         tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.black333333))
@@ -539,7 +549,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         setViewGone(tvPlanDesc, true)
     }
 
-    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {
+    private fun showPlayFinishTips(course: Course, tvPlanDesc: TextView, tvPlanTitle: TextView) {
         val tips = TimeUtil.getTime(course.duration) + " 已听完"
         tvPlanDesc.text = tips
         tvPlanDesc.textSize = 12f

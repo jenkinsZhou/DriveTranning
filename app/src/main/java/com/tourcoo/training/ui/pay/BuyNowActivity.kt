@@ -25,10 +25,13 @@ import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.pay.CoursePayInfo
 import com.tourcoo.training.entity.pay.PayResultEvent
 import com.tourcoo.training.entity.pay.WxPayEvent
+import com.tourcoo.training.widget.dialog.common.CommonWaringAlert
+import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import kotlinx.android.synthetic.main.activity_pay_buy_now.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.text.SimpleDateFormat
 
 /**
  *@description :立即购买（支付）
@@ -60,12 +63,12 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
     private lateinit var trainingPlanId: String
     override fun initView(savedInstanceState: Bundle?) {
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
         trainingPlanId = intent.getStringExtra("trainingPlanID")
         // 将该app注册到微信
-        wxApi= WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
+        wxApi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
     }
 
     override fun getPayInfoSuccess(payInfo: CoursePayInfo) {
@@ -97,7 +100,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                     tvTitle.text = "支付金额"
                     tvTagYuan.visibility = View.VISIBLE
                     tvTagUnit.visibility = View.GONE
-                    tvAmount.text = "" + CommonUtil.doubleTransStringZhen(payInfo.price)
+                    tvAmount.text = "" + CommonUtil.doubleTransStringZhen(payInfo.price / 100)
                     btnBuy.isEnabled = true
                 }
             }
@@ -117,36 +120,91 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         }
 
         btnBuy.setOnClickListener {
-            val payType = if (rbCompany.isChecked) 1
-            else if (rbUs.isChecked) 2
-            else if (rbAlipay.isChecked) 3
-            else if (rbWx.isChecked) 4
-            else 1
-
-            presenter.buyCourse(trainingPlanId, payType)
+            doBuyNow()
         }
+        when (payInfo.paymentMode) {
+            1 -> {
+                //自付
+                setViewGone(llCoinGroup, false)
+                //只显示现金支付
+                setViewGone(llCashGroup, true)
+            }
+            2 -> {
+                //个人学币
+                setViewGone(llCoinGroup, true)
+                //隐藏企业学币支付
+                setViewGone(ffCompany, false)
+                //屏蔽现金支付
+                setViewGone(llCashGroup, false)
+            }
+            3 -> {
+                //自付+个人学币支付
+                setViewGone(llCoinGroup, true)
+                setViewGone(llCashGroup, true)
+                //隐藏企业学币支付
+                setViewGone(ffCompany, false)
+                //显示个人学币支付
+                setViewGone(ffUser, true)
+            }
+            4 -> {
+                //企业学币支付
+                setViewGone(llCoinGroup, true)
+                setViewGone(ffCompany, true)
+                setViewGone(llCashGroup, false)
+                //隐藏现金支付
+                setViewGone(llCashGroup, false)
+                setViewGone(ffUser, false)
+            }
+            5 -> {
+                //自付 + 企业学币
+                setViewGone(llCoinGroup, true)
+                setViewGone(llCashGroup, true)
+                setViewGone(ffCompany, true)
+                setViewGone(ffUser, false)
+            }
+            6 -> {
+                //个人学币 + 企业学币
+                setViewGone(llCoinGroup, true)
+                setViewGone(llCashGroup, false)
+                setViewGone(ffCompany, true)
+                setViewGone(ffUser, true)
+            }
+
+            else -> {
+                //全部都显示
+                setViewGone(llCoinGroup, true)
+                setViewGone(llCashGroup, true)
+                setViewGone(ffCompany, true)
+                setViewGone(ffUser, true)
+            }
+        }
+
 
     }
 
 
     override fun setPayInfo(payType: Int, payInfo: PayInfo?) {
         if (payType == 1 || payType == 2) {
-            setResult(Activity.RESULT_OK)
-            finish()
+            //学币支付成功
+            doHandlePaySuccess()
         } else if (payType == 3) {
-            if(payInfo == null){
+            if (payInfo == null) {
                 ToastUtil.show("支付参数异常")
                 return
             }
             payByAlipay(payInfo.thirdPayInfo.toString())
         } else if (payType == 4) {
-            if(payInfo == null){
+            if (payInfo == null) {
                 ToastUtil.show("支付参数异常")
                 return
             }
             payByWx(payInfo.thirdPayInfo)
         }
 
+    }
+
+    override fun payFailed(message: String?) {
+        showPayFailed()
     }
 
     private val SDK_PAY_FLAG = 1
@@ -167,11 +225,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        ToastUtil.showSuccess("支付成功")
-                        //支付成功 发送消息通知其他页面 （微信也是一样 需要发送消息）
-                        EventBus.getDefault().post(PayResultEvent(true))
-                        setResult(Activity.RESULT_OK)
-                        finish()
+                        doHandlePaySuccess()
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         ToastUtil.show(payResult.memo)
@@ -222,7 +276,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         request.nonceStr = wxPayModel.noncestr
         request.sign = wxPayModel.sign
         //todo 微信支付
-        request.timeStamp = "" +wxPayModel.timestamp
+        request.timeStamp = "" + wxPayModel.timestamp
 
         wxApi!!.sendReq(request)
 
@@ -240,11 +294,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
             return
         }
         if (payEvent.paySuccess) {
-            //支付成功 发送消息通知其他页面 （支付宝也是一样 需要发送消息）
-            EventBus.getDefault().post(PayResultEvent(true))
-            ToastUtil.showSuccess("支付成功")
-            setResult(Activity.RESULT_OK)
-            finish()
+            doHandlePaySuccess()
         } else {
             ToastUtil.show("支付未完成")
         }
@@ -254,5 +304,56 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         super.onDestroy()
         wxApi?.detach()
         EventBus.getDefault().unregister(this)
+    }
+
+    /**
+     * 执行支付成功回调的地方 支付宝微信 学币支付通用
+     */
+    private fun doHandlePaySuccess() {
+        showPaySuccessDialog()
+    }
+
+    /**
+     * 真正处理支付成功回调的地方
+     */
+    private fun handlerPaySuccessResult() {
+        //支付成功 发送消息通知其他页面
+        EventBus.getDefault().post(PayResultEvent(true))
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
+    private fun showPaySuccessDialog() {
+        val dialog = CommonSuccessAlert(mContext)
+        dialog.create().setAlertTitle("支付成功")
+        dialog.setCancelTouchOutSide(false)
+        val successAlert: String = "现在您可以开始学习了~"
+        dialog.setConfirmClick(View.OnClickListener {
+            baseHandler.postDelayed(Runnable {
+                handlerPaySuccessResult()
+            }, 500)
+        })
+        dialog.setContent(successAlert).show()
+    }
+
+
+    private fun showPayFailed() {
+        val alert = CommonWaringAlert(mContext)
+        alert.create().setTitle("支付失败").setContent("如未完成支付请重新支付").setPositiveButtonClick("继续支付", object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                doBuyNow()
+            }
+        })
+        alert.show()
+    }
+
+
+    private fun doBuyNow() {
+        val payType = if (rbCompany.isChecked) 1
+        else if (rbUs.isChecked) 2
+        else if (rbAlipay.isChecked) 3
+        else if (rbWx.isChecked) 4
+        else 1
+        presenter.buyCourse(trainingPlanId, payType)
     }
 }

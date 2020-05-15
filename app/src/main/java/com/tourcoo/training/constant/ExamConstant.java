@@ -28,4 +28,9 @@ public class ExamConstant {
     public static final int STATUS_NO_ANSWER_FIRST = 4;
 
 
+    /**
+     * 考试
+     */
+    public static final int EXTRA_CODE_REQUEST_EXAM = 2018;
+
 }

@@ -13,6 +13,8 @@ public class CoursePayInfo {
     private int Coins;
     private int CoinRemain;
     private int CompanyCoinRemain;
+    //支付方式
+    private int PaymentMode;
 
     public double getPrice() {
         return Price;
@@ -44,5 +46,13 @@ public class CoursePayInfo {
 
     public void setCompanyCoinRemain(int CompanyCoinRemain) {
         this.CompanyCoinRemain = CompanyCoinRemain;
+    }
+
+    public int getPaymentMode() {
+        return PaymentMode;
+    }
+
+    public void setPaymentMode(int paymentMode) {
+        PaymentMode = paymentMode;
     }
 }

@@ -23,6 +23,8 @@ import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.ExamConstant
+import com.tourcoo.training.constant.ExamConstant.EXTRA_CODE_REQUEST_EXAM
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -558,7 +560,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         //考试题id
         intent.putExtra(ExamActivity.EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
-        startActivity(intent)
+        startActivityForResult(intent, ExamConstant.EXTRA_CODE_REQUEST_EXAM)
     }
 
     /**
@@ -682,7 +684,15 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     requestPlanDetail()
                 }
             }
+            EXTRA_CODE_REQUEST_EXAM -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    finish()
+                }
+            }
+
+
         }
+
     }
 
     /**

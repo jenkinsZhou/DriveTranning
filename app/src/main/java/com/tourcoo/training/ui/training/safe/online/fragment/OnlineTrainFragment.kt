@@ -312,7 +312,7 @@ class OnlineTrainFragment : BaseFragment() {
             }, 500)
         }
         //以下是刷新列表逻辑
-        if(requestCode ==REQUEST_CODE_REFRESH_ALL){
+        if(requestCode ==REQUEST_CODE_REFRESH_ALL || resultCode == Activity.RESULT_OK){
             refreshDataList()
         }
 

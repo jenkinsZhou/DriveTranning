@@ -18,8 +18,11 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
+import com.tourcoo.training.entity.account.UserInfo
+import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
+import com.tourcoo.training.event.OffLineRefreshEvent
 import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
 import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
@@ -29,6 +32,7 @@ import com.tourcoo.training.widget.websocket.WebSocketHandler
 import com.tourcoo.training.widget.websocket.WebSocketSetting
 import com.tourcoo.training.widget.websocket.response.ErrorResponse
 import kotlinx.android.synthetic.main.activity_training_detail_teacher.*
+import org.greenrobot.eventbus.EventBus
 import org.java_websocket.framing.Framedata
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
@@ -365,7 +369,7 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
         try {
             val scanResult = JSON.parseObject(result, QrScanResult::class.java)
 
-            if(scanResult.trainingPlanID  != trainingPlanId){
+            if (scanResult.trainingPlanID != trainingPlanId) {
                 ToastUtil.show("课程不匹配")
                 return
             }
@@ -467,5 +471,16 @@ class TeacherPlanDetailActivity : BaseMvpTitleActivity<TeacherDetailPresenter>()
     }
 
     override fun onPing(framedata: Framedata?) {
+    }
+
+
+    /**
+     * 重点：重写finish 处理刷新
+     */
+    override fun finish() {
+        val offLineRefreshEvent = OffLineRefreshEvent()
+        offLineRefreshEvent.userInfo = UserInfo()
+        EventBus.getDefault().post(offLineRefreshEvent)
+        super.finish()
     }
 }

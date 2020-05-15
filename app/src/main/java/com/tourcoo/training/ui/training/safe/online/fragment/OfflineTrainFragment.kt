@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.tourcoo.training.R
@@ -17,13 +16,12 @@ import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
-import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.entity.account.AccountHelper
-import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.course.CourseInfo
+import com.tourcoo.training.event.OffLineRefreshEvent
 import com.tourcoo.training.ui.training.safe.online.detail.common.CommonPlanDetailActivity
 import com.tourcoo.training.ui.training.safe.online.detail.student.StudentPlanDetailActivity
 import com.tourcoo.training.ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity
@@ -168,18 +166,19 @@ class OfflineTrainFragment : BaseFragment() {
 
 
     /**
-     * 收到消息
+     *  重要的刷新机制
      *
-     * @param userInfoEvent
+     * @param offLineRefreshEvent
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUserInfoRefreshEvent(userInfoEvent: UserInfoEvent?) {
-        if (userInfoEvent == null) {
+    fun onOfflineRefreshEvent(offLineRefreshEvent : OffLineRefreshEvent?) {
+        if (offLineRefreshEvent == null) {
             return
         }
-        if (userInfoEvent.userInfo == null) {
+        if (offLineRefreshEvent.userInfo == null) {
             removeData()
         } else {
+            //只要offLineRefreshEvent不为空 就刷新数据
             requestCourseOffLine()
         }
 

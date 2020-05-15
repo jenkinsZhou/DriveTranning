@@ -133,5 +133,10 @@ public class CommonSuccessAlert {
         return this;
     }
 
-
+    public CommonSuccessAlert setCancelTouchOutSide(boolean cancelTouchOutSide) {
+        if (dialog != null) {
+            dialog.setCanceledOnTouchOutside(cancelTouchOutSide);
+        }
+        return this;
+    }
 }

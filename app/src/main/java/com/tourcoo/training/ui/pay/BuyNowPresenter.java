@@ -9,12 +9,8 @@ import com.tourcoo.training.core.base.mvp.BasePresenter;
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.entity.account.PayInfo;
-import com.tourcoo.training.entity.account.UserInfo;
 import com.tourcoo.training.entity.pay.CoursePayInfo;
-import com.tourcoo.training.ui.account.register.DriverRegisterContract;
-import com.tourcoo.training.ui.account.register.DriverRegisterModel;
 
-import java.util.Map;
 
 
 /**
@@ -51,6 +47,7 @@ public class BuyNowPresenter extends BasePresenter<BuyNowContract.BuyNowModel, B
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
                     getView().getPayInfoSuccess(entity.getData());
                 } else {
+                    getView().payFailed(entity.msg);
                     ToastUtil.show(entity.msg);
                 }
             }

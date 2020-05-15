@@ -227,7 +227,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
 
             override fun onSuccessNext(entity: BaseResult<UserInfo?>?) {
                 smartRefreshLayoutCommon.finishRefresh(true)
-                if (entity == null || entity.data == null) {
+                if (entity?.data == null) {
                     return
                 }
                 when {

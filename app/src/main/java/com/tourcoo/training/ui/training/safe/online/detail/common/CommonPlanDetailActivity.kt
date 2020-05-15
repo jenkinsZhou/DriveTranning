@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
 import com.google.gson.Gson
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.app.MyApplication
 import com.tourcoo.training.core.base.mvp.BaseMvpTitleActivity
@@ -22,8 +23,11 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.SocketBean
 import com.tourcoo.training.entity.account.AccountHelper
+import com.tourcoo.training.entity.account.UserInfo
+import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
+import com.tourcoo.training.event.OffLineRefreshEvent
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
 import com.tourcoo.training.widget.dialog.CommonBellAlert
@@ -34,6 +38,7 @@ import com.tourcoo.training.widget.websocket.WebSocketHandler
 import com.tourcoo.training.widget.websocket.WebSocketSetting
 import com.tourcoo.training.widget.websocket.response.ErrorResponse
 import kotlinx.android.synthetic.main.activity_training_detail_teacher_and_student.*
+import org.greenrobot.eventbus.EventBus
 import org.java_websocket.framing.Framedata
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
@@ -1068,4 +1073,15 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
 
     /*  //初始化WebSocket连接
       initWebSocket(socketUrl)*/
+
+
+    /**
+     * 重点：重写finish 处理刷新
+     */
+    override fun finish() {
+        val offLineRefreshEvent = OffLineRefreshEvent()
+        offLineRefreshEvent.userInfo = UserInfo()
+        EventBus.getDefault().post(offLineRefreshEvent)
+        super.finish()
+    }
 }

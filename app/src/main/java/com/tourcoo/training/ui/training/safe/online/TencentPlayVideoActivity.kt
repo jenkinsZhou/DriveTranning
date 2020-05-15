@@ -26,6 +26,7 @@ import com.tencent.rtmp.TXLiveConstants
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.ExamConstant
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -135,18 +136,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvExam.setOnClickListener(this)
         mCourseList = ArrayList()
         mCourseHashMap = HashMap()
-        //增加封面
-//        val imageView = ImageView(this)
-//        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-//        imageView.setImageResource(R.drawable.img_training_free_video)
 
-        /*   tvTest.setOnClickListener {
-               if (mTitleBar.visibility != View.GONE) {
-                   mTitleBar.visibility = View.GONE
-               } else {
-                   mTitleBar.visibility = View.VISIBLE
-               }
-           }*/
         requestPlanDetail()
     }
 
@@ -272,12 +262,12 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             // 重新开始播放
             if (smartVideoPlayer.getPlayState() == SuperPlayerConst.PLAYSTATE_PLAY) {
                 smartVideoPlayer.onResume()
+                timerResume()
                 if (smartVideoPlayer.getPlayMode() == SuperPlayerConst.PLAYMODE_FLOAT) {
                     smartVideoPlayer.requestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW)
                 }
             }
         }
-        timerResume()
     }
 
 
@@ -323,7 +313,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         clearCount()
         //拿到后台配置的间隔时间
-        faceVerifyInterval = detail.faceVerifyInterval
+        if (AppConfig.DEBUG_MODE) {
+            //todo 人脸验证间隔时间 调试模式下 固定成20秒 方便测试
+            faceVerifyInterval = 30
+        } else {
+            faceVerifyInterval = detail.faceVerifyInterval
+        }
+
         //初始化计时器
         initTimerAndStart()
 
@@ -587,7 +583,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         //考试题id
         intent.putExtra(EXTRA_EXAM_ID, trainingPlanDetail.latestExamID.toString())
-        startActivity(intent)
+        startActivityForResult(intent, ExamConstant.EXTRA_CODE_REQUEST_EXAM)
     }
 
     /**
@@ -712,6 +708,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_CODE_FACE -> {
+                ToastUtil.showSuccess("'收到回调")
                 if (resultCode == Activity.RESULT_OK) {
                     //人脸认证成功 不做任何处理
                 } else {
@@ -720,7 +717,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                         //如果是正式包 则必须执行认证失败的处理
                         handleRecognizeFailedCallback()
                     }
-
                 }
             }
             REQUEST_CODE_WEB -> {
@@ -729,7 +725,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     requestPlanDetail()
                 }
             }
-
+            ExamConstant.EXTRA_CODE_REQUEST_EXAM -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    finish()
+                }
+            }
         }
     }
 
@@ -745,7 +745,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         //初始化计时器
 //        faceVerifyInterval = 12
-        mTimerTask = CountDownTimerSupport(faceVerifyInterval.toLong() * 1000, 1000L)
+        val faceVerifyMillisecond = faceVerifyInterval.toLong() * 1000
+        TourCooLogUtil.i(mTag, "计时时间:" + faceVerifyMillisecond + "毫秒")
+        mTimerTask = CountDownTimerSupport(faceVerifyMillisecond, 1000L)
+
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
             override fun onFinish() {
                 //时间到 开始下一个计时
@@ -783,9 +786,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun timerPause() {
         if (mTimerTask != null) {
+            mTimerTask!!.pause()
             //暂停
             TourCooLogUtil.d(mTag, "计时器暂停")
-            mTimerTask!!.pause()
         }
     }
 
@@ -807,17 +810,17 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun handleRecognizeFailedCallback() {
+        ToastUtil.showSuccess("收到失败回调")
         //将视频置为不可点击
 //        smartVideoPlayer.startButton.isEnabled = false
         //暂停视频
         baseHandler.postDelayed(Runnable {
             smartVideoPlayer?.onPause()
-        }, 300)
-
+        }, 50)
         ToastUtil.show("人脸识别失败")
         baseHandler.postDelayed(Runnable {
             doSaveProgressAndFinish()
-        }, 1500)
+        }, 50)
     }
 
 

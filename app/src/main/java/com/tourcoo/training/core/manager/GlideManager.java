@@ -130,15 +130,20 @@ public class GlideManager {
      * @param placeholder
      */
     public static void loadImg(Object obj, ImageView iv, Drawable placeholder) {
-        if (iv == null|| iv.getContext() == null) {
+        if (iv == null || iv.getContext() == null) {
             return;
         }
-        Glide.with(iv.getContext()).load(obj).apply(getRequestOptions()
-                .placeholder(placeholder)
-                .fallback(placeholder)
-                .dontAnimate()
-                .error(placeholder)
-        ).into(iv);
+        try {
+            Glide.with(iv.getContext()).load(obj).apply(getRequestOptions()
+                    .placeholder(placeholder)
+                    .fallback(placeholder)
+                    .dontAnimate()
+                    .error(placeholder)
+            ).into(iv);
+        } catch (Exception e) {
+            e.fillInStackTrace();
+        }
+
     }
 
 
@@ -168,7 +173,7 @@ public class GlideManager {
      * @param placeholder 占位图
      */
     public static void loadCircleImg(Object obj, ImageView iv, Drawable placeholder) {
-        if (iv == null|| iv.getContext() == null) {
+        if (iv == null || iv.getContext() == null) {
             return;
         }
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptions()
@@ -189,7 +194,7 @@ public class GlideManager {
     }
 
     public static void loadImageAuto(Object obj, ImageView iv, Drawable placeholder) {
-        if (iv == null|| iv.getContext() == null) {
+        if (iv == null || iv.getContext() == null) {
             return;
         }
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptionsAuto()
@@ -359,7 +364,7 @@ public class GlideManager {
      * @param placeholder
      */
     public static void loadImgXml(Object obj, ImageView iv, Drawable placeholder) {
-        if (iv == null|| iv.getContext() == null) {
+        if (iv == null || iv.getContext() == null) {
             return;
         }
         Glide.with(iv.getContext()).load(obj).apply(getRequestOptionsAuto()
