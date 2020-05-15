@@ -6,9 +6,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.TextUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SPUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.google.gson.Gson
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject
@@ -27,7 +29,10 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.SizeUtil
+import com.tourcoo.training.core.util.ToastUtil
+import com.tourcoo.training.core.util.ToastUtils
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.news.NewsEntity
 import com.tourcoo.training.entity.pay.WxShareEvent
 import com.tourcoo.training.widget.dialog.share.BottomShareDialog
@@ -98,6 +103,8 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
             when (view.id) {
                 R.id.llShare -> {
                     val entity = adapter.data[position] as NewsEntity
+                    //必须赋值
+                    mNewsEntity = entity
                     showShareDialog(entity)
                 }
                 else -> {
@@ -135,6 +142,9 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
 
 
     private fun wxSharePic(isSession: Boolean, mNewsEntity: NewsEntity) { //初始化WXImageObject和WXMediaMessage对象
+        AccountTempHelper.getInstance().shareNewsID = mNewsEntity.id
+        AccountTempHelper.getInstance().shareNewsPageType = 1
+
         val webPage = WXWebpageObject()
         webPage.webpageUrl = TrainingConstant.NEWS_SHARE_URL + "?id=" + mNewsEntity.id +
                 "&TraineeID=" + SPUtils.getInstance().getString("TraineeID")
@@ -207,11 +217,13 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
         if (event == null) {
             return
         }
+
         TourCooLogUtil.i(TAG, "执行了" + mNewsEntity)
-        if (event.isShareSuccess && mNewsEntity != null) {
+
+        if (event.isShareSuccess && mNewsEntity != null && AccountTempHelper.getInstance().shareNewsPageType == 1 && AccountTempHelper.getInstance().shareNewsID == mNewsEntity!!.getID()) {
             requestShareSuccess(mNewsEntity!!.getID())
-            TourCooLogUtil.i(TAG, "执行了1")
         }
+
     }
 
     private fun requestShareSuccess(newsId: String) {
@@ -245,6 +257,7 @@ class NewsTabFragment : BaseTitleMvpRefreshLoadFragment<NewsListPresenter, NewsE
                         baseHandler.postDelayed(Runnable {
                             adapter?.notifyItemChanged(position)
                         }, 500)
+
                     }
                 } else {
 

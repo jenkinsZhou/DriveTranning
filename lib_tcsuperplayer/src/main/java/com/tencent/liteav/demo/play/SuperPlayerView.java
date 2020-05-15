@@ -1005,6 +1005,11 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                         mVodPlayer.seek(mCurrentTimeWhenPause);
                         mCurrentTimeWhenPause = 0;
                     }
+
+                    if (onPlayStatusListener != null) {
+                        onPlayStatusListener.resumeVideo();
+                    }
+
                 }
             } else {
                 if (mLivePlayer != null) {
@@ -1024,6 +1029,9 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
                 if (mVodPlayer != null) {
                     mVodPlayer.pause();
+                    if (onPlayStatusListener != null) {
+                        onPlayStatusListener.pauseVideo();
+                    }
                 }
             } else {
                 if (mLivePlayer != null) {
@@ -1469,6 +1477,11 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                         mVodPlayer.seek(mCurrentTimeWhenPause);
                         mCurrentTimeWhenPause = 0;
                     }
+
+                    if (onPlayStatusListener != null) {
+                        onPlayStatusListener.resumeVideo();
+                    }
+
                 }
             } else {
                 if (mLivePlayer != null) {
@@ -1488,6 +1501,9 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             if (mCurrentPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
                 if (mVodPlayer != null) {
                     mVodPlayer.pause();
+                    if (onPlayStatusListener != null) {
+                        onPlayStatusListener.pauseVideo();
+                    }
                 }
             } else {
                 if (mLivePlayer != null) {
@@ -1846,10 +1862,18 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     public interface OnPlayStatusListener {
         //支持seek
         void enableSeek();
+
         //开始播放
         void onAutoPlayStart();
+
         //视频是否播放完成
         void onAutoPlayComplete();
+
+        //恢复视频播放
+        void resumeVideo();
+
+        //暂停视频播放
+        void pauseVideo();
     }
 
     /**
@@ -1932,7 +1956,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             mVodControllerSmall.updateReplay(true);
             mVodControllerLarge.updateReplay(true);
         } else if (event == TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {
-            if(BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 Toast.makeText(mContext, "进度同步中...", Toast.LENGTH_SHORT).show();
             }
 
@@ -2171,15 +2195,15 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     }
 
     public void release() {
-        if(mLivePlayer != null){
+        if (mLivePlayer != null) {
             mLivePlayer.stopPlay(true);
         }
 
-        if(mVodPlayer != null){
+        if (mVodPlayer != null) {
             mVodPlayer.stopPlay(true);
         }
 
-        if(mTXCloudVideoView != null){
+        if (mTXCloudVideoView != null) {
             mTXCloudVideoView.removeVideoView();
         }
 

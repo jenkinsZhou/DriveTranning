@@ -10,6 +10,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.training.R;
+import com.tourcoo.training.entity.account.AccountTempHelper;
 import com.tourcoo.training.entity.pay.WxShareEvent;
 
 import org.greenrobot.eventbus.EventBus;

@@ -145,6 +145,14 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //调试模式下允许拖动进度条
         smartVideoPlayer.setSeekEnable(AppConfig.DEBUG_MODE)
         smartVideoPlayer.setOnPlayStatusListener(object : SuperPlayerView.OnPlayStatusListener {
+            override fun resumeVideo() {
+                ToastUtil.showSuccess("开始")
+            }
+
+            override fun pauseVideo() {
+                ToastUtil.showSuccess("展厅")
+            }
+
             override fun onAutoPlayStart() {
                 ivCoverView.visibility = View.GONE
                 smartVideoPlayer.mVodControllerSmall.enableClick(true)

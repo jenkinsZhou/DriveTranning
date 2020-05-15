@@ -14,6 +14,26 @@ public class AccountTempHelper {
 
     public static final String TAG = "AccountTempHelper";
 
+    // 1: 列表   2 ：视频详情  3：文本详情
+    private int shareNewsPageType;
+    private String  shareNewsID;
+
+    public String getShareNewsID() {
+        return shareNewsID;
+    }
+
+    public void setShareNewsID(String shareNewsID) {
+        this.shareNewsID = shareNewsID;
+    }
+
+    public int getShareNewsPageType() {
+        return shareNewsPageType;
+    }
+
+    public void setShareNewsPageType(int shareNewsPageType) {
+        this.shareNewsPageType = shareNewsPageType;
+    }
+
     private AccountTempHelper() {
     }
     private String facePhotoPath;

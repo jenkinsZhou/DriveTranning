@@ -10,6 +10,16 @@ package com.tourcoo.training.entity.pay;
 public class WxShareEvent {
     private boolean shareSuccess;
 
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public boolean isShareSuccess() {
         return shareSuccess;
     }

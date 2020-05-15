@@ -49,6 +49,7 @@ import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
+import com.tourcoo.training.entity.account.AccountTempHelper;
 import com.tourcoo.training.entity.news.NewsDetail;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.WxShareEvent;
@@ -281,6 +282,16 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             public void onAutoPlayComplete() {
 
             }
+
+            @Override
+            public void resumeVideo() {
+
+            }
+
+            @Override
+            public void pauseVideo() {
+
+            }
         });
         // 播放器配置
         SuperPlayerGlobalConfig prefs = SuperPlayerGlobalConfig.getInstance();
@@ -462,6 +473,9 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
 
     public void wxSharePic(boolean isSession) {
+        AccountTempHelper.getInstance().setShareNewsID(mNewsEntity.getID());
+        AccountTempHelper.getInstance().setShareNewsPageType(2);
+
         //初始化WXImageObject和WXMediaMessage对象
         WXWebpageObject webPage = new WXWebpageObject();
         webPage.webpageUrl = TrainingConstant.NEWS_SHARE_URL + "?id=" + mNewsEntity.getID() +
@@ -524,7 +538,8 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         if (event == null) {
             return;
         }
-        if (event.isShareSuccess()) {
+
+        if (event.isShareSuccess() && AccountTempHelper.getInstance().getShareNewsPageType() == 2 && AccountTempHelper.getInstance().getShareNewsID().equals(mNewsEntity.getID())) {
             requestShareSuccess(mNewsEntity.getID());
         }
     }

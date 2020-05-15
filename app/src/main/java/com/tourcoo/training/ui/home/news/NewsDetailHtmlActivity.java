@@ -36,6 +36,7 @@ import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
+import com.tourcoo.training.entity.account.AccountTempHelper;
 import com.tourcoo.training.entity.news.NewsDetail;
 import com.tourcoo.training.entity.news.NewsEntity;
 import com.tourcoo.training.entity.pay.WxShareEvent;
@@ -313,6 +314,9 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
 
 
     public void wxSharePic(boolean isSession) {
+        AccountTempHelper.getInstance().setShareNewsID(mNewsEntity.getID());
+        AccountTempHelper.getInstance().setShareNewsPageType(3);
+
         //初始化WXImageObject和WXMediaMessage对象
         WXWebpageObject webPage = new WXWebpageObject();
         webPage.webpageUrl = TrainingConstant.NEWS_SHARE_URL + "?id=" + mNewsEntity.getID() +
@@ -376,7 +380,7 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
         if (event == null) {
             return;
         }
-        if (event.isShareSuccess()) {
+        if (event.isShareSuccess() && AccountTempHelper.getInstance().getShareNewsPageType() == 3 && AccountTempHelper.getInstance().getShareNewsID().equals(mNewsEntity.getID())) {
             requestShareSuccess(mNewsEntity.getID());
         }
     }
