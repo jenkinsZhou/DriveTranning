@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tencent.liteav.demo.play.BuildConfig;
 import com.tencent.liteav.demo.play.R;
 import com.tencent.liteav.demo.play.SuperPlayerConst;
 import com.tencent.liteav.demo.play.utils.TCTimeUtils;
@@ -130,7 +131,11 @@ public abstract class TCVodControllerSmallBase extends RelativeLayout implements
         });
         mGestureDetector.setIsLongpressEnabled(false);
 
-        //禁用手势操作
+    }
+
+
+    //设置支持手势操作
+    public void setEnableVideoGesture() {
         mVideoGestureUtil = new VideoGestureUtil(getContext());
         mVideoGestureUtil.setVideoGestureListener(new VideoGestureUtil.VideoGestureListener() {
             @Override
@@ -185,6 +190,7 @@ public abstract class TCVodControllerSmallBase extends RelativeLayout implements
             }
         });
     }
+
 
     public void setVideoQualityList(ArrayList<TCVideoQulity> videoQualityList) {
         mVideoQualityList = videoQualityList;

@@ -216,6 +216,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         LogReport.getInstance().setPackageName(getPackagename());
     }
 
+
+
     private String getApplicationName() {
         Context context = mContext.getApplicationContext();
         ApplicationInfo applicationInfo = context.getApplicationInfo();
@@ -2024,7 +2026,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      */
     @Override
     public void onPlayEvent(int event, Bundle param) {
-        if(mLivePlayer == null){
+        if (mLivePlayer == null) {
             return;
         }
         if (event != TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {
@@ -2244,5 +2246,9 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     public void setSeekEnable(boolean enable) {
         mVodControllerSmall.setSeekEnable(enable);
         mVodControllerLarge.setSeekEnable(enable);
+        if(enable) {
+            mVodControllerSmall.setEnableVideoGesture();
+            mVodControllerLarge.setEnableVideoGesture();
+        }
     }
 }

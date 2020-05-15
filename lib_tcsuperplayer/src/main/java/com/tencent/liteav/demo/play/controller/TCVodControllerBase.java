@@ -132,8 +132,13 @@ public abstract class TCVodControllerBase extends RelativeLayout implements TCPo
         });
         mGestureDetector.setIsLongpressEnabled(false);
 
-        //禁用手势操作
-        if (BuildConfig.DEBUG) {
+    }
+
+
+
+    //设置支持手势操作
+    public void setEnableVideoGesture() {
+        if(mVideoGestureUtil == null) {
             mVideoGestureUtil = new VideoGestureUtil(getContext());
             mVideoGestureUtil.setVideoGestureListener(new VideoGestureUtil.VideoGestureListener() {
                 @Override
@@ -156,10 +161,6 @@ public abstract class TCVodControllerBase extends RelativeLayout implements TCPo
 
                 @Override
                 public void onSeekGesture(int progress) {
-                    if (!BuildConfig.DEBUG) {
-                        //正式环境 禁止手势
-                        return;
-                    }
                     mIsChangingSeekBarProgress = true;
                     if (mGestureVideoProgressLayout != null) {
 
@@ -192,8 +193,8 @@ public abstract class TCVodControllerBase extends RelativeLayout implements TCPo
                 }
             });
         }
-
     }
+
 
     public void setVideoQualityList(ArrayList<TCVideoQulity> videoQualityList) {
         mVideoQualityList = videoQualityList;
