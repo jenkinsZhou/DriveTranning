@@ -183,7 +183,7 @@ public class ApiRepository extends BaseRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public Observable<BaseResult<Object>> requestRegisterIndustry(Map<String, Object> map) {
+    public Observable<BaseResult<UserInfo>> requestRegisterIndustry(Map<String, Object> map) {
         Map<String, Object> params = new HashMap<>(1);
         params.put("appType", "Android");
         params.put("appVersion", AppUtils.getAppVersionName());

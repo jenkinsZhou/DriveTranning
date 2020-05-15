@@ -27,7 +27,7 @@ public class IndustryRegisterModel implements IndustryRegisterContract.RegisterM
     }
 
     @Override
-    public void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<Object>> observer) {
+    public void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<UserInfo>> observer) {
         ApiRepository.getInstance().requestRegisterIndustry(values).subscribe(observer);
     }
 

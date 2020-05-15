@@ -256,14 +256,19 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
         handleLoginCallback(userInfo)
     }
 
-    override fun registerSuccess(userInfo: Any?) {
+    override fun registerSuccess(userInfo: UserInfo?) {
         if (userInfo != null) {
             //保存用户信息
-//            AccountHelper.getInstance().userInfo = userInfo
+            AccountHelper.getInstance().userInfo = userInfo
             ToastUtil.show("注册成功")
-            finish()
+            SPUtils.getInstance().put("TraineeID",userInfo.traineeID)
+            EventBus.getDefault().post(UserInfoEvent(userInfo))
+            val intent = Intent(this, MainTabActivity::class.java)
+            startActivity(intent)
             StackUtil.getInstance().previous?.finish()
             StackUtil.getInstance().getActivity(RecognizeLicenseActivity::class.java)?.finish()
+            StackUtil.getInstance().getActivity(RecognizeResultActivity::class.java)?.finish()
+            finish()
         }
 
     }

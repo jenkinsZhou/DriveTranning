@@ -24,7 +24,7 @@ public interface IndustryRegisterContract {
 
 //        String showCompanyByKeyword(String keyWord);
 
-        void registerSuccess(Object userInfo);
+        void registerSuccess(UserInfo userInfo);
 
         void initIndustry(List<IndustryCategory> list);
 
@@ -36,7 +36,7 @@ public interface IndustryRegisterContract {
 
         void requestCategory(BaseObserver<BaseResult<List<IndustryCategory>>> observer);
 
-        void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<Object>> observer);
+        void requestRegister(Map<String, Object> values, BaseObserver<BaseResult<UserInfo>> observer);
 
         void requestLogin(String idCard, String password,BaseObserver<BaseResult<UserInfo>> observer);
     }

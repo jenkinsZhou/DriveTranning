@@ -167,7 +167,7 @@ public interface ApiService {
     Observable<BaseResult> setIndustryCategory(@Body Map<String, Object> map);
 
     @POST("v1.0/open/user/register-individual-business")
-    Observable<BaseResult<Object>> requestRegisterIndustry(@Body Map<String, Object> map);
+    Observable<BaseResult<UserInfo>> requestRegisterIndustry(@Body Map<String, Object> map);
 
     @POST("v1.0/open/user/id-card-login")
     Observable<BaseResult<UserInfo>> requestLoginByIdCard(@Body Map<String, Object> map);

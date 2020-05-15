@@ -37,9 +37,9 @@ public class IndustryRegisterPresenter extends BasePresenter<IndustryRegisterCon
         if (!isViewAttached()) {
             return;
         }
-        getModule().requestRegister(values, new BaseLoadingObserver<BaseResult<Object>>() {
+        getModule().requestRegister(values, new BaseLoadingObserver<BaseResult<UserInfo>>() {
             @Override
-            public void onSuccessNext(BaseResult<Object> entity) {
+            public void onSuccessNext(BaseResult<UserInfo> entity) {
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
                     getView().registerSuccess(entity.getData());
                 } else {
