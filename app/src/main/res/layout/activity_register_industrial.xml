@@ -101,6 +101,7 @@
                             android:layout_weight="1"
                             android:inputType="number"
                             android:background="@null"
+                            android:maxLength="11"
                             android:hint="请输入户主联系电话"
                             android:padding="@dimen/dp_5"
                             android:textColor="@color/black333333"

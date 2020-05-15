@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
+import com.google.gson.Gson
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.app.MyApplication
@@ -17,6 +20,7 @@ import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.SocketBean
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
@@ -131,6 +135,8 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
             return
         }
 
+        this.planDetail = planDetail
+
         latestExamID = "" + planDetail.latestExamID
 
         tvTrainTitle.text = CommonUtil.getNotNullValue(planDetail.title)
@@ -173,9 +179,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 } else {
                     //未开始 学员模块只有转线上
                     setViewGone(llStudentTimeLayout, false)
-                    if(planDetail.type == 0){//纯现场
+                    if (planDetail.type == 0) {//纯现场
                         setViewGone(ivStudentToOnline, false)
-                    }else {
+                    } else {
                         //显示转线上
                         setViewGone(ivStudentToOnline, true)
                     }
@@ -210,9 +216,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_NO_START -> {
                         setViewGone(ivStudentSignIn, true)
                         setViewGone(ivStudentSignOut, false)
-                        if(planDetail.type == 0){//纯现场
+                        if (planDetail.type == 0) {//纯现场
                             setViewGone(ivStudentToOnline, false)
-                        }else {
+                        } else {
                             //显示转线上
                             setViewGone(ivStudentToOnline, true)
                         }
@@ -223,9 +229,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_SIGNED -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, true)
-                        if(planDetail.type == 0){//纯现场
+                        if (planDetail.type == 0) {//纯现场
                             setViewGone(ivStudentToOnline, false)
-                        }else {
+                        } else {
                             //显示转线上
                             setViewGone(ivStudentToOnline, true)
                         }
@@ -235,9 +241,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_SIGN_OUT -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
-                        if(planDetail.type == 0){//纯现场
+                        if (planDetail.type == 0) {//纯现场
                             setViewGone(ivStudentToOnline, false)
-                        }else {
+                        } else {
                             //显示转线上
                             setViewGone(ivStudentToOnline, true)
                         }
@@ -261,9 +267,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_CHECK_STATUS -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
-                        if(planDetail.type == 0){//纯现场
+                        if (planDetail.type == 0) {//纯现场
                             setViewGone(ivStudentToOnline, false)
-                        }else {
+                        } else {
                             //显示转线上
                             setViewGone(ivStudentToOnline, true)
                         }
@@ -311,9 +317,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_NO_START -> {
                         setViewGone(ivStudentSignIn, true)
                         setViewGone(ivStudentSignOut, false)
-                        if(planDetail.type == 0){//纯现场
+                        if (planDetail.type == 0) {//纯现场
                             setViewGone(ivStudentToOnline, false)
-                        }else {
+                        } else {
                             //显示转线上
                             setViewGone(ivStudentToOnline, true)
                         }
@@ -324,9 +330,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_SIGNED -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, true)
-                        if(planDetail.type == 0){//纯现场
+                        if (planDetail.type == 0) {//纯现场
                             setViewGone(ivStudentToOnline, false)
-                        }else {
+                        } else {
                             //显示转线上
                             setViewGone(ivStudentToOnline, true)
                         }
@@ -336,9 +342,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_SIGN_OUT -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
-                        if(planDetail.type == 0){//纯现场
+                        if (planDetail.type == 0) {//纯现场
                             setViewGone(ivStudentToOnline, false)
-                        }else {
+                        } else {
                             //显示转线上
                             setViewGone(ivStudentToOnline, true)
                         }
@@ -362,9 +368,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_CHECK_STATUS -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
-                        if(planDetail.type == 0){//纯现场
+                        if (planDetail.type == 0) {//纯现场
                             setViewGone(ivStudentToOnline, false)
-                        }else {
+                        } else {
                             //显示转线上
                             setViewGone(ivStudentToOnline, true)
                         }
@@ -387,9 +393,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
-                if(planDetail.type == 0){//纯现场
+                if (planDetail.type == 0) {//纯现场
                     setViewGone(ivStudentToOnline, false)
-                }else {
+                } else {
                     //隐藏转线上
                     setViewGone(ivStudentToOnline, true)
                 }
@@ -466,9 +472,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
-                if(planDetail.type == 0){//纯现场
+                if (planDetail.type == 0) {//纯现场
                     setViewGone(ivStudentToOnline, false)
-                }else {
+                } else {
                     //隐藏转线上
                     setViewGone(ivStudentToOnline, true)
                 }
@@ -511,9 +517,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 setViewGone(ivStudentSignOut, true)
                 setViewGone(ivStudentSignIn, false)
                 setViewGone(ivScanCode, true)
-                if(planDetail.type == 0){//纯现场
+                if (planDetail.type == 0) {//纯现场
                     setViewGone(ivStudentToOnline, false)
-                }else {
+                } else {
                     //显示转线上
                     setViewGone(ivStudentToOnline, true)
                 }
@@ -546,9 +552,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
-                if(planDetail.type == 0){//纯现场
+                if (planDetail.type == 0) {//纯现场
                     setViewGone(ivStudentToOnline, false)
-                }else {
+                } else {
                     //隐藏转线上
                     setViewGone(ivStudentToOnline, true)
                 }
@@ -588,9 +594,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
                 setViewGone(ivScanCode, false)
-                if(planDetail.type == 0){//纯现场
+                if (planDetail.type == 0) {//纯现场
                     setViewGone(ivStudentToOnline, false)
-                }else {
+                } else {
                     //显示转线上
                     setViewGone(ivStudentToOnline, true)
                 }
@@ -627,9 +633,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
-                if(planDetail.type == 0){//纯现场
+                if (planDetail.type == 0) {//纯现场
                     setViewGone(ivStudentToOnline, false)
-                }else {
+                } else {
                     //隐藏转线上
                     setViewGone(ivStudentToOnline, true)
                 }
@@ -777,10 +783,34 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         TourCooLogUtil.i(mTag, "连接成功")
     }
 
+    private var planDetail:TrainingPlanDetail? = null
     override fun <T : Any?> onMessage(message: String?, data: T) {
 //        ToastUtil.showFailed("webSocket:onMessage---" + data + "message =" + message)
         TourCooLogUtil.i(mTag, "webSocket:onMessage---" + data + "message =" + message)
-        presenter.getTrainDetail(trainingPlanId)
+
+        val model = Gson().fromJson<SocketBean>(message, SocketBean::class.java)
+
+        if(model.type == 1){
+
+            if(planDetail == null){
+                return
+            }
+
+            showCheckAlert()
+
+            if (planDetail?.type == 0) {//纯现场
+                setViewGone(ivStudentToOnline, false)
+            } else {
+                //显示转线上
+                setViewGone(ivStudentToOnline, true)
+            }
+
+            setViewGone(ivScanCode, true)
+
+        }else{
+            presenter.getTrainDetail(trainingPlanId)
+        }
+
     }
 
     override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {
@@ -918,6 +948,10 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 REQUEST_CODE_SIGN_STUDENT
             }
 
+            TrainingConstant.ACTION_SAFE_MANAGER_SIGN -> {
+                REQUEST_CODE_SIGN_STUDENT
+            }
+
             TrainingConstant.ACTION_STUDENT_SIGN_OUT -> {
                 REQUEST_CODE_SIGN_OUT_STUDENT
             }
@@ -937,7 +971,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         try {
             val scanResult = JSON.parseObject(result, QrScanResult::class.java)
 
-            if(scanResult.trainingPlanID  != trainingPlanId){
+            if (scanResult.trainingPlanID != trainingPlanId) {
                 ToastUtil.show("课程不匹配")
                 return
             }

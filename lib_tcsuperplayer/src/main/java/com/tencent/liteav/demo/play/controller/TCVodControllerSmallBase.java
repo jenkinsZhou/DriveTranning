@@ -153,6 +153,8 @@ public abstract class TCVodControllerSmallBase extends RelativeLayout implements
 
             @Override
             public void onSeekGesture(int progress) {
+
+
                 mIsChangingSeekBarProgress = true;
                 if (mGestureVideoProgressLayout != null) {
 

@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
+import com.google.gson.Gson
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.constant.TrainingConstant.*
@@ -19,6 +20,7 @@ import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.SocketBean
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
@@ -162,10 +164,10 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 //未开始 只有转线上按钮
                 setViewGone(rlButtonLayout, true)
 
-                if(planDetail.type == 0){ //纯现场
+                if (planDetail.type == 0) { //纯现场
                     //转线上按钮
                     setViewGone(ivStudentToOnline, false)
-                }else{
+                } else {
                     //转线上按钮
                     setViewGone(ivStudentToOnline, true)
 
@@ -195,10 +197,10 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
              * 已签到
              */
             TRAIN_STATUS_SIGNED -> {
-                if(planDetail.type == 0){ //纯现场
+                if (planDetail.type == 0) { //纯现场
                     //转线上按钮
                     setViewGone(ivStudentToOnline, false)
-                }else {
+                } else {
                     //转线上按钮
                     setViewGone(ivStudentToOnline, true)
                 }
@@ -206,6 +208,31 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(ivSignStudent, false)
                 //扫码按钮
                 setViewGone(ivScanCode, false)
+                //签退按钮
+                setViewGone(ivSignOut, true)
+                //显示签到时间
+                setViewGone(llSignedTime, true)
+                tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                //隐藏签退时间
+                setViewGone(llSignedOutTime, false)
+                //隐藏标签
+                setViewGone(ivStatusTag, false)
+                ivStatusTag.setImageResource(R.mipmap.ic_training_state_signed)
+                setViewGone(llBottomButtonLayout, false)
+            }
+
+            TRAIN_STATUS_CHECK_STATUS->{
+                if (planDetail.type == 0) { //纯现场
+                    //转线上按钮
+                    setViewGone(ivStudentToOnline, false)
+                } else {
+                    //转线上按钮
+                    setViewGone(ivStudentToOnline, true)
+                }
+                //签到按钮
+                setViewGone(ivSignStudent, false)
+                //扫码按钮
+                setViewGone(ivScanCode, true)
                 //签退按钮
                 setViewGone(ivSignOut, true)
                 //显示签到时间
@@ -351,6 +378,16 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 skipExamActivity()
             }
 
+            R.id.ivSignOut -> {
+                //学生签退
+                studentSignOut()
+            }
+
+            R.id.ivScanCode -> {
+                //学生抽验
+                studentCheckStatus()
+            }
+
             else -> {
             }
         }
@@ -410,7 +447,30 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     override fun <T : Any?> onMessage(message: String?, data: T) {
 //        ToastUtil.show("webSocket:onMessage---" + data + "message =" + message)
         TourCooLogUtil.i(mTag, "webSocket:onMessage---" + data + "message =" + message)
-        presenter.getTrainDetail(trainingPlanId)
+        val model = Gson().fromJson<SocketBean>(message, SocketBean::class.java)
+        if(model.type == 1){
+
+            if(mTrainingPlanDetail == null){
+                return
+            }
+
+            showCheckAlert()
+
+            if (mTrainingPlanDetail!!.type == 0) { //纯现场
+                //转线上按钮
+                setViewGone(ivStudentToOnline, false)
+            } else {
+                //转线上按钮
+                setViewGone(ivStudentToOnline, true)
+            }
+
+            //扫码按钮
+            setViewGone(ivScanCode, true)
+
+
+        }else {
+            presenter.getTrainDetail(trainingPlanId)
+        }
     }
 
     override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {
@@ -500,6 +560,24 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     private fun studentSign() {
         //学生签到扫码
         currentAction = ACTION_STUDENT_SIGN
+        scanCode()
+    }
+
+    /**
+     * 学生签退
+     */
+    private fun studentSignOut() {
+        //学生签签退扫码
+        currentAction = ACTION_STUDENT_SIGN_OUT
+        scanCode()
+    }
+
+    /**
+     * 学生抽验
+     */
+    private fun studentCheckStatus() {
+        //学生抽验
+        currentAction = ACTION_STUDENT_CHECK_STATUS
         scanCode()
     }
 
