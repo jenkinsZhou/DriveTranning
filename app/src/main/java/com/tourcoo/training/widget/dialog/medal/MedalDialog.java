@@ -389,9 +389,12 @@ public class MedalDialog {
     }
 
 
-    public void show() {
+    public boolean show() {
         if (dialog != null && isShow) {
             dialog.show();
+            return true;
+        }else {
+           return false;
         }
     }
 

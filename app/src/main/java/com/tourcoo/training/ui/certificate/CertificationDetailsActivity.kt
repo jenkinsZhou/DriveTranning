@@ -169,7 +169,7 @@ class CertificationDetailsActivity : BaseTitleActivity() {
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     //显示勋章
-                    showMedalDialog(entity.data.consume.toInt())
+                    showMedalDialog(entity.data.certificate.toInt())
                 }
             }
         })

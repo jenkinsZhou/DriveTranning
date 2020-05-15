@@ -22,6 +22,7 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.medal.MedalDictionary
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
@@ -125,9 +126,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         if (detail.finishedCourses == 1 && detail.finishedExam == 0) {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
-            //延时弹出是否考试弹窗
-            showAcceptExamDialog()
-//            requestMedalDictionary()
+            requestMedalDictionary()
         } else {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
             tvExam.isEnabled = false
@@ -497,7 +496,9 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         countCatalog = 0
     }
 
-
+    /**
+     * 获取勋章领取条件接口
+     */
     private fun requestMedalDictionary() {
         ApiRepository.getInstance().requestMedalDictionary().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MedalDictionary>>() {
             override fun onSuccessNext(entity: BaseResult<MedalDictionary>?) {
@@ -506,20 +507,27 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     //显示勋章
-                    showMedalDialog()
+                    showMedalDialog(entity.data.hour.toInt())
                 }
             }
         })
     }
 
-
-    private fun showMedalDialog() {
+    private fun showMedalDialog(number: Int) {
         val dialog = MedalDialog(mContext)
-        dialog.create().setPositiveButtonListener {
-            dialog.dismiss()
-            val intent = Intent(this, StudyMedalRecordActivity::class.java)
-            startActivityForResult(intent, 2017)
-        }.show()
+        val isShow = dialog.create()
+                .setMedal(1, number, AccountTempHelper.getInstance().studyMedalEntity)
+                .setPositiveButtonListener {
+                    dialog.dismiss()
+                    val intent = Intent(this, StudyMedalRecordActivity::class.java)
+                    startActivityForResult(intent, 2017)
+                }.show()
+
+        if(!isShow){
+            //延时弹出是否考试弹窗
+            showAcceptExamDialog()
+        }
+
     }
 
     private fun showUnlockTips(course: Course, tvPlanDesc: TextView,tvPlanTitle: TextView) {

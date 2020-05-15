@@ -33,9 +33,12 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountTempHelper
+import com.tourcoo.training.entity.medal.MedalDictionary
 import com.tourcoo.training.entity.training.*
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
+import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity
 import com.tourcoo.training.ui.training.safe.online.web.WebCourseTempHelper
@@ -64,6 +67,7 @@ import com.tourcoo.training.widget.aliplayer.view.tipsview.ErrorInfo
 import com.tourcoo.training.widget.aliplayer.view.tipsview.TipsView
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
+import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_ali.*
 import kotlinx.android.synthetic.main.activity_play_video_ali.llPlanContentView
@@ -261,6 +265,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
+
+
     private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
         if (hasRequireExam) {
             cancelTimer()
@@ -282,8 +288,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             //如果允许考试则将考试按钮置为蓝色 并允许点击 否则置灰
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.blue5087FF))
             tvExam.isEnabled = true
-            //延时弹出是否考试弹窗
-            showAcceptExamDialog()
+
+            requestMedalDictionary()
         } else {
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
             tvExam.isEnabled = false
@@ -1778,5 +1784,40 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvPlanTitle.setTextColor(CommonUtil.getColor(R.color.gray999999))
         setViewGone(tvPlanDesc, true)
     }
+
+    /**
+     * 获取勋章领取条件接口
+     */
+    private fun requestMedalDictionary() {
+        ApiRepository.getInstance().requestMedalDictionary().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MedalDictionary>>() {
+            override fun onSuccessNext(entity: BaseResult<MedalDictionary>?) {
+                if (entity == null) {
+                    return
+                }
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
+                    //显示勋章
+                    showMedalDialog(entity.data.hour.toInt())
+                }
+            }
+        })
+    }
+
+    private fun showMedalDialog(number: Int) {
+        val dialog = MedalDialog(mContext)
+        val isShow = dialog.create()
+                .setMedal(1, number, AccountTempHelper.getInstance().studyMedalEntity)
+                .setPositiveButtonListener {
+                    dialog.dismiss()
+                    val intent = Intent(this, StudyMedalRecordActivity::class.java)
+                    startActivityForResult(intent, 2017)
+                }.show()
+
+        if(!isShow){
+            //延时弹出是否考试弹窗
+            showAcceptExamDialog()
+        }
+
+    }
+
 }
 

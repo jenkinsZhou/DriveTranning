@@ -12,6 +12,7 @@ import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.medal.MedalInfo
 import com.tourcoo.training.entity.medal.StudyMedalEntity
 import com.tourcoo.training.entity.study.StudyMedal
@@ -249,6 +250,7 @@ class StudyMedalRecordActivity : BaseTitleActivity() {
             override fun onSuccessNext(entity: BaseResult<StudyMedalEntity>?) {
                 if (entity != null) {
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                        AccountTempHelper.getInstance().studyMedalEntity = entity.data
                         showMedalRecord(entity.data)
                     } else {
                         ToastUtil.show(entity.msg)
