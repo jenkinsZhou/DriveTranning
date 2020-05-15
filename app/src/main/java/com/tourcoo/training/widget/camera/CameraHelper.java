@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.ui.MainActivity;
 
@@ -75,7 +76,12 @@ public class CameraHelper implements Camera.PreviewCallback {
                 return;
             }
             //相机数量为2则打开1,1则打开0,相机ID 1为前置，0为后置
-            mCameraId = Camera.getNumberOfCameras() - 1;
+
+            if(AppConfig.DEBUG_MODE){
+                mCameraId = 0;
+            }else {
+                mCameraId = Camera.getNumberOfCameras() - 1;
+            }
             //若指定了相机ID且该相机存在，则打开指定的相机
             if (specificCameraId != null && specificCameraId <= mCameraId) {
                 mCameraId = specificCameraId;

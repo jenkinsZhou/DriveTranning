@@ -1,4 +1,4 @@
-package com.tourcoo.training.widget.aliplayer.view.control;
+package com.tourcoo.training.ui.training.safe.online.aliyun;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -21,11 +21,9 @@ import androidx.core.content.ContextCompat;
 
 import com.aliyun.player.nativeclass.MediaInfo;
 import com.aliyun.player.nativeclass.TrackInfo;
-import com.aliyun.utils.VcPlayerLog;
-import com.blankj.utilcode.util.ToastUtils;
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.log.TourCooLogUtil;
-import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.entity.training.Course;
 import com.tourcoo.training.entity.training.VideoStream;
 import com.tourcoo.training.widget.AliYunVodPlayerView;
@@ -38,7 +36,6 @@ import com.tourcoo.training.widget.aliplayer.view.quality.QualityItem;
 
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -333,8 +330,15 @@ public class ControlView extends RelativeLayout implements ViewAction, ITheme {
         //禁用seekbar的滑动监听
 //        mLargeSeekbar.setOnSeekBarChangeListener(seekBarChangeListener);
 //        mSmallSeekbar.setOnSeekBarChangeListener(seekBarChangeListener);
-        mSmallSeekbar.setEnabled(false);
-        mLargeSeekbar.setEnabled(false);
+        //阿里云播放器拖动控制
+        if(AppConfig.DEBUG_MODE){
+            mSmallSeekbar.setEnabled(true);
+            mLargeSeekbar.setEnabled(true);
+        }else {
+            mSmallSeekbar.setEnabled(false);
+            mLargeSeekbar.setEnabled(false);
+        }
+
         mSmallSeekbar.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

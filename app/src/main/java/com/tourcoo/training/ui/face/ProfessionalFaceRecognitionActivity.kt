@@ -171,7 +171,7 @@ class ProfessionalFaceRecognitionActivity : BaseTitleActivity(), CameraListener,
                         uploadFaceImage(mExamId, faceBitmap)
 
                     }
-                }, 200)
+                }, 50)
 
             }
         })

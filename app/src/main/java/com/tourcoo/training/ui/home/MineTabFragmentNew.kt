@@ -283,7 +283,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     }
 
 
-    private fun refreshUserInfo() {
+     fun refreshUserInfo() {
         if (!AccountHelper.getInstance().isLogin) {
             showUnLogin()
             smartRefreshLayoutCommon.finishRefresh()

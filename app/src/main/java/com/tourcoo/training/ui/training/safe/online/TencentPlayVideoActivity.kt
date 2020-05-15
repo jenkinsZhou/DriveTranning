@@ -57,7 +57,7 @@ import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 
 /**
  *@description :
- *@company :翼迈科技股份有限公司
+ *@company :途酷科技
  * @author :JenkinsZhou
  * @date 2020年04月19日23:27
  * @Email: 971613168@qq.com
@@ -152,7 +152,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun loadPlayerSetting(currentProgress: Int) {
         //进度条拖动开关
-        smartVideoPlayer.setSeekEnable(true)
+        //调试模式下允许拖动进度条
+        smartVideoPlayer.setSeekEnable(AppConfig.DEBUG_MODE)
         smartVideoPlayer.setOnPlayStatusListener(object : SuperPlayerView.OnPlayStatusListener {
             override fun onAutoPlayStart() {
                 ivCoverView.visibility = View.GONE
@@ -916,7 +917,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     startActivityForResult(intent, 2017)
                 }.show()
 
-        if(!isShow){
+        if (!isShow) {
             //延时弹出是否考试弹窗
             showAcceptExamDialog()
         }

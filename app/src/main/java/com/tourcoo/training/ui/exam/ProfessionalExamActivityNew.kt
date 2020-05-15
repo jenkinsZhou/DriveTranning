@@ -30,10 +30,12 @@ import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
+import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.exam.*
 import com.tourcoo.training.ui.MainTabActivity
+import com.tourcoo.training.ui.certificate.CertificationDetailsActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.exam.ExamNotPassDialog
@@ -497,7 +499,11 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
                             }
                             .setNegativeButtonListener {
                                 dialog.dismiss()
-                                startActivity(Intent(this@ProfessionalExamActivityNew, MyCertificationActivity::class.java))
+                                // startActivity(Intent(this@ProfessionalExamActivityNew, MyCertificationActivity::class.java))
+                                //跳转到证书详情
+                                val intent = Intent(mContext, CertificationDetailsActivity::class.java)
+                                intent.putExtra("id", CommonUtil.getNotNullValue(id))
+                                startActivity(intent)
                                 setResult(Activity.RESULT_OK)
                                 finish()
                             }
@@ -630,12 +636,23 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
 
 
     private fun showButtonByCurrentPage() {
-        if (vpExamOnline.currentItem == list!!.size - 1) {
-            setViewGone(tvCommitExam, true)
-            setViewGone(tvNextQuestion, false)
-        } else {
-            setViewGone(tvCommitExam, false)
-            setViewGone(tvNextQuestion, true)
+        when (vpExamOnline.currentItem) {
+            list!!.size - 1 -> {
+                setViewGone(tvCommitExam, true)
+                setViewGone(tvLastQuestion, true)
+                setViewGone(tvNextQuestion, false)
+            }
+            0 -> {
+                setViewGone(tvCommitExam, false)
+                setViewGone(tvNextQuestion, true)
+                //第一题的话 就不显示上一题了
+                setViewGone(tvLastQuestion, false)
+            }
+            else -> {
+                setViewGone(tvCommitExam, false)
+                setViewGone(tvLastQuestion, true)
+                setViewGone(tvNextQuestion, true)
+            }
         }
     }
 

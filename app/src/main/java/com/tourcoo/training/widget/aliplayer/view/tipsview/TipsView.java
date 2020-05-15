@@ -115,9 +115,7 @@ public class TipsView extends RelativeLayout implements ITheme {
         } else {
             mNetChangeView.setVisibility(VISIBLE);
         }
-        if (tipViewShowListener != null) {
-            tipViewShowListener.tipViewShowing();
-        }
+        listenShow(true);
     }
 
     /**
@@ -142,9 +140,7 @@ public class TipsView extends RelativeLayout implements ITheme {
         mErrorView.updateTips(errorCode, errorEvent, errorMsg);
         mErrorView.setVisibility(VISIBLE);
 
-        if (tipViewShowListener != null) {
-            tipViewShowListener.tipViewShowing();
-        }
+        listenShow(true);
         Log.d(TAG, " errorCode = " + mErrorCode);
     }
 
@@ -164,9 +160,7 @@ public class TipsView extends RelativeLayout implements ITheme {
         if (mErrorView.getVisibility() != VISIBLE) {
             mErrorView.setVisibility(VISIBLE);
         }
-        if (tipViewShowListener != null) {
-            tipViewShowListener.tipViewShowing();
-        }
+        listenShow(true);
     }
 
     /**
@@ -182,9 +176,7 @@ public class TipsView extends RelativeLayout implements ITheme {
         if (mReplayView.getVisibility() != VISIBLE) {
             mReplayView.setVisibility(VISIBLE);
         }
-        if (tipViewShowListener != null) {
-            tipViewShowListener.tipViewShowing();
-        }
+        listenShow(true);
     }
 
 
@@ -248,11 +240,14 @@ public class TipsView extends RelativeLayout implements ITheme {
      * 隐藏所有的tip
      */
     public void hideAll() {
+        //隐藏所有view
         hideNetChangeTipView();
         hideErrorTipView();
         hideReplayTipView();
         hideBufferLoadingTipView();
         hideNetLoadingTipView();
+       //只在隐藏所有tipView情况下回调监听
+        listenShow(false);
     }
 
     /**
@@ -385,8 +380,8 @@ public class TipsView extends RelativeLayout implements ITheme {
     }
 
 
-  public   interface TipViewShowListener {
-        void tipViewShowing();
+    public interface TipViewShowListener {
+        void tipViewShowing(boolean show);
     }
 
     public TipViewShowListener getTipViewShowListener() {
@@ -395,5 +390,12 @@ public class TipsView extends RelativeLayout implements ITheme {
 
     public void setTipViewShowListener(TipViewShowListener tipViewShowListener) {
         this.tipViewShowListener = tipViewShowListener;
+    }
+
+
+    private void listenShow(boolean visible) {
+        if (tipViewShowListener != null) {
+            tipViewShowListener.tipViewShowing(visible);
+        }
     }
 }

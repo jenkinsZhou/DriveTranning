@@ -172,7 +172,7 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                         uploadFaceImage(trainId, faceBitmap)
 
                     }
-                }, 200)
+                }, 50)
 
             }
         })

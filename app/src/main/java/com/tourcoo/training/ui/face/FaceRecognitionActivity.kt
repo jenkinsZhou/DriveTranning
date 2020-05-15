@@ -175,7 +175,7 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                         AccountTempHelper.getInstance().facePhotoPath = photoPath
                         uploadFaceImage(trainId, faceBitmap)
                     }
-                }, 200)
+                }, 50)
 
             }
         })

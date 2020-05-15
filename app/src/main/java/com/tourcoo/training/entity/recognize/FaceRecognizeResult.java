@@ -3,7 +3,7 @@ package com.tourcoo.training.entity.recognize;
 /**
  * @author :JenkinsZhou
  * @description :
- * @company :翼迈科技股份有限公司
+ * @company :途酷科技
  * @date 2020年04月15日23:07
  * @Email: 971613168@qq.com
  */

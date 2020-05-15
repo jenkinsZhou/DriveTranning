@@ -12,7 +12,7 @@ import com.tourcoo.training.R;
 /**
  * @author :JenkinsZhou
  * @description :
- * @company :翼迈科技股份有限公司
+ * @company :途酷科技
  * @date 2020年02月20日19:32
  * @Email: 971613168@qq.com
  */

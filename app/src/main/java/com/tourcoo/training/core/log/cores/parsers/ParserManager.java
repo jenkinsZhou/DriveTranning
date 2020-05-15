@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author :JenkinsZhou
  * @description :解析器管理者
- * @company :翼迈科技股份有限公司
+ * @company :途酷科技
  * @date 2020年03月07日22:16
  * @Email: 971613168@qq.com
  */

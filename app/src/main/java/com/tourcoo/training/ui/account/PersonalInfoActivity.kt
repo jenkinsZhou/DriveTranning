@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.activity_personal_info.*
 
 /**
  *@description :
- *@company :翼迈科技股份有限公司
+ *@company :途酷科技
  * @author :JenkinsZhou
  * @date 2020年04月11日23:09
  * @Email: 971613168@qq.com

@@ -36,10 +36,9 @@ import com.aliyun.thumbnail.ThumbnailHelper;
 import com.aliyun.utils.VcPlayerLog;
 
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.log.TourCooLogUtil;
-import com.tourcoo.training.core.util.CommonUtil;
-import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.entity.training.Course;
 import com.tourcoo.training.entity.training.VideoStream;
 import com.tourcoo.training.ui.training.safe.online.aliyun.DefinitionView;
@@ -58,7 +57,7 @@ import com.tourcoo.training.widget.aliplayer.utils.NetWatchdog;
 import com.tourcoo.training.widget.aliplayer.utils.OrientationWatchDog;
 import com.tourcoo.training.widget.aliplayer.utils.ScreenUtils;
 import com.tourcoo.training.widget.aliplayer.utils.TimeFormater;
-import com.tourcoo.training.widget.aliplayer.view.control.ControlView;
+import com.tourcoo.training.ui.training.safe.online.aliyun.ControlView;
 import com.tourcoo.training.widget.aliplayer.view.gesture.GestureDialogManager;
 import com.tourcoo.training.widget.aliplayer.view.gesture.GestureView;
 import com.tourcoo.training.widget.aliplayer.view.guide.GuideView;
@@ -613,7 +612,7 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
 
                 Context context = getContext();
                 if (context instanceof Activity) {
-                    ((Activity) context).finish();
+                    ((Activity) context).onBackPressed();
                 }
             }
 
@@ -1141,26 +1140,29 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
             @Override
             public void onHorizontalDistance(float downX, float nowX) {
                 //todo:手势禁用
-                //水平滑动调节seek。
-                // seek需要在手势结束时操作。
-//                long duration = mAliyunVodPlayer.getDuration();
-//                long position = mCurrentPosition;
-//                long deltaPosition = 0;
-//                int targetPosition = 0;
-//                if (mPlayerState == IPlayer.prepared ||
-//                        mPlayerState == IPlayer.paused ||
-//                        mPlayerState == IPlayer.started) {
-//                    //在播放时才能调整大小
-//                    deltaPosition = (long) (nowX - downX) * duration / getWidth();
-//                    targetPosition = getTargetPosition(duration, position, deltaPosition);
-//                }
-//
-//                if (mGestureDialogManager != null) {
-//                    inSeek = true;
-//                    mControlView.setVideoPosition(targetPosition);
-//                    requestBitmapByPosition(targetPosition);
-//                    showThumbnailView();
-//                }
+//                水平滑动调节seek。
+//                 seek需要在手势结束时操作。
+                if (AppConfig.DEBUG_MODE) {
+                    long duration = mAliyunVodPlayer.getDuration();
+                    long position = mCurrentPosition;
+                    long deltaPosition = 0;
+                    int targetPosition = 0;
+                    if (mPlayerState == IPlayer.prepared ||
+                            mPlayerState == IPlayer.paused ||
+                            mPlayerState == IPlayer.started) {
+                        //在播放时才能调整大小
+                        deltaPosition = (long) (nowX - downX) * duration / getWidth();
+                        targetPosition = getTargetPosition(duration, position, deltaPosition);
+                    }
+
+                    if (mGestureDialogManager != null) {
+                        inSeek = true;
+                        mControlView.setVideoPosition(targetPosition);
+                        requestBitmapByPosition(targetPosition);
+                        showThumbnailView();
+                    }
+                }
+
             }
 
             @Override
@@ -1201,18 +1203,21 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
                     mGestureDialogManager.dismissVolumeDialog();
 
                     //todo:手势禁用
-//                    if (inSeek) {
-//                        int seekPosition = mControlView.getVideoPosition();
-//                        if (seekPosition >= mAliyunVodPlayer.getDuration()) {
-//                            seekPosition = (int) (mAliyunVodPlayer.getDuration() - 1000);
-//                        }
-//                        if (seekPosition >= 0) {
-//                            seekTo(seekPosition);
-//                            hideThumbnailView();
-//                        } else {
-//                            inSeek = false;
-//                        }
-//                    }
+                    if (AppConfig.DEBUG_MODE) {
+                        if (inSeek) {
+                            int seekPosition = mControlView.getVideoPosition();
+                            if (seekPosition >= mAliyunVodPlayer.getDuration()) {
+                                seekPosition = (int) (mAliyunVodPlayer.getDuration() - 1000);
+                            }
+                            if (seekPosition >= 0) {
+                                seekTo(seekPosition);
+                                hideThumbnailView();
+                            } else {
+                                inSeek = false;
+                            }
+                        }
+                    }
+
 
                 }
             }
@@ -2726,7 +2731,7 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     /**
      * 播放器状态改变监听
      */
-    private static class VideoPlayerStateChangedListener implements IPlayer.OnStateChangedListener {
+    public static class VideoPlayerStateChangedListener implements IPlayer.OnStateChangedListener {
 
         private WeakReference<AliYunVodPlayerView> weakReference;
 
@@ -3108,6 +3113,13 @@ public class AliYunVodPlayerView extends RelativeLayout implements ITheme {
     public void setTipViewShowListener(TipsView.TipViewShowListener listener) {
         if (mTipsView != null) {
             mTipsView.setTipViewShowListener(listener);
+        }
+    }
+
+
+    public void hideAllTipView() {
+        if (mTipsView != null) {
+            mTipsView.hideAll();
         }
     }
 

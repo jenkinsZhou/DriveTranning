@@ -21,7 +21,7 @@ import static com.tourcoo.training.entity.study.StudyMedalGroup.ITEM_TYPE_HEADER
 /**
  * @author :JenkinsZhou
  * @description :
- * @company :翼迈科技股份有限公司
+ * @company :途酷科技
  * @date 2020年03月05日23:29
  * @Email: 971613168@qq.com
  */

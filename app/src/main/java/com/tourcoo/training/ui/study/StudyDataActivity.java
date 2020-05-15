@@ -178,7 +178,7 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
         mStudyDataEntity.setTotalHour(TimeUtil.secondToHour(detail.getTotalHour()));
         loadChart(detail);
         tvSelectDateShow.setText(mStudyDataEntity.getMonths().get(currentPosition).getTime());
-        tvTotalStudyLength.setText(CommonUtil.doubleTransStringZhen(detail.getTotalHour()) + "小时");
+        tvTotalStudyLength.setText(CommonUtil.doubleTransStringZhenOneZero(detail.getTotalHour()) + "小时");
         List<Fragment> fragmentList = new ArrayList<>();
         for (StudyDataInfo month : detail.getMonths()) {
             fragmentList.add(StudyDataFragment.newInstance(month.getDay()));

@@ -12,7 +12,7 @@ import com.trello.rxlifecycle3.android.ActivityEvent;
 /**
  * @author :JenkinsZhou
  * @description :mvp模式下的下拉刷新与加载更多的activity基类
- * @company :翼迈科技股份有限公司
+ * @company :途酷科技
  * @date 2019年08月15日23:02
  * @Email: 971613168@qq.com
  */

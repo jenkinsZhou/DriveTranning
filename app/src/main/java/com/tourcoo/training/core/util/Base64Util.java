@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * @author :JenkinsZhou
  * @description :
- * @company :翼迈科技股份有限公司
+ * @company :途酷科技
  * @date 2020年04月15日23:26
  * @Email: 971613168@qq.com
  */
@@ -26,7 +26,7 @@ public class Base64Util {
         try {
             if (bitmap != null) {
                 baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
 
                 baos.flush();
                 baos.close();

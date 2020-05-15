@@ -68,7 +68,7 @@ import com.tourcoo.training.widget.aliplayer.utils.download.AliyunDownloadInfoLi
 import com.tourcoo.training.widget.aliplayer.utils.download.AliyunDownloadManager;
 import com.tourcoo.training.widget.aliplayer.utils.download.AliyunDownloadMediaInfo;
 import com.tourcoo.training.widget.aliplayer.view.choice.AlivcShowMoreDialog;
-import com.tourcoo.training.widget.aliplayer.view.control.ControlView;
+import com.tourcoo.training.ui.training.safe.online.aliyun.ControlView;
 import com.tourcoo.training.widget.aliplayer.view.download.AddDownloadView;
 import com.tourcoo.training.widget.aliplayer.view.download.AlivcDialog;
 import com.tourcoo.training.widget.aliplayer.view.download.AlivcDownloadMediaInfo;

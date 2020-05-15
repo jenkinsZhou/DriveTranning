@@ -17,7 +17,6 @@ import com.aliyun.player.bean.ErrorCode
 import com.aliyun.player.nativeclass.PlayerConfig
 import com.aliyun.player.source.UrlSource
 import com.aliyun.player.source.VidSts
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
@@ -59,7 +58,6 @@ import com.tourcoo.training.widget.aliplayer.utils.VidStsUtil
 import com.tourcoo.training.widget.aliplayer.utils.VidStsUtil.OnStsResultListener
 import com.tourcoo.training.widget.aliplayer.utils.download.AliyunDownloadMediaInfo
 import com.tourcoo.training.widget.aliplayer.view.choice.AlivcShowMoreDialog
-import com.tourcoo.training.widget.aliplayer.view.control.ControlView
 import com.tourcoo.training.widget.aliplayer.view.gesturedialog.BrightnessDialog
 import com.tourcoo.training.widget.aliplayer.view.more.AliyunShowMoreValue
 import com.tourcoo.training.widget.aliplayer.view.more.SpeedValue
@@ -194,7 +192,10 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     override fun setTitleBar(titleBar: TitleBarView?) {
-        titleBar?.setTitleMainText("在线学习")
+        titleBar?.setTitleMainText("线上学习")
+        titleBar?.setOnLeftTextClickListener {
+            onBackPressed()
+        }
     }
 
 
@@ -243,7 +244,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         aliYunPlayer?.onDestroy()
         super.onDestroy()
 
-
     }
 
 
@@ -263,8 +263,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
         })
     }
-
-
 
 
     private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
@@ -313,9 +311,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         for (entry in mCourseHashMap!!.entries) {
             loadCourseStatusAndClick(entry.value, entry.key)
         }
-
-        LogUtils.e(countCatalog, countNode)
-
         tvCourseCountInfoAli.text = "共" + countCatalog + "章" + countNode + "小节"
         tvCourseTimeAli.text = "课时：" + detail.courseTime.toString()
         tvTitle.text = getNotNullValue(detail.title)
@@ -442,8 +437,15 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 if (course.mediaType == MEDIA_TYPE_HTML) {
                     ToastUtil.show("当前是网页课件,需要手动点击学习")
                     setCourseInfoClick(view, course)
+                    //因为当前课件不是视频了 为了防止播放器黑屏 所以给播放器设置封面图
+                    //设置默认封面图 并停止播放
+                    aliYunPlayer?.hideAllTipView()
+                    aliYunPlayer?.setCoverResource(R.drawable.ic_rect_default)
+                    aliYunPlayer?.optionStop()
+                } else {
+                    playStreamUrlOrHtml(course)
                 }
-                playStreamUrlOrHtml(course)
+
             }
             else -> {
             }
@@ -481,6 +483,10 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 //关键点：需要先判断当前是否有视频
                 if (course.streams == null || course.streams.size == 0) {
                     ToastUtil.show("当前课件不是视频课件")
+                    return
+                }
+                if (mExamEnable) {
+                    //如果是考试状态 就不用播放视频了 因此直接拦截播放操作
                     return
                 }
                 course.streams = sortQuality(course.streams)
@@ -603,9 +609,9 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             finish()
             return
         }
-        IosAlertDialog(mContext)
+        val dialog = IosAlertDialog(mContext)
                 .init()
-                .setCancelable(false)
+        dialog.setCancelable(false)
                 .setCanceledOnTouchOutside(false)
                 .setTitle("确认退出学习")
                 .setMsg("退出前会保存当前学习进度")
@@ -619,7 +625,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     }, 500)
                 })
                 .setNegativeButton("取消", View.OnClickListener {
-                    finish()
+                    dialog.dismiss()
                 }).show()
     }
 
@@ -701,7 +707,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-            TourCooLogUtil.d("计时中...")
+                TourCooLogUtil.d("计时中...")
+                /*  if (!isVideoPlaying()) {
+                      //如果播放器不在播放状态下 则暂停计时器
+                      timerPause()
+                  }*/
             }
 
         })
@@ -712,7 +722,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun cancelTimer() {
         if (mTimerTask != null) {
             mTimerTask!!.stop()
-            TourCooLogUtil.w(mTag, "计时器已取消")
+            mTimerTask = null
+            TourCooLogUtil.w(mTag, "计时器销毁")
         }
     }
 
@@ -723,6 +734,9 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             mTimerTask!!.reset()
             mTimerTask!!.start()
             TourCooLogUtil.i(mTag, "计时器开始")
+        } else {
+            initTimerAndStart()
+            TourCooLogUtil.i(mTag, "计时器开始（新一轮计时）")
         }
     }
 
@@ -1194,21 +1208,14 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         showMoreDialog!!.show()
         showMoreView.setOnDownloadButtonClickListener(object : MoreViewLayout.OnDownloadButtonClickListener {
             override fun onDownloadClick() {
-                Toast.makeText(activity, "点击了下载......", Toast.LENGTH_SHORT).show()
             }
 
         })
         showMoreView.setOnScreenCastButtonClickListener {
-            Toast.makeText(activity, "功能正在开发中......", Toast.LENGTH_SHORT).show()
-            //                TODO 2019年04月18日16:43:29  先屏蔽投屏功能
-//                showMoreDialog.dismiss();
-//                showScreenCastView();
+
         }
         showMoreView.setOnBarrageButtonClickListener {
-            Toast.makeText(activity, "功能正在开发中......", Toast.LENGTH_SHORT).show()
-            //                if (showMoreDialog != null && showMoreDialog.isShowing()) {
-//                    showMoreDialog.dismiss();
-//                }
+
         }
         showMoreView.setOnSpeedCheckedChangedListener { group, checkedId ->
             // 点击速度切换
@@ -1538,9 +1545,9 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private class MyTipViewShowListener internal constructor(activity: AliYunPlayVideoActivity) : TipsView.TipViewShowListener {
         private val weakReference: WeakReference<AliYunPlayVideoActivity> = WeakReference(activity)
-        override fun tipViewShowing() {
+        override fun tipViewShowing(visible: Boolean) {
             val weakAct = weakReference.get()
-            weakAct?.onTipViewShow()
+            weakAct?.onTipViewShow(visible)
         }
 
 
@@ -1556,11 +1563,19 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     /**
      * 关键核心 控制布局显示监听
      */
-    private fun onTipViewShow() {
+    private fun onTipViewShow(visible: Boolean) {
         //播放器层的提示框已经显示了 就没必要显示loading框了 因此 关闭
-        closeLoading()
         //todo 暂停计时
-        timerPause()
+        //如果提示框出来 说明播放暂停了 需要暂停计时器
+        if (visible) {
+            timerPause()
+        } else {
+            timerResume()
+        }
+        baseHandler.postDelayed(Runnable {
+            closeLoading()
+        }, 1000)
+
     }
 
     /**
@@ -1568,8 +1583,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private fun loadPlayerSettingDefinitionAndSeek(url: String, seek: Long) {
         initAliYunPlayerView(url)
-        showLoading("清晰度切换中...")
         aliYunPlayer.seekTo(seek.toInt())
+        showLoading("清晰度切换中...")
     }
 
 
@@ -1785,6 +1800,14 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         setViewGone(tvPlanDesc, true)
     }
 
+
+    private fun isVideoPlaying(): Boolean {
+        if (aliYunPlayer != null) {
+            return aliYunPlayer.isPlaying
+        }
+        return false
+    }
+
     /**
      * 获取勋章领取条件接口
      */
@@ -1812,7 +1835,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     startActivityForResult(intent, 2017)
                 }.show()
 
-        if(!isShow){
+        if (!isShow) {
             //延时弹出是否考试弹窗
             showAcceptExamDialog()
         }

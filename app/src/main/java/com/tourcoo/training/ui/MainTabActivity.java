@@ -27,6 +27,7 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository;
 import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.tab.CommonTabLayout;
+import com.tourcoo.training.core.widget.view.tab.listener.OnTabSelectListener;
 import com.tourcoo.training.entity.account.AccountHelper;
 import com.tourcoo.training.entity.account.AccountTempHelper;
 import com.tourcoo.training.entity.medal.StudyMedalEntity;
@@ -94,6 +95,25 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
     public void initView(Bundle savedInstanceState) {
         mTabLayout = findViewById(R.id.commonTabLayout);
         mTabLayout.setCurrentTab(1);
+        mTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelect(int position) {
+                if (position == 2) {
+                    if (mTabEntities != null) {
+                        if (mTabEntities.size() > position) {
+                            //保证不会越界前提下
+                            MineTabFragmentNew mineFragment = (MineTabFragmentNew) mTabEntities.get(position).mFragment;
+                            mineFragment.refreshUserInfo();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onTabReselect(int position) {
+
+            }
+        });
     }
 
     @Override

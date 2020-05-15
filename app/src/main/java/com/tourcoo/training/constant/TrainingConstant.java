@@ -3,7 +3,7 @@ package com.tourcoo.training.constant;
 /**
  * @author :JenkinsZhou
  * @description :培训相关常量
- * @company :翼迈科技股份有限公司
+ * @company :途酷科技
  * @date 2020年04月15日22:50
  * @Email: 971613168@qq.com
  */

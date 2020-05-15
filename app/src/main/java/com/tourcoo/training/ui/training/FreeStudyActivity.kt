@@ -6,7 +6,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 
 /**
  *@description :
- *@company :翼迈科技股份有限公司
+ *@company :途酷科技
  * @author :JenkinsZhou
  * @date 2020年02月20日21:34
  * @Email: 971613168@qq.com

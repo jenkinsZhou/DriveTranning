@@ -27,7 +27,7 @@ import java.util.*
 
 /**
  *@description :安全培训
- *@company :翼迈科技股份有限公司
+ *@company :途酷科技
  * @author :JenkinsZhou
  * @date 2020年03月10日20:37
  * @Email: 971613168@qq.com

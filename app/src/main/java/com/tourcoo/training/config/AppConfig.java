@@ -14,9 +14,9 @@ import com.tourcoo.training.BuildConfig;
 public class AppConfig {
 
 
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
     /**
-     * 标题栏主标题文字大小(sp)
+     * 标.题栏主标题文字大小(sp)
      */
     public static final int TITLE_MAIN_TITLE_SIZE = 19;
 
