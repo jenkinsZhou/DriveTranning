@@ -424,6 +424,7 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
                                     .setTips(entity.data.tips)
                                     .setPositiveButtonListener {
                                         dialog.dismiss()
+                                        setResult(Activity.RESULT_OK)
                                         finish()
                                     }
                                     .setNegativeGone(false)
