@@ -21,7 +21,6 @@
         android:layout_marginEnd="@dimen/dp_12"
         android:layout_marginTop="@dimen/dp_10"
         android:id="@+id/rlPickImage"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_radius_5_blue_e8eeff"
@@ -81,8 +80,9 @@
         <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ivSelectedLicense"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_232"
             android:scaleType="centerInside"
+            android:background="@color/white"
             android:visibility="gone"
             app:riv_corner_radius="@dimen/dp_15" />
     </RelativeLayout>

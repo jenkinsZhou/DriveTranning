@@ -456,7 +456,7 @@ class OnlineTrainFragment : BaseFragment() {
             requestBusinessPayInfo(inputAlert!!.inputCount)
             inputAlert!!.dismiss()
         }
-                .setLimitCount(0, 12, 1).show()
+                .setLimitCount(1, 12, 1).show()
     }
 
 

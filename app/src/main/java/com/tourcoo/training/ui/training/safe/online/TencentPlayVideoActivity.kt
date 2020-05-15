@@ -730,13 +730,14 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_CODE_FACE -> {
-                ToastUtil.showSuccess("'收到回调")
                 if (resultCode == Activity.RESULT_OK) {
                     //人脸认证成功 不做任何处理
                 } else {
                     //人脸识别失败 处理人脸识别逻辑
                     if (!AppConfig.DEBUG_MODE) {
                         //如果是正式包 则必须执行认证失败的处理
+                        handleRecognizeFailedCallback()
+                    }else{
                         handleRecognizeFailedCallback()
                     }
                 }
@@ -832,7 +833,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun handleRecognizeFailedCallback() {
-        ToastUtil.showSuccess("收到失败回调")
         //将视频置为不可点击
 //        smartVideoPlayer.startButton.isEnabled = false
         //暂停视频

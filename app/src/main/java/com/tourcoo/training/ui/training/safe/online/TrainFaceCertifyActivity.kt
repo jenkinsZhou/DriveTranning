@@ -382,7 +382,7 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
             if (aMapLocation != null) {
                 mapLocation = aMapLocation
                 if (aMapLocation.errorCode == 0) {
-//可在其中解析amapLocation获取相应内容。
+                    //可在其中解析amapLocation获取相应内容。
                     //定位成功 上传人脸数据到服务器
                     uploadFaceImage(bitmap, aMapLocation)
                 } else {
@@ -392,9 +392,8 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
                             + aMapLocation.getErrorInfo());
                     handleLocateFailed()
                 }
-
-
             } else {
+                //aMapLocation ==null 处理定位失败
                 handleLocateFailed()
             }
             LocateHelper.getInstance().stopLocation()

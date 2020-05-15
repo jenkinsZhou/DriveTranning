@@ -27,7 +27,7 @@ public class AddSubtractView extends LinearLayout {
     TextView mTvSPNumber;//输入众筹数量
 
     //最大值
-    private int mMin = 0;
+    private int mMin = 1;
     //最小值
     private int mMax = Integer.MAX_VALUE;
     //当前值

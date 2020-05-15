@@ -11,7 +11,6 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.ui.exam.ProfessionalExamActivityNew
-import com.tourcoo.training.ui.exam.ProfessionalExamActivityOld
 import com.tourcoo.training.ui.face.ProfessionalFaceRecognitionActivity
 import kotlinx.android.synthetic.main.activity_professional_exam_select_child.*
 
@@ -38,10 +37,8 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
 
 
         rlExamSimulation.setOnClickListener {
-            //模拟考试
             formal = false
-
-            //人脸认证成功 则开始考试
+            //模拟考试不需要人脸验证 直接跳到考试页面
             skipExamByType(mTrainingPlanId, mExamId, formal)
 
         }
@@ -51,7 +48,7 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
                 ToastUtil.show("请先完成模拟测试")
             } else {
                 formal = true
-                //考试都要先人脸认证
+                //正式考试要先人脸认证
                 skipFaceCertify()
             }
         }
@@ -75,10 +72,12 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
 
     }
 
-
+    /**
+     * 跳转到专项模块的人脸验证
+     */
     private fun skipFaceCertify() {
         val intent = Intent(this, ProfessionalFaceRecognitionActivity::class.java)
-        intent.putExtra(EXTRA_KEY_EXAM_ID, mExamId)
+        intent.putExtra(EXTRA_KEY_EXAM_ID, CommonUtil.getNotNullValue(mExamId))
         startActivityForResult(intent, 2017)
     }
 
