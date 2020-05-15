@@ -325,7 +325,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         clearCount()
         //拿到后台配置的间隔时间
         if (AppConfig.DEBUG_MODE) {
-            //todo 人脸验证间隔时间 调试模式下 固定成20秒 方便测试
+            //todo 人脸验证间隔时间 调试模式下 固定成30秒 方便测试
             faceVerifyInterval = 30
         } else {
             faceVerifyInterval = detail.faceVerifyInterval

@@ -150,6 +150,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         }
 
         vpExamOnline.adapter = fragmentCommonAdapter
+        //禁止左右滑动
         vpExamOnline.setScrollEnable(false)
     }
 

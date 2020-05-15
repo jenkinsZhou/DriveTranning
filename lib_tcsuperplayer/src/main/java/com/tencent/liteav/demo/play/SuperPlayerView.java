@@ -1835,6 +1835,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      *
      * @param orientation
      */
+    @SuppressLint("SourceLockedOrientationActivity")
     private void rotateScreenOrientation(int orientation) {
         switch (orientation) {
             case SuperPlayerConst.ORIENTATION_LANDSCAPE:
@@ -1885,6 +1886,9 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      */
     @Override
     public void onPlayEvent(TXVodPlayer player, int event, Bundle param) {
+        if (player == null) {
+            return;
+        }
         if (event != TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {
             String playEventLog = "TXVodPlayer onPlayEvent event: " + event + ", " + param.getString(TXLiveConstants.EVT_DESCRIPTION);
             TXCLog.d(TAG, playEventLog);
@@ -1957,7 +1961,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             mVodControllerLarge.updateReplay(true);
         } else if (event == TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {
             if (BuildConfig.DEBUG) {
-//                Toast.makeText(mContext, "进度同步中...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "进度同步中...", Toast.LENGTH_SHORT).show();
             }
 
             int progress = param.getInt(TXLiveConstants.EVT_PLAY_PROGRESS_MS);
@@ -2021,6 +2025,9 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      */
     @Override
     public void onPlayEvent(int event, Bundle param) {
+        if(mLivePlayer == null){
+            return;
+        }
         if (event != TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {
             String playEventLog = "TXLivePlayer onPlayEvent event: " + event + ", " + param.getString(TXLiveConstants.EVT_DESCRIPTION);
             TXCLog.d(TAG, playEventLog);
@@ -2197,24 +2204,30 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     public void release() {
         if (mLivePlayer != null) {
             mLivePlayer.stopPlay(true);
+            mLivePlayer = null;
         }
 
         if (mVodPlayer != null) {
             mVodPlayer.stopPlay(true);
+            mVodPlayer = null;
         }
 
         if (mTXCloudVideoView != null) {
             mTXCloudVideoView.removeVideoView();
+            mTXCloudVideoView = null;
         }
 
         if (mVodControllerSmall != null) {
             mVodControllerSmall.release();
+            mVodControllerSmall = null;
         }
         if (mVodControllerLarge != null) {
             mVodControllerLarge.release();
+            mVodControllerLarge = null;
         }
         if (mVodControllerFloat != null) {
             mVodControllerFloat.release();
+            mVodControllerFloat = null;
         }
     }
 

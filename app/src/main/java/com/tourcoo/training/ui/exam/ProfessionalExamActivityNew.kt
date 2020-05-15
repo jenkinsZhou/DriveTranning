@@ -163,6 +163,8 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
         vpExamOnline.adapter = fragmentCommonAdapter
         val endTime = System.currentTimeMillis()
         TourCooLogUtil.i(mTag, "加载试题耗时=" + (endTime - startTime))
+        //禁止左右滑动
+        vpExamOnline.setScrollEnable(false)
     }
 
     override fun onClick(v: View?) {

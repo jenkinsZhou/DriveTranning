@@ -381,18 +381,21 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
         LocateHelper.getInstance().startLocation(AMapLocationListener { aMapLocation ->
             if (aMapLocation != null) {
                 mapLocation = aMapLocation
-                if (aMapLocation.getErrorCode() == 0) {
+                if (aMapLocation.errorCode == 0) {
 //可在其中解析amapLocation获取相应内容。
+                    //定位成功 上传人脸数据到服务器
                     uploadFaceImage(bitmap, aMapLocation)
                 } else {
                     //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-                    Log.e("AmapError", "location Error, ErrCode:"
+                    TourCooLogUtil.e("AmapError", "location Error, ErrCode:"
                             + aMapLocation.getErrorCode() + ", errInfo:"
                             + aMapLocation.getErrorInfo());
+                    handleLocateFailed()
                 }
-                //定位成功 上传人脸数据到服务器
 
-                TourCooLogUtil.i("高德定位数据", aMapLocation)
+
+            } else {
+                handleLocateFailed()
             }
             LocateHelper.getInstance().stopLocation()
             closeLoading()
@@ -403,6 +406,14 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
     private fun handleTakePhotoCallback(bitmap: Bitmap?) {
         //获取经纬度 然后上传图片
         getLocateAndCertify(bitmap)
+    }
+
+    /**
+     * 处理定位失败逻辑
+     */
+    private fun handleLocateFailed() {
+        ToastUtil.show("获取位置信息失败 请重试")
+        finish()
     }
 }
 
