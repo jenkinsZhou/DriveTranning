@@ -161,8 +161,16 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
             TRAIN_STATUS_NO_START -> {
                 //未开始 只有转线上按钮
                 setViewGone(rlButtonLayout, true)
-                //转线上按钮
-                setViewGone(ivStudentToOnline, true)
+
+                if(planDetail.type == 0){ //纯现场
+                    //转线上按钮
+                    setViewGone(ivStudentToOnline, false)
+                }else{
+                    //转线上按钮
+                    setViewGone(ivStudentToOnline, true)
+
+                }
+
 
                 if (planDetail.safetyManagerStatus == TRAIN_STATUS_SIGNED) {
                     //签到按钮
@@ -187,8 +195,13 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
              * 已签到
              */
             TRAIN_STATUS_SIGNED -> {
-                //转线上按钮
-                setViewGone(ivStudentToOnline, true)
+                if(planDetail.type == 0){ //纯现场
+                    //转线上按钮
+                    setViewGone(ivStudentToOnline, false)
+                }else {
+                    //转线上按钮
+                    setViewGone(ivStudentToOnline, true)
+                }
                 //签到按钮
                 setViewGone(ivSignStudent, false)
                 //扫码按钮

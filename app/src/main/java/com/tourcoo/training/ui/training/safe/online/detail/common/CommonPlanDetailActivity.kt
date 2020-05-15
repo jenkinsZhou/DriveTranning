@@ -173,8 +173,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 } else {
                     //未开始 学员模块只有转线上
                     setViewGone(llStudentTimeLayout, false)
-                    //显示转线上
-                    setViewGone(ivStudentToOnline, true)
+                    if(planDetail.type == 0){//纯现场
+                        setViewGone(ivStudentToOnline, false)
+                    }else {
+                        //显示转线上
+                        setViewGone(ivStudentToOnline, true)
+                    }
                 }
 
 
@@ -206,8 +210,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_NO_START -> {
                         setViewGone(ivStudentSignIn, true)
                         setViewGone(ivStudentSignOut, false)
-                        //显示转线上
-                        setViewGone(ivStudentToOnline, true)
+                        if(planDetail.type == 0){//纯现场
+                            setViewGone(ivStudentToOnline, false)
+                        }else {
+                            //显示转线上
+                            setViewGone(ivStudentToOnline, true)
+                        }
                         setViewGone(ivScanCode, false)
                     }
 
@@ -215,16 +223,24 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_SIGNED -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, true)
-                        //显示转线上
-                        setViewGone(ivStudentToOnline, true)
+                        if(planDetail.type == 0){//纯现场
+                            setViewGone(ivStudentToOnline, false)
+                        }else {
+                            //显示转线上
+                            setViewGone(ivStudentToOnline, true)
+                        }
                         setViewGone(ivScanCode, false)
                     }
 
                     TrainingConstant.TRAIN_STATUS_SIGN_OUT -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
-                        //显示转线上
-                        setViewGone(ivStudentToOnline, true)
+                        if(planDetail.type == 0){//纯现场
+                            setViewGone(ivStudentToOnline, false)
+                        }else {
+                            //显示转线上
+                            setViewGone(ivStudentToOnline, true)
+                        }
                         setViewGone(ivScanCode, false)
                     }
 
@@ -245,8 +261,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_CHECK_STATUS -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
-                        //显示转线上
-                        setViewGone(ivStudentToOnline, true)
+                        if(planDetail.type == 0){//纯现场
+                            setViewGone(ivStudentToOnline, false)
+                        }else {
+                            //显示转线上
+                            setViewGone(ivStudentToOnline, true)
+                        }
                         setViewGone(ivScanCode, true)
                     }
 
@@ -291,8 +311,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_NO_START -> {
                         setViewGone(ivStudentSignIn, true)
                         setViewGone(ivStudentSignOut, false)
-                        //显示转线上
-                        setViewGone(ivStudentToOnline, true)
+                        if(planDetail.type == 0){//纯现场
+                            setViewGone(ivStudentToOnline, false)
+                        }else {
+                            //显示转线上
+                            setViewGone(ivStudentToOnline, true)
+                        }
                         setViewGone(ivScanCode, false)
                     }
 
@@ -300,16 +324,24 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_SIGNED -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, true)
-                        //显示转线上
-                        setViewGone(ivStudentToOnline, true)
+                        if(planDetail.type == 0){//纯现场
+                            setViewGone(ivStudentToOnline, false)
+                        }else {
+                            //显示转线上
+                            setViewGone(ivStudentToOnline, true)
+                        }
                         setViewGone(ivScanCode, false)
                     }
 
                     TrainingConstant.TRAIN_STATUS_SIGN_OUT -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
-                        //显示转线上
-                        setViewGone(ivStudentToOnline, true)
+                        if(planDetail.type == 0){//纯现场
+                            setViewGone(ivStudentToOnline, false)
+                        }else {
+                            //显示转线上
+                            setViewGone(ivStudentToOnline, true)
+                        }
                         setViewGone(ivScanCode, false)
                     }
 
@@ -330,8 +362,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     TrainingConstant.TRAIN_STATUS_CHECK_STATUS -> {
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
-                        //显示转线上
-                        setViewGone(ivStudentToOnline, true)
+                        if(planDetail.type == 0){//纯现场
+                            setViewGone(ivStudentToOnline, false)
+                        }else {
+                            //显示转线上
+                            setViewGone(ivStudentToOnline, true)
+                        }
                         setViewGone(ivScanCode, true)
                     }
 
@@ -351,8 +387,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
-                //隐藏转线上
-                setViewGone(ivStudentToOnline, true)
+                if(planDetail.type == 0){//纯现场
+                    setViewGone(ivStudentToOnline, false)
+                }else {
+                    //隐藏转线上
+                    setViewGone(ivStudentToOnline, true)
+                }
                 setViewGone(ivScanCode, false)
                 //显示学员签到时间和签退时间
                 setViewGone(llStudentSignedLayout, true)
@@ -426,8 +466,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
-                //隐藏转线上
-                setViewGone(ivStudentToOnline, true)
+                if(planDetail.type == 0){//纯现场
+                    setViewGone(ivStudentToOnline, false)
+                }else {
+                    //隐藏转线上
+                    setViewGone(ivStudentToOnline, true)
+                }
                 setViewGone(ivScanCode, false)
                 //显示学员签到时间和签退时间
                 setViewGone(llStudentSignedLayout, true)
@@ -467,8 +511,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 setViewGone(ivStudentSignOut, true)
                 setViewGone(ivStudentSignIn, false)
                 setViewGone(ivScanCode, true)
-                //显示转线上
-                setViewGone(ivStudentToOnline, true)
+                if(planDetail.type == 0){//纯现场
+                    setViewGone(ivStudentToOnline, false)
+                }else {
+                    //显示转线上
+                    setViewGone(ivStudentToOnline, true)
+                }
                 //显示安全员签到时间
                 setViewGone(llTeacherSignedTime, true)
                 //设置签到时间
@@ -498,8 +546,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
-                //隐藏转线上
-                setViewGone(ivStudentToOnline, true)
+                if(planDetail.type == 0){//纯现场
+                    setViewGone(ivStudentToOnline, false)
+                }else {
+                    //隐藏转线上
+                    setViewGone(ivStudentToOnline, true)
+                }
                 setViewGone(ivScanCode, false)
                 //显示学员签到时间和签退时间
                 setViewGone(llStudentSignedLayout, true)
@@ -536,8 +588,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
                 setViewGone(ivScanCode, false)
-                //显示转线上
-                setViewGone(ivStudentToOnline, true)
+                if(planDetail.type == 0){//纯现场
+                    setViewGone(ivStudentToOnline, false)
+                }else {
+                    //显示转线上
+                    setViewGone(ivStudentToOnline, true)
+                }
                 //显示学员签到时间和签退时间
                 setViewGone(llStudentSignedLayout, true)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
@@ -571,8 +627,12 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                 //已签退 显示学员签到时间和签退时间 显示安全员签到时间 安全员预结束时间
                 //隐藏学员签到按钮
                 setViewGone(ivStudentSignOut, false)
-                //隐藏转线上
-                setViewGone(ivStudentToOnline, true)
+                if(planDetail.type == 0){//纯现场
+                    setViewGone(ivStudentToOnline, false)
+                }else {
+                    //隐藏转线上
+                    setViewGone(ivStudentToOnline, true)
+                }
                 setViewGone(ivScanCode, false)
                 //显示学员签到时间和签退时间
                 setViewGone(llStudentSignedLayout, true)
