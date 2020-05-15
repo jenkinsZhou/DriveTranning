@@ -26,6 +26,7 @@ import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.course.CourseInfo
+import com.tourcoo.training.event.WorkProRefreshEvent
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
@@ -33,6 +34,7 @@ import com.tourcoo.training.ui.pay.BuyNowActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.fragment.OnlineTrainFragment
+import com.tourcoo.training.ui.training.safe.online.web.HtmlBrowserActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
@@ -63,7 +65,6 @@ class WorkProTrainingFragment  : BaseFragment()  {
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
@@ -320,8 +321,7 @@ class WorkProTrainingFragment  : BaseFragment()  {
         var intent: Intent? = null
         when (courseType) {
             TrainingConstant.TYPE_COURSE_HTML -> {
-                //todo 全部为html
-                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+                intent = Intent(mContext, HtmlBrowserActivity::class.java)
             }
             TrainingConstant.TYPE_COURSE_TYPE_DRIVE -> {
                 //车学堂 使用腾讯播放器
@@ -346,27 +346,51 @@ class WorkProTrainingFragment  : BaseFragment()  {
         EventBus.getDefault().unregister(this)
         super.onDestroy()
     }
-    /**
-     * 收到消息
-     *
-     * @param userInfoEvent
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUserInfoRefreshEvent(userInfoEvent: UserInfoEvent?) {
-        if (userInfoEvent == null) {
-            return
-        }
-        if (userInfoEvent.userInfo == null) {
-            removeData()
-        } else{
-            requestBeforeThePostTrainingList()
-        }
-
-    }
+//    /**
+//     * 收到消息
+//     *
+//     * @param userInfoEvent
+//     */
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    fun onUserInfoRefreshEvent(userInfoEvent: UserInfoEvent?) {
+//        if (userInfoEvent == null) {
+//            return
+//        }
+//        if (userInfoEvent.userInfo == null) {
+//            removeData()
+//        } else{
+//            requestBeforeThePostTrainingList()
+//        }
+//
+//    }
 
     private fun removeData(){
         adapter?.data?.clear()
         adapter?.notifyDataSetChanged()
         refreshLayout?.finishRefresh()
     }
+
+
+    /**
+     *  重要的刷新机制
+     *
+     * @param offLineRefreshEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun workProRefreshEvent(offLineRefreshEvent : WorkProRefreshEvent?) {
+        if (offLineRefreshEvent == null) {
+            return
+        }
+
+        if (offLineRefreshEvent.userInfo == null) {
+            removeData()
+        } else {
+            //只要offLineRefreshEvent不为空 就刷新数据
+            requestBeforeThePostTrainingList()
+        }
+
+    }
+
+
+
 }

@@ -35,8 +35,10 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountTempHelper
+import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.medal.MedalDictionary
 import com.tourcoo.training.entity.training.*
+import com.tourcoo.training.event.WorkProRefreshEvent
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
@@ -75,6 +77,7 @@ import kotlinx.android.synthetic.main.activity_play_video_ali.tvExam
 import kotlinx.android.synthetic.main.activity_play_video_ali.tvSubjectDesc
 import kotlinx.android.synthetic.main.activity_play_video_ali.tvTitle
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
+import org.greenrobot.eventbus.EventBus
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -638,11 +641,20 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             aliYunPlayer.changeScreenMode(AliyunScreenMode.Small, false)
             return
         }
+
+
         if (hasRequireExam) {
             finish()
         } else {
             showExit()
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        val offLineRefreshEvent = WorkProRefreshEvent()
+        offLineRefreshEvent.userInfo = UserInfo()
+        EventBus.getDefault().post(offLineRefreshEvent)
     }
 
 

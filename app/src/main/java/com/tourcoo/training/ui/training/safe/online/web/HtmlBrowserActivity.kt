@@ -24,10 +24,12 @@ import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.*
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountTempHelper
+import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.medal.MedalDictionary
 import com.tourcoo.training.entity.training.Catalog
 import com.tourcoo.training.entity.training.Course
 import com.tourcoo.training.entity.training.TrainingPlanDetail
+import com.tourcoo.training.event.WorkProRefreshEvent
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
@@ -36,6 +38,7 @@ import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *@description :
@@ -79,7 +82,9 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun setTitleBar(titleBar: TitleBarView?) {
         titleBar?.setTitleMainText("在线学习")
-
+        titleBar?.setOnLeftTextClickListener {
+            onBackPressed()
+        }
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -331,6 +336,14 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
 
         }
 
+    }
+
+
+    override fun finish() {
+        super.finish()
+        val offLineRefreshEvent = WorkProRefreshEvent()
+        offLineRefreshEvent.userInfo = UserInfo()
+        EventBus.getDefault().post(offLineRefreshEvent)
     }
 
 
