@@ -91,6 +91,11 @@ public class TCDanmuView extends DanmakuView {
             mHandlerThread.quit();
             mHandlerThread = null;
         }
+
+        if(mContext != null){
+            mContext = null;
+        }
+
     }
 
     private BaseDanmakuParser mParser = new BaseDanmakuParser() {

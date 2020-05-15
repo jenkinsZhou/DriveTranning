@@ -358,10 +358,14 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
 
             @Override
             public void onClickSmallReturnBtn() {
+
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 setStatusBarDarkMode(mContext, isStatusBarDarkMode());
+
                 //设置返回按键功能
                 onBackPressed();
+
+
             }
 
             @Override
@@ -378,6 +382,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
         if (smartVideoPlayer.getPlayMode() != SuperPlayerConst.PLAYMODE_FULLSCREEN) {
             setStatusBarDarkMode(mContext, isStatusBarDarkMode());
         } else {
@@ -402,6 +407,8 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
             smartVideoPlayer.requestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW);
         } else {
             if (ActivityUtils.isActivityExistsInStack(MainTabActivity.class)) {
+//                this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
                 super.onBackPressed();
             } else {
                 Intent resultIntent = new Intent(this, SplashActivity.class);

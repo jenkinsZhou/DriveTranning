@@ -20,6 +20,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:padding="10dp"
+            android:visibility="gone"
             android:src="@drawable/btn_back_play" />
 
         <TextView
@@ -28,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="暂无视频"
+            android:layout_marginLeft="20dp"
             android:textColor="@android:color/white"
             android:textSize="11dp" />
     </LinearLayout>

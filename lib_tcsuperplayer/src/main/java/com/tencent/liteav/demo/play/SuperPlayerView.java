@@ -165,7 +165,6 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
         mVodControllerSmall = (TCVodControllerSmall) mRootView.findViewById(R.id.controller_small);
         mVodControllerFloat = (TCVodControllerFloat) mRootView.findViewById(R.id.controller_float);
         mDanmuView = (TCDanmuView) mRootView.findViewById(R.id.danmaku_view);
-        mDanmuView = (TCDanmuView) mRootView.findViewById(R.id.danmaku_view);
 
         mVodControllerSmallParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mVodControllerLargeParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -1886,7 +1885,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
      */
     @Override
     public void onPlayEvent(TXVodPlayer player, int event, Bundle param) {
-        if (player == null) {
+        if (player == null || mVodControllerSmall == null || mVodControllerLarge == null) {
             return;
         }
         if (event != TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {

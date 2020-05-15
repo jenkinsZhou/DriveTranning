@@ -215,7 +215,8 @@ public class TCVodControllerSmall extends TCVodControllerSmallBase implements Vi
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.layout_top) {
-            onBack();
+            //todo:注释小窗口返回事件，避免页面关闭抖动
+//            onBack();
 
         } else if (i == R.id.iv_pause) {
             changePlayState();
