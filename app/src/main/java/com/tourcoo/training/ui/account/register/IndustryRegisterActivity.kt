@@ -258,6 +258,7 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
 
     override fun registerSuccess(userInfo: UserInfo?) {
         if (userInfo != null) {
+
             //保存用户信息
             AccountHelper.getInstance().userInfo = userInfo
             ToastUtil.show("注册成功")

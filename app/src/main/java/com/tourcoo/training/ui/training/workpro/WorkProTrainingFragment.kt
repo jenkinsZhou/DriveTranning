@@ -31,6 +31,7 @@ import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
+import com.tourcoo.training.ui.study.StudyDetailActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.fragment.OnlineTrainFragment
@@ -211,7 +212,7 @@ class WorkProTrainingFragment  : BaseFragment()  {
             OnLineTrainingCourseAdapter.COURSE_STATUS_NEED_PAY -> {
                 val intent = Intent(context, BuyNowActivity::class.java)
                 intent.putExtra("trainingPlanID", courseInfo.trainingPlanID)
-                startActivityForResult(intent, 0)
+                startActivityForResult(intent, OnlineTrainFragment.REQUEST_CODE_AUTH)
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_CONTINUE -> {
@@ -223,13 +224,24 @@ class WorkProTrainingFragment  : BaseFragment()  {
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_FINISHED -> {
-
+                //已完成 跳转到培训记录
+                skipStudyDetailActivity(courseInfo.trainingPlanID)
             }
 
             else -> {
                 skipPlayVideoByType(courseInfo.trainingPlanID,courseInfo.type)
             }
         }
+
+
+    }
+
+
+
+    private fun skipStudyDetailActivity(trainingId: String?){
+        val intent = Intent(mContext, StudyDetailActivity::class.java)
+        intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
+        startActivityForResult(intent, OnlineTrainFragment.REQUEST_CODE_REFRESH_ALL)
     }
 
 
@@ -262,6 +274,11 @@ class WorkProTrainingFragment  : BaseFragment()  {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
+                OnlineTrainFragment.REQUEST_CODE_AUTH -> {
+                    currentCourseInfo!!.status = OnLineTrainingCourseAdapter.COURSE_STATUS_CONTINUE
+                    verifyByStatus(currentCourseInfo!!)
+                }
+
                 REQUEST_CODE_FACE_RECORD -> {
                     if (data != null) {
                         handleStepOneSuccess()
@@ -284,6 +301,12 @@ class WorkProTrainingFragment  : BaseFragment()  {
                 closeFaceDialog()
             }, 500)
         }
+
+        //以下是刷新列表逻辑
+        if(requestCode == OnlineTrainFragment.REQUEST_CODE_REFRESH_ALL || resultCode == Activity.RESULT_OK){
+            requestBeforeThePostTrainingList()
+        }
+
     }
 
 
