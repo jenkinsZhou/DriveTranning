@@ -112,7 +112,7 @@ public class MedalDialog {
                 //number 小时
                 List<MedalInfo> list = studyMedalEntity.getStudyMedals();
 
-                if (number >= 3 && number < 6) {
+                if (number >= 1 && number < 6) {
                     isShow = list.get(0).getStatus() == 0;
                     if (isShow) {
                         index = 0;
@@ -121,13 +121,13 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计学习时长已达3个小时");
+                            tvContent.setText("累计学习时长已达1个学时");
                         }
 
                         requestMedalRecord("1001");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_01);
-                } else if (number >= 6 && number < 10) {
+                } else if (number >= 6 && number < 12) {
                     isShow = list.get(1).getStatus() == 0;
                     if (isShow) {
                         index = 1;
@@ -137,14 +137,14 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计学习时长已达6个小时");
+                            tvContent.setText("累计学习时长已达6个学时");
                         }
 
 
                         requestMedalRecord("1002");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_02);
-                } else if (number >= 10 && number < 15) {
+                } else if (number >= 12 && number < 20) {
                     isShow = list.get(2).getStatus() == 0;
                     if (isShow) {
                         index = 2;
@@ -153,13 +153,13 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计学习时长已达10个小时");
+                            tvContent.setText("累计学习时长已达12个学时");
                         }
 
                         requestMedalRecord("1003");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_03);
-                } else if (number >= 15 && number < 20) {
+                } else if (number >= 20 && number < 30) {
                     isShow = list.get(3).getStatus() == 0;
                     if (isShow) {
                         index = 3;
@@ -168,13 +168,13 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计学习时长已达15个小时");
+                            tvContent.setText("累计学习时长已达20个学时");
                         }
 
                         requestMedalRecord("1004");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_04);
-                } else if (number >= 20) {
+                } else if (number >= 30) {
                     isShow = list.get(4).getStatus() == 0;
                     if (isShow) {
                         index = 4;
@@ -183,7 +183,7 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计学习时长已达20个小时");
+                            tvContent.setText("累计学习时长已达30个学时");
                         }
 
                         requestMedalRecord("1005");
@@ -197,7 +197,7 @@ public class MedalDialog {
                 //number
                 list = studyMedalEntity.getCertificateMedals();
 
-                if (number >= 2 && number < 4) {
+                if (number >= 1 && number < 6) {
                     isShow = list.get(0).getStatus() == 0;
                     if (isShow) {
                         index = 0;
@@ -206,13 +206,13 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计获得2个学习证书");
+                            tvContent.setText("累计获得1个学习证书");
                         }
 
                         requestMedalRecord("2001");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_06);
-                } else if (number >= 4 && number < 6) {
+                } else if (number >= 6 && number < 12) {
                     isShow = list.get(1).getStatus() == 0;
                     if (isShow) {
                         index = 1;
@@ -221,12 +221,12 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计获得4个学习证书");
+                            tvContent.setText("累计获得6个学习证书");
                         }
                         requestMedalRecord("2002");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_07);
-                } else if (number >= 6 && number < 8) {
+                } else if (number >= 12 && number < 20) {
                     isShow = list.get(2).getStatus() == 0;
                     if (isShow) {
                         index = 2;
@@ -235,12 +235,12 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计获得6个学习证书");
+                            tvContent.setText("累计获得12个学习证书");
                         }
                         requestMedalRecord("2003");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_08);
-                } else if (number >= 8 && number < 10) {
+                } else if (number >= 20 && number < 30) {
                     isShow = list.get(3).getStatus() == 0;
                     if (isShow) {
                         index = 3;
@@ -249,12 +249,12 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计获得8个学习证书");
+                            tvContent.setText("累计获得20个学习证书");
                         }
                         requestMedalRecord("2004");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_09);
-                } else if (number >= 10) {
+                } else if (number >= 30) {
                     isShow = list.get(4).getStatus() == 0;
                     if (isShow) {
                         index = 4;
@@ -263,7 +263,7 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计获得10个学习证书");
+                            tvContent.setText("累计获得30个学习证书");
                         }
                         requestMedalRecord("2005");
                     }
@@ -275,7 +275,7 @@ public class MedalDialog {
                 //number
                 list = studyMedalEntity.getConsumptionMedals();
 
-                if (number >= 1 && number < 50) {
+                if (number > 0 && number < 50) {
                     isShow = list.get(0).getStatus() == 0;
                     if (isShow) {
                         index = 0;
@@ -284,12 +284,12 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计消费已达1元");
+                            tvContent.setText("首次充值");
                         }
                         requestMedalRecord("3001");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_11);
-                } else if (number >= 50 && number < 100) {
+                } else if (number >= 50 && number < 200) {
                     isShow = list.get(1).getStatus() == 0;
                     if (isShow) {
                         index = 1;
@@ -303,7 +303,7 @@ public class MedalDialog {
                         requestMedalRecord("3002");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_12);
-                } else if (number >= 100 && number < 150) {
+                } else if (number >= 200 && number < 1000) {
                     isShow = list.get(2).getStatus() == 0;
                     if (isShow) {
                         index = 2;
@@ -312,12 +312,12 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计消费已达100元");
+                            tvContent.setText("累计消费已达200元");
                         }
                         requestMedalRecord("3003");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_13);
-                } else if (number >= 150 && number < 200) {
+                } else if (number >= 1000 && number < 3000) {
                     isShow = list.get(3).getStatus() == 0;
                     if (isShow) {
                         index = 3;
@@ -326,12 +326,12 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计消费已达150元");
+                            tvContent.setText("累计消费已达1000元");
                         }
                         requestMedalRecord("3004");
                     }
                     ivMedalIcon.setImageResource(R.drawable.img_14);
-                } else if (number >= 200) {
+                } else if (number >= 3000) {
                     isShow = list.get(4).getStatus() == 0;
                     if (isShow) {
                         index = 4;
@@ -340,7 +340,7 @@ public class MedalDialog {
                         }
 
                         if(tvContent != null){
-                            tvContent.setText("累计消费已达200元");
+                            tvContent.setText("累计消费已达3000元");
                         }
                         requestMedalRecord("3005");
                     }
