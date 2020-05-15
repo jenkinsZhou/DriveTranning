@@ -833,13 +833,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun handleRecognizeFailedCallback() {
+        ToastUtil.show("人脸识别失败")
         //将视频置为不可点击
 //        smartVideoPlayer.startButton.isEnabled = false
         //暂停视频
         baseHandler.postDelayed(Runnable {
             smartVideoPlayer?.onPause()
         }, 50)
-        ToastUtil.show("人脸识别失败")
         baseHandler.postDelayed(Runnable {
             doSaveProgressAndFinish()
         }, 50)
