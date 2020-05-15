@@ -433,7 +433,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:includeFontPadding="false"
-                                android:text="年审到期"
+                                android:text="年审到期："
                                 android:textColor="@color/gray999999"
                                 android:textSize="@dimen/sp_13" />
 

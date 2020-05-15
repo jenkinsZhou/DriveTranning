@@ -2,6 +2,7 @@ package com.tourcoo.training.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -283,7 +284,7 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
     }
 
 
-     fun refreshUserInfo() {
+    fun refreshUserInfo() {
         if (!AccountHelper.getInstance().isLogin) {
             showUnLogin()
             smartRefreshLayoutCommon.finishRefresh()
@@ -380,7 +381,15 @@ class MineTabFragmentNew : BaseTitleFragment(), View.OnClickListener, OnRefreshL
         }
         tvCarPlantNum.text = "车牌号：" + CommonUtil.getNotNullValue(vehicleInfo.plateNumber)
 //        tvCarModule.text = " 车型：" + CommonUtil.getNotNullValue(vehicleInfo.model)
-        tvCarModule.text = CommonUtil.getNotNullValue(vehicleInfo.model)
+        var carMode = CommonUtil.getNotNullValue(vehicleInfo.model)
+        if (TextUtils.isEmpty(carMode)) {
+            tvCarModule.text = ""
+        } else {
+            carMode = "车型：$carMode"
+            tvCarModule.text = carMode
+        }
+
+
         tvCarBrand.text = "品牌：" + CommonUtil.getNotNullValue(vehicleInfo.brand)
         tvCarExpire.text = CommonUtil.getNotNullValue(vehicleInfo.expiredTime)
     }
