@@ -209,6 +209,8 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                     //转线上按钮
                     setViewGone(ivStudentToOnline, true)
                 }
+                //显示按钮布局
+                setViewGone(rlButtonLayout,true)
                 //签到按钮
                 setViewGone(ivSignStudent, false)
                 //扫码按钮

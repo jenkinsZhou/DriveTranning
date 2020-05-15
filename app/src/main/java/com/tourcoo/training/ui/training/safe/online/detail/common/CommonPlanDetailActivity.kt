@@ -282,6 +282,8 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                     }
 
                     TrainingConstant.TRAIN_STATUS_NO_COMPLETE -> {
+                        tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
+                        tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                         setViewGone(ivStudentSignIn, false)
                         setViewGone(ivStudentSignOut, false)
                         //显示转线上
@@ -289,6 +291,8 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
                         setViewGone(ivScanCode, false)
                         setViewGone(ivStudentStatusTag, true)
                         ivStudentStatusTag.setImageResource(R.mipmap.ic_training_state_no_complete)
+                        setViewGone(llStudentTimeLayout, true)
+                        setViewGone(llStudentSignedLayout, true)
                         setViewGone(llStudentSignOutLayout, true)
                         tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                     }
