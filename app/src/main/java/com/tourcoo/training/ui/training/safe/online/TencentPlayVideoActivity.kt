@@ -146,11 +146,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         smartVideoPlayer.setSeekEnable(AppConfig.DEBUG_MODE)
         smartVideoPlayer.setOnPlayStatusListener(object : SuperPlayerView.OnPlayStatusListener {
             override fun resumeVideo() {
-                ToastUtil.showSuccess("开始")
+                timerResume()
             }
 
             override fun pauseVideo() {
-                ToastUtil.showSuccess("展厅")
+                timerPause()
             }
 
             override fun onAutoPlayStart() {
