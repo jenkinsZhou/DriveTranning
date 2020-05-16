@@ -104,6 +104,14 @@ public class CommonWaringAlert {
         return this;
     }
 
+    public CommonWaringAlert setCancelEnable(boolean touchOutSide) {
+      if(dialog != null){
+          dialog.setCanceledOnTouchOutside(touchOutSide);
+          dialog.setCancelable(touchOutSide);
+      }
+        return this;
+    }
+
     public CommonWaringAlert setTitle(CharSequence text) {
         if (TextUtils.isEmpty(text)) {
             text = "";

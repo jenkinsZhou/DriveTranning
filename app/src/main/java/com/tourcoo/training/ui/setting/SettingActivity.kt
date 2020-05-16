@@ -103,6 +103,8 @@ class SettingActivity : BaseTitleActivity(), View.OnClickListener {
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     ToastUtil.show("账号已退出")
                     logout()
+                }else{
+                    ToastUtil.show(entity.msg)
                 }
 
             }

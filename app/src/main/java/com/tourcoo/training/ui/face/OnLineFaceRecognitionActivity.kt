@@ -21,9 +21,11 @@ import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.FaceConstant.*
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
@@ -52,6 +54,10 @@ import java.io.*
  */
 class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClickListener, EasyPermissions.PermissionCallbacks {
 
+    /**
+     * 人脸验证的状态 默认 状态为验证取消
+     */
+    private var mFaceCertifyStatus = FACE_CERTIFY_CANCEL
 
     companion object {
         const val tag = "FaceRecognitionActivity"
@@ -158,7 +164,7 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                     ToastUtil.show("存储空间不足或异常")
                     return
                 }
-                baseHandler.postDelayed(Runnable {
+                baseHandler.post(Runnable {
                     val resource = BitmapFactory.decodeByteArray(data, 0, data!!.size)
                     if (resource == null) {
                         ToastUtil.show("拍照失败")
@@ -172,7 +178,7 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                         uploadFaceImage(trainId, faceBitmap)
 
                     }
-                }, 50)
+                })
 
             }
         })
@@ -324,7 +330,8 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
     private fun handleRecognizeSuccessCallback() {
         val intent = Intent()
 //        intent.putExtra(EXTRA_FACE_IMAGE_PATH,faceImagePath)
-        setResult(Activity.RESULT_OK, intent)
+        //验证通过 将状态置为验证通过状态 FACE_CERTIFY_SUCCESS
+        mFaceCertifyStatus = FACE_CERTIFY_SUCCESS
         finish()
     }
 
@@ -343,9 +350,11 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                     handleRecognizeSuccessCallback()
                 } else {
                     ToastUtil.show(entity.msg)
+
                     if (AppConfig.DEBUG_MODE) {
                         //如果是测试包 则当成功处理 不做拦截
-                        handleRecognizeSuccessCallback()
+//                        handleRecognizeSuccessCallback()
+                        handleRecognizeFailedCallback()
                     } else {
                         //如果是正式包 则必须执行认证失败的处理
                         handleRecognizeFailedCallback()
@@ -357,13 +366,20 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
 
 
     private fun handleRecognizeFailedCallback() {
+        //验证失败 需要将状态置为failed
+        mFaceCertifyStatus = FACE_CERTIFY_FAILED
         val alert = CommonWaringAlert(mContext)
-        alert.create().setTitle("验证失败").setContent("本次验证未通过～").setPositiveButtonClick("我知道了",object : View.OnClickListener{
+        alert.create().setTitle("验证失败").setCancelEnable(false).setContent("本次验证未通过～").setPositiveButtonClick("我知道了",object : View.OnClickListener{
             override fun onClick(v: View?) {
                 //验证失败直接关闭页面
                 finish()
             }
         })
         alert.show()
+    }
+
+    override fun finish() {
+        setResult(mFaceCertifyStatus)
+        super.finish()
     }
 }

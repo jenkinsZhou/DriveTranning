@@ -14,6 +14,9 @@ import com.tourcoo.training.ui.exam.ProfessionalExamActivityNew
 import com.tourcoo.training.ui.face.ProfessionalFaceRecognitionActivity
 import kotlinx.android.synthetic.main.activity_professional_exam_select_child.*
 
+/**
+ * 考试类型选择页（模拟+正式）
+ */
 class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
 
     /**

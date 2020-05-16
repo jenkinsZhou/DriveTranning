@@ -76,8 +76,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.face.FaceRecognitionActivity"
-            android:launchMode="singleTask" />
+            android:name=".ui.face.FaceRecognitionActivity" />
         <activity android:name=".ui.face.DialogFaceRecognitionActivity" />
         <activity android:name=".ui.account.register.IndustryRegisterActivity" />
         <activity android:name=".ui.account.register.DriverRegisterActivity" />
@@ -135,7 +134,7 @@
         <activity android:name=".ui.training.safe.online.web.HtmlBrowserActivity" />
         <activity android:name=".ui.home.news.NewsTabFragment" />
         <activity android:name=".ui.training.professional.ProfessionalSelectActivity" />
-        <activity android:name=".ui.training.professional.ProfessionalExamSelectActivity" />
+        <activity android:name=".ui.training.professional.ProfessionalExamSelectListActivity" />
         <activity android:name=".ui.exam.ProfessionalExamActivityOld" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />

@@ -1,18 +1,26 @@
 package com.tourcoo.training.core.retrofit;
 
+import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
+import com.tourcoo.training.core.app.MyApplication;
+import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.SSLUtil;
 import com.tourcoo.training.entity.account.AccountHelper;
+import com.tourcoo.training.ui.account.LoginActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +37,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -113,9 +122,10 @@ public class RetrofitHelper {
 
     private RetrofitHelper() {
         sClientBuilder = new OkHttpClient.Builder();
-        sClientBuilder.addInterceptor(mHeaderInterceptor)
-                .addInterceptor(new RqInterceptor());
-//                .addInterceptor(new TokenInterceptor());
+//        sClientBuilder.addInterceptor(mHeaderInterceptor)
+        sClientBuilder .addInterceptor(new RqInterceptor())
+         .addInterceptor(new ResponseInterceptor());
+
         sRetrofitBuilder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
@@ -149,6 +159,45 @@ public class RetrofitHelper {
                     .addHeader("accesstoken", token)
                     .build();
             return chain.proceed(request);
+        }
+    }
+
+    /**
+     * 添加返回结果统一处理拦截器
+     */
+    private class ResponseInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(final Chain chain) throws IOException {
+            // 原始请求
+            Request request = chain.request();
+            Response response = chain.proceed(request);
+            ResponseBody responseBody = response.body();
+            BufferedSource source = responseBody.source();
+            source.request(Long.MAX_VALUE);
+            String respString = source.buffer().clone().readString(Charset.defaultCharset());
+
+            //json格式使用Logger.json打印
+            boolean isJson = respString.startsWith("[") || respString.startsWith("{");
+            isJson = isJson && mLogJsonEnable;
+            TourCooLogUtil.d(respString);
+            if (isJson) {
+                LogUtils.json(respString);
+
+            }
+            BaseResult result = new Gson().fromJson(respString, BaseResult.class);
+
+            if (result != null && result.getCode() == 401) {
+//                ToastUtils.showShort(result.getMsg());
+                Log.d(TAG, "--->登录失效，自动重新登录");
+                AccountHelper.getInstance().logout();
+                Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                MyApplication.getContext().startActivity(intent);
+            }
+
+            return response;
+
         }
     }
 
@@ -472,6 +521,8 @@ public class RetrofitHelper {
                     //json格式使用Logger.json打印
                     boolean isJson = message.startsWith("[") || message.startsWith("{");
                     isJson = isJson && mLogJsonEnable;
+                    TourCooLogUtil.d(message);
+
                     if (isJson) {
                         LogUtils.json(message);
                         return;

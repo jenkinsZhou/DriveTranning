@@ -5,6 +5,7 @@ import android.accounts.NetworkErrorException;
 
 
 import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.ResourceUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.JsonParseException;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -16,6 +17,7 @@ import com.tourcoo.training.core.interfaces.HttpRequestControl;
 import com.tourcoo.training.core.interfaces.IHttpRequestControl;
 import com.tourcoo.training.core.interfaces.OnHttpRequestListener;
 import com.tourcoo.training.core.log.TourCooLogUtil;
+import com.tourcoo.training.core.util.ResourceUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 
 import java.net.ConnectException;
@@ -56,6 +58,9 @@ public class HttpRequestControlImpl implements HttpRequestControl {
             smartRefreshLayout.finishRefresh();
         }
         if (adapter == null) {
+            if (statusLayoutManager != null) {
+                statusLayoutManager.showEmptyLayout();
+            }
             return;
         }
         adapter.loadMoreComplete();
@@ -134,9 +139,10 @@ public class HttpRequestControlImpl implements HttpRequestControl {
         if (httpRequestControl == null || httpRequestControl.getStatusLayoutManager() == null) {
 //            ToastUtil.show(reason);
             if (AppConfig.DEBUG_MODE) {
-                ToastUtil.show(e.getMessage());
-            } else {
+
                 ToastUtil.show(reason);
+            } else {
+                handleRequestErrorTips();
             }
 
             return;
@@ -166,5 +172,14 @@ public class HttpRequestControlImpl implements HttpRequestControl {
             //可根据不同错误展示不同错误布局  showCustomLayout(R.layout.xxx);
             statusLayoutManager.showErrorLayout();
         }
+    }
+
+
+    private void handleRequestErrorTips() {
+        if (!NetworkUtils.isConnected()) {
+            ToastUtil.show(R.string.frame_exception_network_not_connected);
+            return;
+        }
+        ToastUtil.show("服务器开了点小差 请稍后再试");
     }
 }

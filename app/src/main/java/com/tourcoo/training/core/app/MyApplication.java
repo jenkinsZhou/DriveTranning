@@ -9,6 +9,7 @@ import androidx.multidex.MultiDexApplication;
 import com.didichuxing.doraemonkit.DoraemonKit;
 import com.didichuxing.doraemonkit.kit.webdoor.WebDoorManager;
 import com.simple.spiderman.SpiderMan;
+import com.tourcoo.training.BuildConfig;
 import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.core.UiManager;
 import com.tourcoo.training.config.RequestConfig;
@@ -142,7 +143,7 @@ public class MyApplication extends MultiDexApplication {
         // 配置可展示日志等级
         TourCooLogUtil.getLogConfig()
                 // 是否在Logcat显示日志
-                .configAllowLog(AppConfig.DEBUG_MODE)
+                .configAllowLog(BuildConfig.DEBUG)
                 // 配置统一的TAG 前缀
                 .configTagPrefix(PREFIX_TAG_GLOBAL)
                 // 首行显示信息(可配置日期，线程等等)

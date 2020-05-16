@@ -125,6 +125,14 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
                 return@OnItemClickListener
             }
 
+            /*  case finished = 0
+             case continues = 1
+             case immdiate = 2
+             case preText = 3*/
+            if(currentCourseInfo!!.status == 0){
+                //已完成状态下 不可点击
+                return@OnItemClickListener
+            }
 
             if (AccountHelper.getInstance().userInfo.isAuthenticated == 1 || AccountHelper.getInstance().userInfo.isAuthenticated == 3) {
                 val dialog = CommonBellAlert(mContext)

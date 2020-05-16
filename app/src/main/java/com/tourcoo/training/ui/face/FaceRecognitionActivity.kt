@@ -17,13 +17,16 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
@@ -33,6 +36,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
+import com.tourcoo.training.utils.TourCooUtil
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener
 import com.tourcoo.training.widget.dialog.IosAlertDialog
@@ -46,6 +50,7 @@ import java.io.*
 
 /**
  *@description :
+ * 普通人脸验证
  *@company :途酷科技
  * @author :JenkinsZhou
  * @date 2020年03月03日14:52
@@ -63,6 +68,8 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
     private val cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT
 
     private var onlyBase64 = false
+
+    private var requestCount = 0
 
     override fun getContentLayout(): Int {
         return R.layout.activity_face_recognition
@@ -158,11 +165,12 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
         }
         cameraHelper!!.takePhoto(object : Camera.PictureCallback {
             override fun onPictureTaken(data: ByteArray?, camera: Camera?) {
+
                 if (!sdCardIsAvailable()) {
                     ToastUtil.show("存储空间不足或异常")
                     return
                 }
-                baseHandler.postDelayed(Runnable {
+                baseHandler.post(Runnable {
                     val resource = BitmapFactory.decodeByteArray(data, 0, data!!.size)
                     if (resource == null) {
                         ToastUtil.show("拍照失败")
@@ -175,7 +183,7 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                         AccountTempHelper.getInstance().facePhotoPath = photoPath
                         uploadFaceImage(trainId, faceBitmap)
                     }
-                }, 50)
+                })
 
             }
         })
@@ -350,15 +358,20 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
             setResult(Activity.RESULT_OK, intent)
             finish()
         } else {
+            TourCooLogUtil.d("执行人脸认证回调")
             ApiRepository.getInstance().requestFaceVerify(trainId, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
                 override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
                     if (entity == null) {
                         return
                     }
+                    TourCooLogUtil.e("------>"+"奇葩问题")
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                         handleRecognizeSuccessCallback()
                     } else {
-                        ToastUtil.show(entity.msg)
+//                        ToastUtil.show(entity.msg)
+                        ToastUtils.showShort(entity.msg)
+                        requestCount++
+                        TourCooLogUtil.d("奇葩问题="+requestCount)
                         if (AppConfig.DEBUG_MODE) {
                             //如果是测试包 则当成功处理 不做拦截
                             handleRecognizeSuccessCallback()

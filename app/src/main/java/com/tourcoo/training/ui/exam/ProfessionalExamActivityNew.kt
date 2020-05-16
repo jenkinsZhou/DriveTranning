@@ -66,6 +66,7 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
     private var trainPlanId = ""
     private var lastQuestionIndex = -1
     private var type = 0
+
     /**
      * 用来计数是否答完所有试题 (没回答完不让提交答案)
      */
@@ -91,12 +92,6 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
         trainPlanId = intent.getStringExtra("trainingPlanId")
         type = intent.getIntExtra("type", 0)
         examId = intent.getStringExtra("examId")
-
-//        if (type == 1) {
-////            examId = ""
-//        } else {
-//
-//        }
 
         if (TextUtils.isEmpty(trainPlanId) || TextUtils.isEmpty(examId)) {
             ToastUtil.show("未获取到考试题数据")
@@ -333,6 +328,10 @@ class ProfessionalExamActivityNew : BaseTitleActivity(), View.OnClickListener, Q
         if (examEntity == null || examEntity.questions == null) {
             return
         }
+
+        //拿到考试试题后刷新ExamID,防止交卷失败
+        examId = "" + examEntity.examID
+
         //显示题目布局
         setViewGone(coordinatorLayoutContainer, true)
         setViewGone(rlBottomLayout, true)

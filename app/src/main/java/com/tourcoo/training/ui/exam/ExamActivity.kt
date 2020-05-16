@@ -305,6 +305,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
                 }
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                     rlBottomLayout.visibility = View.VISIBLE
+
                     handleExamResult(entity.data)
                 } else {
                     handleRequestError()
@@ -325,6 +326,11 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         if (examEntity == null || examEntity.questions == null) {
             return
         }
+
+        //拿到考试试题后刷新ExamID,防止交卷失败
+        examId = "" + examEntity.examID
+
+
         setViewGone(rlBottomLayout, true)
         setViewGone(coordinatorLayoutContainer, true)
         ExamTempHelper.getInstance().examInfo = examEntity

@@ -11,7 +11,6 @@ import com.tourcoo.training.R
 import com.tourcoo.training.adapter.training.OnLineTrainingCourseAdapter
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.UiManager
-import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
@@ -25,7 +24,6 @@ import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonBellDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_professional_exam_select.*
-import kotlinx.android.synthetic.main.sample_video_pick.*
 
 /**
  *@description :专项测试选择页面
@@ -34,7 +32,7 @@ import kotlinx.android.synthetic.main.sample_video_pick.*
  * @date 2020年04月28日14:22
  * @Email: 971613168@qq.com
  */
-class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), View.OnClickListener {
+class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), View.OnClickListener {
 
 
     private var adapter: OnLineTrainingCourseAdapter? = null
@@ -105,7 +103,14 @@ class ProfessionalExamSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(
                 showBuyDialog()
                 return@setOnItemClickListener
             }
-
+            // public static final int COURSE_STATUS_FINISHED = 0;
+            //    public static final int COURSE_STATUS_CONTINUE = 1;
+            //    public static final int COURSE_STATUS_NEED_PAY = 2;
+            //    public static final int COURSE_STATUS_WAIT_EXAM = 3;
+            if(info.status == 0){
+                //已完成状态下 屏蔽点击事件
+                return@setOnItemClickListener
+            }
             val intent = Intent(this, ProfessionalExamSelectChildActivity::class.java)
             intent.putExtra("trainingPlanId", CommonUtil.getNotNullValue(info.trainingPlanID))
             intent.putExtra("examId", CommonUtil.getNotNullValue(info.examId))

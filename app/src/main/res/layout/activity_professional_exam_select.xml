@@ -11,6 +11,7 @@
         android:id="@+id/llHeaderBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:background="#E8EDFA"
         android:orientation="vertical">
 

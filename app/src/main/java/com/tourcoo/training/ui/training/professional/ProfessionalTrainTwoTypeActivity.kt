@@ -94,7 +94,7 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
 
         } else {//直接跳转到考试分类列表
 
-            val intent = Intent(this, ProfessionalExamSelectActivity::class.java)
+            val intent = Intent(this, ProfessionalExamSelectListActivity::class.java)
             intent.putExtra("id", info.specialId)
             intent.putExtra("childModuleId", info.childModuleId)
             intent.putExtra("title", info.title)

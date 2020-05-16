@@ -24,6 +24,12 @@ public class ResourceUtil {
         this.mContext = context;
     }
 
+    public static String getString(int stingId) {
+
+            return MyApplication.getContext().getResources().getString(stingId);
+
+    }
+
     public CharSequence getText(int res) {
         CharSequence txt = null;
         try {
@@ -37,6 +43,7 @@ public class ResourceUtil {
     public CharSequence[] getTextArray(int res) {
         CharSequence[] result = new CharSequence[0];
         try {
+
             result = mContext.getResources().getTextArray(res);
         } catch (Exception e) {
         }
@@ -133,4 +140,6 @@ public class ResourceUtil {
         }
         return result == 0 ? def : result;
     }
+
+
 }

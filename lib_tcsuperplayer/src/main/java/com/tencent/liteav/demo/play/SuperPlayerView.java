@@ -1962,7 +1962,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             mVodControllerLarge.updateReplay(true);
         } else if (event == TXLiveConstants.PLAY_EVT_PLAY_PROGRESS) {
             if (BuildConfig.DEBUG) {
-                Toast.makeText(mContext, "进度同步中...", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "进度同步中...", Toast.LENGTH_SHORT).show();
             }
 
             int progress = param.getInt(TXLiveConstants.EVT_PLAY_PROGRESS_MS);

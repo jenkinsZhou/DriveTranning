@@ -278,6 +278,12 @@ public class ApiRepository extends BaseRepository {
     }
 
 
+    /**
+     * 线上学习验证
+     * @param trainingPlanID
+     * @param photoBase64
+     * @return
+     */
     public Observable<BaseResult<FaceRecognizeResult>> requestFaceVerify(String trainingPlanID, String photoBase64) {
         Map<String, Object> params = new HashMap<>(3);
         params.put("trainingPlanID", trainingPlanID);

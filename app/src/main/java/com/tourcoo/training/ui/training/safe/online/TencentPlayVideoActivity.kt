@@ -27,6 +27,8 @@ import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.ExamConstant
+import com.tourcoo.training.constant.FaceConstant.FACE_CERTIFY_FAILED
+import com.tourcoo.training.constant.FaceConstant.FACE_CERTIFY_SUCCESS
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -56,6 +58,7 @@ import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
+import kotlinx.android.synthetic.main.activity_news_detail_video.*
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 import org.greenrobot.eventbus.EventBus
 
@@ -139,7 +142,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvExam.setOnClickListener(this)
         mCourseList = ArrayList()
         mCourseHashMap = HashMap()
-
         requestPlanDetail()
     }
 
@@ -159,6 +161,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onAutoPlayStart() {
                 ivCoverView.visibility = View.GONE
                 smartVideoPlayer.mVodControllerSmall.enableClick(true)
+                    //只有播放状态下才启动计时器
+
             }
 
             override fun enableSeek() {
@@ -167,7 +171,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
             override fun onAutoPlayComplete() {
                 //通知后台当前课程播放结束
-                ivCoverView.visibility = View.VISIBLE
+                if (smartVideoPlayer.playMode != SuperPlayerConst.PLAYMODE_FULLSCREEN) {
+                    ivCoverView.visibility = View.VISIBLE
+                } else {
+                    ivCoverView.visibility = View.GONE
+                }
                 requestCompleteCurrentCourse(currentCourseId)
             }
 
@@ -316,6 +324,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
+        //只有播放状态下才启动计时器
+            cancelTimer()
         if (hasRequireExam) {
             cancelTimer()
         }
@@ -330,10 +340,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         } else {
             faceVerifyInterval = detail.faceVerifyInterval
         }
-
-        //初始化计时器
-        initTimerAndStart()
-
         if (detail.requireExam == 1) {
             tvExam.visibility = View.VISIBLE
         }
@@ -347,6 +353,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             requestMedalDictionary()
 
         } else {
+            //置灰
             tvExam.setBackgroundColor(ResourceUtil.getColor(R.color.grayCCCCCC))
             tvExam.isEnabled = false
         }
@@ -373,6 +380,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvCourseCountInfo.text = "共" + countCatalog + "章" + countNode + "小节"
         tvCourseTime.text = "课时：" + detail.courseTime.toString()
         tvSubjectDesc.text = getNotNullValue(detail.description)
+        //todo 暂时在这里启动计时器
+        initTimerAndStart(faceVerifyInterval)
     }
 
 
@@ -707,8 +716,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-
-    private fun skipRecognize() {
+    private fun doSkipRecognize() {
         //暂停视频
         smartVideoPlayer.onPause()
         //暂停计时器
@@ -730,17 +738,24 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_CODE_FACE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    //人脸认证成功 不做任何处理
-                } else {
-                    //人脸识别失败 处理人脸识别逻辑
-                    if (!AppConfig.DEBUG_MODE) {
-                        //如果是正式包 则必须执行认证失败的处理
-                        handleRecognizeFailedCallback()
-                    }else{
+                when (resultCode) {
+                    FACE_CERTIFY_SUCCESS -> {
+                        //本次人脸验证通过 需要继续播放课件
+                        //处理继续播放课件逻辑
+                        doPlayVideoContinue()
+                    }
+
+
+                    FACE_CERTIFY_FAILED -> {
+                        //本次人脸验证失败 需要提示用户后 关闭页面并保存进度 不让用户学习了
                         handleRecognizeFailedCallback()
                     }
+                    else -> {
+                        //用户压根就没验证人脸 直接返回的 肯定关闭页面并保存进度 更不让用户学习了
+                        handleRecognizeCancelCallback()
+                    }
                 }
+
             }
             REQUEST_CODE_WEB -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -759,29 +774,23 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     /**
      * 初始化计时器 并开始计时
      */
-    private fun initTimerAndStart() {
-        //总时长 间隔时间
-        if (faceVerifyInterval <= 0) {
-            //取消计时器
-            cancelTimer()
-            return
-        }
+    private fun initTimerAndStart(faceVerifySecond : Int) {
+
+        cancelTimer()
         //初始化计时器
 //        faceVerifyInterval = 12
-        val faceVerifyMillisecond = faceVerifyInterval.toLong() * 1000
-        TourCooLogUtil.i(mTag, "计时时间:" + faceVerifyMillisecond + "毫秒")
+        val faceVerifyMillisecond =faceVerifySecond*1000.toLong()
         mTimerTask = CountDownTimerSupport(faceVerifyMillisecond, 1000L)
 
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
             override fun onFinish() {
-                //时间到 开始下一个计时
-                startTimer()
+                //时间到 进行人脸验证
                 //todo 处理认证逻辑
-                skipRecognize()
+                doSkipRecognize()
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                TourCooLogUtil.i(mTag, "计时中...")
+                TourCooLogUtil.i(mTag, "计时中..."+faceVerifyMillisecond)
             }
 
         })
@@ -828,23 +837,39 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private fun doSaveProgressAndFinish() {
         val progress = smartVideoPlayer.currentProgress
+        if(progress == 0){
+            //说明没有播放 直接finish 不保存进度
+            finish()
+            return
+        }
         requestSaveProgress(currentCourseId, progress.toString())
     }
 
 
+    /**
+     * 人脸验证用户未通过的回调
+     */
     private fun handleRecognizeFailedCallback() {
-        ToastUtil.show("人脸识别失败")
-        //将视频置为不可点击
-//        smartVideoPlayer.startButton.isEnabled = false
-        //暂停视频
+        smartVideoPlayer?.onPause()
+        ToastUtil.show("您当前人脸验证未通过 本次学习结束")
         baseHandler.postDelayed(Runnable {
-            smartVideoPlayer?.onPause()
-        }, 50)
-        baseHandler.postDelayed(Runnable {
+            //保存进度并关闭
             doSaveProgressAndFinish()
-        }, 50)
+        },1000)
     }
 
+
+    /**
+     * 人脸验证用户未点击拍照的回调
+     */
+    private fun handleRecognizeCancelCallback() {
+        smartVideoPlayer?.onPause()
+        ToastUtil.show("您当前没有验证人脸 本次学习结束")
+        baseHandler.postDelayed(Runnable {
+            //保存进度并关闭
+            doSaveProgressAndFinish()
+        },1000)
+    }
 
     /**
      * 设置课程点击事件
@@ -968,5 +993,15 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         setViewGone(tvPlanDesc, true)
     }
 
+    /**
+     * 人脸验证通过后 需要继续播放课件 计时又得开始了
+     */
+    private fun doPlayVideoContinue(){
+        superPlayerView?.onResume()
+        //开始新一轮计时
+        TourCooLogUtil.i("开始新一轮计时")
+        initTimerAndStart(faceVerifyInterval)
+        TourCooLogUtil.d("人脸验证通过 继续播放视频")
+    }
 
 }
