@@ -176,7 +176,7 @@
             android:launchMode="singleTop" />
         <activity android:name=".ui.training.safe.online.web.PlayHtmlWebActivity" />
         <activity android:name=".ui.face.ProfessionalFaceRecognitionActivity" />
-        <activity android:name=".ui.exam.ProfessionalExamActivityNew" />
+        <activity android:name=".ui.exam.ProfessionalExamActivity" />
         <service android:name="com.amap.api.location.APSService"/>
     </application>
 

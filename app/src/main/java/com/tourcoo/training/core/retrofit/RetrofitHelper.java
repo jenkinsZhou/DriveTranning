@@ -15,6 +15,7 @@ import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.base.entity.BaseResult;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.SSLUtil;
+import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.entity.account.AccountHelper;
 import com.tourcoo.training.ui.account.LoginActivity;
 
@@ -185,7 +186,12 @@ public class RetrofitHelper {
                 LogUtils.json(respString);
 
             }
+            TourCooLogUtil.d(TAG,isJson);
             BaseResult result = new Gson().fromJson(respString, BaseResult.class);
+            TourCooLogUtil.d(TAG,result);
+            if(result != null &&result.code == -1 ){
+              ToastUtil.show("服务器数据有误");
+            }
 
             if (result != null && result.getCode() == 401) {
 //                ToastUtils.showShort(result.getMsg());

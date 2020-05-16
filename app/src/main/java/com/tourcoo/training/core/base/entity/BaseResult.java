@@ -5,7 +5,7 @@ package com.tourcoo.training.core.base.entity;
  */
 public class BaseResult<T> {
 
-    public int code;
+    public int code = -1;
     public String msg;
     public T data;
 

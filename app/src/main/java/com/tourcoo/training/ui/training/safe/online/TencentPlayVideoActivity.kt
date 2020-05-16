@@ -52,6 +52,7 @@ import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity
 import com.tourcoo.training.ui.training.safe.online.web.WebCourseTempHelper
+import com.tourcoo.training.utils.CustomCountDownTimer
 import com.tourcoo.training.utils.TourCooUtil
 import com.tourcoo.training.widget.aliplayer.utils.ScreenUtils
 import com.tourcoo.training.widget.dialog.IosAlertDialog
@@ -85,11 +86,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     //人脸验证间隔时间
     private var faceVerifyInterval = Int.MAX_VALUE
 
+    private var mRemainTime = Int.MAX_VALUE
+
     /**
      * 判断考试是否完成
      */
     private var hasRequireExam = true
-    private var mTimerTask: CountDownTimerSupport? = null
+    private var mTimerTask: CustomCountDownTimer? = null
 
     /**
      * 章的数量
@@ -161,12 +164,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onAutoPlayStart() {
                 ivCoverView.visibility = View.GONE
                 smartVideoPlayer.mVodControllerSmall.enableClick(true)
-                    //只有播放状态下才启动计时器
 
             }
 
             override fun enableSeek() {
                 smartVideoPlayer.seekTo(currentProgress)
+                //只有播放状态下才初始化计时器
+                initTimerAndStart(mRemainTime)
             }
 
             override fun onAutoPlayComplete() {
@@ -326,6 +330,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
         //只有播放状态下才启动计时器
             cancelTimer()
+
+
         if (hasRequireExam) {
             cancelTimer()
         }
@@ -336,7 +342,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //拿到后台配置的间隔时间
         if (AppConfig.DEBUG_MODE) {
             //todo 人脸验证间隔时间 调试模式下 固定成30秒 方便测试
-            faceVerifyInterval = 30
+            faceVerifyInterval = 20
         } else {
             faceVerifyInterval = detail.faceVerifyInterval
         }
@@ -381,7 +387,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvCourseTime.text = "课时：" + detail.courseTime.toString()
         tvSubjectDesc.text = getNotNullValue(detail.description)
         //todo 暂时在这里启动计时器
-        initTimerAndStart(faceVerifyInterval)
+        if(mRemainTime == Int.MAX_VALUE){
+            mRemainTime = faceVerifyInterval
+        }
+
     }
 
 
@@ -657,8 +666,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         ApiRepository.getInstance().requestSaveProgress(trainingPlanID, courseId, second).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>() {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    //todo
-                    ToastUtil.showSuccess("进度保存成功")
+
+                    if(AppConfig.DEBUG_MODE){
+                        ToastUtil.showSuccess("进度保存成功")
+                    }
+
                 } else {
                     ToastUtil.show(entity?.msg)
                 }
@@ -731,6 +743,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         val intent = Intent(this, OnLineFaceRecognitionActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
         startActivityForResult(intent, REQUEST_CODE_FACE)
+
     }
 
 
@@ -777,20 +790,26 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun initTimerAndStart(faceVerifySecond : Int) {
 
         cancelTimer()
+        if(faceVerifySecond <=0){
+            return
+        }
         //初始化计时器
 //        faceVerifyInterval = 12
         val faceVerifyMillisecond =faceVerifySecond*1000.toLong()
-        mTimerTask = CountDownTimerSupport(faceVerifyMillisecond, 1000L)
+        mTimerTask = CustomCountDownTimer(faceVerifyMillisecond, 1000L)
 
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
             override fun onFinish() {
                 //时间到 进行人脸验证
                 //todo 处理认证逻辑
+                TourCooLogUtil.i("计时完成")
+
                 doSkipRecognize()
             }
 
             override fun onTick(millisUntilFinished: Long) {
                 TourCooLogUtil.i(mTag, "计时中..."+faceVerifyMillisecond)
+                mRemainTime--
             }
 
         })
@@ -999,8 +1018,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun doPlayVideoContinue(){
         superPlayerView?.onResume()
         //开始新一轮计时
+        mRemainTime = faceVerifyInterval
         TourCooLogUtil.i("开始新一轮计时")
-        initTimerAndStart(faceVerifyInterval)
+        initTimerAndStart(mRemainTime)
         TourCooLogUtil.d("人脸验证通过 继续播放视频")
     }
 
