@@ -45,6 +45,7 @@ import com.tourcoo.training.entity.pay.WxPayEvent
 import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.recharge.CoinInfo
 import com.tourcoo.training.entity.recharge.CoinPackageEntity
+import com.tourcoo.training.event.OrderRefreshEvent
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.tourcoo.training.widget.dialog.pay.BottomPayDialog
@@ -306,12 +307,14 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private val SDK_PAY_FLAG = 1
+
     @SuppressLint("HandlerLeak")
     private val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 SDK_PAY_FLAG -> {
                     val payResult = PayResult(msg.obj as Map<String, String>)
+
                     /**
                      * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                      */
@@ -328,7 +331,9 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                         //刷新学币
                         requestCoinPackage()
                         notifyUserInfo()
+                        notifyOrderList()
                         requestMedalDictionary()
+
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         ToastUtil.show(payResult.memo)
@@ -416,6 +421,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         if (payEvent == null) {
             return
         }
+        notifyOrderList()
         if (payEvent.paySuccess) {
             ToastUtil.showSuccess("支付成功")
             requestCoinPackage()
@@ -460,6 +466,12 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
         val refreshEvent = UserInfoEvent()
         val user = UserInfo()
         refreshEvent.userInfo = user
+        EventBus.getDefault().post(refreshEvent)
+    }
+
+
+    private fun notifyOrderList() {
+        val refreshEvent = OrderRefreshEvent()
         EventBus.getDefault().post(refreshEvent)
     }
 }

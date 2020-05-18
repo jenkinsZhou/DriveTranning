@@ -55,7 +55,7 @@ class OrderListFragment : BaseRefreshLoadFragment<OrderEntity>() {
     }
 
 
-    private fun requestOrderList(page: Int) {
+   private  fun requestOrderList(page: Int) {
         ApiRepository.getInstance().requestOrderList(page, mType).compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MutableList<OrderEntity>>?>(iHttpRequestControl) {
             override fun onSuccessNext(entity: BaseResult<MutableList<OrderEntity>>?) {
                 if (entity == null) {
@@ -122,4 +122,7 @@ class OrderListFragment : BaseRefreshLoadFragment<OrderEntity>() {
         }
     }
 
+  fun  autoRefresh(){
+        mRefreshLayout?.autoRefresh()
+    }
 }

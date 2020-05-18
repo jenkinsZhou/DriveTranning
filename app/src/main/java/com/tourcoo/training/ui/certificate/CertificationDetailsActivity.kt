@@ -94,7 +94,7 @@ class CertificationDetailsActivity : BaseTitleActivity() {
         val contentEtString = TrainingConstant.STUDY_SHARE_URL + "?TraineeID=${SPUtils.getInstance().getString("TraineeID")}&trainingPlanID=${detail.trainingPlanID}"
         val bitmap = CodeCreator.createQRCode(contentEtString, 500, 500, null)
         ivCode.setImageBitmap(bitmap)
-
+        ivCode.isEnabled = false
         btnSave.setOnClickListener {
             val bitmap = (ivImage.drawable as BitmapDrawable).bitmap
             TourImageUtils.saveBitmap2Gallery(this, bitmap)

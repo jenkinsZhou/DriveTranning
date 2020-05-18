@@ -51,6 +51,12 @@ android {
         javaMaxHeapSize "Xg"
         preDexLibraries = false
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
 }
 
 greendao {

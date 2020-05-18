@@ -42,13 +42,26 @@
                     android:layout_marginTop="@dimen/dp_5" />
 
 
-                <ImageView
-                    android:id="@+id/ivCode"
-                    android:layout_width="@dimen/dp_90"
-                    android:layout_height="@dimen/dp_90"
+                <RelativeLayout
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:scaleType="fitXY" />
+                    android:layout_width="@dimen/dp_90"
+                    android:layout_height="@dimen/dp_90">
+                    <ImageView
+                        android:id="@+id/ivCode"
+                        android:layout_width="@dimen/dp_90"
+                        android:layout_height="@dimen/dp_90"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:scaleType="fitXY" />
+                    <View
+                        android:background="@color/transparent"
+                        android:layout_width="@dimen/dp_90"
+                        android:layout_height="@dimen/dp_90"/>
+
+
+
+                </RelativeLayout>
+
 
                 <TextView
                     android:layout_width="wrap_content"
