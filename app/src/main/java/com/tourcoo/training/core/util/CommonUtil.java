@@ -596,6 +596,7 @@ public class CommonUtil {
         return numberStr;*/
 
     }
+
     public static Map<String, ArrayList<CertificateInfo>> sort(List<CertificateInfo> list) {
         TreeMap tm = new TreeMap<String, ArrayList<CertificateInfo>>();
 
@@ -639,15 +640,21 @@ public class CommonUtil {
                 Collections.sort(o1List, new Comparator<CertificateInfo>() {
                     @Override
                     public int compare(CertificateInfo o1, CertificateInfo o2) {
-                        Date d1 = o1.getDate();
-                        Date d2 = o2.getDate();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        try {
+                            Date d1 = sdf.parse(o1.getCreateTime());
+                            Date d2 = sdf.parse(o2.getCreateTime());
 
-                        if (d1 == d2) {
+                            if (d1 == d2) {
+                                return 0;
+                            } else if (d1.before(d2)) {
+                                return 1;
+                            } else {
+                                return -1;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             return 0;
-                        } else if (d1.before(d2)) {
-                            return 1;
-                        } else {
-                            return -1;
                         }
                     }
                 });
@@ -655,15 +662,21 @@ public class CommonUtil {
                 Collections.sort(o2List, new Comparator<CertificateInfo>() {
                     @Override
                     public int compare(CertificateInfo o1, CertificateInfo o2) {
-                        Date d1 = o1.getDate();
-                        Date d2 = o2.getDate();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        try {
+                            Date d1 = sdf.parse(o1.getCreateTime());
+                            Date d2 = sdf.parse(o2.getCreateTime());
 
-                        if (d1 == d2) {
+                            if (d1 == d2) {
+                                return 0;
+                            } else if (d1.before(d2)) {
+                                return 1;
+                            } else {
+                                return -1;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             return 0;
-                        } else if (d1.before(d2)) {
-                            return 1;
-                        } else {
-                            return -1;
                         }
                     }
                 });

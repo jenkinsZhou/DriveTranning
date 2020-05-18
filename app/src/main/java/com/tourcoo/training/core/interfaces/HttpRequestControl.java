@@ -12,6 +12,7 @@ import io.reactivex.annotations.NonNull;
  */
 public interface HttpRequestControl {
 
+
     /**
      * 网络成功回调
      *

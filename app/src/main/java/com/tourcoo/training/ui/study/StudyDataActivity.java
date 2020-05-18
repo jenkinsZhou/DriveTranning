@@ -1,6 +1,7 @@
 package com.tourcoo.training.ui.study;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,6 +30,8 @@ import com.tourcoo.training.entity.study.StudyDataInfo;
 import com.tourcoo.training.widget.viewpager.WrapContentHeightViewPager;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -102,7 +105,7 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
 
 
     private void requestStudyData(String year) {
-        TourCooLogUtil.i("year="+year);
+        TourCooLogUtil.i("year=" + year);
         ApiRepository.getInstance().requestStudyDataList(year).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(new BaseLoadingObserver<BaseResult<StudyDataEntity>>() {
             @Override
             public void onSuccessNext(BaseResult<StudyDataEntity> entity) {
@@ -223,8 +226,12 @@ public class StudyDataActivity extends BaseTitleActivity implements View.OnClick
             }
             count++;
             list.add(CommonUtil.getNotNullValue(count + ""));
-            floatList.add((float) TimeUtil.secondToHour(month.getStudyHour()));
+
+            BigDecimal bd = new BigDecimal(TimeUtil.secondToHour(month.getStudyHour()));
+            BigDecimal bd2 = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+
+            floatList.add(bd2.floatValue());
         }
-        oilLineChartManager.showLineChart(list,floatList,"学习时长", ResourceUtil.getColor(R.color.blue5087FF));
+        oilLineChartManager.showLineChart(list, floatList, "学习时长", ResourceUtil.getColor(R.color.blue5087FF));
     }
 }

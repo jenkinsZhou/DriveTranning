@@ -16,6 +16,7 @@ import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.UiManager
 import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity
 import com.tourcoo.training.core.base.entity.BasePageResult
+import com.tourcoo.training.core.interfaces.OnHttpRequestListener
 import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
@@ -23,6 +24,7 @@ import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.certificate.CertificateInfo
+import com.tourcoo.training.entity.certificate.CertifyDetail
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_study_record_certificate.*
 import java.text.SimpleDateFormat
@@ -37,7 +39,7 @@ import kotlin.collections.ArrayList
  * @date 2020年04月15日9:26
  * @Email: 971613168@qq.com
  */
-class  MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() {
+class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() {
     private var adapter: CertificateInfoAdapter? = null
 
     override fun getContentLayout(): Int {
@@ -61,7 +63,7 @@ class  MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>()
             if (!TextUtils.isEmpty(CommonUtil.getNotNullValue(info.id))) {
                 //非标题item才响应点击事件
                 val intent = Intent(this, CertificationDetailsActivity::class.java)
-                intent.putExtra("id",CommonUtil.getNotNullValue(info.id))
+                intent.putExtra("id", CommonUtil.getNotNullValue(info.id))
                 startActivity(intent)
             }
 
@@ -73,18 +75,41 @@ class  MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>()
         requestCertificate(page)
     }
 
+
+    private var resultList: MutableList<CertificateInfo>? = ArrayList()
+
     private fun requestCertificate(page: Int) {
         ApiRepository.getInstance().requestCertificate(page).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BasePageResult<CertificateInfo>>(iHttpRequestControl) {
             override fun onSuccessNext(entity: BasePageResult<CertificateInfo>?) {
-                if(entity == null){
+                if (entity == null) {
                     UiManager.getInstance().httpRequestControl.httpRequestError(iHttpRequestControl, NullPointerException("data==null"))
                     return
                 }
-                if(entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS){
+                if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
+
+                    if (page == 1) {
+                        resultList = ArrayList()
+                    }
+
+                    if (entity.data == null) {
+                        resultList!!.addAll(ArrayList())
+                    } else {
+                        resultList!!.addAll(entity.data.rows)
+                    }
+
                     val total = entity.data?.total ?: 0
                     tvTotalCertificate.text = "已获得" + total + "张"
-                    UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity.data == null) ArrayList<CertificateInfo>() else transformData(entity.data.rows), null)
-                }else{
+                    UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, transformData(resultList), null)
+
+                    if (adapter == null) {
+                        return
+                    }
+                    adapter!!.setNewData(transformData(resultList))
+                    if(entity.data.rows.size < 10){
+                        adapter!!.loadMoreEnd()
+                    }
+
+                } else {
                     UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, ArrayList<CertificateInfo>())
                 }
             }

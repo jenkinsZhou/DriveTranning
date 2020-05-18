@@ -3,6 +3,7 @@ package com.tourcoo.training.ui.study;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -14,8 +15,11 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.tourcoo.training.R;
 import com.tourcoo.training.utils.TourCooUtil;
 
@@ -116,6 +120,9 @@ public class LineChartManager {
         rightYaxis.setDrawGridLines(false);
         leftYAxis.setDrawGridLines(true);
         leftYAxis.setGridColor(Color.parseColor("#F3F3F3"));
+        leftYAxis.setSpaceTop(10f);
+        xAxis.setAxisLineColor(Color.parseColor("#999999"));
+        xAxis.setAxisLineWidth(1f);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -172,6 +179,13 @@ public class LineChartManager {
         LineDataSet lineDataSet = new LineDataSet(entries, name);
         initLineDataSet(lineDataSet, color);
         LineData lineData = new LineData(lineDataSet);
+        lineData.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return value+"";
+
+            }
+        });
         lineChart.animateX(0); // 立即执行的动画,x轴
         lineChart.setData(lineData);
     }
@@ -184,7 +198,7 @@ public class LineChartManager {
         xAxis.setTextColor(Color.parseColor("#999999"));//设置X轴字体颜色
         IndexAxisValueFormatter xAxisFormatter = new IndexAxisValueFormatter(xValues);
         xAxis.setValueFormatter(xAxisFormatter);
-        leftYAxis.setAxisMaximum(Collections.max(dataList) + 2);
+//        leftYAxis.setAxisMaximum(Collections.max(dataList) );
         showChart(dataList, name, color);
         setChartFillDrawable(TourCooUtil.getDrawable(R.color.white));
         Description description = new Description();

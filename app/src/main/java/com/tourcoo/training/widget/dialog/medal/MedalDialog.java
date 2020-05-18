@@ -105,6 +105,7 @@ public class MedalDialog {
      * @return
      */
 
+
     public MedalDialog setMedal(int type, int number, StudyMedalEntity studyMedalEntity) {
         mType = type;
         switch (type) {
@@ -120,7 +121,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·安培新星勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计学习时长已达1个学时");
                         }
 
@@ -136,7 +137,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·贵在坚持勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计学习时长已达6个学时");
                         }
 
@@ -152,7 +153,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·学习之星勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计学习时长已达12个学时");
                         }
 
@@ -167,7 +168,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·持之以恒勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计学习时长已达20个学时");
                         }
 
@@ -182,7 +183,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·安培代言人勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计学习时长已达30个学时");
                         }
 
@@ -205,7 +206,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·牛刀小试勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计获得1个学习证书");
                         }
 
@@ -220,7 +221,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·小有成就勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计获得6个学习证书");
                         }
                         requestMedalRecord("2002");
@@ -234,7 +235,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·登堂入室勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计获得12个学习证书");
                         }
                         requestMedalRecord("2003");
@@ -248,7 +249,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·安全达人勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计获得20个学习证书");
                         }
                         requestMedalRecord("2004");
@@ -262,7 +263,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·证书终结者勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计获得30个学习证书");
                         }
                         requestMedalRecord("2005");
@@ -283,7 +284,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·安培萌新勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("首次充值");
                         }
                         requestMedalRecord("3001");
@@ -297,7 +298,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·安培新贵勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计消费已达50元");
                         }
                         requestMedalRecord("3002");
@@ -311,7 +312,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·安培豪杰勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计消费已达200元");
                         }
                         requestMedalRecord("3003");
@@ -325,7 +326,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·安培大师勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计消费已达1000元");
                         }
                         requestMedalRecord("3004");
@@ -339,7 +340,7 @@ public class MedalDialog {
                             tvTitle.setText("恭喜您获得·土豪不差钱勋章");
                         }
 
-                        if(tvContent != null){
+                        if (tvContent != null) {
                             tvContent.setText("累计消费已达3000元");
                         }
                         requestMedalRecord("3005");
@@ -361,7 +362,10 @@ public class MedalDialog {
                     @Override
                     public void onSuccessNext(BaseResult entity) {
                         if (entity != null && entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS) {
-                            ToastUtil.show("领取勋章成功");
+                            if (dialog != null && isShow) {
+                                dialog.show();
+                            }
+
                             if (mType == 1) {
                                 //number 小时
                                 List<MedalInfo> list = AccountTempHelper.getInstance().getStudyMedalEntity().getStudyMedals();
@@ -389,13 +393,11 @@ public class MedalDialog {
     }
 
 
+//      if (dialog != null && isShow) {
+//        dialog.show();
+
     public boolean show() {
-        if (dialog != null && isShow) {
-            dialog.show();
-            return true;
-        }else {
-           return false;
-        }
+        return isShow;
     }
 
     public void dismiss() {

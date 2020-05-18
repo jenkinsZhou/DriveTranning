@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alipay.sdk.app.PayTask
+import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.gson.Gson
 import com.tencent.mm.opensdk.modelpay.PayReq
@@ -449,6 +450,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             }
         })
     }
+
 
     private fun showMedalDialog(number: Int) {
         val dialog = MedalDialog(mContext)
