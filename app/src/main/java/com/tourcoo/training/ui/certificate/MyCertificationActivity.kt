@@ -12,6 +12,7 @@ import com.tourcoo.training.R
 import com.tourcoo.training.adapter.certificate.CertificateInfoAdapter
 import com.tourcoo.training.adapter.certificate.CertificateInfoAdapter.ITEM_TYPE_CONTENT
 import com.tourcoo.training.adapter.certificate.CertificateInfoAdapter.ITEM_TYPE_HEADER
+import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.UiManager
 import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity
 import com.tourcoo.training.core.base.entity.BasePageResult
@@ -75,13 +76,17 @@ class  MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>()
     private fun requestCertificate(page: Int) {
         ApiRepository.getInstance().requestCertificate(page).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BasePageResult<CertificateInfo>>(iHttpRequestControl) {
             override fun onSuccessNext(entity: BasePageResult<CertificateInfo>?) {
-                if(entity?.data == null){
+                if(entity == null){
                     UiManager.getInstance().httpRequestControl.httpRequestError(iHttpRequestControl, NullPointerException("data==null"))
                     return
                 }
-                val total = entity.data?.total ?: 0
-                tvTotalCertificate.text = "已获得" + total + "张"
-                UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity!!.data == null) ArrayList<CertificateInfo>() else transformData(entity.data.rows), null)
+                if(entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS){
+                    val total = entity.data?.total ?: 0
+                    tvTotalCertificate.text = "已获得" + total + "张"
+                    UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity.data == null) ArrayList<CertificateInfo>() else transformData(entity.data.rows), null)
+                }else{
+                    UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, ArrayList<CertificateInfo>())
+                }
             }
         })
     }
