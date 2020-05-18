@@ -33,7 +33,10 @@ import com.tourcoo.training.core.util.Base64Util
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.UserInfo
 import com.tourcoo.training.entity.exam.*
+import com.tourcoo.training.event.OffLineRefreshEvent
+import com.tourcoo.training.event.ProfessionRefreshEvent
 import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.certificate.CertificationDetailsActivity
 import com.tourcoo.training.ui.certificate.MyCertificationActivity
@@ -43,6 +46,7 @@ import com.tourcoo.training.widget.dialog.exam.ExamPassDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_exam_online.*
 import org.apache.commons.lang.StringUtils
+import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 
 /**
@@ -413,8 +417,11 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener, Ques
                 if (entity == null) {
                     return
                 }
-
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
+                    //无论考试是否合格都需要刷新培训列表
+                    //通知专项培训列表刷新列表
+                    //todo
+                    EventBus.getDefault().post(ProfessionRefreshEvent(UserInfo()))
                     if (entity.data.status == 0) { //合格
 
                         if (type == 0) { //正式考试

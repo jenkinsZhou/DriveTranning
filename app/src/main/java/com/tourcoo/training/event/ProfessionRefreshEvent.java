@@ -4,16 +4,17 @@ import com.tourcoo.training.entity.account.UserInfo;
 
 /**
  * @author :JenkinsZhou
- * @description :现场培训刷新事件
+ * @description :专项相关页面刷新事件
  * @company :途酷科技
- * @date 2020年05月15日20:01
+ * @date 2020/5/18 16:36
  * @Email: 971613168@qq.com
  */
-public class OffLineRefreshEvent {
+
+public class ProfessionRefreshEvent {
     public int type;
     public UserInfo userInfo;
 
-    public OffLineRefreshEvent(UserInfo userInfo) {
+    public ProfessionRefreshEvent(UserInfo userInfo) {
         this.userInfo = userInfo;
     }
 }

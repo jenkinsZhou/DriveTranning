@@ -75,7 +75,11 @@ class  MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>()
     private fun requestCertificate(page: Int) {
         ApiRepository.getInstance().requestCertificate(page).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BasePageResult<CertificateInfo>>(iHttpRequestControl) {
             override fun onSuccessNext(entity: BasePageResult<CertificateInfo>?) {
-                val total = entity?.data?.total ?: 0
+                if(entity?.data == null){
+                    UiManager.getInstance().httpRequestControl.httpRequestError(iHttpRequestControl, NullPointerException("data==null"))
+                    return
+                }
+                val total = entity.data?.total ?: 0
                 tvTotalCertificate.text = "已获得" + total + "张"
                 UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity!!.data == null) ArrayList<CertificateInfo>() else transformData(entity.data.rows), null)
             }

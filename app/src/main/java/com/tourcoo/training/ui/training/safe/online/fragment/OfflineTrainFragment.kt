@@ -16,6 +16,7 @@ import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
@@ -26,6 +27,7 @@ import com.tourcoo.training.ui.training.safe.online.detail.common.CommonPlanDeta
 import com.tourcoo.training.ui.training.safe.online.detail.student.StudentPlanDetailActivity
 import com.tourcoo.training.ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity
 import com.tourcoo.training.utils.RecycleViewDivider
+import com.tourcoo.training.utils.TourCooUtil
 import com.trello.rxlifecycle3.android.FragmentEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -39,7 +41,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @Email: 971613168@qq.com
  */
 class OfflineTrainFragment : BaseFragment() {
-
+    private val mTag = ""
     private var adapter: OffLineTrainingAdapter? = null
     private var refreshLayout: SmartRefreshLayout? = null
     private var recyclerView: RecyclerView? = null
@@ -179,6 +181,7 @@ class OfflineTrainFragment : BaseFragment() {
             removeData()
         } else {
             //只要offLineRefreshEvent不为空 就刷新数据
+              TourCooLogUtil.i(mTag,"收到刷新事件")
             requestCourseOffLine()
         }
 

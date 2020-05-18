@@ -150,7 +150,7 @@ public class RetrofitHelper {
     /**
      * 请求拦截器
      */
-    private class RqInterceptor implements Interceptor {
+    private static class RqInterceptor implements Interceptor {
         @Override
         public Response intercept(Interceptor.Chain chain) throws IOException {
             String token = AccountHelper.getInstance().isLogin() ? AccountHelper.getInstance().getUserInfo().getAccessToken() : "";
@@ -194,7 +194,7 @@ public class RetrofitHelper {
             }
 
             if (result != null && result.getCode() == 401) {
-//                ToastUtils.showShort(result.getMsg());
+                ToastUtil.show("登录失效");
                 Log.d(TAG, "--->登录失效，自动重新登录");
                 AccountHelper.getInstance().logout();
                 Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);

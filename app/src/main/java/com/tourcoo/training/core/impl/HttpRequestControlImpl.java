@@ -139,7 +139,6 @@ public class HttpRequestControlImpl implements HttpRequestControl {
         if (httpRequestControl == null || httpRequestControl.getStatusLayoutManager() == null) {
 //            ToastUtil.show(reason);
             if (AppConfig.DEBUG_MODE) {
-
                 ToastUtil.show(reason);
             } else {
                 handleRequestErrorTips();

@@ -398,4 +398,5 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
     }
 
 
+
 }

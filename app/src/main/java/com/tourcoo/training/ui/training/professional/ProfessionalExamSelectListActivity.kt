@@ -13,6 +13,7 @@ import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.core.UiManager
 import com.tourcoo.training.core.base.activity.BaseTitleRefreshLoadActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.CommonUtil
@@ -20,10 +21,14 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.course.CourseInfo
 import com.tourcoo.training.entity.training.TwoTypeModel
+import com.tourcoo.training.event.ProfessionRefreshEvent
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonBellDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_professional_exam_select.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *@description :专项测试选择页面
@@ -81,6 +86,9 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
     private var needBuy = true
 
     override fun initView(savedInstanceState: Bundle?) {
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this)
+        }
         val title = intent.getStringExtra("title")
         childModuleId = intent.getStringExtra("childModuleId")
         coins = intent.getStringExtra("coins")
@@ -189,5 +197,29 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
             }
         })
         dialog.show()
+    }
+
+    /**
+     *  重要的刷新机制
+     *
+     * @param offLineRefreshEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onOfflineRefreshEvent(offLineRefreshEvent : ProfessionRefreshEvent?) {
+        if (offLineRefreshEvent == null) {
+            return
+        }
+        if (offLineRefreshEvent.userInfo == null) {
+//            removeData()
+        } else {
+            //只要offLineRefreshEvent不为空 就刷新数据
+            TourCooLogUtil.i("","收到刷新事件")
+            requestData()
+        }
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
     }
 }
