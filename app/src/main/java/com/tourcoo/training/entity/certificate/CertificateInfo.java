@@ -24,7 +24,7 @@ public class CertificateInfo implements MultiItemEntity {
      * Url : null
      * CertificateTime:yyyy-mm-dd
      */
-
+    private String CreateTime;
     private String TrainingPlanName;
     private int TrainingPlanID;
     private String Id;
@@ -118,5 +118,13 @@ public class CertificateInfo implements MultiItemEntity {
 
     public void setItemType(int itemType) {
         this.itemType = itemType;
+    }
+
+    public String getCreateTime() {
+        return CreateTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        CreateTime = createTime;
     }
 }
