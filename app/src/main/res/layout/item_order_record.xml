@@ -6,155 +6,158 @@
     android:orientation="vertical">
 
 
-     <LinearLayout
-         android:paddingStart="@dimen/dp_17"
-         android:paddingEnd="@dimen/dp_17"
-         android:layout_marginEnd="@dimen/dp_12"
-         android:background="@drawable/bg_radius_10_white"
-             android:orientation="vertical"
-         android:layout_marginTop="@dimen/dp_10"
-         android:layout_marginStart="@dimen/dp_12"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="@dimen/dp_13"
-             android:orientation="vertical">
+    <LinearLayout
+        android:paddingBottom="@dimen/dp_15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_12"
+        android:background="@drawable/bg_radius_10_white"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/dp_17"
+        android:paddingEnd="@dimen/dp_17">
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_13"
+            android:orientation="vertical">
 
-                 <TextView
-                     android:id="@+id/tvOrderTypeLabel"
-                     style="@style/Text15spBlack333333"
-                     android:textSize="@dimen/sp_15"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center_vertical"
-                     android:text="学币充值" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                 <TextView
-                     android:id="@+id/tvOrderStatus"
-                     style="@style/Text15spBlack333333"
-                     android:layout_width="0dp"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center_vertical"
-                     android:layout_weight="1"
-                     android:gravity="end"
-                     android:text="学币充值"
-                     android:textColor="@color/blue5087FF"
-                     android:textSize="@dimen/sp_12" />
-             </LinearLayout>
+                <TextView
+                    android:id="@+id/tvOrderTypeLabel"
+                    style="@style/Text15spBlack333333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="学币充值"
+                    android:textSize="@dimen/sp_15" />
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="@dimen/dp_13"
-                 android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvOrderStatus"
+                    style="@style/Text15spBlack333333"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="学币充值"
+                    android:textColor="@color/blue5087FF"
+                    android:textSize="@dimen/sp_12" />
+            </LinearLayout>
 
-                 <TextView
-                     android:id="@+id/tvTotalMoney"
-                     style="@style/Text12spGray999999"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center_vertical"
-                     android:textSize="@dimen/sp_12"
-                     android:text="支付金额 : 20元" />
-                 <TextView
-                     android:layout_width="0dp"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center_vertical"
-                     android:layout_weight="1"
-                     android:gravity="end|bottom"
-                     android:text="¥"
-                     android:textColor="@color/black333333"
-                     android:textSize="@dimen/sp_11" />
-                 <TextView
-                     android:id="@+id/tvPrice"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center_vertical"
-                     android:gravity="end"
-                     android:text="20"
-                     android:textColor="@color/black333333"
-                     android:textSize="@dimen/sp_14" />
-             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_13"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/tvTotalMoney"
+                    style="@style/Text12spGray999999"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="支付金额 : 20元"
+                    android:textSize="@dimen/sp_12" />
 
-             <TextView
-                 android:id="@+id/tvCount"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_gravity="end"
-                 android:layout_marginTop="@dimen/dp_13"
-                 android:text="×1"
-                 android:textColor="@color/gray999999"
-                 android:textSize="@dimen/sp_10" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="end|bottom"
+                    android:text="¥"
+                    android:textColor="@color/black333333"
+                    android:textSize="@dimen/sp_11" />
 
-             <TextView
-                 android:id="@+id/tvTotalDesc"
-                 style="@style/Text12spBlack333333"
-                 android:layout_gravity="end"
-                 android:layout_marginTop="@dimen/dp_23"
-                 android:text="共1件商品 合计：¥20"
-                 android:textSize="@dimen/sp_14" />
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="end"
+                    android:text="20"
+                    android:textColor="@color/black333333"
+                    android:textSize="@dimen/sp_14" />
+            </LinearLayout>
 
 
-         </LinearLayout>
+            <TextView
+                android:id="@+id/tvCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/dp_13"
+                android:text="×1"
+                android:textColor="@color/gray999999"
+                android:textSize="@dimen/sp_10" />
 
-         <LinearLayout
-             android:id="@+id/llBtn"
-             android:layout_marginTop="@dimen/dp_15"
-             android:layout_marginEnd="@dimen/dp_20"
-             android:layout_marginBottom="@dimen/dp_15"
-             android:layout_gravity="end"
-             android:orientation="horizontal"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content">
-             <TextView
-                 android:id="@+id/btnOne"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:background="@drawable/selector_bg_radius_15_gray_hollow"
-                 android:gravity="center"
-                 android:paddingTop="@dimen/dp_8"
-                 android:paddingBottom="@dimen/dp_8"
-                 android:text="再次充值"
-                 android:paddingStart="@dimen/dp_21"
-                 android:paddingEnd="@dimen/dp_21"
-                 android:textColor="@color/gray666666"
-                 android:textSize="@dimen/sp_12" />
-             <!--<TextView
-                 android:layout_marginStart="@dimen/dp_10"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:background="@drawable/selector_bg_radius_15_gray_hollow"
-                 android:gravity="center"
-                 android:paddingTop="@dimen/dp_8"
-                 android:paddingBottom="@dimen/dp_8"
-                 android:text="申请退单"
-                 android:paddingStart="@dimen/dp_21"
-                 android:paddingEnd="@dimen/dp_21"
-                 android:textColor="@color/gray666666"
-                 android:textSize="@dimen/sp_12" />-->
-             <!--<TextView
-                 android:layout_marginStart="@dimen/dp_10"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:background="@drawable/selector_bg_radius_15_gray_hollow"
-                 android:gravity="center"
-                 android:paddingTop="@dimen/dp_8"
-                 android:paddingBottom="@dimen/dp_8"
-                 android:text="申请退单"
-                 android:paddingStart="@dimen/dp_21"
-                 android:paddingEnd="@dimen/dp_21"
-                 android:textColor="@color/gray666666"
-                 android:textSize="@dimen/sp_12" />-->
-         </LinearLayout>
-         </LinearLayout>
+            <TextView
+                android:id="@+id/tvTotalDesc"
+                style="@style/Text12spBlack333333"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/dp_23"
+                android:text="共1件商品 合计：¥20"
+                android:textSize="@dimen/sp_14" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dp_15"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bg_radius_15_gray_hollow"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_21"
+                android:paddingTop="@dimen/dp_8"
+                android:paddingEnd="@dimen/dp_21"
+                android:paddingBottom="@dimen/dp_8"
+                android:text="再次充值"
+                android:textColor="@color/gray666666"
+                android:textSize="@dimen/sp_12" />
+            <!--<TextView
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bg_radius_15_gray_hollow"
+                android:gravity="center"
+                android:paddingTop="@dimen/dp_8"
+                android:paddingBottom="@dimen/dp_8"
+                android:text="申请退单"
+                android:paddingStart="@dimen/dp_21"
+                android:paddingEnd="@dimen/dp_21"
+                android:textColor="@color/gray666666"
+                android:textSize="@dimen/sp_12" />-->
+            <!--<TextView
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bg_radius_15_gray_hollow"
+                android:gravity="center"
+                android:paddingTop="@dimen/dp_8"
+                android:paddingBottom="@dimen/dp_8"
+                android:text="申请退单"
+                android:paddingStart="@dimen/dp_21"
+                android:paddingEnd="@dimen/dp_21"
+                android:textColor="@color/gray666666"
+                android:textSize="@dimen/sp_12" />-->
+        </LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -105,7 +105,17 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
     }
 
 
+
+    private var isFirst = false
+    override fun onResume() {
+        super.onResume()
+        if (isFirst) {
+            requestTwoTypeDatas()
+        }
+    }
+
     override fun loadData(page: Int) {
+        isFirst = true
         requestTwoTypeDatas()
     }
 

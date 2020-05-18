@@ -36,7 +36,7 @@ import kotlin.collections.ArrayList
  * @date 2020年04月15日9:26
  * @Email: 971613168@qq.com
  */
-class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() {
+class  MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() {
     private var adapter: CertificateInfoAdapter? = null
 
     override fun getContentLayout(): Int {
