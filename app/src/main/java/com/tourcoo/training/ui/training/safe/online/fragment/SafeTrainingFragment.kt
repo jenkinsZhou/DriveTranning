@@ -12,6 +12,7 @@ import com.tourcoo.training.core.base.fragment.BaseFragment
 import com.tourcoo.training.core.util.ResourceUtil
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.UserInfoEvent
+import com.tourcoo.training.ui.MainTabActivity
 import kotlinx.android.synthetic.main.fragment_training_safe.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -39,7 +40,8 @@ class SafeTrainingFragment : BaseFragment() {
     private var currentPosition = 0
     private val titleList = ArrayList<String>()
     private var safeTrainingViewPager: ViewPager? = null
-//    private var safeTrainingViewPager: AutoHeightViewPager? = null
+
+    //    private var safeTrainingViewPager: AutoHeightViewPager? = null
     override fun getContentLayout(): Int {
         return R.layout.fragment_training_safe
     }
@@ -101,7 +103,7 @@ class SafeTrainingFragment : BaseFragment() {
             titleList.add("现场培训")
             list?.add(OfflineTrainFragment.newInstance())
             magicIndicator.visibility = View.VISIBLE
-        }else{
+        } else {
             magicIndicator.visibility = View.GONE
         }
 
@@ -153,9 +155,9 @@ class SafeTrainingFragment : BaseFragment() {
         if (userInfoEvent == null) {
             return
         }
-       if(userInfoEvent.userInfo != null){
-           loadFragment()
-       }
+        if (userInfoEvent.userInfo != null) {
+            loadFragment()
+        }
 
     }
 

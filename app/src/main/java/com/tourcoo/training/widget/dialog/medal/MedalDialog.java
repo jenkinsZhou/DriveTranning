@@ -108,6 +108,12 @@ public class MedalDialog {
 
     public MedalDialog setMedal(int type, int number, StudyMedalEntity studyMedalEntity) {
         mType = type;
+
+        if(studyMedalEntity == null){
+            isShow = false;
+            return this;
+        }
+
         switch (type) {
             case 1:
                 //number 小时

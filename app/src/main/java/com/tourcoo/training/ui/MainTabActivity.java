@@ -260,7 +260,7 @@ public class MainTabActivity extends BaseMainActivity implements EasyPermissions
         );
     }
 
-    private void requestMedalRecord() {
+    public void requestMedalRecord() {
         ApiRepository.getInstance().requestStudyMedalList().compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(
                 new BaseObserver<BaseResult<StudyMedalEntity>>() {
                     @Override
