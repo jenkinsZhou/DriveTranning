@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -255,7 +256,11 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
                 NewsEntity newsEntity = (NewsEntity) adapter.getData().get(position);
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_NEWS_BEAN, newsEntity);
-                intent.setClass(mContext, NewsDetailHtmlActivity.class);
+                if(!TextUtils.isEmpty(CommonUtil.getNotNullValue(newsEntity.getVideoUrl()))){
+                    intent.setClass(mContext, NewsDetailVideoActivity.class);
+                }else {
+                    intent.setClass(mContext, NewsDetailHtmlActivity.class);
+                }
                 startActivity(intent);
             }
         });

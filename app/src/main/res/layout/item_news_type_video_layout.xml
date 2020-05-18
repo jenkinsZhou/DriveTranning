@@ -76,6 +76,7 @@
                 android:id="@+id/tvShareCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/gray999999"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_3"
                 android:text="2545" />
@@ -92,6 +93,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/dp_3"
             android:textSize="@dimen/sp_13"
+            android:textColor="@color/gray999999"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

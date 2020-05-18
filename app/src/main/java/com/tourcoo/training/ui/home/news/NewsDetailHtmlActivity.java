@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -241,8 +242,11 @@ public class NewsDetailHtmlActivity extends BaseTitleActivity implements View.On
                 NewsEntity newsEntity = (NewsEntity) adapter.getData().get(position);
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_NEWS_BEAN, newsEntity);
-                intent.putExtra(EXTRA_KEY_POSITION, position);
-                intent.setClass(mContext, NewsDetailHtmlActivity.class);
+                if(!TextUtils.isEmpty(CommonUtil.getNotNullValue(newsEntity.getVideoUrl()))){
+                    intent.setClass(mContext, NewsDetailVideoActivity.class);
+                }else {
+                    intent.setClass(mContext, NewsDetailHtmlActivity.class);
+                }
                 startActivity(intent);
             }
         });

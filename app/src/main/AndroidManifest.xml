@@ -135,7 +135,6 @@
         <activity android:name=".ui.home.news.NewsTabFragment" />
         <activity android:name=".ui.training.professional.ProfessionalSelectActivity" />
         <activity android:name=".ui.training.professional.ProfessionalExamSelectListActivity" />
-        <activity android:name=".ui.exam.ProfessionalExamActivityOld" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
         <activity
@@ -153,7 +152,6 @@
         <activity
             android:name=".ui.home.news.NewsDetailVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateHidden">

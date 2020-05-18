@@ -1,6 +1,7 @@
 package com.tourcoo.training.entity.news;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.google.gson.annotations.SerializedName;
@@ -253,20 +254,22 @@ public class NewsEntity implements MultiItemEntity , Serializable {
     }
 
 
+    private static final String TAG = "NewsEntity";
     @Override
     public int getItemType() {
-        if (Images == null || Images.isEmpty()) {
-            return 0;
-        }
         if (!TextUtils.isEmpty(VideoUrl)) {
             return NEWS_TYPE_VIDEO;
         }
+
+        if (Images == null || Images.isEmpty()) {
+            return 0;
+        }
+
         if (Images.size() == 1) {
             return NEWS_TYPE_IMAGE_ONE;
         } else {
             return NEWS_TYPE_IMAGE_MULTI;
         }
-
 
     }
 
