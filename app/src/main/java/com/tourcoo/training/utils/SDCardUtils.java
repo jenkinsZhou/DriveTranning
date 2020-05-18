@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 public class SDCardUtils {
 
     private SDCardUtils() {
+
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
