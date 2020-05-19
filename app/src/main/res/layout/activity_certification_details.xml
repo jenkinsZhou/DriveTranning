@@ -43,6 +43,7 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/lltest"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="@dimen/dp_90"
                     android:layout_height="@dimen/dp_90">
@@ -50,9 +51,12 @@
                         android:id="@+id/ivCode"
                         android:layout_width="@dimen/dp_90"
                         android:layout_height="@dimen/dp_90"
+                        android:clickable="false"
+                        android:longClickable="false"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/dp_5"
                         android:scaleType="fitXY" />
+
                     <View
                         android:background="@color/transparent"
                         android:layout_width="@dimen/dp_90"

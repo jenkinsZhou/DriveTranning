@@ -93,7 +93,7 @@ class CertificationDetailsActivity : BaseTitleActivity() {
         GlideManager.loadImg(CommonUtil.getUrl(detail.certificateImage), ivImage)
 
         val contentEtString = TrainingConstant.STUDY_SHARE_URL + "?TraineeID=${SPUtils.getInstance().getString("TraineeID")}&trainingPlanID=${detail.trainingPlanID}"
-        val bitmap = CodeCreator.createQRCode(contentEtString, 500, 500, null)
+        val bitmap = CodeCreator.createQRCode(contentEtString, SizeUtils.dp2px(90f), SizeUtils.dp2px(90f), null)
         ivCode.setImageBitmap(bitmap)
         ivCode.isEnabled = false
         btnSave.setOnClickListener {
@@ -105,8 +105,8 @@ class CertificationDetailsActivity : BaseTitleActivity() {
             val bitmap = ImageUtils.view2Bitmap(llShare)
             share(bitmap)
         }
-        ivCode.setOnLongClickListener {
-            true }
+
+
     }
 
 

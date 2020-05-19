@@ -1052,6 +1052,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         val currentTime = System.currentTimeMillis()
         val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
         dialog.setContent(timeNow).setConfirmClick {
+            dialog.dismiss()
             presenter.getTrainDetail(
                     trainingPlanId)
         }.show()
@@ -1063,6 +1064,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         val currentTime = System.currentTimeMillis()
         val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
         dialog.setContent(timeNow).setConfirmClick {
+            dialog.dismiss()
             presenter.getTrainDetail(
                     trainingPlanId)
         }.show()
@@ -1074,6 +1076,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         val currentTime = System.currentTimeMillis()
         val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
         dialog.setContent(timeNow).setConfirmClick {
+            dialog.dismiss()
             presenter.getTrainDetail(
                     trainingPlanId)
         }.show()
