@@ -27,6 +27,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.tourcoo.training.config.RequestConfig;
@@ -629,6 +630,33 @@ public class CommonUtil {
         }
 
         List<Map.Entry<String, ArrayList<CertificateInfo>>> infoIds = new ArrayList<Map.Entry<String, ArrayList<CertificateInfo>>>(tm.entrySet());
+
+
+        if (infoIds.size() == 1) {
+            ArrayList<CertificateInfo> o1List = infoIds.get(0).getValue();
+            Collections.sort(o1List, new Comparator<CertificateInfo>() {
+                @Override
+                public int compare(CertificateInfo o1, CertificateInfo o2) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    try {
+                        Date d1 = sdf.parse(o1.getCreateTime());
+                        Date d2 = sdf.parse(o2.getCreateTime());
+
+                        if (d1 == d2) {
+                            return 0;
+                        } else if (d1.before(d2)) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return 0;
+                    }
+                }
+            });
+        }
+
         // 对HashMap中的key 进行排序
         Collections.sort(infoIds, new Comparator<Map.Entry<String, ArrayList<CertificateInfo>>>() {
             @Override
@@ -636,6 +664,7 @@ public class CommonUtil {
                 //key排序
                 ArrayList<CertificateInfo> o1List = o11.getValue();
                 ArrayList<CertificateInfo> o2List = o21.getValue();
+
 
                 Collections.sort(o1List, new Comparator<CertificateInfo>() {
                     @Override
@@ -724,6 +753,27 @@ public class CommonUtil {
 
         TourCooLogUtil.e(tm.entrySet());
         List<Map.Entry<String, ArrayList<StudyRecord>>> infoIds = new ArrayList<Map.Entry<String, ArrayList<StudyRecord>>>(tm.entrySet());
+
+        if (infoIds.size() == 1) {
+            ArrayList<StudyRecord> o1List = infoIds.get(0).getValue();
+            Collections.sort(o1List, new Comparator<StudyRecord>() {
+                @Override
+                public int compare(StudyRecord o1, StudyRecord o2) {
+                    Date d1 = o1.getTrainDate();
+                    Date d2 = o2.getTrainDate();
+
+                    if (d1 == d2) {
+                        return 0;
+                    } else if (d1.before(d2)) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+        }
+
+
         // 对HashMap中的key 进行排序
         Collections.sort(infoIds, new Comparator<Map.Entry<String, ArrayList<StudyRecord>>>() {
             @Override

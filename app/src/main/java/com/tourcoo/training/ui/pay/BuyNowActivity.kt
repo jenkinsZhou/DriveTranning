@@ -19,6 +19,7 @@ import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.util.CommonUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
+import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.account.PayInfo
 import com.tourcoo.training.entity.account.PayResult
 import com.tourcoo.training.entity.pay.WxPayModel
@@ -49,8 +50,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
     }
 
     override fun loadPresenter() {
-      /*  presenter.start()
-        presenter.getPayInfo(trainingPlanId)*/
+        /*  presenter.start()
+          presenter.getPayInfo(trainingPlanId)*/
     }
 
     override fun getContentLayout(): Int {
@@ -70,8 +71,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         trainingPlanId = intent.getStringExtra("trainingPlanID")
         // 将该app注册到微信
         wxApi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
-        tvGoRecharge.setOnClickListener{
-            CommonUtil.startActivity(mContext,MyAccountActivity::class.java)
+        tvGoRecharge.setOnClickListener {
+            CommonUtil.startActivity(mContext, MyAccountActivity::class.java)
         }
     }
 
@@ -111,17 +112,6 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
         }
 
-        when {
-            payInfo.companyCoinRemain >= payInfo.coins -> {
-                rbCompany.isChecked = true
-            }
-            payInfo.coinRemain >= payInfo.coins -> {
-                rbUs.isChecked = true
-            }
-            else -> {
-                rbAlipay.isChecked = true
-            }
-        }
 
         btnBuy.setOnClickListener {
             doBuyNow()
@@ -132,6 +122,9 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                 setViewGone(llCoinGroup, false)
                 //只显示现金支付
                 setViewGone(llCashGroup, true)
+
+                rbAlipay.isChecked = true
+
             }
             2 -> {
                 //个人学币
@@ -140,6 +133,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                 setViewGone(ffCompany, false)
                 //屏蔽现金支付
                 setViewGone(llCashGroup, false)
+                rbUs.isChecked = true
+
             }
             3 -> {
                 //自付+个人学币支付
@@ -149,6 +144,16 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                 setViewGone(ffCompany, false)
                 //显示个人学币支付
                 setViewGone(ffUser, true)
+
+                when {
+                    payInfo.coinRemain >= payInfo.coins -> {
+                        rbUs.isChecked = true
+                    }
+                    else -> {
+                        rbAlipay.isChecked = true
+                    }
+                }
+
             }
             4 -> {
                 //企业学币支付
@@ -158,6 +163,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                 //隐藏现金支付
                 setViewGone(llCashGroup, false)
                 setViewGone(ffUser, false)
+
+                rbCompany.isChecked = true
             }
             5 -> {
                 //自付 + 企业学币
@@ -165,6 +172,17 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                 setViewGone(llCashGroup, true)
                 setViewGone(ffCompany, true)
                 setViewGone(ffUser, false)
+
+                when {
+                    payInfo.companyCoinRemain >= payInfo.coins -> {
+                        rbCompany.isChecked = true
+                    }
+
+                    else -> {
+                        rbAlipay.isChecked = true
+                    }
+                }
+
             }
             6 -> {
                 //个人学币 + 企业学币
@@ -172,6 +190,20 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                 setViewGone(llCashGroup, false)
                 setViewGone(ffCompany, true)
                 setViewGone(ffUser, true)
+
+
+                when {
+                    payInfo.companyCoinRemain >= payInfo.coins -> {
+                        rbCompany.isChecked = true
+                    }
+                    payInfo.coinRemain >= payInfo.coins -> {
+                        rbUs.isChecked = true
+                    }
+                    else -> {
+                        rbCompany.isChecked = true
+                    }
+                }
+
             }
 
             else -> {
@@ -180,6 +212,19 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
                 setViewGone(llCashGroup, true)
                 setViewGone(ffCompany, true)
                 setViewGone(ffUser, true)
+
+                when {
+                    payInfo.companyCoinRemain >= payInfo.coins -> {
+                        rbCompany.isChecked = true
+                    }
+                    payInfo.coinRemain >= payInfo.coins -> {
+                        rbUs.isChecked = true
+                    }
+                    else -> {
+                        rbAlipay.isChecked = true
+                    }
+                }
+
             }
         }
 
@@ -212,12 +257,14 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
     }
 
     private val SDK_PAY_FLAG = 1
+
     @SuppressLint("HandlerLeak")
     private val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 SDK_PAY_FLAG -> {
                     val payResult = PayResult(msg.obj as Map<String, String>)
+
                     /**
                      * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                      */
@@ -260,6 +307,7 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
 
 
     private fun payByWx(orderInfo: Any) {
+        AccountTempHelper.WX_TYPE_RETURN = 1
         val wxPayModelStr = Gson().toJson(orderInfo)
         val wxPayModel = Gson().fromJson<WxPayModel>(wxPayModelStr, WxPayModel::class.java)
         if (wxPayModel == null) {
@@ -297,6 +345,13 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         if (payEvent == null) {
             return
         }
+
+        if (AccountTempHelper.WX_TYPE_RETURN != 1) {
+            return
+        }
+
+        AccountTempHelper.WX_TYPE_RETURN = 0
+
         if (payEvent.paySuccess) {
             doHandlePaySuccess()
         } else {

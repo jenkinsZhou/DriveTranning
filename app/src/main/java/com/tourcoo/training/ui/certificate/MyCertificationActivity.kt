@@ -138,6 +138,7 @@ class MyCertificationActivity : BaseTitleRefreshLoadActivity<CertificateInfo>() 
         }
 
         val maps = CommonUtil.sort(list)
+        TourCooLogUtil.e("MyCertificationActivity  1`  ", maps)
         for (map in maps) {
             val values = map.value
             val certificateInfo = CertificateInfo()

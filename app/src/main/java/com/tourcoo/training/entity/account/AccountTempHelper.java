@@ -18,6 +18,10 @@ public class AccountTempHelper {
     private int shareNewsPageType;
     private String  shareNewsID;
 
+
+    //type:  1:课程购买  2：学币购买
+    public static int WX_TYPE_RETURN = 0;
+
     /**
      * 人脸认证缓存图片Base64数据
      */

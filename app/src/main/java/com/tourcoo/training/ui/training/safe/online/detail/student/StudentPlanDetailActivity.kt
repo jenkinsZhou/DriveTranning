@@ -261,6 +261,8 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                //隐藏签退时间
+                setViewGone(llSignedOutTime, true)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                 //隐藏标签
@@ -276,6 +278,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                setViewGone(llSignedOutTime, true)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                 //显示转线上标签
@@ -292,6 +295,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                setViewGone(llSignedOutTime, true)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
 
@@ -310,6 +314,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                setViewGone(llSignedOutTime, true)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
 
@@ -328,6 +333,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                setViewGone(llSignedOutTime, true)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                 //显示已结束标签
@@ -344,6 +350,7 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
                 setViewGone(rlButtonLayout, false)
                 //显示签到签退时间信息
                 setViewGone(llTrainStatusLayout, true)
+                setViewGone(llSignedOutTime, true)
                 tvStudentSignTime.text = CommonUtil.getNotNullValue(planDetail.signInTime)
                 tvStudentSignOutTime.text = CommonUtil.getNotNullValue(planDetail.signOutTime)
                 //隐藏标签
@@ -476,7 +483,8 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
 
             //扫码按钮
             setViewGone(ivScanCode, true)
-
+            //显示所有按钮
+            setViewGone(rlButtonLayout, true)
 
         } else {
             presenter.getTrainDetail(trainingPlanId)

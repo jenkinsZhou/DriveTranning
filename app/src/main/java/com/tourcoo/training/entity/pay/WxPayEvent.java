@@ -8,6 +8,7 @@ package com.tourcoo.training.entity.pay;
  * @Email: 971613168@qq.com
  */
 public class WxPayEvent {
+
     private int type;
     private boolean paySuccess;
 
