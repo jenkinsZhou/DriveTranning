@@ -47,7 +47,7 @@ public class RetryWhen implements Function<Observable<? extends Throwable>, Obse
     }
 
     public RetryWhen(Context context) {
-        this(context, 3, 500);
+        this(context, 0, 500);
     }
 
     public RetryWhen() {

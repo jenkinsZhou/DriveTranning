@@ -95,6 +95,7 @@
                     android:text="2月安全教育培训"
                     android:textColor="@color/black333333"
                     android:textSize="@dimen/sp_15"
+                    android:maxLines="2"
                     android:textStyle="bold" />
 
                 <TextView

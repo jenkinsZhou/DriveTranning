@@ -37,6 +37,7 @@ import com.tourcoo.training.widget.banner.BannerEntity
 import com.tourcoo.training.widget.banner.ImageBannerAdapter
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.viewpager.SwitchScrollViewPager
+import com.tourcoo.training.widget.viewpager.WrapContentHeightViewPager
 import com.trello.rxlifecycle3.android.FragmentEvent
 import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.listener.OnBannerListener

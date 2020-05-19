@@ -165,9 +165,8 @@
             <com.tourcoo.training.widget.viewpager.SwitchScrollViewPager
                 android:id="@+id/trainingViewPager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"/>
 
-            </com.tourcoo.training.widget.viewpager.SwitchScrollViewPager>
         </RelativeLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -19,6 +19,7 @@ import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.entity.BaseResult
 import com.tourcoo.training.core.base.fragment.BaseFragment
+import com.tourcoo.training.core.interfaces.IMultiStatusView
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.ToastUtil
@@ -52,7 +53,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @date 2020年03月10日21:19
  * @Email: 971613168@qq.com
  */
-class WorkProTrainingFragment  : BaseFragment()  {
+class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
 
     private var adapter: OnLineTrainingCourseAdapter? = null
     private var refreshLayout: SmartRefreshLayout? = null
@@ -69,6 +70,7 @@ class WorkProTrainingFragment  : BaseFragment()  {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
+
         refreshLayout = mContentView.findViewById(R.id.smartRefreshLayoutCommon)
         refreshLayout?.setRefreshHeader(ClassicsHeader(mContext))
         refreshLayout?.setOnRefreshListener {
@@ -123,6 +125,7 @@ class WorkProTrainingFragment  : BaseFragment()  {
             }
 
             override fun onError(e: Throwable) {
+                super.onError(e)
                 refreshLayout?.finishRefresh(false)
                 if (AppConfig.DEBUG_MODE) {
                     ToastUtil.showFailed(e.toString())
@@ -414,6 +417,8 @@ class WorkProTrainingFragment  : BaseFragment()  {
 
     }
 
-
+  /*  override fun getCustomerClickListener(): View.OnClickListener {
+        return super.getCustomerClickListener()
+    }*/
 
 }

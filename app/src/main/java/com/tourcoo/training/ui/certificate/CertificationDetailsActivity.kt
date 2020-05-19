@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.blankj.utilcode.util.ImageUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
@@ -104,7 +105,8 @@ class CertificationDetailsActivity : BaseTitleActivity() {
             val bitmap = ImageUtils.view2Bitmap(llShare)
             share(bitmap)
         }
-
+        ivCode.setOnLongClickListener {
+            true }
     }
 
 

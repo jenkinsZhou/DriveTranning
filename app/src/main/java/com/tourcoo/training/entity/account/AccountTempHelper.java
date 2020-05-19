@@ -18,6 +18,20 @@ public class AccountTempHelper {
     private int shareNewsPageType;
     private String  shareNewsID;
 
+    /**
+     * 人脸认证缓存图片Base64数据
+     */
+    private String tempBase64FaceData;
+
+
+    public String getTempBase64FaceData() {
+        return tempBase64FaceData;
+    }
+
+    public void setTempBase64FaceData(String tempBase64FaceData) {
+        this.tempBase64FaceData = tempBase64FaceData;
+    }
+
     public String getShareNewsID() {
         return shareNewsID;
     }
@@ -36,15 +50,15 @@ public class AccountTempHelper {
 
     private AccountTempHelper() {
     }
-    private String facePhotoPath;
+//    private String facePhotoPath;
 
-    public String getFacePhotoPath() {
+ /*   public String getFacePhotoPath() {
         return facePhotoPath;
     }
 
     public void setFacePhotoPath(String facePhotoPath) {
         this.facePhotoPath = facePhotoPath;
-    }
+    }*/
 
     private static class SingletonInstance {
         private static final AccountTempHelper INSTANCE = new AccountTempHelper();

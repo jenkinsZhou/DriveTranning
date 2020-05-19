@@ -57,6 +57,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/gray666666"
                     android:text="共-章 -小节" />
 
                 <TextView
@@ -64,6 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="课时：-  "
+                    android:textColor="@color/gray666666"
                     android:textSize="@dimen/sp_13" />
             </LinearLayout>
         </LinearLayout>

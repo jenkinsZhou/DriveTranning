@@ -1,13 +1,16 @@
 package com.tourcoo.training.core.base.delegate;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -17,6 +20,7 @@ import com.tourcoo.training.core.interfaces.IRefreshLoadView;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.FindViewUtil;
 import com.tourcoo.training.core.widget.view.FrameLoadMoreView;
+import com.tourcoo.training.utils.network.NetworkUtil;
 
 import me.bakumon.statuslayoutmanager.library.OnStatusChildClickListener;
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
@@ -118,6 +122,7 @@ public class RefreshLoadDelegate<T> {
                 .setDefaultLoadingText(R.string.frame_multi_loading)
                 .setDefaultErrorText(R.string.frame_multi_error)
                 .setDefaultErrorClickViewTextColor(ContextCompat.getColor(mContext, R.color.colorTitleText))*/
+
         StatusLayoutManager.Builder builder = new StatusLayoutManager.Builder(contentView)
                 .setDefaultLayoutsBackgroundColor(android.R.color.transparent)
                 .setDefaultEmptyText(R.string.frame_multi_empty)

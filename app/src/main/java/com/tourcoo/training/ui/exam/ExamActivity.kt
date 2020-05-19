@@ -562,6 +562,8 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
 
     override fun onBackPressed() {
         getAllQuestions()
+        //通知播放页 刷新examId
+        setResult(RESULT_CODE_REFRESH_EXAM_ID)
         if (!isSubmit && answerCount < list!!.size) {
             //说明还没交卷并且还有题目没有答完 需要保存答题进度
             showExitExamAnswerDialog()
@@ -677,4 +679,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         setViewGone(coordinatorLayoutContainer, false)
         setViewGone(rlBottomLayout, false)
     }
+
+
 }

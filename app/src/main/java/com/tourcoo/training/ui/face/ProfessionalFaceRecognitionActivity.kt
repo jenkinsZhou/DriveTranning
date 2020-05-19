@@ -17,6 +17,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
@@ -24,6 +25,7 @@ import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
+import com.tourcoo.training.core.log.TourCooLogUtil
 import com.tourcoo.training.core.retrofit.BaseLoadingObserver
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
@@ -33,6 +35,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
+import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener
 import com.tourcoo.training.widget.dialog.IosAlertDialog
@@ -51,7 +54,7 @@ import java.io.*
  * @Email: 971613168@qq.com
  */
 class ProfessionalFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClickListener, EasyPermissions.PermissionCallbacks {
-
+    private val mTag = "ProfessionalFaceRecognitionActivity"
     companion object {
         const val tag = "FaceRecognitionActivity"
         const val EXTRA_FACE_IMAGE_PATH = "EXTRA_FACE_IMAGE_PATH"
@@ -162,13 +165,17 @@ class ProfessionalFaceRecognitionActivity : BaseTitleActivity(), CameraListener,
                     if (resource == null) {
                         ToastUtil.show("拍照失败")
                     } else {
-                        val photoPath = com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory() + File.separator + photoName
                         //todo
                         val faceBitmap = toTurn(resource)!!
-                        saveImage(photoPath, faceBitmap)
-                        notifyMedia(photoPath)
-                        AccountTempHelper.getInstance().facePhotoPath = photoPath
-                        uploadFaceImage(mExamId, faceBitmap)
+                        val  compressBitmap  =      ImageUtils.compressBySampleSize(faceBitmap,SizeUtil.dp2px(235f),SizeUtil.dp2px(235f))
+                        TourCooLogUtil.i(mTag,"长宽信息:"+compressBitmap.width+"---"+compressBitmap.height)
+                        val faceBase64Data = Base64Util.bitmapToBase64(compressBitmap)
+                        //缓存人脸数据
+                        AccountTempHelper.getInstance().tempBase64FaceData=faceBase64Data
+                        compressBitmap.recycle()
+                        faceBitmap.recycle()
+                        uploadFaceImage(mExamId, faceBase64Data)
+
 
                     }
                 }, 50)
@@ -328,11 +335,12 @@ class ProfessionalFaceRecognitionActivity : BaseTitleActivity(), CameraListener,
     }
 
 
-    private fun uploadFaceImage(examId: String, bitmap: Bitmap?) {
-        if (bitmap == null) {
+    private fun uploadFaceImage(examId: String, base64Data: String?) {
+        if (TextUtils.isEmpty(base64Data)|| TextUtils.isEmpty(examId)) {
+            ToastUtil.show("未获取到有效数据")
             return
         }
-        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+        val base64Image = "data:image/jpeg;base64,$base64Data"
         ApiRepository.getInstance().requestFaceVerifySpecial(examId, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
             override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
                 if (entity == null) {
@@ -352,6 +360,14 @@ class ProfessionalFaceRecognitionActivity : BaseTitleActivity(), CameraListener,
 
 //
                 }
+            }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                ToastUtil.show("验证超时")
+                baseHandler.postDelayed(Runnable {
+                    finish()
+                },500)
             }
         })
     }

@@ -19,6 +19,7 @@ import com.tourcoo.training.core.interfaces.OnHttpRequestListener;
 import com.tourcoo.training.core.log.TourCooLogUtil;
 import com.tourcoo.training.core.util.ResourceUtil;
 import com.tourcoo.training.core.util.ToastUtil;
+import com.tourcoo.training.utils.network.NetworkUtil;
 
 import java.net.ConnectException;
 import java.net.SocketException;
@@ -160,8 +161,8 @@ public class HttpRequestControlImpl implements HttpRequestControl {
             }
             //初始页
             if (page == START_PAGE || page == 0) {
-//                if (!NetworkUtil.isConnected(App.getContext())) {
-//                    //可自定义网络错误页面展示
+//                if (!NetworkUtils.isConnected()) {
+////                    //可自定义网络错误页面展示
 //                    statusLayoutManager.showCustomLayout(R.layout.layout_status_layout_manager_error);
 //                } else {
                 statusLayoutManager.showErrorLayout();

@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
 import android.view.View
+import com.blankj.utilcode.util.ImageUtils
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
@@ -26,6 +27,7 @@ import com.tourcoo.training.core.retrofit.UploadProgressBody
 import com.tourcoo.training.core.retrofit.UploadRequestListener
 import com.tourcoo.training.core.retrofit.repository.ApiRepository
 import com.tourcoo.training.core.util.Base64Util
+import com.tourcoo.training.core.util.SizeUtil
 import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.IdCardInfo
@@ -220,7 +222,10 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
             return
         }
         if (AccountTempHelper.getInstance().recognizeType == EXTRA_TYPE_RECOGNIZE_COMPARE) { //身份证比对
-            uploadFaceImage(BitmapFactory.decodeFile(imagePath), AccountTempHelper.getInstance().facePhotoPath)
+           val idCardBitmap =  BitmapFactory.decodeFile(imagePath)
+            val  compressBitmap  =      ImageUtils.compressBySampleSize(idCardBitmap, SizeUtil.dp2px(235f), SizeUtil.dp2px(235f))
+           val idCardBase64 =  Base64Util.bitmapToBase64(compressBitmap)
+            uploadFaceImage(idCardBase64, AccountTempHelper.getInstance().tempBase64FaceData)
         } else {
             uploadImage(imagePath)
         }
@@ -347,14 +352,17 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
     /**
      * 人脸和身份证比对
      */
-    private fun uploadFaceImage(bitmap: Bitmap?, facePhotoPath: String) {
-        if (bitmap == null || TextUtils.isEmpty(facePhotoPath) || TextUtils.isEmpty(trainId)) {
+    private fun uploadFaceImage(base64DataIdCard: String?, facePhotoBase64: String) {
+        if (TextUtils.isEmpty(base64DataIdCard) || TextUtils.isEmpty(facePhotoBase64) || TextUtils.isEmpty(trainId)) {
             ToastUtil.show("未获取到图像信息")
             return
         }
-        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
-        val base64FaceImage = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(BitmapFactory.decodeFile(facePhotoPath))
-        ApiRepository.getInstance().requestIdCardVerify(trainId, base64Image, base64FaceImage).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
+        //身份证base64数据
+        val base64Image = "data:image/jpeg;base64,$base64DataIdCard"
+        //人脸base64数据
+        val finalFaceBase64 = "data:image/jpeg;base64,$facePhotoBase64"
+//        val base64FaceImage = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(BitmapFactory.decodeFile(facePhotoPath))
+        ApiRepository.getInstance().requestIdCardVerify(trainId, base64Image, finalFaceBase64).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
             override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
                 if (entity == null) {
                     return
@@ -369,9 +377,10 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
 
             override fun onError(e: Throwable) {
                 super.onError(e)
-                if (AppConfig.DEBUG_MODE) {
-                    ToastUtil.showFailed(e.toString())
-                }
+                ToastUtil.show("验证超时")
+                baseHandler.postDelayed(Runnable {
+                    finish()
+                },500)
             }
         })
     }

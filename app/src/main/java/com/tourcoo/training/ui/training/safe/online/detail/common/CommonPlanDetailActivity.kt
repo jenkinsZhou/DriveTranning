@@ -56,7 +56,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     private val mTag = "StudentPlanDetailActivity"
     private var confirmDialog: LocalTrainingConfirmDialog? = null
     private var currentAction = ""
-
+    private  var mAlert : CommonBellAlert ? = null
     companion object {
         const val REQUEST_CODE_SCAN = 1007
         const val REQUEST_CODE_SIGN_STUDENT = 1008
@@ -1032,16 +1032,16 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
 
 
     private fun showCheckAlert() {
-        val dialog = CommonBellAlert(mContext)
-        dialog.create().setContent(SpanUtils().append("系统抽检到你了，快去点击").setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true)
+        mAlert = CommonBellAlert(mContext)
+        mAlert?.create()?.setContent(SpanUtils().append("系统抽检到你了，快去点击").setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true)
                 .append("扫码").setForegroundColor(Color.parseColor("#5087FF")).setFontSize(14, true)
                 .append("吧").setForegroundColor(Color.parseColor("#333333")).setFontSize(14, true)
-                .create()).setPositiveButton("知道了", object : View.OnClickListener {
+                .create())?.setPositiveButton("知道了", object : View.OnClickListener {
             override fun onClick(v: View?) {
-                dialog.dismiss()
+                mAlert?.dismiss()
             }
         })
-        dialog.show()
+        mAlert?.show()
     }
 
 

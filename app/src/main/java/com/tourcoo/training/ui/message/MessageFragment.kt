@@ -3,6 +3,7 @@ package com.tourcoo.training.ui.message
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.tourcoo.training.R
@@ -95,6 +96,7 @@ class MessageFragment : BaseRefreshLoadFragment<MessageEntity>() {
             mRefreshLayout.autoRefresh()
         }
     }
+
 
 }
 

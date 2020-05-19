@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.tourcoo.training.R
@@ -57,6 +58,8 @@ import java.io.*
  * @Email: 971613168@qq.com
  */
 class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClickListener, EasyPermissions.PermissionCallbacks {
+    private val mTag = "FaceRecognitionActivity"
+
     companion object {
         const val tag = "FaceRecognitionActivity"
         const val EXTRA_FACE_IMAGE_PATH = "EXTRA_FACE_IMAGE_PATH"
@@ -175,12 +178,19 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                     if (resource == null) {
                         ToastUtil.show("拍照失败")
                     } else {
-                        val photoPath = com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory() + File.separator + photoName
+//                        val photoPath = com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory() + File.separator + photoName
                         //todo
                         val faceBitmap = toTurn(resource)!!
-                        saveImage(photoPath, faceBitmap)
-                        notifyMedia(photoPath)
-                        AccountTempHelper.getInstance().facePhotoPath = photoPath
+                        /*val success =          saveImage(photoPath, faceBitmap)
+                                 TourCooLogUtil.i(tag, "图片保存成功? = $success")*/
+//                        notifyMedia(photoPath)
+//                        AccountTempHelper.getInstance().facePhotoPath = photoPath
+                        val compressBitmap = ImageUtils.compressBySampleSize(faceBitmap, SizeUtil.dp2px(235f), SizeUtil.dp2px(235f))
+                        val bitmapSize = compressBitmap.getRowBytes() * compressBitmap.getHeight()
+                        TourCooLogUtil.i(mTag, "图片大小:" + bitmapSize)
+                        //缓存人脸数据
+                        AccountTempHelper.getInstance().tempBase64FaceData = Base64Util.bitmapToBase64(compressBitmap)
+                        compressBitmap.recycle()
                         uploadFaceImage(trainId, faceBitmap)
                     }
                 })
@@ -205,10 +215,8 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
             return
         }
         try {
-            val bos = BufferedOutputStream(FileOutputStream(path))
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bos)
-            bos.flush()
-            bos.close()
+            val compressBitmap = ImageUtils.compressBySampleSize(bitmap, SizeUtil.dp2px(234f), SizeUtil.dp2px(234f))
+            ImageUtils.save(compressBitmap, path, Bitmap.CompressFormat.JPEG)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
         } catch (e: IOException) {
@@ -364,14 +372,14 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                     if (entity == null) {
                         return
                     }
-                    TourCooLogUtil.e("------>"+"奇葩问题")
+                    TourCooLogUtil.e("------>" + "奇葩问题")
                     if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
                         handleRecognizeSuccessCallback()
                     } else {
 //                        ToastUtil.show(entity.msg)
                         ToastUtils.showShort(entity.msg)
                         requestCount++
-                        TourCooLogUtil.d("奇葩问题="+requestCount)
+                        TourCooLogUtil.d("奇葩问题=" + requestCount)
                         if (AppConfig.DEBUG_MODE) {
                             //如果是测试包 则当成功处理 不做拦截
                             handleRecognizeSuccessCallback()
@@ -381,6 +389,13 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                         }
                     }
                 }
+                    override fun onError(e: Throwable) {
+                        super.onError(e)
+                        ToastUtil.show("验证超时")
+                        baseHandler.postDelayed(Runnable {
+                            finish()
+                        },500)
+                    }
             })
         }
     }

@@ -20,6 +20,7 @@ import android.view.WindowManager
 import com.alibaba.fastjson.JSON
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationListener
+import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
@@ -172,13 +173,15 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
                     if (resource == null) {
                         ToastUtil.show("拍照失败")
                     } else {
-                        val photoPath = com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory() + File.separator + photoName
                         //todo
-                        val faceBitmap = toTurn(resource)!!
-                        saveImage(photoPath, faceBitmap)
-                        notifyMedia(photoPath)
-                        AccountTempHelper.getInstance().facePhotoPath = photoPath
-                        handleTakePhotoCallback(faceBitmap)
+                      val faceBitmap = toTurn(resource)!!
+                        val  compressBitmap  =      ImageUtils.compressBySampleSize(faceBitmap,SizeUtil.dp2px(235f),SizeUtil.dp2px(235f))
+                        TourCooLogUtil.i(tag,"长宽信息:"+compressBitmap.width+"---"+compressBitmap.height)
+                        val faceBase64Data = Base64Util.bitmapToBase64(compressBitmap)
+                        //缓存人脸数据
+                        AccountTempHelper.getInstance().tempBase64FaceData=faceBase64Data
+                        handleTakePhotoCallback(faceBase64Data)
+                        faceBitmap.recycle()
                     }
                 }, 200)
 
@@ -322,21 +325,21 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
     }
 
 
-    private fun uploadFaceImage(bitmap: Bitmap?, location: AMapLocation?) {
-        if (bitmap == null || location == null) {
+    private fun uploadFaceImage(base64Data: String?, location: AMapLocation?) {
+        if ( location == null ||TextUtils.isEmpty(base64Data)) {
             ToastUtil.show("未获取到有效数据")
             return
         }
 
         val params: MutableMap<String, Any> = HashMap(6)
-        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+        val base64Image = "data:image/jpeg;base64,$base64Data"
         params["photo"] = base64Image
         params["trainingPlanID"] = scanResult!!.trainingPlanID
         params["eventId"] = scanResult!!.eventId
         params["scene"] = scanResult!!.scene
         params["lng"] = location.longitude
         params["lat"] = location.latitude
-        TourCooLogUtil.i("上传的参数", params)
+//        TourCooLogUtil.i("上传的参数", params)
         ApiRepository.getInstance().requestTrainFaceVerify(params).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
             override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
                 if (entity == null) {
@@ -348,6 +351,14 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
                     ToastUtil.show(entity.msg)
                     handleRecognizeFailCallback()
                 }
+            }
+
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                ToastUtil.show("验证超时")
+                baseHandler.postDelayed(Runnable {
+                    finish()
+                },500)
             }
         })
     }
@@ -372,7 +383,7 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
     }
 
 
-    private fun getLocateAndCertify(bitmap: Bitmap?) {
+    private fun getLocateAndCertify(base64Data: String?) {
         if (!EasyPermissions.hasPermissions(this@TrainFaceCertifyActivity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
             ToastUtil.show("请先授予定位权限")
             return
@@ -384,7 +395,7 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
                 if (aMapLocation.errorCode == 0) {
                     //可在其中解析amapLocation获取相应内容。
                     //定位成功 上传人脸数据到服务器
-                    uploadFaceImage(bitmap, aMapLocation)
+                    uploadFaceImage(base64Data, aMapLocation)
                 } else {
                     //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
                     TourCooLogUtil.e("AmapError", "location Error, ErrCode:"
@@ -402,9 +413,9 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
     }
 
 
-    private fun handleTakePhotoCallback(bitmap: Bitmap?) {
+    private fun handleTakePhotoCallback(base64Data: String?) {
         //获取经纬度 然后上传图片
-        getLocateAndCertify(bitmap)
+        getLocateAndCertify(base64Data)
     }
 
     /**

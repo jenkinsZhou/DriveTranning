@@ -25,11 +25,11 @@
                 android:src="@drawable/img_no_network" />
 
             <TextView
-                android:id="@+id/tvErrorContent"
+                android:id="@+id/tvNoNet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="服务器开了点小差" />
+                android:text="网络未连接" />
 
             <TextView
                 android:minWidth="@dimen/dp_140"

@@ -87,7 +87,7 @@ class ProfessionalTrainingFragment : BaseTitleRefreshLoadFragment<ProfessionTrai
 
 
     private fun requestCourseProfessionalTraining(page: Int) {
-        ApiRepository.getInstance().requestCourseProfessionalTraining(page).compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BasePageResult<ProfessionTrainingEntity>?>() {
+        ApiRepository.getInstance().requestCourseProfessionalTraining(page).compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BasePageResult<ProfessionTrainingEntity>?>(iHttpRequestControl) {
             override fun onSuccessNext(entity: BasePageResult<ProfessionTrainingEntity>?) {
                 if (entity == null) {
                     return
@@ -95,9 +95,8 @@ class ProfessionalTrainingFragment : BaseTitleRefreshLoadFragment<ProfessionTrai
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
 //                    handleOnLineCourseList(entity.data)
                     UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl, if (entity.data == null) ArrayList<ProfessionTrainingEntity>() else entity.data.rows, null)
-
-
                 } else {
+                    UiManager.getInstance().httpRequestControl.httpRequestSuccess(iHttpRequestControl,ArrayList<ProfessionTrainingEntity>() )
                     ToastUtil.show(entity.msg)
                 }
 

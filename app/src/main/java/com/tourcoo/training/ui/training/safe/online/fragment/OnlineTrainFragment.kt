@@ -188,7 +188,6 @@ class OnlineTrainFragment : BaseFragment() {
                 dialog.show()
                 return@OnItemClickListener
             }
-
             when (AccountHelper.getInstance().userInfo.status) {
                 0 -> {  //未认证
                     showRecognize(currentCourseInfo!!.trainingPlanID)

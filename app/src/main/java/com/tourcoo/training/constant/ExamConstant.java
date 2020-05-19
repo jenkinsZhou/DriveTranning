@@ -33,4 +33,7 @@ public class ExamConstant {
      */
     public static final int EXTRA_CODE_REQUEST_EXAM = 2018;
 
+
+    public static final int RESULT_CODE_REFRESH_EXAM_ID = 10;
+
 }

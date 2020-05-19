@@ -17,6 +17,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
@@ -35,6 +36,7 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
+import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener
 import com.tourcoo.training.widget.dialog.IosAlertDialog
@@ -53,7 +55,7 @@ import java.io.*
  * @Email: 971613168@qq.com
  */
 class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClickListener, EasyPermissions.PermissionCallbacks {
-
+private val mTag = "OnLineFaceRecognitionActivity"
     /**
      * 人脸验证的状态 默认 状态为验证取消
      */
@@ -172,10 +174,16 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                         val photoPath = com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory() + File.separator + photoName
                         //todo
                         val faceBitmap = toTurn(resource)!!
-                        saveImage(photoPath, faceBitmap)
-                        notifyMedia(photoPath)
-                        AccountTempHelper.getInstance().facePhotoPath = photoPath
-                        uploadFaceImage(trainId, faceBitmap)
+                        val  compressBitmap  =      ImageUtils.compressBySampleSize(faceBitmap,SizeUtil.dp2px(235f),SizeUtil.dp2px(235f))
+                        TourCooLogUtil.i(mTag,"长宽信息:"+compressBitmap.width+"---"+compressBitmap.height)
+                        val bitmapSize = compressBitmap.getRowBytes() * compressBitmap.getHeight()
+                        TourCooLogUtil.i(mTag, "图片大小:" + bitmapSize)
+                        val faceBase64Data = Base64Util.bitmapToBase64(compressBitmap)
+                        //缓存人脸数据
+                        AccountTempHelper.getInstance().tempBase64FaceData=faceBase64Data
+                        compressBitmap.recycle()
+                        faceBitmap.recycle()
+                        uploadFaceImage(trainId, faceBase64Data)
 
                     }
                 })
@@ -336,11 +344,12 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
     }
 
 
-    private fun uploadFaceImage(trainId: String, bitmap: Bitmap?) {
-        if (bitmap == null) {
+    private fun uploadFaceImage(trainId: String, base64Data: String?) {
+        if (TextUtils.isEmpty(base64Data)) {
+            ToastUtil.show("未获取到有效数据")
             return
         }
-        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+        val base64Image = "data:image/jpeg;base64,$base64Data"
         ApiRepository.getInstance().requestFaceVerify(trainId, base64Image).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
             override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
                 if (entity == null) {
@@ -360,6 +369,13 @@ class OnLineFaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.
                         handleRecognizeFailedCallback()
                     }
                 }
+            }
+            override fun onError(e: Throwable) {
+                super.onError(e)
+                ToastUtil.show("验证超时")
+                baseHandler.postDelayed(Runnable {
+                    finish()
+                },500)
             }
         })
     }

@@ -13,6 +13,7 @@ import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tencent.liteav.demo.play.SuperPlayerConst
 import com.tourcoo.training.R
 import com.tourcoo.training.config.RequestConfig
+import com.tourcoo.training.constant.ExamConstant
 import com.tourcoo.training.constant.ExamConstant.EXTRA_CODE_REQUEST_EXAM
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.constant.TrainingConstant.*
@@ -445,18 +446,18 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            //刷新课件
-            when (requestCode) {
-                EXTRA_CODE_REQUEST_EXAM -> {
+        when (requestCode) {
+            EXTRA_CODE_REQUEST_EXAM  -> {
+                if (resultCode == Activity.RESULT_OK) {
                     finish()
-                }
-                else -> {
+                }else if( resultCode == ExamConstant.RESULT_CODE_REFRESH_EXAM_ID){
                     requestPlanDetail()
                 }
             }
-
+            else -> {
+            }
         }
+
 
     }
 

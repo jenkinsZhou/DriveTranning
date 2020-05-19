@@ -495,7 +495,7 @@ public class NewsDetailVideoActivity extends BaseTitleActivity implements View.O
         WXMediaMessage msg = new WXMediaMessage(webPage);
         msg.title = mNewsEntity.getTitle();
         msg.description = mNewsEntity.getTitle();
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_news_share_icon);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_news_share_white);
         Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, SizeUtil.dp2px(41), SizeUtil.dp2px(40), true);
         bmp.recycle();
         msg.thumbData = bmpToByteArray(thumbBmp, true);

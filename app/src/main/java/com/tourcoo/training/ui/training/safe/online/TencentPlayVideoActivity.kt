@@ -27,6 +27,7 @@ import com.tourcoo.training.R
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.ExamConstant
+import com.tourcoo.training.constant.ExamConstant.RESULT_CODE_REFRESH_EXAM_ID
 import com.tourcoo.training.constant.FaceConstant.FACE_CERTIFY_FAILED
 import com.tourcoo.training.constant.FaceConstant.FACE_CERTIFY_SUCCESS
 import com.tourcoo.training.constant.TrainingConstant.*
@@ -108,6 +109,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      * 是否是考试状态
      */
     private var mExamEnable = false
+
+
+    private var mExamId = ""
 
 
     companion object {
@@ -331,13 +335,13 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //只有播放状态下才启动计时器
             cancelTimer()
 
-
         if (hasRequireExam) {
             cancelTimer()
         }
         if (detail == null || detail.subjects == null) {
             return
         }
+        mExamId = detail.latestExamID.toString()
         clearCount()
         //拿到后台配置的间隔时间
         if (AppConfig.DEBUG_MODE) {
@@ -779,6 +783,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             ExamConstant.EXTRA_CODE_REQUEST_EXAM -> {
                 if (resultCode == Activity.RESULT_OK) {
                     finish()
+                }else if( resultCode == RESULT_CODE_REFRESH_EXAM_ID){
+                    requestPlanDetail()
                 }
             }
         }
