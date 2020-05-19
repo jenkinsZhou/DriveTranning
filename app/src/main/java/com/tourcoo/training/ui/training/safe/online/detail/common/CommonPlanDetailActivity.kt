@@ -56,7 +56,8 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     private val mTag = "StudentPlanDetailActivity"
     private var confirmDialog: LocalTrainingConfirmDialog? = null
     private var currentAction = ""
-    private  var mAlert : CommonBellAlert ? = null
+    private var mAlert: CommonBellAlert? = null
+
     companion object {
         const val REQUEST_CODE_SCAN = 1007
         const val REQUEST_CODE_SIGN_STUDENT = 1008
@@ -792,16 +793,16 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
         TourCooLogUtil.i(mTag, "连接成功")
     }
 
-    private var planDetail:TrainingPlanDetail? = null
+    private var planDetail: TrainingPlanDetail? = null
     override fun <T : Any?> onMessage(message: String?, data: T) {
 //        ToastUtil.showFailed("webSocket:onMessage---" + data + "message =" + message)
         TourCooLogUtil.i(mTag, "webSocket:onMessage---" + data + "message =" + message)
 
         val model = Gson().fromJson<SocketBean>(message, SocketBean::class.java)
 
-        if(model.type == 1){
+        if (model.type == 1) {
 
-            if(planDetail == null){
+            if (planDetail == null) {
                 return
             }
 
@@ -816,7 +817,7 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
 
             setViewGone(ivScanCode, true)
 
-        }else{
+        } else {
             presenter.getTrainDetail(trainingPlanId)
         }
 
@@ -1046,33 +1047,36 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
 
 
     private fun showSafeManagerSignSuccess() {
-        presenter.getTrainDetail(
-                trainingPlanId)
         val dialog = CommonSuccessAlert(mContext)
         dialog.create().setAlertTitle("安全员签到成功")
         val currentTime = System.currentTimeMillis()
         val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
-        dialog.setContent(timeNow).show()
+        dialog.setContent(timeNow).setConfirmClick {
+            presenter.getTrainDetail(
+                    trainingPlanId)
+        }.show()
     }
 
     private fun showSafeManagerSignOutSuccess() {
-        presenter.getTrainDetail(
-                trainingPlanId)
         val dialog = CommonSuccessAlert(mContext)
         dialog.create().setAlertTitle("学员签退成功")
         val currentTime = System.currentTimeMillis()
         val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
-        dialog.setContent(timeNow).show()
+        dialog.setContent(timeNow).setConfirmClick {
+            presenter.getTrainDetail(
+                    trainingPlanId)
+        }.show()
     }
 
     private fun showCheckStatusSuccess() {
-        presenter.getTrainDetail(
-                trainingPlanId)
         val dialog = CommonSuccessAlert(mContext)
         dialog.create().setAlertTitle("学员抽验成功")
         val currentTime = System.currentTimeMillis()
         val timeNow: String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentTime)
-        dialog.setContent(timeNow).show()
+        dialog.setContent(timeNow).setConfirmClick {
+            presenter.getTrainDetail(
+                    trainingPlanId)
+        }.show()
     }
 
     /*  //初始化WebSocket连接

@@ -158,7 +158,6 @@ class SafeTrainingFragment : BaseFragment() {
         if (userInfoEvent.userInfo != null) {
             loadFragment()
         }
-
     }
 
 
@@ -166,4 +165,5 @@ class SafeTrainingFragment : BaseFragment() {
         EventBus.getDefault().unregister(this)
         super.onDestroy()
     }
+
 }
