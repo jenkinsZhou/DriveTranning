@@ -2,6 +2,7 @@ package com.tourcoo.training.ui.training.safe.online.web;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.training.Course;
+import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity;
 import com.tourcoo.training.utils.CustomCountDownTimer;
 import com.tourcoo.training.widget.dialog.IosAlertDialog;
 import com.tourcoo.training.widget.web.RichWebView;
@@ -35,6 +37,7 @@ import com.trello.rxlifecycle3.android.ActivityEvent;
 import static com.tourcoo.training.constant.TrainingConstant.COURSE_STATUS_FINISH;
 import static com.tourcoo.training.constant.TrainingConstant.EXTRA_COURSE_INFO;
 import static com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN_ID;
+import static com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity.REQUEST_CODE_FACE;
 
 /**
  * @author :JenkinsZhou
@@ -57,7 +60,24 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     private long fixedDuration;
     private long duration;
     private String mTrainingPlanID;
+    /**
+     * 课程倒计时的使用的计时器
+     */
     private CustomCountDownTimer mTimerTask;
+
+    /**
+     * 人脸认证间隔使用的计时器
+     */
+    private CustomCountDownTimer mFaceTimeTask;
+
+
+    //后台配置的人脸验证间隔时间
+    private int mFaceVerifyInterval = Integer.MAX_VALUE;
+
+    /**
+     * 人脸验证间隔时间
+     */
+    private int mFaceRemainTime = Integer.MAX_VALUE;
     private TextView tvLimitTips;
     private LinearLayout llHeaderBar;
     /**
@@ -92,9 +112,9 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     public void loadData() {
         webView.loadUrl(CommonUtil.getNotNullValue(mUrl));
         //初始化计时器
-        initTimerAndStart();
+        initCourseTimerAndStart();
         //计时开始
-        startTimer();
+        startCourseTimer();
     }
 
     @Override
@@ -114,13 +134,14 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 indicator.complete();
+                //页面加载成功
             }
         });
     }
 
     @Override
     protected void onDestroy() {
-        cancelTimer();
+        cancelCourseTimer();
         if (webView != null) {
             webView.setWebChromeClient(null);
             webView.setWebViewClient(null);
@@ -135,10 +156,10 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
 
 
     /**
-     * 初始化计时器 并开始计时
+     * 初始化课程计时器 并开始计时
      */
-    private void initTimerAndStart() {
-        cancelTimer();
+    private void initCourseTimerAndStart() {
+        cancelCourseTimer();
         if(AppConfig.DEBUG_MODE){
             duration= TEST_TIME;
         }
@@ -146,7 +167,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
         if (duration <= 0) {
             //取消计时器
             showHeaderTime(-1);
-            cancelTimer();
+            cancelCourseTimer();
             return;
         }
         showHeaderTime(duration);
@@ -170,14 +191,16 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     }
 
 
-    private void cancelTimer() {
+    private void cancelCourseTimer() {
         if (mTimerTask != null) {
             mTimerTask.stop();
         }
     }
 
-
-    private void startTimer() {
+    /**
+     * 课程计时器启动
+     */
+    private void startCourseTimer() {
         if (mTimerTask != null) {
             //先重置 在启动
             mTimerTask.reset();
@@ -185,14 +208,14 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
         }
     }
 
-    private void timerPause() {
+    private void timerCoursePause() {
         if (mTimerTask != null) {
             //暂停
             mTimerTask.pause();
         }
     }
 
-    private void timerResume() {
+    private void timerCourseResume() {
         if (mTimerTask != null) {
             //恢复
             mTimerTask.resume();
@@ -213,13 +236,13 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
 
     @Override
     protected void onPause() {
-        timerPause();
+        timerCoursePause();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        timerResume();
+        timerCourseResume();
         super.onResume();
     }
 
@@ -309,7 +332,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
                 .setCanceledOnTouchOutside(false)
                 .setOnDismissListener(dialog -> {
                     //计时恢复
-                    timerResume();
+                    timerCourseResume();
                 })
                 .setTitle("确认退出学习")
                 .setMsg("退出前会保存当前学习进度")
@@ -329,7 +352,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
                     setStatusBarDarkMode(mContext, isStatusBarDarkMode());
                 }).show();
         //对话框弹出时 计时停止
-        timerPause();
+        timerCoursePause();
     }
 
     /**
@@ -375,5 +398,92 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
             setViewGone(llHeaderBar, false);
         }
         tvLimitTips.setText("文件至少要学习" + second + "秒");
+    }
+
+
+
+    private void initFaceTimerAndStart(int faceVerifySecond ){
+        cancelCourseTimer();
+        if(faceVerifySecond <=0){
+            TourCooLogUtil.w("人脸计时器间隔时间为0 计时器未能启动");
+            return;
+        }
+        long faceVerifyMillisecond =faceVerifySecond*1000L;
+        mFaceTimeTask = new CustomCountDownTimer(faceVerifyMillisecond, 1000L);
+        mTimerTask.setOnCountDownTimerListener( new  OnCountDownTimerListener (){
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+         /*   override fun onFinish() {
+                //时间到 进行人脸验证
+                //todo 处理认证逻辑
+                TourCooLogUtil.i("计时完成")
+
+                doSkipRecognize()
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                TourCooLogUtil.i(mTag, "计时中..."+faceVerifyMillisecond)
+                mRemainTime--
+            }*/
+
+        });
+
+
+    }
+
+    /**
+     * 人脸计时器启动
+     */
+    private void startFaceTimer() {
+        if (mTimerTask != null) {
+            //先重置 在启动
+            mTimerTask.reset();
+            mTimerTask.start();
+        }
+    }
+
+    /**
+     * 人脸计时器暂停
+     */
+    private void timerFacePause() {
+        if (mTimerTask != null) {
+            //暂停
+            mTimerTask.pause();
+        }
+    }
+
+    /**
+     * 人脸计时器恢复
+     */
+    private void timerFaceResume() {
+        if (mTimerTask != null) {
+            //恢复
+            mTimerTask.resume();
+        }
+    }
+
+
+    private void doSkipRecognize() {
+        //暂停课程倒计时计时器
+        timerCoursePause();
+        //
+        timerFacePause();
+        //跳转到人脸认证
+        skipFace();
+    }
+
+    private void  skipFace() {
+        //人脸认证
+        Intent intent =new  Intent(this, OnLineFaceRecognitionActivity.class);
+        intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(mTrainingPlanID));
+        startActivityForResult(intent, REQUEST_CODE_FACE);
+
     }
 }

@@ -25,6 +25,7 @@ import com.tourcoo.training.entity.pay.WxPayModel
 import com.tourcoo.training.entity.pay.CoursePayInfo
 import com.tourcoo.training.entity.pay.PayResultEvent
 import com.tourcoo.training.entity.pay.WxPayEvent
+import com.tourcoo.training.ui.account.MyAccountActivity
 import com.tourcoo.training.widget.dialog.common.CommonWaringAlert
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import kotlinx.android.synthetic.main.activity_pay_buy_now.*
@@ -48,8 +49,8 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
     }
 
     override fun loadPresenter() {
-        presenter.start()
-        presenter.getPayInfo(trainingPlanId)
+      /*  presenter.start()
+        presenter.getPayInfo(trainingPlanId)*/
     }
 
     override fun getContentLayout(): Int {
@@ -69,6 +70,9 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         trainingPlanId = intent.getStringExtra("trainingPlanID")
         // 将该app注册到微信
         wxApi = WXAPIFactory.createWXAPI(this, TrainingConstant.APP_ID)
+        tvGoRecharge.setOnClickListener{
+            CommonUtil.startActivity(mContext,MyAccountActivity::class.java)
+        }
     }
 
     override fun getPayInfoSuccess(payInfo: CoursePayInfo) {
@@ -355,5 +359,10 @@ class BuyNowActivity : BaseMvpTitleActivity<BuyNowPresenter>(), BuyNowContract.V
         else if (rbWx.isChecked) 4
         else 1
         presenter.buyCourse(trainingPlanId, payType)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.getPayInfo(CommonUtil.getNotNullValue(trainingPlanId))
     }
 }

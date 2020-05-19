@@ -165,18 +165,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_27">
+                <TextView
+                    android:id="@+id/tvGoRecharge"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_5"
+                    android:background="@drawable/bg_gradient_radius_5_blue_53c2ff_4e52ff"
+                    android:paddingStart="@dimen/dp_12"
+                    android:paddingTop="@dimen/dp_3"
+                    android:paddingEnd="@dimen/dp_12"
+                    android:layout_gravity="end|center_vertical"
 
+                    android:layout_marginEnd="@dimen/dp_30"
+                    android:paddingBottom="@dimen/dp_3"
+                    android:text="充值"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14" />
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp_50"
                     android:layout_marginStart="@dimen/dp_12"
-                    android:layout_marginTop="@dimen/dp_17"
-                    android:layout_marginBottom="@dimen/dp_17"
+
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:orientation="horizontal">
 
                         <TextView
@@ -206,6 +222,9 @@
                         android:layout_centerVertical="true"
                         android:text="剩余学币:20个"
                         android:textSize="@dimen/sp_13" />
+
+
+
 
                 </RelativeLayout>
 
