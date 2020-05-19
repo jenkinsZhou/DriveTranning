@@ -432,6 +432,10 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     private fun skipWebView(course: Course) {
+        if(trainingPlanDetail == null){
+            ToastUtil.show("暂未获取到课件详情 请返回重试")
+            return
+        }
         //缓存当前课件
         WebCourseTempHelper.getInstance().course = course
         val intent = Intent(this, PlayHtmlWebActivity::class.java)
@@ -441,6 +445,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
             intent.putExtra("url", CommonUtil.getNotNullValue(course.html.url))
         }
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
+        intent.putExtra(EXTRA_KEY_FACE_TIME,trainingPlanDetail!!.faceVerifyInterval)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
         startActivityForResult(intent, RESULT_CODE_REFRESH_HTML, bundle)

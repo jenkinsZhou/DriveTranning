@@ -12,6 +12,11 @@ public class TrainingConstant {
      * 培训计划ID
      */
     public static final String EXTRA_TRAINING_PLAN_ID = "EXTRA_TRAINING_PLAN_ID";
+
+    /**
+     * 人脸验证间隔时间
+     */
+    public static final String EXTRA_KEY_FACE_TIME = "EXTRA_KEY_FACE_TIME";
     /**
      * 考试ID
      */
