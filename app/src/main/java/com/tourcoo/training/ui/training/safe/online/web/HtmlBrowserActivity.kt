@@ -35,6 +35,7 @@ import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
+import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity.RESULT_CODE_REFRESH_HTML
 import com.tourcoo.training.utils.CustomCountDownTimer
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
@@ -442,7 +443,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingPlanID)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
-        startActivityForResult(intent, 1001, bundle)
+        startActivityForResult(intent, RESULT_CODE_REFRESH_HTML, bundle)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -454,6 +455,9 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
                 }else if( resultCode == ExamConstant.RESULT_CODE_REFRESH_EXAM_ID){
                     requestPlanDetail()
                 }
+            }
+            RESULT_CODE_REFRESH_HTML->{
+                requestPlanDetail()
             }
             else -> {
             }

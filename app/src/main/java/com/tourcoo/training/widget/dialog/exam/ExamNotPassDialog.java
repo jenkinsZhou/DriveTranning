@@ -45,6 +45,8 @@ public class ExamNotPassDialog {
 //        view.setMinimumWidth(width);
         // 定义Dialog布局和参数
         dialog = new Dialog(mContext, R.style.AlertDialogStyle);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(view);
         btnSubmit = view.findViewById(R.id.btnSubmit);
         tvTips = view.findViewById(R.id.tvTips);

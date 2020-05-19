@@ -46,6 +46,8 @@ public class ExamPassDialog {
 //        view.setMinimumWidth(width);
         // 定义Dialog布局和参数
         dialog = new Dialog(mContext, R.style.AlertDialogStyle);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(view);
         tvPositive = view.findViewById(R.id.tvPositive);
         tvNegative = view.findViewById(R.id.tvNegative);

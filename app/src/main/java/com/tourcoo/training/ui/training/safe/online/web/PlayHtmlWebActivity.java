@@ -44,7 +44,9 @@ import static com.tourcoo.training.constant.TrainingConstant.EXTRA_TRAINING_PLAN
  * @Email: 971613168@qq.com
  */
 public class PlayHtmlWebActivity extends BaseTitleActivity {
+    public static final int RESULT_CODE_REFRESH_HTML = 1001;
     public static final String TAG = "计时器模块";
+    private static final int TEST_TIME = 45;
     private Course mCurrentCourse;
     private RichWebView webView;
     private CoolIndicator indicator;
@@ -138,7 +140,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     private void initTimerAndStart() {
         cancelTimer();
         if(AppConfig.DEBUG_MODE){
-            duration= 30;
+            duration= TEST_TIME;
         }
         //总时长 间隔时间
         if (duration <= 0) {
@@ -261,8 +263,9 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
             @Override
             public void onSuccessNext(BaseResult entity) {
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    //重点：将本次课程完成状态置位已完成
+                    //关键点：将本次课程完成状态置位已完成
                     mCurrentCourse.setCompleted(1);
+                    // 通知上个页面刷新
                     setResult(Activity.RESULT_OK);
                 } else {
                     ToastUtil.show(entity.msg);
@@ -334,7 +337,12 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
      */
     private void initDuration() {
         //获取课件固定的时长
-        fixedDuration = mCurrentCourse.getDuration();
+        if(AppConfig.DEBUG_MODE  ){
+            fixedDuration = TEST_TIME ;
+        }else {
+            fixedDuration = mCurrentCourse.getDuration();
+        }
+
         if (mCurrentCourse.getCompleted() == COURSE_STATUS_FINISH) {
             //如果当前html课件本来就是已完成状态则将计时器时间置为0
             TourCooLogUtil.w(TAG, "当前课件已完成 不需要计时");
