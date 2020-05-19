@@ -16,6 +16,7 @@ import com.dyhdyh.support.countdowntimer.CountDownTimerSupport;
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener;
 import com.tencent.liteav.demo.play.SuperPlayerConst;
 import com.tourcoo.training.R;
+import com.tourcoo.training.config.AppConfig;
 import com.tourcoo.training.config.RequestConfig;
 import com.tourcoo.training.core.base.activity.BaseTitleActivity;
 import com.tourcoo.training.core.base.entity.BaseResult;
@@ -26,6 +27,7 @@ import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.core.widget.view.bar.TitleBarView;
 import com.tourcoo.training.entity.training.Course;
+import com.tourcoo.training.utils.CustomCountDownTimer;
 import com.tourcoo.training.widget.dialog.IosAlertDialog;
 import com.tourcoo.training.widget.web.RichWebView;
 import com.trello.rxlifecycle3.android.ActivityEvent;
@@ -53,7 +55,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
     private long fixedDuration;
     private long duration;
     private String mTrainingPlanID;
-    private CountDownTimerSupport mTimerTask;
+    private CustomCountDownTimer mTimerTask;
     private TextView tvLimitTips;
     private LinearLayout llHeaderBar;
     /**
@@ -134,6 +136,10 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
      * 初始化计时器 并开始计时
      */
     private void initTimerAndStart() {
+        cancelTimer();
+        if(AppConfig.DEBUG_MODE){
+            duration= 30;
+        }
         //总时长 间隔时间
         if (duration <= 0) {
             //取消计时器
@@ -143,7 +149,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
         }
         showHeaderTime(duration);
         //初始化计时器
-        mTimerTask = new CountDownTimerSupport(duration * 1000L, 1000L);
+        mTimerTask = new CustomCountDownTimer(duration * 1000L, 1000L);
         mTimerTask.setOnCountDownTimerListener(new OnCountDownTimerListener() {
             @Override
             public void onTick(long millisUntilFinished) {

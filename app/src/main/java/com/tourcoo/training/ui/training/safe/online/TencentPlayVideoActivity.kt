@@ -12,10 +12,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import com.blankj.utilcode.util.LogUtils
-import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tencent.liteav.demo.play.SuperPlayerConst
 import com.tencent.liteav.demo.play.SuperPlayerGlobalConfig

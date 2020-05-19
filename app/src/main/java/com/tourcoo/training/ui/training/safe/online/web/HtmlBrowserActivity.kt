@@ -35,6 +35,7 @@ import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
+import com.tourcoo.training.utils.CustomCountDownTimer
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
@@ -65,7 +66,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
      * 判断考试是否完成
      */
     private var hasRequireExam = true
-    private var mTimerTask: CountDownTimerSupport? = null
+    private var mTimerTask: CustomCountDownTimer? = null
 
     /**
      * 章的数量
@@ -176,7 +177,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         }
         //初始化计时器
 //        faceVerifyInterval = 12
-        mTimerTask = CountDownTimerSupport(faceVerifyInterval.toLong() * 1000, 1000L)
+        mTimerTask = CustomCountDownTimer(faceVerifyInterval.toLong() * 1000, 1000L)
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
             override fun onFinish() {
                 ToastUtil.show("时间到")
