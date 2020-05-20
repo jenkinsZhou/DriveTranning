@@ -1619,7 +1619,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                     } else {
                         TXCLog.i(TAG, "setBitrateIndex quality.index:" + quality.index);
 
-                        if (quality.url.endsWith(".mp4")) {
+                        if (quality.url != null && quality.url.endsWith(".mp4")) {
 
                             float currentTime = mVodPlayer.getCurrentPlaybackTime();
                             mVodPlayer.setStartTime(currentTime);
