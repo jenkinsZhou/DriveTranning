@@ -19,6 +19,7 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.app.MyApplication;
 import com.tourcoo.training.core.interfaces.IRefreshLoadView;
 import com.tourcoo.training.core.interfaces.LoadMoreFoot;
 import com.tourcoo.training.core.interfaces.LoadingDialog;
@@ -30,6 +31,7 @@ import com.tourcoo.training.core.interfaces.TitleBarViewControl;
 import com.tourcoo.training.core.interfaces.ToastControl;
 import com.tourcoo.training.core.retrofit.BaseObserver;
 import com.tourcoo.training.core.util.DrawableUtil;
+import com.tourcoo.training.core.util.RomUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.StackUtil;
 import com.tourcoo.training.core.util.StatusBarUtil;
@@ -190,6 +192,9 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
 
     @Override
     public Toast getToast() {
+        if (RomUtil.isMIUI()) {
+            return new Toast(MyApplication.getContext());
+        }
         return null;
     }
 

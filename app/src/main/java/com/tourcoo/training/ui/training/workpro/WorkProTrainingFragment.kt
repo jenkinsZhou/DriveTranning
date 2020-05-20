@@ -183,6 +183,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
 
                 2 -> {  //认证失败
                     val dialog = LocalTrainingConfirmDialog(mContext)
+                            .create()
                     dialog.setContent("请确认是否为本人学习？")
                             .setPositiveButtonClick("确认") {
                                 verifyByStatus(currentCourseInfo!!)
@@ -191,7 +192,6 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
                             .setNegativeButtonClick("取消") {
                                 dialog.dismiss()
                             }
-                            .create()
                             .show()
                 }
             }
@@ -359,7 +359,9 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
             }
             TrainingConstant.TYPE_COURSE_OTHER -> {
                 //混合非加密 使用腾讯播放器
-                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+            // intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+                //todo 暂时跳转到阿里播放器
+                intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
             }
 
         }

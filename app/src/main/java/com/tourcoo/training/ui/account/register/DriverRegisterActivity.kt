@@ -19,6 +19,7 @@ import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.register.SelectCompanyActivity.Companion.EXTRA_KEY_COMPANY
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
+import com.tourcoo.training.utils.TourCooUtil
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import kotlinx.android.synthetic.main.activity_register_driver.*
 import org.greenrobot.eventbus.EventBus
@@ -146,7 +147,11 @@ class DriverRegisterActivity : BaseMvpTitleActivity<DriverRegisterPresenter>(), 
             return
         }
         if (TextUtils.isEmpty(getTextValue(etPhone))) {
-            ToastUtil.show("请填写驾驶员联系电话")
+            ToastUtil.show("请输入驾驶员手机号")
+            return
+        }
+        if (!TourCooUtil.isMobileNumber(getTextValue(etPhone))) {
+            ToastUtil.show("请输入正确的手机号")
             return
         }
         if (TextUtils.isEmpty(getTextValue(etDriverPlantNum))) {

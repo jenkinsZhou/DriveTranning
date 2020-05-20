@@ -29,6 +29,7 @@ import com.tourcoo.training.entity.account.register.IndustryCategory
 import com.tourcoo.training.entity.account.register.Supervisors
 import com.tourcoo.training.ui.MainTabActivity
 import com.tourcoo.training.ui.account.LoginActivity
+import com.tourcoo.training.utils.TourCooUtil
 import com.tourcoo.training.widget.citypicker.OnCityItemClickListener
 import com.tourcoo.training.widget.citypicker.bean.CityBean
 import com.tourcoo.training.widget.citypicker.bean.DistrictBean
@@ -38,7 +39,13 @@ import com.tourcoo.training.widget.citypicker.cityjd.JDCityPicker
 import com.tourcoo.training.widget.dialog.BottomSheetDialog
 import com.tourcoo.training.widget.keyboard.KingKeyboard
 import com.trello.rxlifecycle3.android.ActivityEvent
+import kotlinx.android.synthetic.main.activity_register_driver.*
 import kotlinx.android.synthetic.main.activity_register_industrial.*
+import kotlinx.android.synthetic.main.activity_register_industrial.etDriverPlantNum
+import kotlinx.android.synthetic.main.activity_register_industrial.etIdCard
+import kotlinx.android.synthetic.main.activity_register_industrial.etPhone
+import kotlinx.android.synthetic.main.activity_register_industrial.keyboardParent
+import kotlinx.android.synthetic.main.activity_register_industrial.tvGoLogin
 import org.apache.commons.lang.StringUtils
 import org.greenrobot.eventbus.EventBus
 
@@ -289,7 +296,11 @@ class IndustryRegisterActivity : BaseMvpTitleActivity<IndustryRegisterPresenter>
             return
         }
         if (TextUtils.isEmpty(getTextValue(etPhone))) {
-            ToastUtil.show("请填写电话")
+            ToastUtil.show("请输入手机号")
+            return
+        }
+        if (!TourCooUtil.isMobileNumber(getTextValue(etPhone))) {
+            ToastUtil.show("请输入正确的手机号")
             return
         }
         if (TextUtils.isEmpty(getTextValue(etIdCard))) {

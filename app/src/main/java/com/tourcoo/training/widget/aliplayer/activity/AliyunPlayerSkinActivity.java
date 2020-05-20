@@ -50,6 +50,7 @@ import com.aliyun.private_service.PrivateService;
 import com.aliyun.utils.VcPlayerLog;
 import com.tourcoo.training.R;
 import com.tourcoo.training.core.app.MyApplication;
+import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.widget.aliplayer.constants.PlayParameter;
 import com.tourcoo.training.widget.aliplayer.listener.OnChangeQualityListener;
 import com.tourcoo.training.widget.aliplayer.listener.OnStoppedListener;
@@ -1933,6 +1934,7 @@ public class AliyunPlayerSkinActivity extends AliBaseActivity {
      */
     private void onPlayStateSwitch(int playerState) {
         if (playerState == IPlayer.started) {
+            ToastUtil.show("点击了暂停");
             tvLogs.append(format.format(new Date()) + " 暂停 \n");
         } else if (playerState == IPlayer.paused) {
             tvLogs.append(format.format(new Date()) + " 开始 \n");

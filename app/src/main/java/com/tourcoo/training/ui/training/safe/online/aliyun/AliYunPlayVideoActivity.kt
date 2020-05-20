@@ -9,7 +9,10 @@ import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.TextView
 import com.aliyun.player.IPlayer
 import com.aliyun.player.IPlayer.OnRenderingStartListener
 import com.aliyun.player.IPlayer.OnSeiDataListener
@@ -18,10 +21,8 @@ import com.aliyun.player.nativeclass.PlayerConfig
 import com.aliyun.player.source.UrlSource
 import com.aliyun.player.source.VidSts
 import com.blankj.utilcode.util.ToastUtils
-import com.dyhdyh.support.countdowntimer.CountDownTimerSupport
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tourcoo.training.R
-import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.ExamConstant
 import com.tourcoo.training.constant.ExamConstant.EXTRA_CODE_REQUEST_EXAM
@@ -45,6 +46,7 @@ import com.tourcoo.training.ui.training.StudyMedalRecordActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity
 import com.tourcoo.training.ui.training.safe.online.web.WebCourseTempHelper
+import com.tourcoo.training.utils.CustomCountDownTimer
 import com.tourcoo.training.widget.AliYunVodPlayerView
 import com.tourcoo.training.widget.AliYunVodPlayerView.*
 import com.tourcoo.training.widget.aliplayer.activity.AliyunPlayerSkinActivity.DEFAULT_URL
@@ -112,7 +114,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private var faceVerifyInterval = Int.MAX_VALUE
 
 
-    private var mTimerTask: CountDownTimerSupport? = null
+    private var mTimerTask: CustomCountDownTimer? = null
 
     private var currentError = ErrorInfo.Normal
 
@@ -684,10 +686,10 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     //人脸认证成功 不做任何处理
                 } else {
                     //人脸识别失败 处理人脸识别逻辑
-                    if (!AppConfig.DEBUG_MODE) {
+//                    if (!AppConfig.DEBUG_MODE) {
                         //如果是正式包 则必须执行认证失败的处理
                         handleRecognizeFailedCallback()
-                    }
+//                    }
                 }
             }
             TencentPlayVideoActivity.REQUEST_CODE_WEB -> {
@@ -719,7 +721,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         //初始化计时器
 //        faceVerifyInterval = 12
-        mTimerTask = CountDownTimerSupport(faceVerifyInterval.toLong() * 1000, 1000L)
+        mTimerTask = CustomCountDownTimer(faceVerifyInterval.toLong() * 1000, 1000L)
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
             override fun onFinish() {
                 //时间到 开始下一个计时
@@ -1298,14 +1300,16 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
     /**
-     * 播放状态切换
+     * 核心 播放状态切换
      */
     private fun onPlayStateSwitch(playerState: Int) {
-//        if (playerState == IPlayer.started) {
-//            ToastUtils.showShort("IPlayer.started")
-//        } else if (playerState == IPlayer.paused) {
-//            ToastUtils.showShort("IPlayer.paused")
-//        }
+        if (playerState == IPlayer.started) {
+            //暂停播放 暂停计时
+            timerPause()
+        } else if (playerState == IPlayer.paused) {
+            //开始播放 恢复计时
+            timerResume()
+        }
     }
 
     private class MySeekCompleteListener internal constructor(activity: AliYunPlayVideoActivity) : IPlayer.OnSeekCompleteListener {

@@ -52,7 +52,7 @@ import static com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActiv
 public class PlayHtmlWebActivity extends BaseTitleActivity {
     public static final int RESULT_CODE_REFRESH_HTML = 1001;
     public static final String TAG = "计时器模块";
-    private static final int TEST_TIME = 45;
+    private static final int TEST_TIME = 60;
     private Course mCurrentCourse;
     private RichWebView webView;
     private CoolIndicator indicator;
@@ -111,7 +111,7 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
         indicator = findViewById(R.id.indicator);
         llHeaderBar = findViewById(R.id.llHeaderBar);
         if(AppConfig.DEBUG_MODE){
-            mFaceVerifyInterval = 20;
+            mFaceVerifyInterval = 15;
         }
 //        mFaceRemainTime = mCurrentCourse.
             mFaceRemainTime = mFaceVerifyInterval;

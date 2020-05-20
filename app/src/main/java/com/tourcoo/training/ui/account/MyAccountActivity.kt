@@ -222,6 +222,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             rechargeEntity.rechargeMoney = coinInfo.price
             recharges.add(rechargeEntity)
         }
+
         //选中第一个
         if (recharges.isNotEmpty()) {
             recharges[0].selected = true

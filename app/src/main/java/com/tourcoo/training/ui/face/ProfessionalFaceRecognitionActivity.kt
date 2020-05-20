@@ -350,13 +350,13 @@ class ProfessionalFaceRecognitionActivity : BaseTitleActivity(), CameraListener,
                     handleRecognizeSuccessCallback()
                 } else {
                     ToastUtil.show(entity.msg)
-                    if (AppConfig.DEBUG_MODE) {
-                        //如果是测试包 则当成功处理 不做拦截
-                        handleRecognizeSuccessCallback()
-                    } else {
-                        //如果是正式包 则必须执行认证失败的处理
+//                    if (AppConfig.DEBUG_MODE) {
+//                        //如果是测试包 则当成功处理 不做拦截
+//                        handleRecognizeSuccessCallback()
+//                    } else {
+//                        //如果是正式包 则必须执行认证失败的处理
                         handleRecognizeFailedCallback()
-                    }
+//                    }
 
 //
                 }

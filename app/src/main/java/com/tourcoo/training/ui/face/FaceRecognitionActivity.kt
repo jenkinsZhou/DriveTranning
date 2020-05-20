@@ -185,13 +185,15 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                                  TourCooLogUtil.i(tag, "图片保存成功? = $success")*/
 //                        notifyMedia(photoPath)
 //                        AccountTempHelper.getInstance().facePhotoPath = photoPath
-                        val compressBitmap = ImageUtils.compressBySampleSize(faceBitmap, SizeUtil.dp2px(235f), SizeUtil.dp2px(235f))
+                        val compressBitmap = ImageUtils.compressBySampleSize(faceBitmap, SizeUtil.dp2px(200f), SizeUtil.dp2px(200f))
                         val bitmapSize = compressBitmap.getRowBytes() * compressBitmap.getHeight()
                         TourCooLogUtil.i(mTag, "图片大小:" + bitmapSize)
+                        val faceBase64Data = Base64Util.bitmapToBase64(compressBitmap)
                         //缓存人脸数据
-                        AccountTempHelper.getInstance().tempBase64FaceData = Base64Util.bitmapToBase64(compressBitmap)
+                        AccountTempHelper.getInstance().tempBase64FaceData=faceBase64Data
                         compressBitmap.recycle()
-                        uploadFaceImage(trainId, faceBitmap)
+                        faceBitmap.recycle()
+                        uploadFaceImage(trainId, faceBase64Data)
                     }
                 })
 
@@ -355,11 +357,12 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
     }
 
 
-    private fun uploadFaceImage(trainId: String, bitmap: Bitmap?) {
-        if (bitmap == null) {
+    private fun uploadFaceImage(trainId: String, faceBase64Data: String?) {
+        if (TextUtils.isEmpty(faceBase64Data)) {
+            ToastUtil.show("未获取到有效数据")
             return
         }
-        val base64Image = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(bitmap)
+        val base64Image = "data:image/jpeg;base64,$faceBase64Data"
         if (onlyBase64) {
             val intent = Intent()
             AccountTempHelper.getInstance().faceBase64Image = base64Image
@@ -379,14 +382,13 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
 //                        ToastUtil.show(entity.msg)
                         ToastUtils.showShort(entity.msg)
                         requestCount++
-                        TourCooLogUtil.d("奇葩问题=" + requestCount)
-                        if (AppConfig.DEBUG_MODE) {
+                      /*  if (AppConfig.DEBUG_MODE) {
                             //如果是测试包 则当成功处理 不做拦截
                             handleRecognizeSuccessCallback()
-                        } else {
+                        } else {*/
                             //如果是正式包 则必须执行认证失败的处理
                             handleRecognizeFailedCallback()
-                        }
+//                        }
                     }
                 }
                     override fun onError(e: Throwable) {
