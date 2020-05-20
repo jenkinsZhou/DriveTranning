@@ -38,12 +38,14 @@ public class RechargeAmountAdapter extends BaseQuickAdapter<RechargeEntity, Base
             helper.setBackgroundRes(R.id.llRechargeMoney, R.drawable.selector_bg_radius_7_blue_hollow);
             helper.setTextColor(R.id.tvRechargeMoney, ResourceUtil.getColor(R.color.blue5087FF));
             helper.setTextColor(R.id.tvRechargeDesc, ResourceUtil.getColor(R.color.blue5087FF));
-            helper.setText(R.id.tvRechargeDesc,item.rechargeDesc);
+//            helper.setText(R.id.tvRechargeDesc,"充值"+item.getCoins()+"学币");
+            helper.setText(R.id.tvRechargeDesc,CommonUtil.getNotNullValue(item.rechargeDesc));
         } else {
             helper.setBackgroundRes(R.id.llRechargeMoney, R.drawable.bg_radius_7_white_fffeff);
             helper.setTextColor(R.id.tvRechargeMoney, ResourceUtil.getColor(R.color.black525252));
             helper.setTextColor(R.id.tvRechargeDesc, ResourceUtil.getColor(R.color.gray666666));
-            helper.setText(R.id.tvRechargeDesc,item.rechargeDesc);
+//            helper.setText(R.id.tvRechargeDesc,"充值"+item.getCoins()+"学币");
+            helper.setText(R.id.tvRechargeDesc,CommonUtil.getNotNullValue(item.rechargeDesc));
         }
     }
 

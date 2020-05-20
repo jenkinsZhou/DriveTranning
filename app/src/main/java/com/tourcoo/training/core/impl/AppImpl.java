@@ -30,7 +30,9 @@ import com.tourcoo.training.core.interfaces.RecyclerViewControl;
 import com.tourcoo.training.core.interfaces.TitleBarViewControl;
 import com.tourcoo.training.core.interfaces.ToastControl;
 import com.tourcoo.training.core.retrofit.BaseObserver;
+import com.tourcoo.training.core.util.CommonUtil;
 import com.tourcoo.training.core.util.DrawableUtil;
+import com.tourcoo.training.core.util.ResourceUtil;
 import com.tourcoo.training.core.util.RomUtil;
 import com.tourcoo.training.core.util.SizeUtil;
 import com.tourcoo.training.core.util.StackUtil;
@@ -157,9 +159,9 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
     @Override
     public boolean createTitleBarViewControl(TitleBarView titleBar, Class<?> cls) {
         //默认的MD风格返回箭头icon如使用该风格可以不用设置
-        // 设置标题栏
+      /*  // 设置标题栏
         Drawable mDrawable = DrawableUtil.setTintDrawable(ContextCompat.getDrawable(mContext, R.drawable.icon_return),
-                ContextCompat.getColor(mContext, R.color.colorTitleText));
+                ContextCompat.getColor(mContext, R.color.colorTitleText));*/
         //是否支持状态栏白色
         boolean isSupport = StatusBarUtil.isSupportStatusBarFontChange();
         boolean isActivity = Activity.class.isAssignableFrom(cls);
@@ -167,9 +169,11 @@ public class AppImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot, Recyc
         //设置TitleBarView 所有TextView颜色
         titleBar.setStatusBarLightMode(isSupport);
         //不支持黑字的设置白透明
-        titleBar.setLeftText("        ");
+//        titleBar.setLeftText("        ");
+      /*  Drawable mDrawable = DrawableUtil.setTintDrawable(ContextCompat.getDrawable(mContext, R.drawable.back),
+                ContextCompat.getColor(mContext, R.color.transparent));*/
         titleBar.setStatusAlpha(isSupport ? 0 : 102)
-                .setLeftTextDrawable(isActivity ? mDrawable : null)
+                .setLeftTextDrawable(isActivity ? ResourceUtil.getDrawable(R.drawable.back) : null)
                 .setDividerHeight(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? SizeUtil.dp2px(0.5f) : 0);
         if (activity != null) {
             titleBar.setTitleMainText(activity.getTitle())

@@ -300,11 +300,13 @@ public class FeedbackActivity extends BaseTitleActivity implements View.OnClickL
                     return;
                 }
                 String phone = getTextValue(etPhone);
-                if (!TextUtils.isEmpty(phone)) {
-                    if (!CommonUtil.isMobileNumber(phone)) {
-                        ToastUtil.show("请输入正确的手机号");
-                        return;
-                    }
+                if (TextUtils.isEmpty(phone)) {
+                    ToastUtil.show("请输入手机号");
+                    return;
+                }
+                if (!CommonUtil.isMobileNumber(phone)) {
+                    ToastUtil.show("请输入正确的手机号");
+                    return;
                 }
                 if (selectList.isEmpty()) {
                     requestFeedback();

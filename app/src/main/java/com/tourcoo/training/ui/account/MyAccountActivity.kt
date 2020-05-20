@@ -219,6 +219,7 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
             rechargeEntity.accountBalance = coinInfo.coins
             rechargeEntity.selected = coinInfo.isSelected
             rechargeEntity.id = coinInfo.id
+            rechargeEntity.coins = coinInfo.coins
             rechargeEntity.rechargeMoney = coinInfo.price
             recharges.add(rechargeEntity)
         }

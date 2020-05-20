@@ -23,9 +23,11 @@ import com.aliyun.player.source.VidSts
 import com.blankj.utilcode.util.ToastUtils
 import com.dyhdyh.support.countdowntimer.OnCountDownTimerListener
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.ExamConstant
 import com.tourcoo.training.constant.ExamConstant.EXTRA_CODE_REQUEST_EXAM
+import com.tourcoo.training.constant.FaceConstant
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -73,12 +75,8 @@ import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
 import com.tourcoo.training.widget.dialog.medal.MedalDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
+import kotlinx.android.synthetic.main.activity_news_detail_video.*
 import kotlinx.android.synthetic.main.activity_play_video_ali.*
-import kotlinx.android.synthetic.main.activity_play_video_ali.llPlanContentView
-import kotlinx.android.synthetic.main.activity_play_video_ali.tvExam
-import kotlinx.android.synthetic.main.activity_play_video_ali.tvSubjectDesc
-import kotlinx.android.synthetic.main.activity_play_video_ali.tvTitle
-import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 import org.greenrobot.eventbus.EventBus
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
@@ -112,6 +110,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     //人脸验证间隔时间
     private var faceVerifyInterval = Int.MAX_VALUE
+
+    private var mRemainTime = Int.MAX_VALUE
 
 
     private var mTimerTask: CustomCountDownTimer? = null
@@ -191,7 +191,6 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         const val ENCRYPTION_TYPE_HLS = "HLSEncryption"
         //腾讯加密类型
         const val ENCRYPTION_TYPE_DRM = "DriveDu-DRM"
-        const val REQUEST_CODE_FACE = 1006
     }
 
     override fun getContentLayout(): Int {
@@ -273,6 +272,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
+        //请求数据后计时器计时器要先停止
+        cancelTimer()
         if (hasRequireExam) {
             cancelTimer()
         }
@@ -281,9 +282,12 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         clearCount()
         //拿到后台配置的间隔时间
-        faceVerifyInterval = detail.faceVerifyInterval
-        //初始化计时器
-        initTimerAndStart()
+        faceVerifyInterval = if (!AppConfig.DEBUG_MODE) {
+            detail.faceVerifyInterval
+        } else {
+            //todo 人脸验证间隔时间 调试模式下 固定成30秒 方便测试
+            20
+        }
 
         if (detail.requireExam == 1) {
             tvExam.visibility = View.VISIBLE
@@ -322,6 +326,9 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvCourseTimeAli.text = "课时：" + detail.courseTime.toString()
         tvTitle.text = getNotNullValue(detail.title)
         tvSubjectDesc.text = getNotNullValue(detail.description)
+        if (mRemainTime == Int.MAX_VALUE) {
+            mRemainTime = faceVerifyInterval
+        }
     }
 
 
@@ -594,8 +601,10 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         ApiRepository.getInstance().requestSaveProgress(trainingPlanID, courseId, second).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>() {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    //todo
-                    ToastUtil.showSuccess("进度保存成功")
+                    if(AppConfig.DEBUG_MODE){
+                        ToastUtil.showSuccess("进度保存成功")
+                    }
+
                     finish()
                 } else {
                     ToastUtil.show(entity?.msg)
@@ -681,17 +690,28 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
+            //处理人脸验证间隔回调
             TencentPlayVideoActivity.REQUEST_CODE_FACE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    //人脸认证成功 不做任何处理
-                } else {
-                    //人脸识别失败 处理人脸识别逻辑
-//                    if (!AppConfig.DEBUG_MODE) {
-                        //如果是正式包 则必须执行认证失败的处理
+                when (resultCode) {
+                    FaceConstant.FACE_CERTIFY_SUCCESS -> {
+                        //本次人脸验证通过 需要继续播放课件
+                        //处理继续播放课件逻辑
+                        doPlayVideoContinue()
+                    }
+
+
+                    FaceConstant.FACE_CERTIFY_FAILED -> {
+                        //本次人脸验证失败 需要提示用户后 关闭页面并保存进度 不让用户学习了
                         handleRecognizeFailedCallback()
-//                    }
+                    }
+                    else -> {
+                        //用户压根就没验证人脸 直接返回的 肯定关闭页面并保存进度 更不让用户学习了
+                        handleRecognizeCancelCallback()
+                    }
                 }
             }
+
+            //处理web回调
             TencentPlayVideoActivity.REQUEST_CODE_WEB -> {
                 if (resultCode == Activity.RESULT_OK) {
                     //刷新课件
@@ -712,35 +732,35 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     /**
      * 初始化计时器 并开始计时
      */
-    private fun initTimerAndStart() {
-        //总时长 间隔时间
-        if (faceVerifyInterval <= 0) {
-            //取消计时器
-            cancelTimer()
+    private fun initTimerAndStart(faceVerifySecond : Int) {
+
+        cancelTimer()
+        if(faceVerifySecond <=0){
             return
         }
         //初始化计时器
 //        faceVerifyInterval = 12
-        mTimerTask = CustomCountDownTimer(faceVerifyInterval.toLong() * 1000, 1000L)
+        val faceVerifyMillisecond =faceVerifySecond*1000.toLong()
+        mTimerTask = CustomCountDownTimer(faceVerifyMillisecond, 1000L)
+
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
             override fun onFinish() {
-                //时间到 开始下一个计时
-                startTimer()
+                //时间到 进行人脸验证
                 //todo 处理认证逻辑
-                skipRecognize()
+                TourCooLogUtil.i("计时完成")
+
+                doSkipRecognize()
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                TourCooLogUtil.d("计时中...")
-                /*  if (!isVideoPlaying()) {
-                      //如果播放器不在播放状态下 则暂停计时器
-                      timerPause()
-                  }*/
+                TourCooLogUtil.i("人脸计时器计时中：还剩：" + mRemainTime + "秒")
+                mRemainTime--
             }
 
         })
         startTimer()
     }
+
 
 
     private fun cancelTimer() {
@@ -752,17 +772,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     }
 
 
-    private fun startTimer() {
-        if (mTimerTask != null) {
-            //先重置 在启动
-            mTimerTask!!.reset()
-            mTimerTask!!.start()
-            TourCooLogUtil.i(mTag, "计时器开始")
-        } else {
-            initTimerAndStart()
-            TourCooLogUtil.i(mTag, "计时器开始（新一轮计时）")
-        }
-    }
+
 
     private fun timerPause() {
         if (mTimerTask != null) {
@@ -850,6 +860,8 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         override fun onPrepared() {
             val activity = activityWeakReference.get()
             activity?.onPrepared()
+            //这里才开始启动计时器
+            activity?.initTimerAndStart( activity.mRemainTime)
         }
 
         init {
@@ -1780,7 +1792,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 //        smartVideoPlayer.startButton.isEnabled = false
         //暂停视频
         baseHandler.postDelayed(Runnable {
-            smartVideoPlayer?.onPause()
+            aliYunPlayer?.onStop()
         }, 300)
 
         ToastUtil.show("人脸识别失败")
@@ -1845,6 +1857,9 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     //显示勋章
+                    if(TextUtils.isEmpty(entity.data.hour)){
+                        entity.data.hour = "0"
+                    }
                     showMedalDialog(entity.data.hour.toInt())
                 }
             }
@@ -1868,5 +1883,51 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     }
 
+
+    /**
+     * 人脸验证用户未点击拍照的回调
+     */
+    private fun handleRecognizeCancelCallback() {
+           aliYunPlayer?.onStop()
+        ToastUtil.show("您当前没有验证人脸 本次学习结束")
+        baseHandler.postDelayed(Runnable {
+            //保存进度并关闭
+            doSaveProgressAndFinish()
+        },1000)
+    }
+
+
+    /**
+     * 人脸验证通过后 需要继续播放课件 计时又得开始了
+     */
+    private fun doPlayVideoContinue(){
+        superPlayerView?.onResume()
+        //开始新一轮计时
+        mRemainTime = faceVerifyInterval
+        TourCooLogUtil.i("开始新一轮计时")
+        initTimerAndStart(mRemainTime)
+        TourCooLogUtil.d("人脸验证通过 继续播放视频")
+    }
+
+
+
+    private fun doSkipRecognize() {
+        //暂停视频
+        aliYunPlayer?.onStop()
+        //暂停计时器
+        timerPause()
+        //跳转到人脸认证
+        skipFace()
+    }
+
+
+    private fun startTimer() {
+        if (mTimerTask != null) {
+            //先重置 在启动
+            mTimerTask!!.reset()
+            TourCooLogUtil.i(mTag, "计时器启动")
+            mTimerTask!!.start()
+        }
+    }
 }
 

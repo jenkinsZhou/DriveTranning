@@ -114,7 +114,7 @@ public class StudyRecordAdapter extends BaseMultiItemQuickAdapter<StudyRecord, B
     @Override
     public int getItemViewType(int position) {
         if (getData().isEmpty()) {
-            return ITEM_TYPE_HEADER;
+            return super.getItemViewType(position);
         }
         if (getData().get(position).isHeader()) {
             return ITEM_TYPE_HEADER;

@@ -168,7 +168,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_divider"
-                    android:textColor="@color/alivc_player_font_info_duration"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/alivc_common_font_12" />
 
                 <Button
@@ -223,7 +223,7 @@
                     android:id="@+id/alivc_info_small_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/alivc_player_font_info_duration"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/alivc_common_font_10" />
 
                 <SeekBar

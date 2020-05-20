@@ -330,8 +330,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
 
     private fun handleTrainingPlanDetail(detail: TrainingPlanDetail?) {
-        //只有播放状态下才启动计时器
-            cancelTimer()
+        //请求数据后计时器计时器要先停止
+        cancelTimer()
 
         if (hasRequireExam) {
             cancelTimer()
@@ -342,11 +342,11 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         mExamId = detail.latestExamID.toString()
         clearCount()
         //拿到后台配置的间隔时间
-        if (AppConfig.DEBUG_MODE) {
+        faceVerifyInterval = if (AppConfig.DEBUG_MODE) {
             //todo 人脸验证间隔时间 调试模式下 固定成30秒 方便测试
-            faceVerifyInterval = 20
+            20
         } else {
-            faceVerifyInterval = detail.faceVerifyInterval
+            detail.faceVerifyInterval
         }
         if (detail.requireExam == 1) {
             tvExam.visibility = View.VISIBLE
@@ -388,8 +388,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         tvCourseCountInfo.text = "共" + countCatalog + "章" + countNode + "小节"
         tvCourseTime.text = "课时：" + detail.courseTime.toString()
         tvSubjectDesc.text = getNotNullValue(detail.description)
-        //todo 暂时在这里启动计时器
-        if(mRemainTime == Int.MAX_VALUE){
+        if (mRemainTime == Int.MAX_VALUE) {
             mRemainTime = faceVerifyInterval
         }
 
@@ -672,7 +671,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity?.code == RequestConfig.CODE_REQUEST_SUCCESS) {
 
-                    if(AppConfig.DEBUG_MODE){
+                    if (AppConfig.DEBUG_MODE) {
                         ToastUtil.showSuccess("进度保存成功")
                     }
 
@@ -784,7 +783,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             ExamConstant.EXTRA_CODE_REQUEST_EXAM -> {
                 if (resultCode == Activity.RESULT_OK) {
                     finish()
-                }else if( resultCode == RESULT_CODE_REFRESH_EXAM_ID){
+                } else if (resultCode == RESULT_CODE_REFRESH_EXAM_ID) {
                     requestPlanDetail()
                 }
             }
@@ -794,15 +793,15 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     /**
      * 初始化计时器 并开始计时
      */
-    private fun initTimerAndStart(faceVerifySecond : Int) {
+    private fun initTimerAndStart(faceVerifySecond: Int) {
 
         cancelTimer()
-        if(faceVerifySecond <=0){
+        if (faceVerifySecond <= 0) {
             return
         }
         //初始化计时器
 //        faceVerifyInterval = 12
-        val faceVerifyMillisecond =faceVerifySecond*1000.toLong()
+        val faceVerifyMillisecond = faceVerifySecond * 1000.toLong()
         mTimerTask = CustomCountDownTimer(faceVerifyMillisecond, 1000L)
 
         mTimerTask!!.setOnCountDownTimerListener(object : OnCountDownTimerListener {
@@ -815,7 +814,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                TourCooLogUtil.i(mTag, "计时中..."+faceVerifyMillisecond)
+                TourCooLogUtil.i("人脸计时器计时中：还剩：" + mRemainTime + "秒")
                 mRemainTime--
             }
 
@@ -863,7 +862,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private fun doSaveProgressAndFinish() {
         val progress = smartVideoPlayer.currentProgress
-        if(progress == 0){
+        if (progress == 0) {
             //说明没有播放 直接finish 不保存进度
             finish()
             return
@@ -881,7 +880,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         baseHandler.postDelayed(Runnable {
             //保存进度并关闭
             doSaveProgressAndFinish()
-        },1000)
+        }, 1000)
     }
 
 
@@ -894,7 +893,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         baseHandler.postDelayed(Runnable {
             //保存进度并关闭
             doSaveProgressAndFinish()
-        },1000)
+        }, 1000)
     }
 
     /**
@@ -976,6 +975,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     return
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
+                    if (TextUtils.isEmpty(entity.data.hour)) {
+                        entity.data.hour = "0"
+                    }
                     //显示勋章
                     showMedalDialog(entity.data.hour.toInt())
                 }
@@ -1022,7 +1024,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     /**
      * 人脸验证通过后 需要继续播放课件 计时又得开始了
      */
-    private fun doPlayVideoContinue(){
+    private fun doPlayVideoContinue() {
         superPlayerView?.onResume()
         //开始新一轮计时
         mRemainTime = faceVerifyInterval
