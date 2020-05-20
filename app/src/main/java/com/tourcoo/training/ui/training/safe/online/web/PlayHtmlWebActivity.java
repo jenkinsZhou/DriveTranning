@@ -285,7 +285,9 @@ public class PlayHtmlWebActivity extends BaseTitleActivity {
             @Override
             public void onSuccessNext(BaseResult entity) {
                 if (entity.code == RequestConfig.CODE_REQUEST_SUCCESS) {
-                    ToastUtil.showSuccess("进度保存成功");
+                    if(AppConfig.DEBUG_MODE){
+                        ToastUtil.showSuccess("进度保存成功");
+                    }
                     //关键点：通知上个页面刷新
                     setResult(Activity.RESULT_OK);
                 } else {

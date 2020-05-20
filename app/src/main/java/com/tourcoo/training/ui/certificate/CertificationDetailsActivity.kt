@@ -172,8 +172,8 @@ class CertificationDetailsActivity : BaseTitleActivity() {
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     //显示勋章
-                    if(TextUtils.isEmpty(entity.data.hour)){
-                        entity.data.hour = "0"
+                    if(TextUtils.isEmpty(entity.data.certificate)){
+                        entity.data.certificate = "0"
                     }
                     showMedalDialog(entity.data.certificate.toInt())
                 }
