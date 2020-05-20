@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import com.blankj.utilcode.util.ImageUtils
 import com.tourcoo.training.R
@@ -171,6 +172,9 @@ class CertificationDetailsActivity : BaseTitleActivity() {
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     //显示勋章
+                    if(TextUtils.isEmpty(entity.data.hour)){
+                        entity.data.hour = "0"
+                    }
                     showMedalDialog(entity.data.certificate.toInt())
                 }
             }

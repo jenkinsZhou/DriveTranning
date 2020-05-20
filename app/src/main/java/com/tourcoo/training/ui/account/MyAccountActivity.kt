@@ -447,6 +447,9 @@ class MyAccountActivity : BaseTitleActivity(), View.OnClickListener {
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
                     //显示勋章
+                    if(TextUtils.isEmpty(entity.data.hour)){
+                        entity.data.hour = "0"
+                    }
                     showMedalDialog(entity.data.consume.toInt())
                 }
             }

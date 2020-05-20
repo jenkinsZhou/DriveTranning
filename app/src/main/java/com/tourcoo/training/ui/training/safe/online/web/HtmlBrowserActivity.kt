@@ -540,6 +540,10 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
                     return
                 }
                 if (entity.getCode() == RequestConfig.CODE_REQUEST_SUCCESS && entity.data != null) {
+
+                    if(TextUtils.isEmpty(entity.data.hour)){
+                        entity.data.hour = "0"
+                    }
                     //显示勋章
                     showMedalDialog(entity.data.hour.toInt())
                 }
