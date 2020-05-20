@@ -15,6 +15,7 @@ public class RechargeEntity {
     public double rechargeMoney;
     public String rechargeDesc;
     public int id;
+    public String Coins;
 
     public int getId() {
         return id;
@@ -52,4 +53,12 @@ public class RechargeEntity {
      */
     public boolean selected;
 
+
+    public String getCoins() {
+        return Coins;
+    }
+
+    public void setCoins(String coins) {
+        Coins = coins;
+    }
 }

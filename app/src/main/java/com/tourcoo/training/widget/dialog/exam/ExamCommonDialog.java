@@ -49,6 +49,8 @@ public class ExamCommonDialog {
         // 定义Dialog布局和参数
         dialog = new Dialog(mContext, R.style.AlertDialogStyle);
         dialog.setContentView(view);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         tvPositive = view.findViewById(R.id.tvPositive);
         tvContent = view.findViewById(R.id.tvContent);
         tvNegative =   view.findViewById(R.id.tvNegative);
