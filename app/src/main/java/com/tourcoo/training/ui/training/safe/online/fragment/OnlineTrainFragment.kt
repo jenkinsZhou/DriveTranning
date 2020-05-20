@@ -178,7 +178,7 @@ class OnlineTrainFragment : BaseFragment() {
             }
 
             //isAuthenticated:0：企业分配  1：自己注册暂未审核 2：已审核  3：驳回
-            if(AccountHelper.getInstance().userInfo.isAuthenticated == 1 || AccountHelper.getInstance().userInfo.isAuthenticated == 3 ){
+            if (AccountHelper.getInstance().userInfo.isAuthenticated == 1 || AccountHelper.getInstance().userInfo.isAuthenticated == 3) {
                 val dialog = CommonBellAlert(mContext)
                 dialog.create().setContent("驾驶员自主注册，需等待企业管理员审核。").setPositiveButton("知道了", object : View.OnClickListener {
                     override fun onClick(v: View?) {
@@ -199,7 +199,8 @@ class OnlineTrainFragment : BaseFragment() {
 
                 2 -> {  //认证失败
                     val dialog = LocalTrainingConfirmDialog(mContext)
-                    dialog.setContent("请确认是否为本人学习？")
+                    dialog.create()
+                            .setContent("请确认是否为本人学习？")
                             .setPositiveButtonClick("确认") {
                                 verifyByStatus(currentCourseInfo!!)
                                 dialog.dismiss()
@@ -207,7 +208,6 @@ class OnlineTrainFragment : BaseFragment() {
                             .setNegativeButtonClick("取消") {
                                 dialog.dismiss()
                             }
-                            .create()
                             .show()
                 }
             }
@@ -311,7 +311,7 @@ class OnlineTrainFragment : BaseFragment() {
             }, 500)
         }
         //以下是刷新列表逻辑
-        if(requestCode ==REQUEST_CODE_REFRESH_ALL || resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_CODE_REFRESH_ALL || resultCode == Activity.RESULT_OK) {
             refreshDataList()
         }
 
@@ -354,7 +354,6 @@ class OnlineTrainFragment : BaseFragment() {
         var intent: Intent? = null
         when (courseType) {
             TYPE_COURSE_HTML -> {
-                //todo 全部为html
                 intent = Intent(mContext, HtmlBrowserActivity::class.java)
             }
             TYPE_COURSE_TYPE_DRIVE -> {
@@ -374,7 +373,7 @@ class OnlineTrainFragment : BaseFragment() {
 
         }
         intent?.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
-        startActivityForResult(intent,REQUEST_CODE_REFRESH_ALL)
+        startActivityForResult(intent, REQUEST_CODE_REFRESH_ALL)
     }
 
 
@@ -460,13 +459,13 @@ class OnlineTrainFragment : BaseFragment() {
     }
 
 
-    private fun skipStudyDetailActivity(trainingId: String?){
+    private fun skipStudyDetailActivity(trainingId: String?) {
         val intent = Intent(mContext, StudyDetailActivity::class.java)
         intent.putExtra(EXTRA_TRAINING_PLAN_ID, trainingId)
-        startActivityForResult(intent,REQUEST_CODE_REFRESH_ALL)
+        startActivityForResult(intent, REQUEST_CODE_REFRESH_ALL)
     }
 
-    private fun refreshDataList(){
+    private fun refreshDataList() {
         requestCourseOnLine()
     }
 

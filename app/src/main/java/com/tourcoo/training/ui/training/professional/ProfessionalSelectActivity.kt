@@ -31,6 +31,7 @@ import com.tourcoo.training.ui.face.FaceRecognitionActivity
 import com.tourcoo.training.ui.pay.BuyNowActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
+import com.tourcoo.training.ui.training.safe.online.web.HtmlBrowserActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.CommonBellDialog
@@ -129,7 +130,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
              case continues = 1
              case immdiate = 2
              case preText = 3*/
-            if(currentCourseInfo!!.status == 0){
+            if (currentCourseInfo!!.status == 0) {
                 //已完成状态下 不可点击
                 return@OnItemClickListener
             }
@@ -157,7 +158,8 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
 
                 2 -> {  //认证失败
                     val dialog = LocalTrainingConfirmDialog(mContext)
-                    dialog.setContent("请确认是否为本人学习？")
+                    dialog.create()
+                            .setContent("请确认是否为本人学习？")
                             .setPositiveButtonClick("确认") {
                                 verifyByStatus(currentCourseInfo!!)
                                 dialog.dismiss()
@@ -165,7 +167,6 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
                             .setNegativeButtonClick("取消") {
                                 dialog.dismiss()
                             }
-                            .create()
                             .show()
                 }
             }
@@ -249,8 +250,7 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
         var intent: Intent? = null
         when (courseType) {
             TrainingConstant.TYPE_COURSE_HTML -> {
-                //todo 全部为html
-                intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+                intent = Intent(mContext, HtmlBrowserActivity::class.java)
             }
             TrainingConstant.TYPE_COURSE_TYPE_DRIVE -> {
                 //车学堂 使用腾讯播放器
@@ -398,7 +398,6 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
     private fun closeFaceDialog() {
         dialog?.dismiss()
     }
-
 
 
 }

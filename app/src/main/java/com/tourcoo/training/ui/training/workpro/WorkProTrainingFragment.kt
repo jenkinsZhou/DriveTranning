@@ -53,7 +53,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @date 2020年03月10日21:19
  * @Email: 971613168@qq.com
  */
-class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
+class WorkProTrainingFragment : BaseFragment(), IMultiStatusView {
 
     private var adapter: OnLineTrainingCourseAdapter? = null
     private var refreshLayout: SmartRefreshLayout? = null
@@ -108,7 +108,6 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
     }
 
 
-
     private fun requestBeforeThePostTrainingList() {
         ApiRepository.getInstance().requestBeforeThePostTrainingList().compose(bindUntilEvent(FragmentEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<MutableList<CourseInfo>?>?>() {
             override fun onSuccessNext(entity: BaseResult<MutableList<CourseInfo>?>?) {
@@ -161,7 +160,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
             }
 
 
-            if(AccountHelper.getInstance().userInfo.isAuthenticated == 1 || AccountHelper.getInstance().userInfo.isAuthenticated == 3){
+            if (AccountHelper.getInstance().userInfo.isAuthenticated == 1 || AccountHelper.getInstance().userInfo.isAuthenticated == 3) {
                 val dialog = CommonBellAlert(mContext)
                 dialog.create().setContent("驾驶员自主注册，需等待企业管理员审核。").setPositiveButton("知道了", object : View.OnClickListener {
                     override fun onClick(v: View?) {
@@ -183,8 +182,8 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
 
                 2 -> {  //认证失败
                     val dialog = LocalTrainingConfirmDialog(mContext)
-                            .create()
-                    dialog.setContent("请确认是否为本人学习？")
+                    dialog.create()
+                            .setContent("请确认是否为本人学习？")
                             .setPositiveButtonClick("确认") {
                                 verifyByStatus(currentCourseInfo!!)
                                 dialog.dismiss()
@@ -223,7 +222,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_WAIT_EXAM -> {
-                skipPlayVideoByType(courseInfo.trainingPlanID,courseInfo.type)
+                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
             }
 
             OnLineTrainingCourseAdapter.COURSE_STATUS_FINISHED -> {
@@ -232,7 +231,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
             }
 
             else -> {
-                skipPlayVideoByType(courseInfo.trainingPlanID,courseInfo.type)
+                skipPlayVideoByType(courseInfo.trainingPlanID, courseInfo.type)
             }
         }
 
@@ -240,8 +239,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
     }
 
 
-
-    private fun skipStudyDetailActivity(trainingId: String?){
+    private fun skipStudyDetailActivity(trainingId: String?) {
         val intent = Intent(mContext, StudyDetailActivity::class.java)
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
         startActivityForResult(intent, OnlineTrainFragment.REQUEST_CODE_REFRESH_ALL)
@@ -269,7 +267,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
     private fun skipFaceRecord(trainingId: String) {
         val intent = Intent(mContext, FaceRecognitionActivity::class.java)
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, trainingId)
-        intent.putExtra("OnlyBase64",true)
+        intent.putExtra("OnlyBase64", true)
         startActivityForResult(intent, OnlineTrainFragment.REQUEST_CODE_FACE_RECORD)
     }
 
@@ -294,7 +292,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
                     verifyByStatus(currentCourseInfo!!)
                 }
 
-                REQUEST_CODE_FACE_VERIFY ->{
+                REQUEST_CODE_FACE_VERIFY -> {
                     skipPlayVideoByType(currentCourseInfo!!.trainingPlanID, currentCourseInfo!!.type)
                 }
 
@@ -306,7 +304,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
         }
 
         //以下是刷新列表逻辑
-        if(requestCode == OnlineTrainFragment.REQUEST_CODE_REFRESH_ALL || resultCode == Activity.RESULT_OK){
+        if (requestCode == OnlineTrainFragment.REQUEST_CODE_REFRESH_ALL || resultCode == Activity.RESULT_OK) {
             requestBeforeThePostTrainingList()
         }
 
@@ -359,7 +357,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
             }
             TrainingConstant.TYPE_COURSE_OTHER -> {
                 //混合非加密 使用腾讯播放器
-            // intent = Intent(mContext, TencentPlayVideoActivity::class.java)
+                // intent = Intent(mContext, TencentPlayVideoActivity::class.java)
                 //todo 暂时跳转到阿里播放器
                 intent = Intent(mContext, AliYunPlayVideoActivity::class.java)
             }
@@ -392,7 +390,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
 //
 //    }
 
-    private fun removeData(){
+    private fun removeData() {
         adapter?.data?.clear()
         adapter?.notifyDataSetChanged()
         refreshLayout?.finishRefresh()
@@ -405,7 +403,7 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
      * @param offLineRefreshEvent
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun workProRefreshEvent(offLineRefreshEvent : WorkProRefreshEvent?) {
+    fun workProRefreshEvent(offLineRefreshEvent: WorkProRefreshEvent?) {
         if (offLineRefreshEvent == null) {
             return
         }
@@ -419,8 +417,8 @@ class WorkProTrainingFragment  : BaseFragment() , IMultiStatusView {
 
     }
 
-  /*  override fun getCustomerClickListener(): View.OnClickListener {
-        return super.getCustomerClickListener()
-    }*/
+    /*  override fun getCustomerClickListener(): View.OnClickListener {
+          return super.getCustomerClickListener()
+      }*/
 
 }
