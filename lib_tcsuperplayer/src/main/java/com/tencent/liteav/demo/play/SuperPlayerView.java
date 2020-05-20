@@ -255,7 +255,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
 
         mVodPlayConfig = new TXVodPlayConfig();
         mVodPlayConfig.setCacheFolderPath(Environment.getExternalStorageDirectory().getPath() + "/txcache");
-        mVodPlayConfig.setMaxCacheItems(config.maxCacheItem);
+        mVodPlayConfig.setMaxCacheItems(1);
+//        mVodPlayConfig.setMaxCacheItems(config.maxCacheItem);
 
         mVodPlayer.setConfig(mVodPlayConfig);
         mVodPlayer.setRenderMode(config.renderMode);

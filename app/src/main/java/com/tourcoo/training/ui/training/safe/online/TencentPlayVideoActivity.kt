@@ -3,7 +3,6 @@ package com.tourcoo.training.ui.training.safe.online
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -60,6 +59,7 @@ import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_news_detail_video.*
 import kotlinx.android.synthetic.main.activity_play_video_tencent.*
 import org.greenrobot.eventbus.EventBus
+import java.net.URLEncoder
 
 /**
  *@description :
@@ -279,6 +279,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         }
         timerPause()
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -639,17 +640,16 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
                     val model = SuperPlayerModel()
                     model.appId = entity.data.appid.toInt()
+                    model.title = course.name
+                    model.token = URLEncoder.encode(replaceBlank(entity.data.token),"UTF-8")
+
                     model.videoId = SuperPlayerVideoId()
                     model.videoId.fileId = course.videoID
                     model.videoId.version = SuperPlayerVideoId.FILE_ID_V3
-                    model.title = course.name
-
                     model.videoId.playDefinition = entity.data.playdefinition
                     model.videoId.sign = entity.data.sign
-                    model.token = entity.data.token
                     model.videoId.us = entity.data.us
                     model.videoId.timeout = entity.data.t
-
                     smartVideoPlayer.playWithModel(model)
                 } else {
                     if (entity != null)
@@ -658,6 +658,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
         })
+    }
+
+    private fun replaceBlank(str: String): String {
+        return str.replace("\\\\".toRegex(), "")
     }
 
     /**
