@@ -6,9 +6,13 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.media.AudioManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import com.tencent.liteav.demo.play.BuildConfig;
 
 /**
  *
@@ -71,7 +75,11 @@ public class VideoGestureUtil {
     }
 
     public boolean isVideoProgressModel() {
-        return mScrollMode == VIDEO_PROGRESS;
+        if(isEnableProgressGesture) {
+            return mScrollMode == VIDEO_PROGRESS;
+        }else {
+            return false;
+        }
     }
 
     public int getVideoProgress() {
@@ -126,13 +134,14 @@ public class VideoGestureUtil {
                 }
                 break;
             case VIDEO_PROGRESS:
+                if(isEnableProgressGesture) {
+                    float dis = moveEvent.getX() - downEvent.getX();
+                    float percent = dis / mVideoWidth;
+                    mVideoProgress = (int) (mDownProgress + percent * 100);
 
-                float dis = moveEvent.getX() - downEvent.getX();
-                float percent = dis / mVideoWidth;
-                mVideoProgress = (int) (mDownProgress + percent * 100);
-
-                if (mVideoGestureListener != null) {
-                    mVideoGestureListener.onSeekGesture(mVideoProgress);
+                    if (mVideoGestureListener != null) {
+                        mVideoGestureListener.onSeekGesture(mVideoProgress);
+                    }
                 }
                 break;
         }
@@ -145,6 +154,11 @@ public class VideoGestureUtil {
         } else {
             return 255;
         }
+    }
+
+    private boolean isEnableProgressGesture = false;
+    public void setEnableVideoGesture() {
+        isEnableProgressGesture = true;
     }
 
 

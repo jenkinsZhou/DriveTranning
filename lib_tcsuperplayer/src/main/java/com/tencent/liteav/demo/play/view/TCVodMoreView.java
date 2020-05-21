@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -100,6 +101,7 @@ public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnChecke
         mSeekBarVolume.setProgress(progress);
     }
 
+
     private void updateCurrentLight() {
         Activity activity = (Activity) mContext;
         Window window = activity.getWindow();
@@ -112,14 +114,21 @@ public class TCVodMoreView extends RelativeLayout implements RadioGroup.OnChecke
                 mSeekBarLight.setProgress(100);
                 return;
             }
+
             mSeekBarLight.setProgress((int) (params.screenBrightness * 100));
         }
+
+
     }
 
     public static float getActivityBrightness(Activity activity) {
         Window localWindow = activity.getWindow();
         WindowManager.LayoutParams params = localWindow.getAttributes();
-        return params.screenBrightness;
+        if(params.screenBrightness == -1.0) {
+            return 0.5f;
+        }else {
+            return params.screenBrightness;
+        }
     }
 
     private SeekBar.OnSeekBarChangeListener mVolumeChangeListener = new SeekBar.OnSeekBarChangeListener() {

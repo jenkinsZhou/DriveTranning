@@ -131,64 +131,68 @@ public abstract class TCVodControllerSmallBase extends RelativeLayout implements
         });
         mGestureDetector.setIsLongpressEnabled(false);
 
+        if (mVideoGestureUtil == null) {
+            mVideoGestureUtil = new VideoGestureUtil(getContext());
+            mVideoGestureUtil.setVideoGestureListener(new VideoGestureUtil.VideoGestureListener() {
+                @Override
+                public void onBrightnessGesture(float newBrightness) {
+                    if (mGestureVolumeBrightnessProgressLayout != null) {
+                        mGestureVolumeBrightnessProgressLayout.setProgress((int) (newBrightness * 100));
+                        mGestureVolumeBrightnessProgressLayout.setImageResource(R.drawable.ic_light_max);
+                        mGestureVolumeBrightnessProgressLayout.show();
+                    }
+                }
+
+                @Override
+                public void onVolumeGesture(float volumeProgress) {
+                    if (mGestureVolumeBrightnessProgressLayout != null) {
+                        mGestureVolumeBrightnessProgressLayout.setImageResource(R.drawable.ic_volume_max);
+                        mGestureVolumeBrightnessProgressLayout.setProgress((int) volumeProgress);
+                        mGestureVolumeBrightnessProgressLayout.show();
+                    }
+                }
+
+                @Override
+                public void onSeekGesture(int progress) {
+                    mIsChangingSeekBarProgress = true;
+
+                    if (mGestureVideoProgressLayout != null) {
+
+                        if (progress > mSeekBarProgress.getMax()) {
+                            progress = mSeekBarProgress.getMax();
+                        }
+                        if (progress < 0) {
+                            progress = 0;
+                        }
+                        mGestureVideoProgressLayout.setProgress(progress);
+                        mGestureVideoProgressLayout.show();
+
+                        float percentage = ((float) progress) / mSeekBarProgress.getMax();
+                        float currentTime = (mVodController.getDuration() * percentage);
+                        if (mPlayType == SuperPlayerConst.PLAYTYPE_LIVE || mPlayType == SuperPlayerConst.PLAYTYPE_LIVE_SHIFT) {
+                            if (mLivePushDuration > MAX_SHIFT_TIME) {
+                                currentTime = (int) (mLivePushDuration - MAX_SHIFT_TIME * (1 - percentage));
+                            } else {
+                                currentTime = mLivePushDuration * percentage;
+                            }
+                            mGestureVideoProgressLayout.setTimeText(TCTimeUtils.formattedTime((long) currentTime));
+                        } else {
+                            mGestureVideoProgressLayout.setTimeText(TCTimeUtils.formattedTime((long) currentTime) + " / " + TCTimeUtils.formattedTime((long) mVodController.getDuration()));
+                        }
+                        onGestureVideoProgress(progress);
+
+                    }
+                    if (mSeekBarProgress != null)
+                        mSeekBarProgress.setProgress(progress);
+                }
+            });
+        }
     }
 
 
     //设置支持手势操作
     public void setEnableVideoGesture() {
-        mVideoGestureUtil = new VideoGestureUtil(getContext());
-        mVideoGestureUtil.setVideoGestureListener(new VideoGestureUtil.VideoGestureListener() {
-            @Override
-            public void onBrightnessGesture(float newBrightness) {
-                if (mGestureVolumeBrightnessProgressLayout != null) {
-                    mGestureVolumeBrightnessProgressLayout.setProgress((int) (newBrightness * 100));
-                    mGestureVolumeBrightnessProgressLayout.setImageResource(R.drawable.ic_light_max);
-                    mGestureVolumeBrightnessProgressLayout.show();
-                }
-            }
-
-            @Override
-            public void onVolumeGesture(float volumeProgress) {
-                if (mGestureVolumeBrightnessProgressLayout != null) {
-                    mGestureVolumeBrightnessProgressLayout.setImageResource(R.drawable.ic_volume_max);
-                    mGestureVolumeBrightnessProgressLayout.setProgress((int) volumeProgress);
-                    mGestureVolumeBrightnessProgressLayout.show();
-                }
-            }
-
-            @Override
-            public void onSeekGesture(int progress) {
-                mIsChangingSeekBarProgress = true;
-                if (mGestureVideoProgressLayout != null) {
-
-                    if (progress > mSeekBarProgress.getMax()) {
-                        progress = mSeekBarProgress.getMax();
-                    }
-                    if (progress < 0) {
-                        progress = 0;
-                    }
-                    mGestureVideoProgressLayout.setProgress(progress);
-                    mGestureVideoProgressLayout.show();
-
-                    float percentage = ((float) progress) / mSeekBarProgress.getMax();
-                    float currentTime = (mVodController.getDuration() * percentage);
-                    if (mPlayType == SuperPlayerConst.PLAYTYPE_LIVE || mPlayType == SuperPlayerConst.PLAYTYPE_LIVE_SHIFT) {
-                        if (mLivePushDuration > MAX_SHIFT_TIME) {
-                            currentTime = (int) (mLivePushDuration - MAX_SHIFT_TIME * (1 - percentage));
-                        } else {
-                            currentTime = mLivePushDuration * percentage;
-                        }
-                        mGestureVideoProgressLayout.setTimeText(TCTimeUtils.formattedTime((long) currentTime));
-                    } else {
-                        mGestureVideoProgressLayout.setTimeText(TCTimeUtils.formattedTime((long) currentTime) + " / " + TCTimeUtils.formattedTime((long) mVodController.getDuration()));
-                    }
-                    onGestureVideoProgress(progress);
-
-                }
-                if (mSeekBarProgress != null)
-                    mSeekBarProgress.setProgress(progress);
-            }
-        });
+        mVideoGestureUtil.setEnableVideoGesture();
     }
 
 
