@@ -499,6 +499,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         val tvPlanDesc = view.findViewById<TextView>(R.id.tvPlanDesc)
         val imageView = view.findViewById<ImageView>(R.id.ivCourseStatus)
         val tvPlanTitle = view.findViewById<TextView>(R.id.tvPlanTitle)
+
+        GlideManager.loadGrayImg(CommonUtil.getNotNullValue(course.coverURL), ivCoverView, R.drawable.ic_rect_default)
+
         when (course.currentPlayStatus) {
             COURSE_PLAY_STATUS_NO_COMPLETE -> {
                 //锁定状态 下的提示文字需要修改成 时长+未解锁
@@ -525,7 +528,6 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
 
                 smartVideoPlayer.mVodControllerSmall.enableClick(false)
-                GlideManager.loadGrayImg(CommonUtil.getNotNullValue(course.coverURL), ivCoverView, R.drawable.ic_rect_default)
 
                 //只有当前正在浏览的课件 并且是html课件才允许点击
                 if (course.mediaType == MEDIA_TYPE_HTML) {
