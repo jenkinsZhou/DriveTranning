@@ -37,7 +37,9 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
+import com.tourcoo.training.utils.ThreadPoolUtils
 import com.tourcoo.training.utils.TourCooUtil
+import com.tourcoo.training.utils.threadpool.ThreadPoolManager
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener
 import com.tourcoo.training.widget.dialog.IosAlertDialog
@@ -173,29 +175,39 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                     ToastUtil.show("存储空间不足或异常")
                     return
                 }
-                baseHandler.post(Runnable {
-                    val resource = BitmapFactory.decodeByteArray(data, 0, data!!.size)
-                    if (resource == null) {
-                        ToastUtil.show("拍照失败")
-                    } else {
-//                        val photoPath = com.tourcoo.training.core.util.FileUtil.getExternalStorageDirectory() + File.separator + photoName
-                        //todo
-                        val faceBitmap = toTurn(resource)!!
-                        /*val success =          saveImage(photoPath, faceBitmap)
-                                 TourCooLogUtil.i(tag, "图片保存成功? = $success")*/
-//                        notifyMedia(photoPath)
-//                        AccountTempHelper.getInstance().facePhotoPath = photoPath
-                        val compressBitmap = ImageUtils.compressBySampleSize(faceBitmap, SizeUtil.dp2px(200f), SizeUtil.dp2px(200f))
-                        val bitmapSize = compressBitmap.getRowBytes() * compressBitmap.getHeight()
-                        TourCooLogUtil.i(mTag, "图片大小:" + bitmapSize)
-                        val faceBase64Data = Base64Util.bitmapToBase64(compressBitmap)
-                        //缓存人脸数据
-                        AccountTempHelper.getInstance().tempBase64FaceData=faceBase64Data
-                        compressBitmap.recycle()
-                        faceBitmap.recycle()
-                        uploadFaceImage(trainId, faceBase64Data)
-                    }
-                })
+                try {
+                    baseHandler.post(Runnable {
+                        showLoading("图片处理中...")
+                        ThreadPoolManager.getThreadPoolProxyNormal().execute(Runnable {
+                            val resource = BitmapFactory.decodeByteArray(data, 0, data!!.size)
+                            if (resource == null) {
+                                baseHandler.post {
+                                    ToastUtil.show("图片处理失败")
+                                    closeLoading()
+                                }
+                            } else {
+                                val faceBitmap = toTurn(resource)!!
+                                val compressBitmap = ImageUtils.compressBySampleSize(faceBitmap, SizeUtil.dp2px(200f), SizeUtil.dp2px(200f))
+                                val bitmapSize = compressBitmap.getRowBytes() * compressBitmap.getHeight()
+                                TourCooLogUtil.i(mTag, "图片大小:" + bitmapSize)
+                                val faceBase64Data = Base64Util.bitmapToBase64(compressBitmap)
+                                //缓存人脸数据
+                                AccountTempHelper.getInstance().tempBase64FaceData = faceBase64Data
+                                compressBitmap.recycle()
+                                faceBitmap.recycle()
+                                closeLoading()
+                                baseHandler.post(Runnable {
+                                    uploadFaceImage(trainId, faceBase64Data)
+                                })
+                            }
+                        })
+                    })
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    closeLoading()
+                    ToastUtil.show("拍照失败 请稍后再试")
+                }
+
 
             }
         })
@@ -382,22 +394,23 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
 //                        ToastUtil.show(entity.msg)
                         ToastUtils.showShort(entity.msg)
                         requestCount++
-                      /*  if (AppConfig.DEBUG_MODE) {
-                            //如果是测试包 则当成功处理 不做拦截
-                            handleRecognizeSuccessCallback()
-                        } else {*/
-                            //如果是正式包 则必须执行认证失败的处理
-                            handleRecognizeFailedCallback()
+                        /*  if (AppConfig.DEBUG_MODE) {
+                              //如果是测试包 则当成功处理 不做拦截
+                              handleRecognizeSuccessCallback()
+                          } else {*/
+                        //如果是正式包 则必须执行认证失败的处理
+                        handleRecognizeFailedCallback()
 //                        }
                     }
                 }
-                    override fun onError(e: Throwable) {
-                        super.onError(e)
-                        ToastUtil.show("验证超时")
-                        baseHandler.postDelayed(Runnable {
-                            finish()
-                        },500)
-                    }
+
+                override fun onError(e: Throwable) {
+                    super.onError(e)
+                    ToastUtil.show("验证超时")
+                    baseHandler.postDelayed(Runnable {
+                        finish()
+                    }, 500)
+                }
             })
         }
     }
