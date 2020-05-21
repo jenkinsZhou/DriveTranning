@@ -101,11 +101,11 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
             startActivity(intent)
 
         } else {//直接跳转到考试分类列表
-            if (info.planStatus == 1) {
+           /* if (info.planStatus == 1) {
                 //说明计划完成 无需考试 直接拦截
-                ToastUtil.show("当前计划已完成 无需考试")
+                ToastUtil.show("当前计划已完成")
                 return
-            }
+            }*/
             val intent = Intent(this, ProfessionalExamSelectListActivity::class.java)
             intent.putExtra("id", info.specialId)
             intent.putExtra("childModuleId", info.childModuleId)

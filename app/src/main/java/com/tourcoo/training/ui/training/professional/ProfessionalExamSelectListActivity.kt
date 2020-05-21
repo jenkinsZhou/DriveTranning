@@ -109,6 +109,11 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
         mRecyclerView.addItemDecoration(RecycleViewDivider(this, LinearLayout.VERTICAL, ConvertUtils.dp2px(10f), resources.getColor(R.color.grayFBF8FB), true))
 
         adapter!!.setOnItemClickListener { adapter, view, position ->
+            if (mPlanStatus == 1) {
+                //说明计划完成 无需考试 直接拦截
+                ToastUtil.show("当前计划已完成")
+                return@setOnItemClickListener
+            }
             val info = adapter.data[position] as CourseInfo
             // TrainingPlanStatus":计划时间是否开始 0未开始 1进行中 2已过期 （说明：未开始和已过期状态下不允许支付学币）
             if (needBuy) {
