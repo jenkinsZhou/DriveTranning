@@ -23,6 +23,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.tourcoo.training.R;
+import com.tourcoo.training.core.util.ResourceUtil;
 import com.tourcoo.training.core.util.ToastUtil;
 import com.tourcoo.training.entity.account.register.IndustryCategory;
 import com.tourcoo.training.widget.citypicker.OnCityItemClickListener;
@@ -74,7 +75,7 @@ public class JDCityPicker {
     private int tabIndex = INDEX_TAB_PROVINCE;
     private Context context;
     private String colorSelected = "#ff181c20";
-    private String colorAlert = "#ffff4444";
+    private String colorAlert = "#5087FF";
 
     private OnCityItemClickListener mBaseListener;
 
@@ -423,7 +424,7 @@ public class JDCityPicker {
     private void updateTabsStyle(int tabIndex) {
         switch (tabIndex) {
             case INDEX_INVALID:
-                mProTv.setTextColor(Color.parseColor(colorAlert));
+                mProTv.setTextColor(ResourceUtil.getColor(R.color.blue5087FF));
                 mProTv.setVisibility(View.VISIBLE);
                 mCityTv.setVisibility(View.GONE);
                 mAreaTv.setVisibility(View.GONE);
@@ -431,7 +432,8 @@ public class JDCityPicker {
                 break;
 
             case INDEX_TAB_PROVINCE:
-                mProTv.setTextColor(Color.parseColor(colorAlert));
+//                mProTv.setTextColor(Color.parseColor(colorAlert));
+                mProTv.setTextColor(ResourceUtil.getColor(R.color.blue5087FF));
                 mProTv.setVisibility(View.VISIBLE);
                 mCityTv.setVisibility(View.GONE);
                 mAreaTv.setVisibility(View.GONE);
