@@ -61,7 +61,7 @@ import java.lang.ref.WeakReference
 class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, PermissionCallbacks {
     private var photoPath = ""
     private var type: Int = -1
-    private var trainId:String? = null
+//    private var trainId:String? = null
     private val mTag = "RecognizeIdCardActivity"
     private var hud: KProgressHUD? = null
     private val mHandler: MyHandler = MyHandler(this)
@@ -88,7 +88,6 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
 
     override fun initView(savedInstanceState: Bundle?) {
         type = intent.getIntExtra(EXTRA_KEY_REGISTER_TYPE, -1)
-        trainId = intent.getStringExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID)
         TourCooLogUtil.i(mTag, "跳转类型=" + type)
         tvNextStep.setOnClickListener(this)
         llTakePhoto.setOnClickListener(this)
@@ -353,8 +352,10 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
      * 人脸和身份证比对
      */
     private fun uploadFaceImage(base64DataIdCard: String?, facePhotoBase64: String) {
-        if (TextUtils.isEmpty(base64DataIdCard) || TextUtils.isEmpty(facePhotoBase64) || TextUtils.isEmpty(trainId)) {
+//        || TextUtils.isEmpty(trainId)
+        if (TextUtils.isEmpty(base64DataIdCard) || TextUtils.isEmpty(facePhotoBase64) ) {
             ToastUtil.show("未获取到图像信息")
+//            TourCooLogUtil.d("未获取到图像信息="+trainId)
             return
         }
         //身份证base64数据
