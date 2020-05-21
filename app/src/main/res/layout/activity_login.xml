@@ -94,6 +94,7 @@
                         android:layout_marginStart="@dimen/dp_11"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                         android:hint="请输入身份证号码"
                         android:inputType="text"
                         android:maxLines="1"

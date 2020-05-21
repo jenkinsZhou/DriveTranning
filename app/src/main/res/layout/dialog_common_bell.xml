@@ -59,9 +59,10 @@
                     android:textColor="@color/gray999999"
                     android:textSize="@dimen/sp_15" />
 
+                <!--grayF0F0E9-->
                 <View
                     android:layout_width="@dimen/dp_0_5"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@color/grayF0F0E9" />
 
                 <TextView

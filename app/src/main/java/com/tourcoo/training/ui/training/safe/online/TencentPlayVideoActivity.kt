@@ -348,8 +348,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         clearCount()
         //拿到后台配置的间隔时间
         faceVerifyInterval = if (AppConfig.DEBUG_MODE) {
-            //todo 人脸验证间隔时间 调试模式下 固定成30秒 方便测试
-            20
+            //todo 人脸验证间隔时间 调试模式下 固定成120秒 方便测试
+            120
         } else {
             detail.faceVerifyInterval
         }
@@ -514,6 +514,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 } else {
                     imageView.setImageResource(R.mipmap.ic_playing)
                 }
+
                 tvPlanTitle.setTextColor(ResourceUtil.getColor(R.color.blue5087FF))
                 setViewGone(tvPlanDesc, true)
                 view.setBackgroundColor(ResourceUtil.getColor(R.color.blueEFF3FF))
@@ -525,9 +526,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 if (course.mediaType == MEDIA_TYPE_HTML) {
                     ToastUtil.show("当前是网页课件,需要手动点击学习")
                     setCourseInfoClick(view, course)
+                }else{
+                    playStreamUrlOrHtml(course)
                 }
-
-                playStreamUrlOrHtml(course)
             }
             else -> {
             }
