@@ -928,6 +928,10 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      * 显示参加考试对话框
      */
     private fun showAcceptExamDialog() {
+//        requireExam 为0 表示无需考试 需要屏蔽考试按钮 1表示需要考试
+        if (trainingPlanDetail == null || trainingPlanDetail!!.requireExam == 0) {
+            return
+        }
         if (!isFirstShow) {
             //如果之前显示过则 不在弹出
             return

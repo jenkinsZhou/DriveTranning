@@ -184,11 +184,8 @@ public class RetrofitHelper {
             TourCooLogUtil.d(respString);
             if (isJson) {
                 LogUtils.json(respString);
-
             }
-            TourCooLogUtil.d(TAG,isJson);
             BaseResult result = new Gson().fromJson(respString, BaseResult.class);
-            TourCooLogUtil.d(TAG,result);
             if(result != null &&result.code == -1 ){
               ToastUtil.show("服务器数据有误");
             }
