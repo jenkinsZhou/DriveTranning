@@ -69,6 +69,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
     private var examId = ""
     private var trainPlanId = ""
     private var lastQuestionIndex = -1
+
     /**
      * 用来计数是否答完所有试题 (没回答完不让提交答案)
      */
@@ -226,8 +227,6 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         //控制题解显示或隐藏
         fragment.showQuestionAnalysis(hasAnswer)
         if (hasAnswer) {
-
-
             skipNextQuestionDelay(delayTime)
         } else {
             skipNextQuestionNow()
@@ -342,11 +341,9 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
         questionNumAdapter?.bindToRecyclerView(questionNumRv)
         //处理底部题目弹窗
         questionNumAdapter?.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-
             //如果这道题用户没有回答则 不让跳转
-            val fragment = list!![position] as ExamFragment
-            if (fragment.getQuestionStatus() == STATUS_NO_ANSWER) {
-                //拦截点击
+            if (position < questionNumAdapter!!.data.size && questionNumAdapter!!.data[position].answerStatus == STATUS_NO_ANSWER) {
+                //拦截点击事件
                 return@OnItemClickListener
             }
             vpExamOnline.setCurrentItem(position, false)

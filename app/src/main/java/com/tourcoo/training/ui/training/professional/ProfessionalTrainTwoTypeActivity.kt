@@ -67,14 +67,20 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
                     if (info.status == 1) { //已购买
                         jumpByModelType(info)
                     } else {
-                        val dialog = CommonBellDialog(mContext)
-                        dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
-                            override fun onClick(v: View?) {
-                                requestPayInfo(info.specialId, info.childModuleId, info.coins)
-                                dialog.dismiss()
-                            }
-                        })
-                        dialog.show()
+                        // TrainingPlanStatus":计划时间是否开始 0未开始 1进行中 2已过期 （说明：未开始和已过期状态下不允许支付学币）
+                        if (info.trainingPlanStatus == 0 || info.trainingPlanStatus == 2) {
+                            ToastUtil.show("当前计划未开始或已过期")
+                        }else{
+                            val dialog = CommonBellDialog(mContext)
+                            dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
+                                override fun onClick(v: View?) {
+                                    requestPayInfo(info.specialId, info.childModuleId, info.coins)
+                                    dialog.dismiss()
+                                }
+                            })
+                            dialog.show()
+                        }
+
                     }
                 }
             }
@@ -90,20 +96,27 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
             intent.putExtra("childModuleId", info.childModuleId)
             intent.putExtra("title", info.title)
             intent.putExtra("coins", info.coins)
+            intent.putExtra("planStatus", info.planStatus)
+            intent.putExtra("trainingPlanStatus", info.trainingPlanStatus)
             startActivity(intent)
 
         } else {//直接跳转到考试分类列表
-
+            if (info.planStatus == 1) {
+                //说明计划完成 无需考试 直接拦截
+                ToastUtil.show("当前计划已完成 无需考试")
+                return
+            }
             val intent = Intent(this, ProfessionalExamSelectListActivity::class.java)
             intent.putExtra("id", info.specialId)
             intent.putExtra("childModuleId", info.childModuleId)
             intent.putExtra("title", info.title)
             intent.putExtra("coins", info.coins)
             intent.putExtra("status", info.status)
+            intent.putExtra("planStatus", info.planStatus)
+            intent.putExtra("trainingPlanStatus", info.trainingPlanStatus)
             startActivity(intent)
         }
     }
-
 
 
     private var isFirst = false

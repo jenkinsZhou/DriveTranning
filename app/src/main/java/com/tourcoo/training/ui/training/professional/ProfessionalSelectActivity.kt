@@ -61,7 +61,8 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
         const val REQUEST_CODE_AUTH = 204
 
     }
-
+    private var mPlanStatus = -1
+    private var mTrainingPlanStatus = -1
     override fun getAdapter(): BaseQuickAdapter<CourseInfo, BaseViewHolder> {
         adapter = OnLineTrainingCourseAdapter()
         return adapter!!
@@ -102,7 +103,8 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
         childModuleId = intent.getStringExtra("childModuleId")
         coins = intent.getStringExtra("coins")
         id = intent.getStringExtra("id")
-
+        mPlanStatus = intent.getIntExtra("planStatus", -1)
+        mTrainingPlanStatus = intent.getIntExtra("trainingPlanStatus", -1)
         mTitleBar.setTitleMainText(title)
 
         mRecyclerView.addItemDecoration(RecycleViewDivider(this, LinearLayout.VERTICAL, ConvertUtils.dp2px(10f), resources.getColor(R.color.grayFBF8FB), true))
@@ -207,6 +209,10 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
         }
 
         if (needBuy) {
+            if (mTrainingPlanStatus == 0 || mTrainingPlanStatus == 2) {
+                ToastUtil.show("当前计划未开始或已过期")
+                return
+            }
             val dialog = CommonBellDialog(mContext)
             dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
                 override fun onClick(v: View?) {
@@ -320,6 +326,10 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvBuy -> {
+                if (mTrainingPlanStatus == 0 || mTrainingPlanStatus == 2) {
+                    ToastUtil.show("当前计划未开始或已过期")
+                    return
+                }
                 val dialog = CommonBellDialog(mContext)
                 dialog.create().setContent("尊敬的学员用户，您还未购买此项目，暂不可进行学习。支付学币之后，方可使用。").setPositiveButton("立即购买", object : View.OnClickListener {
                     override fun onClick(v: View?) {

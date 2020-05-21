@@ -10,6 +10,8 @@ public class ProfessionalTwoTypeModel {
      * SubTitle : 专项01
      * Coins : 1
      * Type : 0
+     * planStatus
+     * TrainingPlanStatus
      */
 
     private String specialId;
@@ -19,6 +21,15 @@ public class ProfessionalTwoTypeModel {
     private String Coins;
     private String Type;
     private int Status;
+    /**
+     * "planStatus" :计划是否完成  1：完成  0：没完成
+     */
+    private int planStatus;
+
+    /**
+     * TrainingPlanStatus":计划时间是否开始 0未开始 1进行中 2已过期 （说明：未开始和已过期状态下不允许支付学币）
+     */
+    private int TrainingPlanStatus;
 
     public int getStatus() {
         return Status;
@@ -74,5 +85,21 @@ public class ProfessionalTwoTypeModel {
 
     public void setType(String Type) {
         this.Type = Type;
+    }
+
+    public int getPlanStatus() {
+        return planStatus;
+    }
+
+    public void setPlanStatus(int planStatus) {
+        this.planStatus = planStatus;
+    }
+
+    public int getTrainingPlanStatus() {
+        return TrainingPlanStatus;
+    }
+
+    public void setTrainingPlanStatus(int trainingPlanStatus) {
+        TrainingPlanStatus = trainingPlanStatus;
     }
 }

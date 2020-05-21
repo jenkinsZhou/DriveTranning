@@ -85,8 +85,10 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
     //是否需要购买
     private var needBuy = true
 
+    private var mPlanStatus = -1
+    private var mTrainingPlanStatus = -1
     override fun initView(savedInstanceState: Bundle?) {
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
         val title = intent.getStringExtra("title")
@@ -94,7 +96,8 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
         coins = intent.getStringExtra("coins")
         id = intent.getStringExtra("id")
         needBuy = intent.getIntExtra("status", 0) == 0  //0(暂未购买)  1（已购买）
-
+        mPlanStatus = intent.getIntExtra("planStatus", -1)
+        mTrainingPlanStatus = intent.getIntExtra("trainingPlanStatus", -1)
         if (needBuy) { //已购买
             llHeaderBar.visibility = View.GONE
         } else { //暂未购买
@@ -107,7 +110,12 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
 
         adapter!!.setOnItemClickListener { adapter, view, position ->
             val info = adapter.data[position] as CourseInfo
+            // TrainingPlanStatus":计划时间是否开始 0未开始 1进行中 2已过期 （说明：未开始和已过期状态下不允许支付学币）
             if (needBuy) {
+                if (mTrainingPlanStatus == 0 || mTrainingPlanStatus == 2) {
+                    ToastUtil.show("当前计划未开始或已过期")
+                    return@setOnItemClickListener
+                }
                 showBuyDialog()
                 return@setOnItemClickListener
             }
@@ -115,7 +123,7 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
             //    public static final int COURSE_STATUS_CONTINUE = 1;
             //    public static final int COURSE_STATUS_NEED_PAY = 2;
             //    public static final int COURSE_STATUS_WAIT_EXAM = 3;
-            if(info.status == 0){
+            if (info.status == 0) {
                 //已完成状态下 屏蔽点击事件
                 return@setOnItemClickListener
             }
@@ -175,7 +183,13 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
 
     override fun onClick(v: View?) {
         when (v?.id) {
+
             R.id.tvBuy -> {
+                // TrainingPlanStatus":计划时间是否开始 0未开始 1进行中 2已过期 （说明：未开始和已过期状态下不允许支付学币）
+                if (mTrainingPlanStatus == 0 || mTrainingPlanStatus == 2) {
+                    ToastUtil.show("当前计划未开始或已过期")
+                    return
+                }
                 if (needBuy) {
                     showBuyDialog()
                     return
@@ -205,7 +219,7 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
      * @param offLineRefreshEvent
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onOfflineRefreshEvent(offLineRefreshEvent : ProfessionRefreshEvent?) {
+    fun onOfflineRefreshEvent(offLineRefreshEvent: ProfessionRefreshEvent?) {
         if (offLineRefreshEvent == null) {
             return
         }
@@ -213,7 +227,7 @@ class ProfessionalExamSelectListActivity : BaseTitleRefreshLoadActivity<CourseIn
 //            removeData()
         } else {
             //只要offLineRefreshEvent不为空 就刷新数据
-            TourCooLogUtil.i("","收到刷新事件")
+            TourCooLogUtil.i("", "收到刷新事件")
             requestData()
         }
     }
