@@ -101,7 +101,7 @@ class StudyTabFragment : BaseBlueBgTitleFragment(), View.OnClickListener {
                             }
 
                             override fun OnBannerClick(data: Any?, position: Int) {
-                                if (list[position].url.isEmpty()) {
+                                if (list[position].url.isNullOrEmpty()) {
                                     return
                                 }
                                 WebViewActivity.start(context, list[position].url, true)

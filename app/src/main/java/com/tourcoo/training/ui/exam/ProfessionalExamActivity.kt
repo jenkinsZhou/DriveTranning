@@ -23,6 +23,7 @@ import com.tourcoo.training.adapter.page.CommonFragmentPagerAdapter
 import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.ExamConstant
+import com.tourcoo.training.constant.ExamConstant.STATUS_NO_ANSWER
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -264,9 +265,15 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener, Ques
                 if (isFirstQuestionAnswered) {
                     //说明第一题回答过了 不做任何处理
                 } else {
-                    //否则 说明第一题都没回答
+                    //否则 说明第一题都没回答 因此第一道题目肯定是蓝色圆圈状态 后面的题全部都置为未回答状态
+                    for (other in 1 until questions.size) {
+                        val otherQuestion = questions[other]
+                        otherQuestion.answerStatus = STATUS_NO_ANSWER
+                    }
+                    //todo
                     currentQuestion.answerStatus = ExamConstant.STATUS_NO_ANSWER_FIRST
                     lastQuestionIndex = 0
+
                 }
                 if (i > 1) {
                     TourCooLogUtil.i("执行了")
