@@ -412,7 +412,7 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener, Ques
             commit.answer = StringUtils.join(question.answer, "")
             commitList.add(commit)
         }
-        ApiRepository.getInstance().requestFinishExam(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamResultEntity>?>() {
+        ApiRepository.getInstance().requestProfessionalFinishExam(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<ExamResultEntity>?>() {
             override fun onSuccessNext(entity: BaseResult<ExamResultEntity>?) {
                 if (entity == null) {
                     return
@@ -560,7 +560,7 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener, Ques
         if (commitList.isEmpty()) {
             return
         }
-        ApiRepository.getInstance().requestSaveAnswer(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
+        ApiRepository.getInstance().requestProfessionalSaveAnswer(examId, commitList).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<Any>?>("正在保存答题..") {
             override fun onSuccessNext(entity: BaseResult<Any>?) {
                 if (entity == null) {
                     return

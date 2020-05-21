@@ -362,7 +362,7 @@ class RecognizeIdCardActivity : BaseTitleActivity(), View.OnClickListener, Permi
         //人脸base64数据
         val finalFaceBase64 = "data:image/jpeg;base64,$facePhotoBase64"
 //        val base64FaceImage = "data:image/jpeg;base64," + Base64Util.bitmapToBase64(BitmapFactory.decodeFile(facePhotoPath))
-        ApiRepository.getInstance().requestIdCardVerify(trainId, base64Image, finalFaceBase64).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
+        ApiRepository.getInstance().requestIdCardVerify( base64Image, finalFaceBase64).compose(bindUntilEvent(ActivityEvent.DESTROY)).subscribe(object : BaseLoadingObserver<BaseResult<FaceRecognizeResult>?>("比对中,请稍后...") {
             override fun onSuccessNext(entity: BaseResult<FaceRecognizeResult>?) {
                 if (entity == null) {
                     return

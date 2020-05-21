@@ -3,6 +3,7 @@ package com.tourcoo.training.ui.training.professional
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import com.tourcoo.training.R
 import com.tourcoo.training.constant.TrainingConstant.EXTRA_KEY_EXAM_ID
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -36,9 +37,10 @@ class ProfessionalExamSelectChildActivity : BaseTitleActivity() {
     override fun initView(savedInstanceState: Bundle?) {
         mTrainingPlanId = intent.getStringExtra("trainingPlanId") as String
         mExamId = intent.getStringExtra("examId")
-
-
         rlExamSimulation.setOnClickListener {
+            if(TextUtils.isEmpty(mExamId)){
+                mExamId = "0"
+            }
             formal = false
             //模拟考试不需要人脸验证 直接跳到考试页面
             skipExamByType(mTrainingPlanId, mExamId, formal)

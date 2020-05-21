@@ -293,7 +293,7 @@ public class ApiRepository extends BaseRepository {
     }
 
 
-    public Observable<BaseResult<FaceRecognizeResult>> requestIdCardVerify(String trainingPlanID, String idPhotoBase64, String facePhotoBase64) {
+    public Observable<BaseResult<FaceRecognizeResult>> requestIdCardVerify( String idPhotoBase64, String facePhotoBase64) {
         Map<String, Object> params = new HashMap<>(2);
         params.put("idCardPhoto", idPhotoBase64);
         params.put("facePhoto", facePhotoBase64);
