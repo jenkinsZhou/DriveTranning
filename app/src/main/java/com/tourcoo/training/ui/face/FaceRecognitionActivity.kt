@@ -195,8 +195,8 @@ class FaceRecognitionActivity : BaseTitleActivity(), CameraListener, View.OnClic
                                 AccountTempHelper.getInstance().tempBase64FaceData = faceBase64Data
                                 compressBitmap.recycle()
                                 faceBitmap.recycle()
-                                closeLoading()
                                 baseHandler.post(Runnable {
+                                    closeLoading()
                                     uploadFaceImage(trainId, faceBase64Data)
                                 })
                             }

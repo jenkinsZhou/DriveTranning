@@ -69,7 +69,7 @@ import java.net.URLEncoder
  * @Email: 971613168@qq.com
  */
 class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
-    private val mTag = "PlayVideoActivity"
+    private val mTag = "TencentPlayVideoActivity"
     private var isTransition = false
 
     private var currentCourseId: String = ""
@@ -526,7 +526,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 if (course.mediaType == MEDIA_TYPE_HTML) {
                     ToastUtil.show("当前是网页课件,需要手动点击学习")
                     setCourseInfoClick(view, course)
+                    TourCooLogUtil.i(mTag,"执行了MEDIA_TYPE_HTML")
                 }else{
+                    TourCooLogUtil.d(mTag,"执行了MEDIA_TYPE_VIDEO")
                     playStreamUrlOrHtml(course)
                 }
             }

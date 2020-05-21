@@ -19,12 +19,10 @@ import com.tourcoo.training.core.util.ToastUtil
 import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.UserInfo
-import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.event.OffLineRefreshEvent
-import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
-import com.tourcoo.training.widget.dialog.CommonBellAlert
+import com.tourcoo.training.ui.face.TrainFaceCertifyActivity
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.tourcoo.training.widget.websocket.SocketListener

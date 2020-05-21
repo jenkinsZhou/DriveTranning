@@ -113,7 +113,7 @@
             android:name=".ui.face.OnLineFaceRecognitionActivity"
             android:launchMode="singleTask" />
         <activity android:name=".ui.training.safe.online.detail.teacher.TeacherPlanDetailActivity" />
-        <activity android:name=".ui.training.safe.online.TrainFaceCertifyActivity" />
+        <activity android:name=".ui.face.TrainFaceCertifyActivity" />
         <activity android:name=".ui.training.safe.online.detail.common.CommonPlanDetailActivity" />
         <activity android:name=".widget.aliplayer.activity.AliBaseActivity" />
         <activity

@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import com.alibaba.fastjson.JSON
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.didichuxing.doraemonkit.zxing.activity.CaptureActivity
 import com.google.gson.Gson
 import com.tourcoo.training.R
@@ -24,12 +22,11 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.SocketBean
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.UserInfo
-import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.event.OffLineRefreshEvent
 import com.tourcoo.training.ui.exam.ExamActivity
-import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
+import com.tourcoo.training.ui.face.TrainFaceCertifyActivity
 import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
@@ -824,7 +821,9 @@ class CommonPlanDetailActivity : BaseMvpTitleActivity<CommonDetailPresenter>(), 
     }
 
     override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {
-
+        if (AppConfig.DEBUG_MODE) {
+            ToastUtil.show("webSocket:onMessage---" + data + "message =" + data)
+        }
     }
 
     override fun onDisconnect() {

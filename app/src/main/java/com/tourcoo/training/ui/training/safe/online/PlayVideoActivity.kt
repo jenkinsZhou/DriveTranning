@@ -28,6 +28,7 @@ import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.exam.ExamActivity.Companion.EXTRA_EXAM_ID
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
+import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity.Companion.REQUEST_CODE_FACE
 import com.tourcoo.training.widget.dialog.IosAlertDialog
 import com.trello.rxlifecycle3.android.ActivityEvent
 import kotlinx.android.synthetic.main.activity_play_video.*
@@ -63,7 +64,6 @@ class PlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         const val IMG_TRANSITION = "IMG_TRANSITION"
         const val TRANSITION = "TRANSITION"
 
-        const val REQUEST_CODE_FACE = 1006
     }
 
 

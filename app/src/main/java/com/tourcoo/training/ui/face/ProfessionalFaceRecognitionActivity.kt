@@ -20,7 +20,6 @@ import android.view.WindowManager
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
-import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
 import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
@@ -35,7 +34,6 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
-import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
 import com.tourcoo.training.utils.threadpool.ThreadPoolManager
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener

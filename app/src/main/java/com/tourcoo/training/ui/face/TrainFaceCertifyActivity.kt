@@ -1,4 +1,4 @@
-package com.tourcoo.training.ui.training.safe.online
+package com.tourcoo.training.ui.face
 
 import android.Manifest
 import android.app.Activity
@@ -17,14 +17,13 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import com.alibaba.fastjson.JSON
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationListener
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
 import com.tourcoo.training.R
+import com.tourcoo.training.config.AppConfig
 import com.tourcoo.training.config.RequestConfig
-import com.tourcoo.training.constant.TrainingConstant
 import com.tourcoo.training.constant.TrainingConstant.*
 import com.tourcoo.training.core.base.activity.BaseTitleActivity
 import com.tourcoo.training.core.base.entity.BaseResult
@@ -39,6 +38,7 @@ import com.tourcoo.training.entity.account.AccountTempHelper
 import com.tourcoo.training.entity.recognize.FaceRecognizeResult
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
+import com.tourcoo.training.utils.threadpool.ThreadPoolManager
 import com.tourcoo.training.widget.camera.CameraHelper
 import com.tourcoo.training.widget.camera.CameraListener
 import com.tourcoo.training.widget.dialog.IosAlertDialog
@@ -168,22 +168,40 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
                     ToastUtil.show("存储空间不足或异常")
                     return
                 }
-                baseHandler.postDelayed(Runnable {
-                    val resource = BitmapFactory.decodeByteArray(data, 0, data!!.size)
-                    if (resource == null) {
-                        ToastUtil.show("拍照失败")
-                    } else {
-                        //todo
-                      val faceBitmap = toTurn(resource)!!
-                        val  compressBitmap  =      ImageUtils.compressBySampleSize(faceBitmap,SizeUtil.dp2px(235f),SizeUtil.dp2px(235f))
-                        TourCooLogUtil.i(tag,"长宽信息:"+compressBitmap.width+"---"+compressBitmap.height)
-                        val faceBase64Data = Base64Util.bitmapToBase64(compressBitmap)
-                        //缓存人脸数据
-                        AccountTempHelper.getInstance().tempBase64FaceData=faceBase64Data
-                        handleTakePhotoCallback(faceBase64Data)
-                        faceBitmap.recycle()
-                    }
-                }, 200)
+                try {
+                    baseHandler.postDelayed(Runnable {
+                        showLoading("图片处理中...")
+                        ThreadPoolManager.getThreadPoolProxyNormal().execute(Runnable {
+                            val resource = BitmapFactory.decodeByteArray(data, 0, data!!.size)
+                            if (resource == null) {
+                                baseHandler.post {
+                                    ToastUtil.show("图片处理失败")
+                                    closeLoading()
+                                }
+                            } else {
+                                val faceBitmap = toTurn(resource)!!
+                                val compressBitmap = ImageUtils.compressBySampleSize(faceBitmap, SizeUtil.dp2px(235f), SizeUtil.dp2px(235f))
+                                TourCooLogUtil.i(tag, "长宽信息:" + compressBitmap.width + "---" + compressBitmap.height)
+                                val faceBase64Data = Base64Util.bitmapToBase64(compressBitmap)
+                                //缓存人脸数据
+                                AccountTempHelper.getInstance().tempBase64FaceData = faceBase64Data
+                                handleTakePhotoCallback(faceBase64Data)
+                                faceBitmap.recycle()
+                                baseHandler.post(Runnable {
+                                    closeLoading()
+                                    getLocateAndCertify(faceBase64Data)
+                                })
+                            }
+                        })
+
+
+                    }, 200)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    closeLoading()
+                    ToastUtil.show("拍照失败 请稍后再试")
+                }
+
 
             }
         })
@@ -326,7 +344,7 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
 
 
     private fun uploadFaceImage(base64Data: String?, location: AMapLocation?) {
-        if ( location == null ||TextUtils.isEmpty(base64Data)) {
+        if (location == null || TextUtils.isEmpty(base64Data)) {
             ToastUtil.show("未获取到有效数据")
             return
         }
@@ -358,7 +376,7 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
                 ToastUtil.show("验证超时")
                 baseHandler.postDelayed(Runnable {
                     finish()
-                },500)
+                }, 500)
             }
         })
     }
@@ -388,42 +406,62 @@ class TrainFaceCertifyActivity : BaseTitleActivity(), CameraListener, View.OnCli
             ToastUtil.show("请先授予定位权限")
             return
         }
-        showLoading("定位中...")
+        baseHandler.post {
+            showLoading("定位中...")
+        }
         LocateHelper.getInstance().startLocation(AMapLocationListener { aMapLocation ->
             if (aMapLocation != null) {
                 mapLocation = aMapLocation
                 if (aMapLocation.errorCode == 0) {
                     //可在其中解析amapLocation获取相应内容。
                     //定位成功 上传人脸数据到服务器
-                    uploadFaceImage(base64Data, aMapLocation)
+                    baseHandler.post {
+                        uploadFaceImage(base64Data, aMapLocation)
+                    }
                 } else {
                     //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
                     TourCooLogUtil.e("AmapError", "location Error, ErrCode:"
                             + aMapLocation.getErrorCode() + ", errInfo:"
                             + aMapLocation.getErrorInfo());
                     handleLocateFailed()
+                    if(AppConfig.DEBUG_MODE){
+                        val string = "定位失败：原因--->location Error, ErrCode:"+ aMapLocation.getErrorCode() + ", errInfo:"+ aMapLocation.getErrorInfo()
+                        ToastUtil.show(string)
+                    }
                 }
             } else {
                 //aMapLocation ==null 处理定位失败
+                TourCooLogUtil.e("AmapError", "aMapLocation=null")
                 handleLocateFailed()
+                if(AppConfig.DEBUG_MODE){
+                    val string = "定位失败：原因--->aMapLocation=null"
+                    ToastUtil.show(string)
+                }
             }
             LocateHelper.getInstance().stopLocation()
-            closeLoading()
+            baseHandler.post {
+             closeLoading()
+            }
         })
     }
 
 
     private fun handleTakePhotoCallback(base64Data: String?) {
         //获取经纬度 然后上传图片
-        getLocateAndCertify(base64Data)
+        baseHandler.post {
+            getLocateAndCertify(base64Data)
+        }
+
     }
 
     /**
      * 处理定位失败逻辑
      */
     private fun handleLocateFailed() {
-        ToastUtil.show("获取位置信息失败 请重试")
-        finish()
+        baseHandler.post {
+            ToastUtil.show("获取位置信息失败 请重试")
+            finish()
+        }
     }
 }
 

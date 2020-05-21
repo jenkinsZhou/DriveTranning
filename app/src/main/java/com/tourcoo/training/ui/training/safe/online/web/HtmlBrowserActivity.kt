@@ -34,7 +34,7 @@ import com.tourcoo.training.event.WorkProRefreshEvent
 import com.tourcoo.training.ui.exam.ExamActivity
 import com.tourcoo.training.ui.face.OnLineFaceRecognitionActivity
 import com.tourcoo.training.ui.training.StudyMedalRecordActivity
-import com.tourcoo.training.ui.training.safe.online.PlayVideoActivity
+import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity.Companion.REQUEST_CODE_FACE
 import com.tourcoo.training.ui.training.safe.online.web.PlayHtmlWebActivity.RESULT_CODE_REFRESH_HTML
 import com.tourcoo.training.utils.CustomCountDownTimer
 import com.tourcoo.training.widget.dialog.exam.ExamCommonDialog
@@ -392,7 +392,7 @@ class HtmlBrowserActivity : BaseTitleActivity(), View.OnClickListener {
         //人脸认证
         val intent = Intent(this, OnLineFaceRecognitionActivity::class.java)
         intent.putExtra(TrainingConstant.EXTRA_TRAINING_PLAN_ID, CommonUtil.getNotNullValue(trainingPlanID))
-        startActivityForResult(intent, PlayVideoActivity.REQUEST_CODE_FACE)
+        startActivityForResult(intent, REQUEST_CODE_FACE)
     }
 
 

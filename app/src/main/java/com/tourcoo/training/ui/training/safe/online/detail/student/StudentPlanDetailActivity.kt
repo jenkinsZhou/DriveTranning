@@ -24,13 +24,11 @@ import com.tourcoo.training.core.widget.view.bar.TitleBarView
 import com.tourcoo.training.entity.SocketBean
 import com.tourcoo.training.entity.account.AccountHelper
 import com.tourcoo.training.entity.account.UserInfo
-import com.tourcoo.training.entity.account.UserInfoEvent
 import com.tourcoo.training.entity.training.QrScanResult
 import com.tourcoo.training.entity.training.TrainingPlanDetail
 import com.tourcoo.training.event.OffLineRefreshEvent
 import com.tourcoo.training.ui.exam.ExamActivity
-import com.tourcoo.training.ui.training.safe.online.TrainFaceCertifyActivity
-import com.tourcoo.training.ui.training.safe.online.detail.common.CommonPlanDetailActivity
+import com.tourcoo.training.ui.face.TrainFaceCertifyActivity
 import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.training.CommonSuccessAlert
 import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
@@ -39,7 +37,6 @@ import com.tourcoo.training.widget.websocket.WebSocketHandler
 import com.tourcoo.training.widget.websocket.WebSocketSetting
 import com.tourcoo.training.widget.websocket.response.ErrorResponse
 import kotlinx.android.synthetic.main.activity_training_detail_student.*
-import kotlinx.android.synthetic.main.alivc_dialog_error.*
 import org.greenrobot.eventbus.EventBus
 import org.java_websocket.framing.Framedata
 import java.nio.ByteBuffer
@@ -492,7 +489,9 @@ class StudentPlanDetailActivity : BaseMvpTitleActivity<StudentDetailPresenter>()
     }
 
     override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {
-
+        if (AppConfig.DEBUG_MODE) {
+            ToastUtil.show("webSocket:onMessage---" + data + "message =" + data)
+        }
     }
 
     override fun onDisconnect() {
