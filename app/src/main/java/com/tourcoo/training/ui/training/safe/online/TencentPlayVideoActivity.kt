@@ -161,7 +161,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
         //调试模式下允许拖动进度条
         TourCooLogUtil.d(mTag, "loadPlayerSetting()：设置的进度" + currentProgress)
         smartVideoPlayer.setSeekEnable(AppConfig.DEBUG_MODE)
-        smartVideoPlayer.seekTo(currentProgress)
+//        smartVideoPlayer.seekTo(currentProgress)
         smartVideoPlayer.setOnPlayStatusListener(object : SuperPlayerView.OnPlayStatusListener {
             override fun resumeVideo() {
                 timerResume()

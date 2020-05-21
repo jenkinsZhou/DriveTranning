@@ -548,6 +548,9 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
             mDefaultSet = false;
             mVodPlayer.setAutoPlay(true);
             mVodPlayer.setVodListener(this);
+            if(isChange){
+                mVodPlayer.setStartTime(0);
+            }
             int ret = mVodPlayer.startPlay(url);
             if (ret == 0) {
                 mCurrentPlayState = SuperPlayerConst.PLAYSTATE_PLAY;
@@ -1278,6 +1281,7 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
     };
 
 
+    private boolean isChange = false;
     /**
      * 播放器控制
      */
@@ -1619,8 +1623,9 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                         TXCLog.i(TAG, "setBitrateIndex quality.index:" + quality.index);
 
                         if (quality.url != null && quality.url.endsWith(".mp4")) {
-
+                            isChange = true;
                             float currentTime = mVodPlayer.getCurrentPlaybackTime();
+                            mVodPlayer.stopPlay(true);
                             mVodPlayer.setStartTime(currentTime);
                             mVodPlayer.startPlay(quality.url);
 
@@ -1687,6 +1692,8 @@ public class SuperPlayerView extends RelativeLayout implements ITXVodPlayListene
                 if (mVodPlayer != null) {
                     mVodPlayer.enableHardwareDecode(isAccelerate);
 
+                    Toast.makeText(mContext, "硬件加速", Toast.LENGTH_SHORT).show();
+                    
                     mSeekPos = (int) mVodPlayer.getCurrentPlaybackTime();
                     TXCLog.i(TAG, "save pos:" + mSeekPos);
 
