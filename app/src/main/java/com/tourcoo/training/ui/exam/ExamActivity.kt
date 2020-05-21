@@ -63,7 +63,7 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
     private var questionNumAdapter: QuestionNumberAdapter? = null
     private var list: ArrayList<Fragment>? = null
     private var currentPosition = 0
-    private val delayTime = 800L
+    private val delayTime = 300L
     private val answerHandler = Handler()
     private var behavior: BottomSheetBehavior<NestedScrollView>? = null
     private var examId = ""
@@ -223,14 +223,21 @@ class ExamActivity : BaseTitleActivity(), View.OnClickListener, QuestionClickLis
             ToastUtil.show("这道题是多选哦")
             return
         }
-        val hasAnswer = fragment.answerQuestion()
+        //如果这道题用户没有回答则 不让跳转
+        val answerQuestion = fragment.answerQuestion()
         //控制题解显示或隐藏
-        fragment.showQuestionAnalysis(hasAnswer)
-        if (hasAnswer) {
+        fragment.showQuestionAnalysis(answerQuestion)
+//        loadNumberStatus(questionNumAdapter!!.data)
+//        val hasAnswer =vpExamOnline.currentItem < questionNumAdapter!!.data.size && questionNumAdapter!!.data[vpExamOnline.currentItem].answerStatus == STATUS_NO_ANSWER_FIRST
+      /*  if (hasAnswer) {
+            TourCooLogUtil.i("延迟跳过=延时时长="+delayTime)
             skipNextQuestionDelay(delayTime)
         } else {
+            TourCooLogUtil.d("未延迟跳过")
             skipNextQuestionNow()
-        }
+        }*/
+        //todo 这里有个优化项 ：  已经做过的题目跳转不加延时 未做过的题目需要延时 这里暂时都不加延时跳转
+        skipNextQuestionNow()
     }
 
     private fun setQuestionNumber(questions: MutableList<Question>): MutableList<Question> {

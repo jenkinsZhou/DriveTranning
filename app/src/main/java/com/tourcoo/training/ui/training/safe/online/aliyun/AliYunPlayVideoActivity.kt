@@ -186,6 +186,11 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      */
     private var countNode = 0
 
+    /**
+     * 是否是第一次显示考试弹窗
+     */
+    private var isFirstShow = true
+
     companion object {
         //阿里hls标准加密类型
         const val ENCRYPTION_TYPE_HLS = "HLSEncryption"
@@ -1810,6 +1815,10 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      * 显示参加考试对话框
      */
     private fun showAcceptExamDialog() {
+        if(!isFirstShow){
+            //如果之前显示过则 不在弹出
+            return
+        }
         baseHandler.postDelayed({
             val dialog = ExamCommonDialog(mContext)
             dialog.create().setContent("学习完成是否参加考试？").setPositiveButtonListener(View.OnClickListener {
@@ -1817,6 +1826,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 //跳转考试
                 skipExamActivity(trainingPlanDetail)
             }).show()
+            isFirstShow = false
         }, 500)
     }
 

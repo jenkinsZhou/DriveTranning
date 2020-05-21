@@ -76,6 +76,8 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener, Ques
      */
     private var answerCount = 0
 
+
+
     companion object {
         const val EXTRA_EXAM_ID = "EXTRA_EXAM_ID"
     }
@@ -231,16 +233,16 @@ class ProfessionalExamActivity : BaseTitleActivity(), View.OnClickListener, Ques
             ToastUtil.show("这道题是多选哦")
             return
         }
-        val hasAnswer = fragment.answerQuestion()
+        val answerQuestion = fragment.answerQuestion()
         //控制题解显示或隐藏
-        fragment.showQuestionAnalysis(hasAnswer)
-        if (hasAnswer) {
-
-
+        fragment.showQuestionAnalysis(answerQuestion)
+       /* if (hasAnswer) {
             skipNextQuestionDelay(delayTime)
         } else {
             skipNextQuestionNow()
-        }
+        }*/
+        //todo 这里有个优化项 ：  已经做过的题目跳转不加延时 未做过的题目需要延时 这里暂时都不加延时跳转
+        skipNextQuestionNow()
     }
 
     private fun setQuestionNumber(questions: MutableList<Question>): MutableList<Question> {
