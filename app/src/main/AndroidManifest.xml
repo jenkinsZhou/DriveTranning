@@ -130,11 +130,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".ui.training.professional.ProfessionalTrainTwoTypeActivity" />
+        <activity android:name=".ui.training.professional.ProfessionalTrainOneListActivity" />
         <activity android:name=".ui.training.safe.online.web.HtmlBrowserActivity" />
         <activity android:name=".ui.home.news.NewsTabFragment" />
-        <activity android:name=".ui.training.professional.ProfessionalSelectActivity" />
-        <activity android:name=".ui.training.professional.ProfessionalExamSelectListActivity" />
+        <activity android:name=".ui.training.professional.ProfessionalTwoCourseSelectActivity" />
+        <activity android:name=".ui.training.professional.ProfessionalTwoExamSelectListActivity" />
         <activity android:name=".ui.training.RichWebViewActivity" />
         <activity android:name=".ui.guide.GuideActivity" />
         <activity

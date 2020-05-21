@@ -1,6 +1,7 @@
 package com.tourcoo.training.core.widget.dialog.loading;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ public class IosLoadingDialog extends Dialog {
         setCancelable(true);
         setCanceledOnTouchOutside(false);
         Window window = getWindow();
-        if(window != null){
+        if (window != null) {
             window.setWindowAnimations(R.style.DialogWindowStyle);
         }
     }
@@ -87,6 +88,9 @@ public class IosLoadingDialog extends Dialog {
 
     @Override
     public void show() {
+        if (((Activity) context).isFinishing()) {
+            return;
+        }
         setLoadingText(loadingText);
         super.show();
     }

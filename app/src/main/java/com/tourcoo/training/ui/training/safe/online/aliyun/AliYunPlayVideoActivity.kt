@@ -494,6 +494,7 @@ class AliYunPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun playStreamUrlOrHtml(course: Course?) {
         if (course == null) {
+            ToastUtil.show("未获取到课件")
             return
         }
         when (course.mediaType) {

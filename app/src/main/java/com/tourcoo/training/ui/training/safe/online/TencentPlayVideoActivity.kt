@@ -69,7 +69,7 @@ import java.net.URLEncoder
  * @Email: 971613168@qq.com
  */
 class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
-    private val mTag = "TencentPlayVideoActivity"
+    private val mTag = "腾讯播放器"
     private var isTransition = false
 
     private var currentCourseId: String = ""
@@ -85,6 +85,8 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private var faceVerifyInterval = Int.MAX_VALUE
 
     private var mRemainTime = Int.MAX_VALUE
+
+    private var mCurrentCourse: Course? = null
 
     /**
      * 判断考试是否完成
@@ -157,7 +159,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
     private fun loadPlayerSetting(currentProgress: Int) {
         //进度条拖动开关
         //调试模式下允许拖动进度条
+        TourCooLogUtil.d(mTag, "loadPlayerSetting()：设置的进度" + currentProgress)
         smartVideoPlayer.setSeekEnable(AppConfig.DEBUG_MODE)
+        smartVideoPlayer.seekTo(currentProgress)
         smartVideoPlayer.setOnPlayStatusListener(object : SuperPlayerView.OnPlayStatusListener {
             override fun resumeVideo() {
                 timerResume()
@@ -174,6 +178,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
             }
 
             override fun enableSeek() {
+                TourCooLogUtil.d(mTag, "设置了进度：" + currentProgress)
                 smartVideoPlayer.seekTo(currentProgress)
                 //只有播放状态下才初始化计时器
                 initTimerAndStart(mRemainTime)
@@ -526,9 +531,9 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                 if (course.mediaType == MEDIA_TYPE_HTML) {
                     ToastUtil.show("当前是网页课件,需要手动点击学习")
                     setCourseInfoClick(view, course)
-                    TourCooLogUtil.i(mTag,"执行了MEDIA_TYPE_HTML")
-                }else{
-                    TourCooLogUtil.d(mTag,"执行了MEDIA_TYPE_VIDEO")
+                    TourCooLogUtil.i(mTag, "执行了MEDIA_TYPE_HTML")
+                } else {
+                    TourCooLogUtil.d(mTag, "执行了MEDIA_TYPE_VIDEO")
                     playStreamUrlOrHtml(course)
                 }
             }
@@ -560,6 +565,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
 
     private fun playStreamUrlOrHtml(course: Course?) {
         if (course == null) {
+            ToastUtil.show("未获取到课件")
             return
         }
         when (course.mediaType) {
@@ -648,7 +654,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
                     val model = SuperPlayerModel()
                     model.appId = entity.data.appid.toInt()
                     model.title = course.name
-                    model.token = URLEncoder.encode(replaceBlank(entity.data.token),"UTF-8")
+                    model.token = URLEncoder.encode(replaceBlank(entity.data.token), "UTF-8")
 
                     model.videoId = SuperPlayerVideoId()
                     model.videoId.fileId = course.videoID
@@ -920,7 +926,7 @@ class TencentPlayVideoActivity : BaseTitleActivity(), View.OnClickListener {
      * 显示参加考试对话框
      */
     private fun showAcceptExamDialog() {
-        if(!isFirstShow){
+        if (!isFirstShow) {
             //如果之前显示过则 不在弹出
             return
         }

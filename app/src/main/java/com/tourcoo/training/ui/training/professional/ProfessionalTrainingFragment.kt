@@ -3,12 +3,9 @@ package com.tourcoo.training.ui.training.professional
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.widget.LinearLayout
-import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
-import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.tourcoo.training.R
@@ -30,7 +27,6 @@ import com.tourcoo.training.entity.training.ProfessionTrainingEntity
 import com.tourcoo.training.ui.account.LoginActivity
 import com.tourcoo.training.ui.account.register.RecognizeIdCardActivity
 import com.tourcoo.training.ui.face.FaceRecognitionActivity
-import com.tourcoo.training.ui.pay.BuyNowActivity
 import com.tourcoo.training.ui.study.StudyDetailActivity
 import com.tourcoo.training.ui.training.safe.online.TencentPlayVideoActivity
 import com.tourcoo.training.ui.training.safe.online.aliyun.AliYunPlayVideoActivity
@@ -39,7 +35,6 @@ import com.tourcoo.training.ui.training.safe.online.web.HtmlBrowserActivity
 import com.tourcoo.training.utils.RecycleViewDivider
 import com.tourcoo.training.widget.dialog.CommonBellAlert
 import com.tourcoo.training.widget.dialog.recognize.RecognizeStepDialog
-import com.tourcoo.training.widget.dialog.training.LocalTrainingConfirmDialog
 import com.trello.rxlifecycle3.android.FragmentEvent
 
 /**
@@ -306,7 +301,7 @@ class ProfessionalTrainingFragment : BaseTitleRefreshLoadFragment<ProfessionTrai
      * 跳转到两类人员专项列表
      */
     private fun skipTwoTypeActivity(){
-        val intent = Intent(context, ProfessionalTrainTwoTypeActivity::class.java)
+        val intent = Intent(context, ProfessionalTrainOneListActivity::class.java)
         intent.putExtra("id", clickTrainingEntity!!.id)
         intent.putExtra("title", clickTrainingEntity!!.name)
         startActivity(intent)

@@ -47,7 +47,7 @@ import kotlinx.android.synthetic.main.activity_professional_select.*
  * @date 2020年04月28日14:22
  * @Email: 971613168@qq.com
  */
-class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), View.OnClickListener {
+class ProfessionalTwoCourseSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), View.OnClickListener {
 
     private var adapter: OnLineTrainingCourseAdapter? = null
 
@@ -127,7 +127,17 @@ class ProfessionalSelectActivity : BaseTitleRefreshLoadActivity<CourseInfo>(), V
                 ToastUtil.show("请先登录")
                 return@OnItemClickListener
             }
-
+//            TrainingPlanStatus":计划时间是否开始 0未开始 1进行中 2已过期
+            if (mTrainingPlanStatus == 0) {
+                //mPlanStatus = 0 说明计划未开始 直接拦截
+                ToastUtil.show("课程还未开始")
+                return@OnItemClickListener
+            }
+            if (mTrainingPlanStatus == 2) {
+                //mPlanStatus = 0 说明计划未开始 直接拦截
+                ToastUtil.show("课程已过期")
+                return@OnItemClickListener
+            }
             /*  case finished = 0
              case continues = 1
              case immdiate = 2

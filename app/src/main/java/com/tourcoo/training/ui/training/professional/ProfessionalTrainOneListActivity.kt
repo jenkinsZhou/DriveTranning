@@ -29,7 +29,7 @@ import com.trello.rxlifecycle3.android.ActivityEvent
  * @date 2020年04月27日16:32
  * @Email: 971613168@qq.com
  */
-class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<ProfessionalTwoTypeModel>() {
+class ProfessionalTrainOneListActivity : BaseTitleRefreshLoadActivity<ProfessionalTwoTypeModel>() {
 
     override fun getContentLayout(): Int {
         return R.layout.frame_layout_title_refresh_recycler
@@ -91,7 +91,7 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
 
     private fun jumpByModelType(info: ProfessionalTwoTypeModel) {
         if (info.type == "0") {//直接跳转到课程列表
-            val intent = Intent(this, ProfessionalSelectActivity::class.java)
+            val intent = Intent(this, ProfessionalTwoCourseSelectActivity::class.java)
             intent.putExtra("id", info.specialId)
             intent.putExtra("childModuleId", info.childModuleId)
             intent.putExtra("title", info.title)
@@ -106,7 +106,7 @@ class ProfessionalTrainTwoTypeActivity : BaseTitleRefreshLoadActivity<Profession
                 ToastUtil.show("当前计划已完成")
                 return
             }*/
-            val intent = Intent(this, ProfessionalExamSelectListActivity::class.java)
+            val intent = Intent(this, ProfessionalTwoExamSelectListActivity::class.java)
             intent.putExtra("id", info.specialId)
             intent.putExtra("childModuleId", info.childModuleId)
             intent.putExtra("title", info.title)
